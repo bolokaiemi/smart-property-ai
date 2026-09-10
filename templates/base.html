@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="{{ current_language | default('en') }}">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="{% block description %}Smart Property AI provides multilingual property management, apartment search, voice assistance and automated landlord services.{% endblock %}"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
+    <title>
+        {% block title %}Smart Property AI{% endblock %}
+    </title>
+
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="{{ url_for('static', path='images/favicon.ico') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/accessibility.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/responsive.css') }}"
+    >
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+    <!-- Skip link for keyboard and screen-reader users -->
+    <a class="skip-link" href="#main-content">
+        Skip to main content
+    </a>
+
+
+    <!-- Accessibility toolbar -->
+    <section
+        class="accessibility-toolbar"
+        aria-label="Accessibility controls"
+    >
+        <div class="container accessibility-toolbar__inner">
+
+            <div class="language-control">
+                <label for="language-select">
+                    Language
+                </label>
+
+                <select
+                    id="language-select"
+                    name="language"
+                    aria-label="Select language"
+                >
+                    <option value="en"
+                        {% if current_language | default('en') == 'en' %}
+                            selected
+                        {% endif %}
+                    >
+                        English
+                    </option>
+
+                    <option value="de"
+                        {% if current_language | default('en') == 'de' %}
+                            selected
+                        {% endif %}
+                    >
+                        Deutsch
+                    </option>
+
+                    <option value="fr"
+                        {% if current_language | default('en') == 'fr' %}
+                            selected
+                        {% endif %}
+                    >
+                        Français
+                    </option>
+
+                    <option value="es"
+                        {% if current_language | default('en') == 'es' %}
+                            selected
+                        {% endif %}
+                    >
+                        Español
+                    </option>
+
+                    <option value="it"
+                        {% if current_language | default('en') == 'it' %}
+                            selected
+                        {% endif %}
+                    >
+                        Italiano
+                    </option>
+
+                    <option value="pt"
+                        {% if current_language | default('en') == 'pt' %}
+                            selected
+                        {% endif %}
+                    >
+                        Português
+                    </option>
+
+                    <option value="ar"
+                        {% if current_language | default('en') == 'ar' %}
+                            selected
+                        {% endif %}
+                    >
+                        العربية
+                    </option>
+
+                    <option value="tr"
+                        {% if current_language | default('en') == 'tr' %}
+                            selected
+                        {% endif %}
+                    >
+                        Türkçe
+                    </option>
+
+                    <option value="pl"
+                        {% if current_language | default('en') == 'pl' %}
+                            selected
+                        {% endif %}
+                    >
+                        Polski
+                    </option>
+
+                    <option value="uk"
+                        {% if current_language | default('en') == 'uk' %}
+                            selected
+                        {% endif %}
+                    >
+                        Українська
+                    </option>
+                </select>
+            </div>
+
+            <div
+                class="accessibility-actions"
+                aria-label="Page display controls"
+            >
+                <button
+                    type="button"
+                    id="decrease-text"
+                    class="accessibility-button"
+                    aria-label="Decrease text size"
+                    title="Decrease text size"
+                >
+                    A−
+                </button>
+
+                <button
+                    type="button"
+                    id="increase-text"
+                    class="accessibility-button"
+                    aria-label="Increase text size"
+                    title="Increase text size"
+                >
+                    A+
+                </button>
+
+                <button
+                    type="button"
+                    id="contrast-toggle"
+                    class="accessibility-button"
+                    aria-pressed="false"
+                    title="Toggle high contrast"
+                >
+                    High contrast
+                </button>
+
+                <button
+                    type="button"
+                    id="read-page-button"
+                    class="accessibility-button"
+                    aria-pressed="false"
+                    title="Read the page aloud"
+                >
+                    Read aloud
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Main website header -->
+    <header class="site-header">
+        <div class="container site-header__inner">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="site-logo"
+                aria-label="Smart Property AI home"
+            >
+                <span class="site-logo__icon" aria-hidden="true">
+                    🏠
+                </span>
+
+                <span class="site-logo__text">
+                    Smart Property AI
+                </span>
+            </a>
+
+
+            <button
+                type="button"
+                id="navigation-toggle"
+                class="navigation-toggle"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="primary-navigation"
+            >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+
+
+            <nav
+                id="primary-navigation"
+                class="primary-navigation"
+                aria-label="Primary navigation"
+            >
+                <ul>
+                    <li>
+                        <a
+                            href="{{ url_for('home') }}"
+                            {% if request.url.path == '/' %}
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="{{ url_for('listings_page') }}"
+                            {% if request.url.path.startswith('/listings') %}
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            Find an apartment
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('guided_search_page') }}">
+                            Guided search
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('ai_assistant_page') }}">
+                            AI assistant
+                        </a>
+                    </li>
+
+                    {% if request.session.get('username') %}
+
+                        {% set user_role = request.session.get('role') %}
+
+                        {% if user_role in ['landlord', 'property_manager'] %}
+                            <li>
+                                <a
+                                    href="{{ url_for('landlord_dashboard') }}"
+                                    {% if request.url.path.startswith('/landlord') %}
+                                        aria-current="page"
+                                    {% endif %}
+                                >
+                                    Landlord portal
+                                </a>
+                            </li>
+                        {% elif user_role == 'tenant' %}
+                            <li>
+                                <a
+                                    href="{{ url_for('tenant_dashboard') }}"
+                                    {% if request.url.path.startswith('/tenant') %}
+                                        aria-current="page"
+                                    {% endif %}
+                                >
+                                    Tenant portal
+                                </a>
+                            </li>
+                        {% elif user_role == 'administrator' %}
+                            <li>
+                                <a href="{{ url_for('admin_dashboard') }}">
+                                    Admin
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    {% endif %}
+                </ul>
+            </nav>
+
+
+            <!-- Single Login/Logout control -->
+            <div class="authentication-control">
+
+                {% if request.session.get('username') %}
+
+                    <span class="current-user">
+                        Hello,
+                        {{ request.session.get('name')
+                           or request.session.get('username') }}
+                    </span>
+
+                    <form
+                        action="{{ url_for('logout') }}"
+                        method="POST"
+                        class="logout-form"
+                    >
+                        <button
+                            type="submit"
+                            id="auth-toggle"
+                            class="button button--outline"
+                        >
+                            Logout
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('login') }}"
+                        id="auth-toggle"
+                        class="button button--primary"
+                    >
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- Flash or status messages -->
+    {% if message %}
+        <div
+            class="site-message site-message--information"
+            role="status"
+            aria-live="polite"
+        >
+            <div class="container">
+                {{ message }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if success %}
+        <div
+            class="site-message site-message--success"
+            role="status"
+            aria-live="polite"
+        >
+            <div class="container">
+                {{ success }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div
+            class="site-message site-message--error"
+            role="alert"
+            aria-live="assertive"
+        >
+            <div class="container">
+                {{ error }}
+            </div>
+        </div>
+    {% endif %}
+
+
+    <!-- Dynamic page content -->
+    <main id="main-content" tabindex="-1">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- AI assistant launcher -->
+    <a
+        href="{{ url_for('ai_assistant_page') }}"
+        class="assistant-launcher"
+        aria-label="Open the Smart Property AI assistant"
+        title="Ask Smart Property AI"
+    >
+        <span aria-hidden="true">💬</span>
+        <span class="assistant-launcher__text">
+            Ask AI
+        </span>
+    </a>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container site-footer__grid">
+
+            <section class="footer-column">
+                <h2 class="footer-heading">
+                    Smart Property AI
+                </h2>
+
+                <p>
+                    Accessible, multilingual property management and
+                    apartment-search assistance for landlords, tenants
+                    and prospective renters.
+                </p>
+            </section>
+
+
+            <section class="footer-column">
+                <h2 class="footer-heading">
+                    Platform
+                </h2>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="{{ url_for('listings_page') }}">
+                            Property listings
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('guided_search_page') }}">
+                            Guided apartment search
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('ai_assistant_page') }}">
+                            AI assistant
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('contact_page') }}">
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+
+            <section class="footer-column">
+                <h2 class="footer-heading">
+                    Account
+                </h2>
+
+                <ul class="footer-links">
+                    {% if request.session.get('username') %}
+
+                        {% set user_role = request.session.get('role') %}
+
+                        {% if user_role in ['landlord', 'property_manager'] %}
+                            <li>
+                                <a href="{{ url_for('landlord_dashboard') }}">
+                                    Landlord dashboard
+                                </a>
+                            </li>
+                        {% elif user_role == 'tenant' %}
+                            <li>
+                                <a href="{{ url_for('tenant_dashboard') }}">
+                                    Tenant dashboard
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    {% else %}
+                        <li>
+                            <a href="{{ url_for('login') }}">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('register') }}">
+                                Create an account
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </section>
+
+
+            <section class="footer-column">
+                <h2 class="footer-heading">
+                    Legal
+                </h2>
+
+                <nav aria-label="Legal information">
+                    <ul class="footer-links">
+                        <li>
+                            <a href="{{ url_for('impressum_page') }}">
+                                Impressum
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('datenschutz_page') }}">
+                                Datenschutz
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('privacy_page') }}">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('terms_page') }}">
+                                Terms of Use
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('ai_disclosure_page') }}">
+                                AI Information
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </section>
+
+        </div>
+
+
+        <div class="container site-footer__bottom">
+            <p>
+                &copy; {{ current_year | default(2026) }}
+                Smart Property AI. All rights reserved.
+            </p>
+
+            <p>
+                AI-generated information should be reviewed before making
+                legal, financial or tenancy decisions.
+            </p>
+        </div>
+    </footer>
+
+
+    <noscript>
+        <div class="noscript-warning">
+            JavaScript is disabled. Basic content remains available, but
+            voice assistance and interactive accessibility controls require
+            JavaScript.
+        </div>
+    </noscript>
+
+
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+
+    <script src="{{ url_for('static', path='js/language-selector.js') }}"></script>
+
+    <script src="{{ url_for('static', path='js/speech-output.js') }}"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

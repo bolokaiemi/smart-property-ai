@@ -1,0 +1,822 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Smart Property AI | Intelligent Property Management
+{% endblock %}
+
+
+{% block description %}
+Search for apartments, manage properties, submit maintenance requests and
+communicate in your preferred language with Smart Property AI.
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Hero section -->
+<section class="hero-section">
+    <div class="container hero-section__grid">
+
+        <div class="hero-content">
+            <p class="section-label">
+                Accessible property technology
+            </p>
+
+            <h1>
+                Find and manage properties with intelligent assistance
+            </h1>
+
+            <p class="hero-description">
+                Smart Property AI helps tenants, property seekers,
+                landlords and property managers communicate, complete
+                forms, schedule appointments and manage property services
+                in their preferred language.
+            </p>
+
+            <div class="hero-actions">
+                <a
+                    href="{{ url_for('listings_page') }}"
+                    class="button button--primary button--large"
+                >
+                    Search apartments
+                </a>
+
+                <a
+                    href="{{ url_for('guided_search_page') }}"
+                    class="button button--outline button--large"
+                >
+                    Start guided search
+                </a>
+
+                <button
+                    type="button"
+                    id="hero-voice-button"
+                    class="button button--voice button--large"
+                    aria-pressed="false"
+                >
+                    <span aria-hidden="true">🎤</span>
+                    Use voice assistance
+                </button>
+            </div>
+
+            <p
+                id="voice-status"
+                class="voice-status"
+                role="status"
+                aria-live="polite"
+            >
+                Voice assistance is ready.
+            </p>
+        </div>
+
+
+        <div
+            class="hero-assistant-card"
+            aria-label="Smart Property AI assistant preview"
+        >
+            <div class="assistant-card__header">
+                <span
+                    class="assistant-status"
+                    aria-hidden="true"
+                ></span>
+
+                <h2>Smart Property Assistant</h2>
+            </div>
+
+            <div class="assistant-conversation">
+
+                <div class="assistant-message assistant-message--ai">
+                    <span class="message-author">
+                        Smart Property AI
+                    </span>
+
+                    <p>
+                        Hello! I can help you find an apartment or manage
+                        a property. Which language would you like to use?
+                    </p>
+                </div>
+
+                <div class="assistant-message assistant-message--user">
+                    <span class="message-author">
+                        User
+                    </span>
+
+                    <p>
+                        I need a two-bedroom apartment near Herne.
+                    </p>
+                </div>
+
+                <div class="assistant-message assistant-message--ai">
+                    <span class="message-author">
+                        Smart Property AI
+                    </span>
+
+                    <p>
+                        I can help with that. What is your maximum
+                        monthly rent?
+                    </p>
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('ai_assistant_page') }}"
+                class="button button--primary button--full"
+            >
+                Open AI assistant
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Quick apartment search -->
+<section
+    class="quick-search-section"
+    aria-labelledby="quick-search-heading"
+>
+    <div class="container">
+
+        <div class="quick-search-card">
+
+            <div class="section-heading">
+                <p class="section-label">
+                    Apartment search
+                </p>
+
+                <h2 id="quick-search-heading">
+                    Find your next home
+                </h2>
+
+                <p>
+                    Enter your preferences or use the guided voice search.
+                </p>
+            </div>
+
+
+            <form
+                action="{{ url_for('search_listings') }}"
+                method="GET"
+                class="property-search-form"
+            >
+
+                <div class="form-group">
+                    <label for="search-location">
+                        Location
+                    </label>
+
+                    <input
+                        type="search"
+                        id="search-location"
+                        name="location"
+                        placeholder="For example, Herne"
+                        autocomplete="address-level2"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="search-property-type">
+                        Property type
+                    </label>
+
+                    <select
+                        id="search-property-type"
+                        name="property_type"
+                    >
+                        <option value="">All property types</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="studio">Studio</option>
+                        <option value="shared">Shared apartment</option>
+                        <option value="accessible">
+                            Accessible property
+                        </option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="search-rooms">
+                        Minimum rooms
+                    </label>
+
+                    <select
+                        id="search-rooms"
+                        name="rooms"
+                    >
+                        <option value="">Any number</option>
+                        <option value="1">1 room</option>
+                        <option value="2">2 rooms</option>
+                        <option value="3">3 rooms</option>
+                        <option value="4">4 rooms</option>
+                        <option value="5">5 or more rooms</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="search-rent">
+                        Maximum monthly rent
+                    </label>
+
+                    <input
+                        type="number"
+                        id="search-rent"
+                        name="max_rent"
+                        min="0"
+                        step="50"
+                        placeholder="For example, 1200"
+                        inputmode="decimal"
+                    >
+                </div>
+
+
+                <div class="form-group form-group--submit">
+                    <button
+                        type="submit"
+                        class="button button--primary button--full"
+                    >
+                        Search properties
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- User pathways -->
+<section
+    class="pathways-section"
+    aria-labelledby="pathways-heading"
+>
+    <div class="container">
+
+        <div class="section-heading section-heading--center">
+            <p class="section-label">
+                One connected platform
+            </p>
+
+            <h2 id="pathways-heading">
+                How would you like to use Smart Property AI?
+            </h2>
+        </div>
+
+
+        <div class="card-grid card-grid--three">
+
+            <article class="pathway-card">
+                <div class="card-icon" aria-hidden="true">
+                    🔍
+                </div>
+
+                <h3>Property seeker</h3>
+
+                <p>
+                    Search for suitable apartments, receive visual
+                    guidance, complete forms by voice and schedule
+                    property viewings.
+                </p>
+
+                <a
+                    href="{{ url_for('guided_search_page') }}"
+                    class="text-link"
+                >
+                    Start apartment search
+                    <span aria-hidden="true">→</span>
+                </a>
+            </article>
+
+
+            <article class="pathway-card">
+                <div class="card-icon" aria-hidden="true">
+                    🔑
+                </div>
+
+                <h3>Tenant</h3>
+
+                <p>
+                    Review your lease, check rent information, submit
+                    maintenance requests, upload images and communicate
+                    securely with property management.
+                </p>
+
+                {% if request.session.get('role') == 'tenant' %}
+                    <a
+                        href="{{ url_for('tenant_dashboard') }}"
+                        class="text-link"
+                    >
+                        Open tenant portal
+                        <span aria-hidden="true">→</span>
+                    </a>
+                {% else %}
+                    <a
+                        href="{{ url_for('login') }}?next=/tenant/dashboard"
+                        class="text-link"
+                    >
+                        Tenant login
+                        <span aria-hidden="true">→</span>
+                    </a>
+                {% endif %}
+            </article>
+
+
+            <article class="pathway-card">
+                <div class="card-icon" aria-hidden="true">
+                    🏢
+                </div>
+
+                <h3>Landlord or property manager</h3>
+
+                <p>
+                    Manage properties, tenants, complaints, leases,
+                    expenses, documents, communication and listing
+                    performance from one secure dashboard.
+                </p>
+
+                {% if request.session.get('role') in
+                    ['landlord', 'property_manager'] %}
+                    <a
+                        href="{{ url_for('landlord_dashboard') }}"
+                        class="text-link"
+                    >
+                        Open landlord portal
+                        <span aria-hidden="true">→</span>
+                    </a>
+                {% else %}
+                    <a
+                        href="{{ url_for('login') }}?next=/landlord/dashboard"
+                        class="text-link"
+                    >
+                        Landlord login
+                        <span aria-hidden="true">→</span>
+                    </a>
+                {% endif %}
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Main features -->
+<section
+    class="features-section"
+    aria-labelledby="features-heading"
+>
+    <div class="container">
+
+        <div class="section-heading section-heading--center">
+            <p class="section-label">
+                Smart Property AI features
+            </p>
+
+            <h2 id="features-heading">
+                Accessible property support from search to management
+            </h2>
+
+            <p>
+                The platform combines multilingual assistance,
+                automation, analytics and secure property-management
+                services.
+            </p>
+        </div>
+
+
+        <div class="card-grid card-grid--three">
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    🌍
+                </div>
+
+                <h3>Multilingual conversations</h3>
+
+                <p>
+                    Communicate with the assistant in your preferred
+                    language through written or spoken requests.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    🎤
+                </div>
+
+                <h3>Voice-activated forms</h3>
+
+                <p>
+                    Complete property searches, viewing requests and
+                    service forms using voice guidance and confirmation.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    👁️
+                </div>
+
+                <h3>Visual guidance</h3>
+
+                <p>
+                    Receive clear instructions that highlight the active
+                    field and explain what information is required.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    ✉️
+                </div>
+
+                <h3>Communication automation</h3>
+
+                <p>
+                    Coordinate approved communication through email,
+                    WhatsApp, telephone and platform messages.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    📅
+                </div>
+
+                <h3>Automatic reminders</h3>
+
+                <p>
+                    Send rent, lease-renewal and appointment reminders,
+                    including alerts 30 minutes before a viewing.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    📷
+                </div>
+
+                <h3>Image processing</h3>
+
+                <p>
+                    Upload property and maintenance images for organized
+                    review, classification and service-request handling.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    📊
+                </div>
+
+                <h3>Listing analytics</h3>
+
+                <p>
+                    Review impressions, property views, enquiries,
+                    application activity, logins and logouts connected
+                    with each listing.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    📄
+                </div>
+
+                <h3>Digital documents</h3>
+
+                <p>
+                    Securely organize leases, invoices, applications,
+                    reports and other authorized property documents.
+                </p>
+            </article>
+
+
+            <article class="feature-card">
+                <div class="card-icon" aria-hidden="true">
+                    🛡️
+                </div>
+
+                <h3>Privacy and security</h3>
+
+                <p>
+                    Protect sensitive information through role-based
+                    access, encrypted connections, audit records and
+                    controlled AI actions.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Automation workflow -->
+<section
+    class="automation-section"
+    aria-labelledby="automation-heading"
+>
+    <div class="container automation-section__grid">
+
+        <div class="automation-content">
+            <p class="section-label">
+                Property automation
+            </p>
+
+            <h2 id="automation-heading">
+                Reduce repetitive property-management tasks
+            </h2>
+
+            <p>
+                Smart Property AI helps authorized users coordinate
+                recurring communication and service workflows while
+                maintaining human oversight.
+            </p>
+
+            <ul class="check-list">
+                <li>Automated rent reminders</li>
+                <li>Lease-renewal notifications</li>
+                <li>Viewing reminders 30 minutes in advance</li>
+                <li>Maintenance-request follow-ups</li>
+                <li>Daily, weekly and monthly reports</li>
+                <li>Expense and invoice organization</li>
+            </ul>
+
+            {% if request.session.get('role') in
+                ['landlord', 'property_manager'] %}
+                <a
+                    href="{{ url_for('landlord_dashboard') }}"
+                    class="button button--primary"
+                >
+                    View your dashboard
+                </a>
+            {% else %}
+                <a
+                    href="{{ url_for('register') }}"
+                    class="button button--primary"
+                >
+                    Create landlord account
+                </a>
+            {% endif %}
+        </div>
+
+
+        <div
+            class="dashboard-preview"
+            aria-label="Landlord dashboard preview"
+        >
+            <div class="dashboard-preview__header">
+                <h3>Property overview</h3>
+                <span>Example data</span>
+            </div>
+
+            <div class="metric-grid">
+
+                <article class="metric-card">
+                    <span class="metric-label">
+                        Listing impressions
+                    </span>
+
+                    <strong class="metric-value">
+                        2,480
+                    </strong>
+
+                    <span class="metric-change metric-change--positive">
+                        +12% this month
+                    </span>
+                </article>
+
+
+                <article class="metric-card">
+                    <span class="metric-label">
+                        Occupied units
+                    </span>
+
+                    <strong class="metric-value">
+                        18
+                    </strong>
+
+                    <span class="metric-description">
+                        Out of 21 units
+                    </span>
+                </article>
+
+
+                <article class="metric-card">
+                    <span class="metric-label">
+                        Open maintenance
+                    </span>
+
+                    <strong class="metric-value">
+                        4
+                    </strong>
+
+                    <span class="metric-description">
+                        1 marked urgent
+                    </span>
+                </article>
+
+
+                <article class="metric-card">
+                    <span class="metric-label">
+                        Lease renewals
+                    </span>
+
+                    <strong class="metric-value">
+                        3
+                    </strong>
+
+                    <span class="metric-description">
+                        Due within 60 days
+                    </span>
+                </article>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Accessibility section -->
+<section
+    class="accessibility-section"
+    aria-labelledby="accessibility-heading"
+>
+    <div class="container accessibility-section__grid">
+
+        <div>
+            <p class="section-label">
+                Accessibility at the foundation
+            </p>
+
+            <h2 id="accessibility-heading">
+                Property services designed for more people
+            </h2>
+
+            <p>
+                The platform combines voice interaction, multilingual
+                content, keyboard navigation and clear visual guidance.
+                Users can always switch back to ordinary text and form
+                controls.
+            </p>
+        </div>
+
+
+        <div class="accessibility-feature-list">
+
+            <article>
+                <h3>Keyboard accessible</h3>
+                <p>
+                    Navigate forms, menus and controls without requiring
+                    a mouse.
+                </p>
+            </article>
+
+            <article>
+                <h3>Screen-reader support</h3>
+                <p>
+                    Semantic headings, visible labels and status messages
+                    help assistive technologies explain each action.
+                </p>
+            </article>
+
+            <article>
+                <h3>Voice and text choice</h3>
+                <p>
+                    Voice assistance remains optional, with text input
+                    available as a permanent alternative.
+                </p>
+            </article>
+
+            <article>
+                <h3>Readable presentation</h3>
+                <p>
+                    Text resizing, focus indicators and high-contrast
+                    controls support different visual needs.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Privacy and AI trust -->
+<section
+    class="trust-section"
+    aria-labelledby="trust-heading"
+>
+    <div class="container trust-section__grid">
+
+        <div class="trust-icon" aria-hidden="true">
+            🔐
+        </div>
+
+        <div class="trust-content">
+            <p class="section-label">
+                Privacy and responsible AI
+            </p>
+
+            <h2 id="trust-heading">
+                Sensitive property information requires strong protection
+            </h2>
+
+            <p>
+                Smart Property AI is designed around controlled access,
+                data minimization, secure document delivery, audit
+                records and human review of important decisions.
+            </p>
+
+            <ul class="check-list">
+                <li>Role-based access for landlords, tenants and staff</li>
+                <li>Protected documents and property records</li>
+                <li>Human review for legal and financial decisions</li>
+                <li>No automatic training from unreviewed conversations</li>
+                <li>Permission checks before sensitive actions</li>
+            </ul>
+
+            <div class="trust-links">
+                <a
+                    href="{{ url_for('datenschutz_page') }}"
+                    class="button button--outline"
+                >
+                    Read the Datenschutzerklärung
+                </a>
+
+                <a
+                    href="{{ url_for('ai_disclosure_page') }}"
+                    class="text-link"
+                >
+                    Learn how the AI works
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Final call to action -->
+<section
+    class="cta-section"
+    aria-labelledby="cta-heading"
+>
+    <div class="container cta-section__content">
+
+        <h2 id="cta-heading">
+            Ready to begin?
+        </h2>
+
+        <p>
+            Search for an apartment, open the multilingual assistant or
+            create an account to manage your property services.
+        </p>
+
+        <div class="cta-actions">
+            <a
+                href="{{ url_for('guided_search_page') }}"
+                class="button button--light button--large"
+            >
+                Start guided search
+            </a>
+
+            {% if not request.session.get('username') %}
+                <a
+                    href="{{ url_for('register') }}"
+                    class="button button--transparent button--large"
+                >
+                    Create an account
+                </a>
+            {% else %}
+                <a
+                    href="{{ url_for('ai_assistant_page') }}"
+                    class="button button--transparent button--large"
+                >
+                    Ask Smart Property AI
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/voice-forms.js') }}"></script>
+<script src="{{ url_for('static', path='js/guided-search.js') }}"></script>
+{% endblock %}
