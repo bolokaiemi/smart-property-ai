@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Account | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Create a tenant, applicant or landlord account for Smart Property AI.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/auth.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container auth-container--wide">
+
+        <article class="auth-card">
+            <header class="auth-header">
+                <div class="auth-icon" aria-hidden="true">
+                    🏠
+                </div>
+
+                <p class="section-label">
+                    Join Smart Property AI
+                </p>
+
+                <h1>Create your account</h1>
+
+                <p>
+                    Register to search for apartments, manage properties
+                    or access tenant services.
+                </p>
+            </header>
+
+
+            {% if error %}
+                <div
+                    class="auth-alert auth-alert--error"
+                    role="alert"
+                    aria-live="assertive"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            {% if errors %}
+                <div
+                    class="auth-alert auth-alert--error"
+                    role="alert"
+                    aria-live="assertive"
+                >
+                    <p>
+                        Please correct the following:
+                    </p>
+
+                    <ul>
+                        {% for form_error in errors %}
+                            <li>{{ form_error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+            <form
+                action="{{ url_for('register_submit') }}"
+                method="POST"
+                class="auth-form"
+                id="registration-form"
+            >
+
+                <fieldset class="auth-fieldset">
+                    <legend>Personal information</legend>
+
+                    <div class="auth-form-grid">
+
+                        <div class="auth-form-group">
+                            <label for="full-name">
+                                Full name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="full-name"
+                                name="full_name"
+                                value="{{ form_data.full_name | default('') }}"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                minlength="2"
+                                maxlength="150"
+                                required
+                                autofocus
+                            >
+                        </div>
+
+
+                        <div class="auth-form-group">
+                            <label for="register-username">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="register-username"
+                                name="username"
+                                value="{{ form_data.username | default('') }}"
+                                placeholder="Choose a username"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="100"
+                                pattern="[A-Za-z0-9._-]+"
+                                aria-describedby="username-help"
+                                spellcheck="false"
+                                required
+                            >
+
+                            <small
+                                id="username-help"
+                                class="auth-help"
+                            >
+                                Use letters, numbers, periods, hyphens
+                                or underscores.
+                            </small>
+                        </div>
+
+
+                        <div class="auth-form-group">
+                            <label for="register-email">
+                                Email address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="register-email"
+                                name="email"
+                                value="{{ form_data.email | default('') }}"
+                                placeholder="name@example.com"
+                                autocomplete="email"
+                                maxlength="255"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="auth-form-group">
+                            <label for="phone-number">
+                                Telephone number
+                                <span class="auth-optional">
+                                    Optional
+                                </span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone-number"
+                                name="phone_number"
+                                value="{{ form_data.phone_number | default('') }}"
+                                placeholder="+49..."
+                                autocomplete="tel"
+                                maxlength="40"
+                            >
+                        </div>
+
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="auth-fieldset">
+                    <legend>Account type</legend>
+
+                    <div class="auth-form-group">
+                        <label for="account-role">
+                            How will you use the platform?
+                        </label>
+
+                        <select
+                            id="account-role"
+                            name="role"
+                            required
+                        >
+                            <option value="">
+                                Select an account type
+                            </option>
+
+                            <option
+                                value="applicant"
+                                {% if form_data.role == 'applicant' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Apartment seeker
+                            </option>
+
+                            <option
+                                value="tenant"
+                                {% if form_data.role == 'tenant' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Tenant
+                            </option>
+
+                            <option
+                                value="landlord"
+                                {% if form_data.role == 'landlord' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Landlord
+                            </option>
+                        </select>
+
+                        <small class="auth-help">
+                            Property-manager, maintenance and administrator
+                            accounts must be assigned by an authorized
+                            administrator.
+                        </small>
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="auth-fieldset">
+                    <legend>Password</legend>
+
+                    <div class="auth-form-grid">
+
+                        <div class="auth-form-group">
+                            <label for="register-password">
+                                Password
+                            </label>
+
+                            <div class="auth-password-control">
+                                <input
+                                    type="password"
+                                    id="register-password"
+                                    name="password"
+                                    placeholder="Create a strong password"
+                                    autocomplete="new-password"
+                                    minlength="10"
+                                    maxlength="128"
+                                    aria-describedby="password-help password-strength"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="auth-password-toggle"
+                                    data-password-toggle="register-password"
+                                    aria-label="Show password"
+                                    aria-pressed="false"
+                                >
+                                    Show
+                                </button>
+                            </div>
+
+                            <small
+                                id="password-help"
+                                class="auth-help"
+                            >
+                                Use at least 10 characters, including
+                                uppercase, lowercase, a number and a
+                                special character.
+                            </small>
+
+                            <div
+                                id="password-strength"
+                                class="auth-password-strength"
+                                role="status"
+                                aria-live="polite"
+                            ></div>
+                        </div>
+
+
+                        <div class="auth-form-group">
+                            <label for="confirm-password">
+                                Confirm password
+                            </label>
+
+                            <div class="auth-password-control">
+                                <input
+                                    type="password"
+                                    id="confirm-password"
+                                    name="confirm_password"
+                                    placeholder="Enter the password again"
+                                    autocomplete="new-password"
+                                    minlength="10"
+                                    maxlength="128"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="auth-password-toggle"
+                                    data-password-toggle="confirm-password"
+                                    aria-label="Show password confirmation"
+                                    aria-pressed="false"
+                                >
+                                    Show
+                                </button>
+                            </div>
+
+                            <div
+                                id="password-match-status"
+                                class="auth-help"
+                                role="status"
+                                aria-live="polite"
+                            ></div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="auth-fieldset">
+                    <legend>Privacy and consent</legend>
+
+                    <div class="auth-consent-list">
+
+                        <label class="auth-checkbox auth-checkbox--top">
+                            <input
+                                type="checkbox"
+                                name="accept_privacy"
+                                value="yes"
+                                {% if form_data.accept_privacy %}
+                                    checked
+                                {% endif %}
+                                required
+                            >
+
+                            <span>
+                                I acknowledge the
+                                <a
+                                    href="{{ url_for('privacy_page') }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Privacy Policy
+                                </a>
+                                and
+                                <a
+                                    href="{{ url_for('datenschutz_page') }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Datenschutzerklärung
+                                </a>.
+                            </span>
+                        </label>
+
+
+                        <label class="auth-checkbox auth-checkbox--top">
+                            <input
+                                type="checkbox"
+                                name="accept_terms"
+                                value="yes"
+                                {% if form_data.accept_terms %}
+                                    checked
+                                {% endif %}
+                                required
+                            >
+
+                            <span>
+                                I accept the
+                                <a
+                                    href="{{ url_for('terms_page') }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Terms of Use
+                                </a>.
+                            </span>
+                        </label>
+
+
+                        <label class="auth-checkbox auth-checkbox--top">
+                            <input
+                                type="checkbox"
+                                name="model_training_consent"
+                                value="yes"
+                                {% if form_data.model_training_consent %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span>
+                                I voluntarily allow suitable information
+                                to be considered for improving the AI
+                                after privacy review and anonymization.
+                                This consent is optional and can be
+                                withdrawn.
+                            </span>
+                        </label>
+
+                    </div>
+                </fieldset>
+
+
+                <button
+                    type="submit"
+                    class="button button--primary button--full"
+                >
+                    Create account
+                </button>
+            </form>
+
+
+            <footer class="auth-footer">
+                <p>
+                    Already have an account?
+
+                    <a href="{{ url_for('login') }}">
+                        Login
+                    </a>
+                </p>
+            </footer>
+        </article>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/auth.js') }}"></script>
+{% endblock %}

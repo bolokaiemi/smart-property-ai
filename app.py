@@ -28,7 +28,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-
+from routes.auth_routes import router as auth_router
 from routes.main_routes import router as main_router
 
 from database.database import create_database_tables
@@ -373,9 +373,8 @@ app.mount(
 # 10. Register main routes
 # ==========================================================================
 
-app.include_router(
-    main_router
-)
+app.include_router(main_router)
+app.include_router(auth_router)
 
 
 # ==========================================================================
@@ -443,59 +442,6 @@ def temporary_page(
         status_code=status.HTTP_200_OK,
     )
 
-
-# --------------------------------------------------------------------------
-# Temporary authentication routes
-# --------------------------------------------------------------------------
-
-@app.get(
-    "/login",
-    name="login",
-)
-async def temporary_login_page():
-    return temporary_page(
-        title="Login",
-        message=(
-            "The secure login page will be connected through "
-            "routes/auth_routes.py."
-        ),
-    )
-
-
-@app.get(
-    "/register",
-    name="register",
-)
-async def temporary_register_page():
-    return temporary_page(
-        title="Create an account",
-        message=(
-            "Account registration will be connected through "
-            "routes/auth_routes.py."
-        ),
-    )
-
-
-@app.post(
-    "/logout",
-    name="logout",
-)
-async def temporary_logout(
-    request: Request,
-):
-    """
-    Clear the complete session and return to the homepage.
-
-    This endpoint can be removed after the permanent logout
-    route is created in auth_routes.py.
-    """
-
-    request.session.clear()
-
-    return RedirectResponse(
-        url="/",
-        status_code=status.HTTP_303_SEE_OTHER,
-    )
 
 
 # --------------------------------------------------------------------------

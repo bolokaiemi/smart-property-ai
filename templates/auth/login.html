@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Log in securely to your Smart Property AI account.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/auth.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container">
+
+        <article class="auth-card">
+            <header class="auth-header">
+                <div class="auth-icon" aria-hidden="true">
+                    🔐
+                </div>
+
+                <p class="section-label">
+                    Secure account access
+                </p>
+
+                <h1>Welcome back</h1>
+
+                <p>
+                    Log in to access your property services,
+                    messages and dashboard.
+                </p>
+            </header>
+
+
+            {% if success %}
+                <div
+                    class="auth-alert auth-alert--success"
+                    role="status"
+                    aria-live="polite"
+                >
+                    {{ success }}
+                </div>
+            {% endif %}
+
+
+            {% if error %}
+                <div
+                    class="auth-alert auth-alert--error"
+                    role="alert"
+                    aria-live="assertive"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            {% if errors %}
+                <div
+                    class="auth-alert auth-alert--error"
+                    role="alert"
+                    aria-live="assertive"
+                >
+                    <p>
+                        Please correct the following:
+                    </p>
+
+                    <ul>
+                        {% for form_error in errors %}
+                            <li>{{ form_error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+            <form
+                action="{{ url_for('login_submit') }}"
+                method="POST"
+                class="auth-form"
+                id="login-form"
+            >
+                <input
+                    type="hidden"
+                    name="next_url"
+                    value="{{ next_url | default('/') }}"
+                >
+
+
+                <div class="auth-form-group">
+                    <label for="username-or-email">
+                        Username or email address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username-or-email"
+                        name="username_or_email"
+                        value="{{ form_data.username_or_email | default('') }}"
+                        placeholder="Enter your username or email"
+                        autocomplete="username"
+                        spellcheck="false"
+                        maxlength="255"
+                        required
+                        autofocus
+                    >
+                </div>
+
+
+                <div class="auth-form-group">
+                    <div class="auth-label-row">
+                        <label for="login-password">
+                            Password
+                        </label>
+
+                        <a href="{{ url_for('forgot_password_page') }}">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <div class="auth-password-control">
+                        <input
+                            type="password"
+                            id="login-password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            maxlength="128"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="auth-password-toggle"
+                            data-password-toggle="login-password"
+                            aria-label="Show password"
+                            aria-pressed="false"
+                        >
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="auth-options">
+                    <label class="auth-checkbox">
+                        <input
+                            type="checkbox"
+                            name="remember_me"
+                            value="yes"
+                            {% if form_data.remember_me %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <span>Remember Me</span>
+                    </label>
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="button button--primary button--full"
+                >
+                    Login
+                </button>
+            </form>
+
+
+            <footer class="auth-footer">
+                <p>
+                    Do not have an account?
+
+                    <a href="{{ url_for('register') }}">
+                        Create an account
+                    </a>
+                </p>
+
+                <p class="auth-security-note">
+                    Never share your password or authentication code.
+                </p>
+            </footer>
+        </article>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/auth.js') }}"></script>
+{% endblock %}

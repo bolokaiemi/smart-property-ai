@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}
+Verify Email | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Verify the email address connected to your Smart Property AI account.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/auth.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container">
+
+        <article class="auth-card auth-card--center">
+            <header class="auth-header">
+
+                {% if error %}
+                    <div class="auth-icon auth-icon--error" aria-hidden="true">
+                        !
+                    </div>
+
+                    <p class="section-label">
+                        Verification problem
+                    </p>
+
+                    <h1>Email could not be verified</h1>
+                {% elif success %}
+                    <div class="auth-icon auth-icon--success" aria-hidden="true">
+                        ✉
+                    </div>
+
+                    <p class="section-label">
+                        Account created
+                    </p>
+
+                    <h1>Verify your email address</h1>
+                {% else %}
+                    <div class="auth-icon" aria-hidden="true">
+                        ✉
+                    </div>
+
+                    <p class="section-label">
+                        Email verification
+                    </p>
+
+                    <h1>Check your email</h1>
+                {% endif %}
+
+            </header>
+
+
+            {% if success %}
+                <div
+                    class="auth-alert auth-alert--success"
+                    role="status"
+                    aria-live="polite"
+                >
+                    {{ success }}
+                </div>
+            {% endif %}
+
+
+            {% if error %}
+                <div
+                    class="auth-alert auth-alert--error"
+                    role="alert"
+                    aria-live="assertive"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            {% if email %}
+                <p>
+                    A verification link has been prepared for:
+                </p>
+
+                <p class="auth-highlight">
+                    {{ email }}
+                </p>
+            {% endif %}
+
+
+            {% if verification_link %}
+                <div class="auth-development-box">
+                    <h2>Development verification link</h2>
+
+                    <p>
+                        Email delivery is not configured yet. Use this
+                        button to verify the account during local
+                        development.
+                    </p>
+
+                    <a
+                        href="{{ verification_link }}"
+                        class="button button--primary button--full"
+                    >
+                        Verify email address
+                    </a>
+
+                    <p class="auth-security-note">
+                        This link is for local development only.
+                        Verification links must be sent privately by
+                        email in production.
+                    </p>
+                </div>
+            {% elif not error %}
+                <div class="auth-instructions">
+                    <h2>What to do next</h2>
+
+                    <ol>
+                        <li>Open your email inbox.</li>
+                        <li>Find the Smart Property AI message.</li>
+                        <li>Click the verification link.</li>
+                        <li>Return to the login page.</li>
+                    </ol>
+                </div>
+            {% endif %}
+
+
+            <footer class="auth-footer">
+                <p>
+                    <a href="{{ url_for('login') }}">
+                        Continue to login
+                    </a>
+                </p>
+
+                {% if error %}
+                    <p>
+                        If the link expired, register again or contact
+                        platform support.
+                    </p>
+                {% endif %}
+            </footer>
+        </article>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/auth.js') }}"></script>
+{% endblock %}

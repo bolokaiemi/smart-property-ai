@@ -81,3 +81,112 @@
 2026-09-10 19:19:04,188 | INFO | smart_property_ai | GET /ai/assistant -> 200 1.23ms
 2026-09-10 19:19:09,490 | INFO | smart_property_ai | GET /ai/assistant -> 200 0.61ms
 2026-09-10 19:35:59,427 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-10 19:57:40,411 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-10 19:57:40,468 | INFO | smart_property_ai | Database tables are ready.
+2026-09-10 19:57:55,601 | INFO | smart_property_ai | GET / -> 200 45.02ms
+2026-09-10 19:57:55,946 | INFO | smart_property_ai | GET /static/css/style.css -> 200 141.85ms
+2026-09-10 19:57:55,948 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 141.05ms
+2026-09-10 19:57:55,948 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 138.25ms
+2026-09-10 19:57:55,949 | INFO | smart_property_ai | GET /static/js/main.js -> 404 138.64ms
+2026-09-10 19:57:55,951 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 138.29ms
+2026-09-10 19:57:55,952 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 136.38ms
+2026-09-10 19:57:55,956 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 404 3.71ms
+2026-09-10 19:57:55,957 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 404 4.38ms
+2026-09-10 19:57:56,215 | INFO | smart_property_ai | GET /static/images/favicon.ico -> 404 3.17ms
+2026-09-10 19:58:25,182 | INFO | smart_property_ai | GET /ai/assistant -> 200 56.61ms
+2026-09-10 19:58:25,293 | INFO | smart_property_ai | GET /favicon.ico -> 307 3.01ms
+2026-09-10 19:58:25,314 | INFO | smart_property_ai | GET /static/images/favicon.ico -> 404 14.62ms
+2026-09-10 19:59:40,703 | INFO | smart_property_ai | GET /listings -> 200 8.27ms
+2026-09-10 19:59:58,264 | INFO | smart_property_ai | GET /listings/guided-search -> 200 3.77ms
+2026-09-10 20:00:04,039 | INFO | smart_property_ai | GET /ai/assistant -> 200 0.95ms
+2026-09-10 20:00:47,725 | INFO | smart_property_ai | GET /ai/assistant -> 200 2.33ms
+2026-09-10 20:00:54,519 | INFO | smart_property_ai | GET /ai/assistant -> 200 1.39ms
+2026-09-10 20:01:05,859 | INFO | smart_property_ai | GET / -> 200 62.01ms
+2026-09-10 20:01:05,899 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 29.04ms
+2026-09-10 20:01:05,907 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 36.22ms
+2026-09-10 20:01:05,909 | INFO | smart_property_ai | GET /static/js/main.js -> 404 22.52ms
+2026-09-10 20:01:05,910 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 23.37ms
+2026-09-10 20:01:05,912 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 404 19.17ms
+2026-09-10 20:01:05,912 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 20.51ms
+2026-09-10 20:01:05,916 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 404 4.88ms
+2026-09-10 20:01:56,881 | INFO | smart_property_ai | GET /listings/search -> 200 2.84ms
+2026-09-10 20:02:55,755 | INFO | smart_property_ai | GET /listings/guided-search -> 200 0.65ms
+2026-09-10 20:04:13,800 | INFO | smart_property_ai | GET /ai/assistant -> 200 0.63ms
+2026-09-10 20:04:34,191 | INFO | smart_property_ai | GET /impressum -> 200 306.13ms
+2026-09-10 20:04:34,214 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 13.15ms
+2026-09-10 20:04:34,215 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 13.97ms
+2026-09-10 20:04:34,218 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 11.18ms
+2026-09-10 20:04:34,219 | INFO | smart_property_ai | GET /static/js/main.js -> 404 11.29ms
+2026-09-10 20:04:34,221 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 11.72ms
+2026-09-10 20:04:53,023 | INFO | smart_property_ai | GET /datenschutz -> 200 17.38ms
+2026-09-10 20:04:53,042 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 11.66ms
+2026-09-10 20:04:53,043 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 12.07ms
+2026-09-10 20:04:53,048 | INFO | smart_property_ai | GET /static/js/main.js -> 404 12.86ms
+2026-09-10 20:04:53,049 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 13.17ms
+2026-09-10 20:04:53,050 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 12.22ms
+2026-09-10 20:07:23,565 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 16:21:43,030 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 16:21:43,119 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 16:21:51,227 | INFO | smart_property_ai | GET /favicon.ico -> 307 3.04ms
+2026-09-11 16:21:51,256 | INFO | smart_property_ai | GET /static/images/favicon.ico -> 404 16.91ms
+2026-09-11 16:23:04,696 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 17:02:06,443 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 17:02:06,460 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 17:03:57,127 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 17:04:00,900 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 17:04:00,932 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 17:04:05,648 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 17:04:19,881 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 17:04:19,925 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 17:04:22,776 | INFO | smart_property_ai | GET / -> 200 271.40ms
+2026-09-11 17:04:24,084 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 958.73ms
+2026-09-11 17:04:24,095 | INFO | smart_property_ai | GET /static/css/style.css -> 200 961.09ms
+2026-09-11 17:04:24,106 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 940.61ms
+2026-09-11 17:04:24,109 | INFO | smart_property_ai | GET /static/js/main.js -> 200 943.76ms
+2026-09-11 17:04:24,116 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 949.28ms
+2026-09-11 17:04:24,122 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 954.39ms
+2026-09-11 17:04:24,230 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 49.07ms
+2026-09-11 17:04:24,252 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 404 73.10ms
+2026-09-11 17:04:24,267 | INFO | smart_property_ai | GET /static/js/auth.js -> 200 86.20ms
+2026-09-11 17:04:24,292 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 404 76.44ms
+2026-09-11 17:04:25,382 | INFO | smart_property_ai | GET /static/images/favicon.ico -> 404 35.86ms
+2026-09-11 17:04:38,443 | INFO | smart_property_ai | GET /ai/assistant -> 200 4.75ms
+2026-09-11 17:04:48,226 | INFO | smart_property_ai | GET /listings -> 200 2.31ms
+2026-09-11 17:05:16,721 | INFO | smart_property_ai | GET /listings/guided-search -> 200 2.13ms
+2026-09-11 17:05:30,302 | INFO | smart_property_ai | GET / -> 200 10.50ms
+2026-09-11 17:05:30,363 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 31.71ms
+2026-09-11 17:05:30,381 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 48.16ms
+2026-09-11 17:05:30,384 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 404 26.93ms
+2026-09-11 17:05:30,386 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 28.78ms
+2026-09-11 17:05:30,390 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 32.30ms
+2026-09-11 17:05:30,396 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 404 37.99ms
+2026-09-11 17:05:56,047 | INFO | smart_property_ai | GET /register -> 200 104.51ms
+2026-09-11 17:05:56,097 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 34.89ms
+2026-09-11 17:05:56,108 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 44.01ms
+2026-09-11 17:05:56,111 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 33.16ms
+2026-09-11 17:05:56,115 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 36.60ms
+2026-09-11 17:06:04,157 | INFO | smart_property_ai | GET /login -> 200 34.34ms
+2026-09-11 17:06:04,189 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 15.14ms
+2026-09-11 17:06:04,191 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 15.76ms
+2026-09-11 17:06:04,194 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 10.04ms
+2026-09-11 17:06:04,196 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 10.30ms
+2026-09-11 17:07:20,721 | INFO | smart_property_ai | GET /ai/assistant -> 200 2.93ms
+2026-09-11 20:35:08,786 | INFO | smart_property_ai | GET /ai/assistant -> 200 757.64ms
+2026-09-11 20:35:10,872 | INFO | smart_property_ai | GET /static/css/style.css -> 304 1287.15ms
+2026-09-11 20:36:22,211 | INFO | smart_property_ai | GET /listings/search -> 200 53.45ms
+2026-09-11 20:36:55,693 | INFO | smart_property_ai | GET /register -> 200 649.71ms
+2026-09-11 20:36:57,406 | INFO | smart_property_ai | GET /static/css/auth.css -> 304 1666.95ms
+2026-09-11 20:36:57,471 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 404 1725.83ms
+2026-09-11 20:36:57,475 | INFO | smart_property_ai | GET /static/css/responsive.css -> 404 87.83ms
+2026-09-11 20:36:57,477 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 404 90.25ms
+2026-09-11 20:36:57,480 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 404 92.05ms
+2026-09-11 20:36:57,483 | INFO | smart_property_ai | GET /static/js/main.js -> 304 95.03ms
+2026-09-11 20:36:57,505 | INFO | smart_property_ai | GET /static/js/auth.js -> 304 35.31ms
+2026-09-11 20:37:11,695 | INFO | smart_property_ai | GET /listings -> 200 11.18ms
+2026-09-11 20:50:08,134 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 20:50:13,321 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 20:50:13,350 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 20:50:34,591 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-11 20:50:47,892 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-11 20:50:48,049 | INFO | smart_property_ai | Database tables are ready.
+2026-09-11 20:50:48,197 | INFO | smart_property_ai | Shutting down Smart Property AI.
