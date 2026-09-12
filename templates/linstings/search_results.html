@@ -1,0 +1,1047 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Apartment search results") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {{ page_description|default(
+        "Search available apartments and rental properties."
+    ) }}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="search-results-page"
+    tabindex="-1"
+>
+    <!-- Breadcrumbs -->
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('listings_page') }}">
+                        Apartments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Search results
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Page header -->
+    <section
+        class="search-results-header"
+        aria-labelledby="search-results-title"
+    >
+        <div class="container">
+            <p class="eyebrow">
+                Apartment search
+            </p>
+
+            <h1 id="search-results-title">
+                Search results
+            </h1>
+
+            <p>
+                {% if pagination.total == 0 %}
+                    No available properties matched your search.
+                {% elif pagination.total == 1 %}
+                    1 available property matched your search.
+                {% else %}
+                    {{ pagination.total }} available properties
+                    matched your search.
+                {% endif %}
+            </p>
+
+            <div class="listing-hero-actions">
+                <a
+                    class="btn btn-secondary"
+                    href="{{ url_for('guided_search') }}"
+                >
+                    <span aria-hidden="true">🧭</span>
+                    Use guided search
+                </a>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-speech-target="search-results-title"
+                    aria-label="Read the search results heading aloud"
+                >
+                    <span aria-hidden="true">🔊</span>
+                    <span data-speech-label>Read aloud</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="section"
+        aria-label="Apartment search results and filters"
+    >
+        <div class="container">
+            {% if error_message %}
+                <div
+                    class="alert alert-error"
+                    role="alert"
+                >
+                    <strong>Search error:</strong>
+                    {{ error_message }}
+                </div>
+            {% endif %}
+
+            <div class="search-results-layout">
+
+                <!-- Filters -->
+                <aside
+                    class="filter-panel"
+                    aria-labelledby="filter-panel-title"
+                >
+                    <div class="filter-panel-header">
+                        <h2 id="filter-panel-title">
+                            Filter results
+                        </h2>
+
+                        <button
+                            type="button"
+                            class="filter-close-button"
+                            data-filter-close
+                            aria-label="Close search filters"
+                            hidden
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <form
+                        id="listing-filter-form"
+                        method="get"
+                        action="{{ url_for('search_listings') }}"
+                        data-listing-search-form
+                    >
+                        <div class="form-group">
+                            <label for="filter-query">
+                                Location or property
+                            </label>
+
+                            <div class="voice-input-group">
+                                <input
+                                    id="filter-query"
+                                    name="q"
+                                    type="search"
+                                    maxlength="200"
+                                    value="{{ filters.query_text or '' }}"
+                                    placeholder="City, postcode or address"
+                                    autocomplete="off"
+                                    data-search-suggestions
+                                >
+
+                                <button
+                                    type="button"
+                                    class="voice-button"
+                                    data-voice-input="filter-query"
+                                    aria-label="Enter location using your voice"
+                                >
+                                    <span aria-hidden="true">🎤</span>
+                                    <span class="sr-only" data-voice-label>
+                                        Use voice
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div
+                                class="search-suggestions"
+                                data-search-suggestions-list
+                                hidden
+                            ></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filter-city">
+                                City
+                            </label>
+
+                            <select
+                                id="filter-city"
+                                name="city"
+                            >
+                                <option value="">
+                                    All cities
+                                </option>
+
+                                {% for city in filter_options.cities %}
+                                    <option
+                                        value="{{ city }}"
+                                        {% if filters.city == city %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ city }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filter-property-type">
+                                Property type
+                            </label>
+
+                            <select
+                                id="filter-property-type"
+                                name="property_type"
+                            >
+                                <option value="">
+                                    All property types
+                                </option>
+
+                                {% for property_type in filter_options.property_types %}
+                                    <option
+                                        value="{{ property_type }}"
+                                        {% if filters.property_type == property_type %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ property_type
+                                            |replace("_", " ")
+                                            |title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="form-group">
+                                <label for="filter-minimum-rent">
+                                    Minimum rent
+                                </label>
+
+                                <input
+                                    id="filter-minimum-rent"
+                                    name="minimum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    value="{{ filters.minimum_rent if filters.minimum_rent is not none else '' }}"
+                                    placeholder="No minimum"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="filter-maximum-rent">
+                                    Maximum rent
+                                </label>
+
+                                <input
+                                    id="filter-maximum-rent"
+                                    name="maximum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    value="{{ filters.maximum_rent if filters.maximum_rent is not none else '' }}"
+                                    placeholder="No maximum"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <div class="form-group">
+                                <label for="filter-bedrooms">
+                                    Minimum bedrooms
+                                </label>
+
+                                <select
+                                    id="filter-bedrooms"
+                                    name="bedrooms"
+                                >
+                                    <option value="">
+                                        Any number
+                                    </option>
+
+                                    {% if filter_options.bedrooms %}
+                                        {% Dee for bedroom_count in filter_options.bedrooms %}
+                                            <option
+                                                value="{{ bedroom_count }}"
+                                                {% if filters.minimum_bedrooms == bedroom_count %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {% if bedroom_count == 0 %}
+                                                    Studio
+                                                {% elif bedroom_count == 1 %}
+                                                    1 bedroom
+                                                {% else %}
+                                                    {{ bedroom_count }}
+                                                    bedrooms
+                                                {% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for bedroom_count in range(0, 6) %}
+                                            <option
+                                                value="{{ bedroom_count }}"
+                                                {% if filters.minimum_bedrooms == bedroom_count %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {% if bedroom_count == 0 %}
+                                                    Studio
+                                                {% elif bedroom_count == 1 %}
+                                                    1 bedroom
+                                                {% elif bedroom_count == 5 %}
+                                                    5+ bedrooms
+                                                {% else %}
+                                                    {{ bedroom_count }}
+                                                    bedrooms
+                                                {% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="filter-bathrooms">
+                                    Minimum bathrooms
+                                </label>
+
+                                <select
+                                    id="filter-bathrooms"
+                                    name="bathrooms"
+                                >
+                                    <option value="">
+                                        Any number
+                                    </option>
+
+                                    {% for bathroom_count in range(1, 6) %}
+                                        <option
+                                            value="{{ bathroom_count }}"
+                                            {% if filters.minimum_bathrooms == bathroom_count %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ bathroom_count }}
+                                            {% if bathroom_count == 1 %}
+                                                bathroom
+                                            {% else %}
+                                                bathrooms
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filter-minimum-area">
+                                Minimum area (m²)
+                            </label>
+
+                            <input
+                                id="filter-minimum-area"
+                                name="minimum_area"
+                                type="number"
+                                min="0"
+                                step="1"
+                                inputmode="decimal"
+                                value="{{ filters.minimum_area if filters.minimum_area is not none else '' }}"
+                                placeholder="Any size"
+                            >
+                        </div>
+
+                        <fieldset class="filter-features">
+                            <legend>
+                                Property features
+                            </legend>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="accessible"
+                                    value="true"
+                                    {% if filters.accessible %}
+                                        checked
+                                    {% endif %}
+                                >
+                                <span>
+                                    Accessible or step-free
+                                </span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="furnished"
+                                    value="true"
+                                    {% if filters.furnished %}
+                                        checked
+                                    {% endif %}
+                                >
+                                <span>Furnished</span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="pets_allowed"
+                                    value="true"
+                                    {% if filters.pets_allowed %}
+                                        checked
+                                    {% endif %}
+                                >
+                                <span>Pets allowed</span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="parking"
+                                    value="true"
+                                    {% if filters.parking %}
+                                        checked
+                                    {% endif %}
+                                >
+                                <span>Parking available</span>
+                            </label>
+                        </fieldset>
+
+                        <input
+                            type="hidden"
+                            name="sort"
+                            value="{{ filters.sort|default('newest') }}"
+                        >
+
+                        <div class="filter-actions">
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Apply filters
+                            </button>
+
+                            <a
+                                class="btn btn-secondary"
+                                href="{{ url_for('search_listings') }}"
+                            >
+                                Clear all filters
+                            </a>
+                        </div>
+
+                        <p
+                            class="voice-status"
+                            data-voice-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+                    </form>
+                </aside>
+
+                <!-- Results -->
+                <div class="search-results-content">
+                    <div class="results-toolbar">
+                        <div>
+                            <button
+                                type="button"
+                                class="btn btn-secondary mobile-filter-button"
+                                data-filter-open
+                                aria-controls="listing-filter-form"
+                                aria-expanded="false"
+                            >
+                                <span aria-hidden="true">☰</span>
+                                Filters
+                            </button>
+
+                            <p
+                                class="results-count"
+                                role="status"
+                                aria-live="polite"
+                            >
+                                {% if pagination.total == 0 %}
+                                    No properties found
+                                {% elif pagination.total == 1 %}
+                                    1 property found
+                                {% else %}
+                                    {{ pagination.total }}
+                                    properties found
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <form
+                            method="get"
+                            action="{{ url_for('search_listings') }}"
+                            class="sort-form"
+                        >
+                            {% for name, value in query_values.items() %}
+                                {% if name != "sort" %}
+                                    <input
+                                        type="hidden"
+                                        name="{{ name }}"
+                                        value="{{ value }}"
+                                    >
+                                {% endif %}
+                            {% endfor %}
+
+                            <label for="results-sort">
+                                Sort by
+                            </label>
+
+                            <select
+                                id="results-sort"
+                                name="sort"
+                                data-auto-submit
+                            >
+                                <option
+                                    value="newest"
+                                    {% if filters.sort == "newest" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Newest first
+                                </option>
+
+                                <option
+                                    value="oldest"
+                                    {% if filters.sort == "oldest" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Oldest first
+                                </option>
+
+                                <option
+                                    value="rent_low"
+                                    {% if filters.sort == "rent_low" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Lowest rent first
+                                </option>
+
+                                <option
+                                    value="rent_high"
+                                    {% if filters.sort == "rent_high" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Highest rent first
+                                </option>
+
+                                <option
+                                    value="bedrooms_high"
+                                    {% if filters.sort == "bedrooms_high" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Most bedrooms
+                                </option>
+
+                                <option
+                                    value="city"
+                                    {% if filters.sort == "city" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    City A–Z
+                                </option>
+                            </select>
+
+                            <noscript>
+                                <button
+                                    type="submit"
+                                    class="btn btn-secondary"
+                                >
+                                    Sort
+                                </button>
+                            </noscript>
+                        </form>
+                    </div>
+
+                    <!-- Active filters -->
+                    {% set active_filter_count =
+                        (1 if filters.query_text else 0)
+                        + (1 if filters.city else 0)
+                        + (1 if filters.property_type else 0)
+                        + (1 if filters.minimum_rent is not none else 0)
+                        + (1 if filters.maximum_rent is not none else 0)
+                        + (1 if filters.minimum_bedrooms is not none else 0)
+                        + (1 if filters.minimum_bathrooms is not none else 0)
+                        + (1 if filters.minimum_area is not none else 0)
+                        + (1 if filters.furnished else 0)
+                        + (1 if filters.accessible else 0)
+                        + (1 if filters.pets_allowed else 0)
+                        + (1 if filters.parking else 0)
+                    %}
+
+                    {% if active_filter_count > 0 %}
+                        <div aria-labelledby="active-filters-title">
+                            <h2
+                                id="active-filters-title"
+                                class="sr-only"
+                            >
+                                Active search filters
+                            </h2>
+
+                            <ul class="active-filters">
+                                {% if filters.query_text %}
+                                    <li class="filter-chip">
+                                        Search:
+                                        {{ filters.query_text }}
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.city %}
+                                    <li class="filter-chip">
+                                        City: {{ filters.city }}
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.property_type %}
+                                    <li class="filter-chip">
+                                        Type:
+                                        {{ filters.property_type
+                                            |replace("_", " ")
+                                            |title }}
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.minimum_rent is not none %}
+                                    <li class="filter-chip">
+                                        Rent from
+                                        {{ filters.minimum_rent }}
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.maximum_rent is not none %}
+                                    <li class="filter-chip">
+                                        Rent up to
+                                        {{ filters.maximum_rent }}
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.minimum_bedrooms is not none %}
+                                    <li class="filter-chip">
+                                        {{ filters.minimum_bedrooms }}+
+                                        bedrooms
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.minimum_bathrooms is not none %}
+                                    <li class="filter-chip">
+                                        {{ filters.minimum_bathrooms }}+
+                                        bathrooms
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.minimum_area is not none %}
+                                    <li class="filter-chip">
+                                        {{ filters.minimum_area }}+ m²
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.accessible %}
+                                    <li class="filter-chip">
+                                        Accessible
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.furnished %}
+                                    <li class="filter-chip">
+                                        Furnished
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.pets_allowed %}
+                                    <li class="filter-chip">
+                                        Pets allowed
+                                    </li>
+                                {% endif %}
+
+                                {% if filters.parking %}
+                                    <li class="filter-chip">
+                                        Parking
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Property cards -->
+                    {% if listings %}
+                        <div
+                            class="listing-grid"
+                            aria-label="Matching properties"
+                        >
+                            {% for listing in listings %}
+                                <article class="listing-card">
+                                    <a
+                                        class="listing-card-image-link"
+                                        href="{{ url_for(
+                                            'listing_details',
+                                            property_id=listing.id
+                                        ) }}"
+                                        aria-label="View {{ listing.title }}"
+                                    >
+                                        <img
+                                            class="listing-card-image"
+                                            src="{{ listing.image_url }}"
+                                            alt=""
+                                            width="640"
+                                            height="400"
+                                            loading="lazy"
+                                            data-property-image
+                                        >
+
+                                        {% if listing.is_featured %}
+                                            <span class="listing-badge">
+                                                Featured
+                                            </span>
+                                        {% endif %}
+                                    </a>
+
+                                    <div class="listing-card-content">
+                                        <div class="listing-card-heading">
+                                            <div>
+                                                <p class="listing-location">
+                                                    <span aria-hidden="true">
+                                                        📍
+                                                    </span>
+
+                                                    {% if listing.city %}
+                                                        {{ listing.city }}
+                                                    {% else %}
+                                                        Location available
+                                                        on request
+                                                    {% endif %}
+                                                </p>
+
+                                                <h2>
+                                                    <a
+                                                        href="{{ url_for(
+                                                            'listing_details',
+                                                            property_id=listing.id
+                                                        ) }}"
+                                                    >
+                                                        {{ listing.title }}
+                                                    </a>
+                                                </h2>
+                                            </div>
+
+                                            {% if listing.minimum_rent is not none %}
+                                                <p class="listing-price">
+                                                    <span class="sr-only">
+                                                        Rent from
+                                                    </span>
+
+                                                    {{ "%.2f"|format(
+                                                        listing.minimum_rent
+                                                    ) }}
+
+                                                    <span>per month</span>
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if listing.description %}
+                                            <p class="listing-description">
+                                                {{ listing.description
+                                                    |truncate(
+                                                        145,
+                                                        true,
+                                                        "…"
+                                                    ) }}
+                                            </p>
+                                        {% endif %}
+
+                                        <ul
+                                            class="listing-facts"
+                                            aria-label="Property details"
+                                        >
+                                            <li>
+                                                <strong>
+                                                    {{ listing.available_units }}
+                                                </strong>
+
+                                                {% if listing.available_units == 1 %}
+                                                    unit available
+                                                {% else %}
+                                                    units available
+                                                {% endif %}
+                                            </li>
+
+                                            {% if listing.minimum_bedrooms is not none %}
+                                                <li>
+                                                    <strong>
+                                                        {{ listing.minimum_bedrooms }}
+                                                    </strong>
+
+                                                    {% if listing.minimum_bedrooms == 1 %}
+                                                        bedroom
+                                                    {% else %}
+                                                        bedrooms
+                                                    {% endif %}
+                                                </li>
+                                            {% endif %}
+
+                                            {% if listing.property_type %}
+                                                <li>
+                                                    {{ listing.property_type
+                                                        |replace("_", " ")
+                                                        |title }}
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+
+                                        {% if listing.accessibility_features %}
+                                            <div class="listing-accessibility">
+                                                <strong>
+                                                    Accessibility:
+                                                </strong>
+
+                                                {% if listing.accessibility_features is string %}
+                                                    {{ listing.accessibility_features
+                                                        |truncate(
+                                                            100,
+                                                            true,
+                                                            "…"
+                                                        ) }}
+                                                {% else %}
+                                                    {{ listing.accessibility_features
+                                                        |join(", ")
+                                                        |truncate(
+                                                            100,
+                                                            true,
+                                                            "…"
+                                                        ) }}
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="listing-card-actions">
+                                            <a
+                                                class="btn btn-primary"
+                                                href="{{ url_for(
+                                                    'listing_details',
+                                                    property_id=listing.id
+                                                ) }}"
+                                            >
+                                                View property
+                                            </a>
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-icon"
+                                                data-speech-target="result-summary-{{ listing.id }}"
+                                                aria-label="Read {{ listing.title }} aloud"
+                                            >
+                                                <span aria-hidden="true">
+                                                    🔊
+                                                </span>
+                                            </button>
+                                        </div>
+
+                                        <div
+                                            id="result-summary-{{ listing.id }}"
+                                            class="sr-only"
+                                        >
+                                            {{ listing.title }}.
+                                            {% if listing.city %}
+                                                Located in
+                                                {{ listing.city }}.
+                                            {% endif %}
+                                            {{ listing.available_units }}
+                                            units available.
+                                            {% if listing.minimum_rent is not none %}
+                                                Rent starts from
+                                                {{ listing.minimum_rent }}
+                                                per month.
+                                            {% endif %}
+                                            {{ listing.description }}
+                                        </div>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if pagination.pages > 1 %}
+                            <nav
+                                class="pagination"
+                                aria-label="Search results pages"
+                            >
+                                {% if pagination.has_previous %}
+                                    <a
+                                        href="{{ pagination.previous_url }}"
+                                        rel="prev"
+                                        aria-label="Go to previous page"
+                                    >
+                                        <span aria-hidden="true">←</span>
+                                    </a>
+                                {% else %}
+                                    <span
+                                        aria-disabled="true"
+                                        title="No previous page"
+                                    >
+                                        <span aria-hidden="true">←</span>
+                                    </span>
+                                {% endif %}
+
+                                {% set first_page =
+                                    1 if pagination.page - 2 < 1
+                                    else pagination.page - 2
+                                %}
+
+                                {% set last_page =
+                                    pagination.pages
+                                    if pagination.page + 2 > pagination.pages
+                                    else pagination.page + 2
+                                %}
+
+                                {% if first_page > 1 %}
+                                    <a
+                                        href="{{ request.url.path }}?{{ query_values|urlencode }}&page=1"
+                                        aria-label="Go to page 1"
+                                    >
+                                        1
+                                    </a>
+
+                                    {% if first_page > 2 %}
+                                        <span aria-hidden="true">…</span>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% for page_number in range(
+                                    first_page,
+                                    last_page + 1
+                                ) %}
+                                    {% if page_number == pagination.page %}
+                                        <span
+                                            class="current"
+                                            aria-current="page"
+                                            aria-label="Current page, page {{ page_number }}"
+                                        >
+                                            {{ page_number }}
+                                        </span>
+                                    {% else %}
+                                        <a
+                                            href="{{ request.url.path }}?{{ query_values|urlencode }}&page={{ page_number }}"
+                                            aria-label="Go to page {{ page_number }}"
+                                        >
+                                            {{ page_number }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if last_page < pagination.pages %}
+                                    {% if last_page < pagination.pages - 1 %}
+                                        <span aria-hidden="true">…</span>
+                                    {% endif %}
+
+                                    <a
+                                        href="{{ request.url.path }}?{{ query_values|urlencode }}&page={{ pagination.pages }}"
+                                        aria-label="Go to page {{ pagination.pages }}"
+                                    >
+                                        {{ pagination.pages }}
+                                    </a>
+                                {% endif %}
+
+                                {% if pagination.has_next %}
+                                    <a
+                                        href="{{ pagination.next_url }}"
+                                        rel="next"
+                                        aria-label="Go to next page"
+                                    >
+                                        <span aria-hidden="true">→</span>
+                                    </a>
+                                {% else %}
+                                    <span
+                                        aria-disabled="true"
+                                        title="No next page"
+                                    >
+                                        <span aria-hidden="true">→</span>
+                                    </span>
+                                {% endif %}
+                            </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="empty-state">
+                            <span
+                                class="empty-state-icon"
+                                aria-hidden="true"
+                            >
+                                🔎
+                            </span>
+
+                            <h2>No matching apartments found</h2>
+
+                            <p>
+                                Try increasing your rent range, changing
+                                the location or removing one or more
+                                property features.
+                            </p>
+
+                            <div class="empty-state-actions">
+                                <a
+                                    class="btn btn-primary"
+                                    href="{{ url_for('search_listings') }}"
+                                >
+                                    Clear search filters
+                                </a>
+
+                                <a
+                                    class="btn btn-secondary"
+                                    href="{{ url_for('guided_search') }}"
+                                >
+                                    Use guided search
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <p
+        class="sr-only"
+        data-listing-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}

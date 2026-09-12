@@ -1,0 +1,1152 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Book a property viewing") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Request a viewing appointment for an available unit at
+    {{ listing.title }}.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="appointment-page"
+    tabindex="-1"
+>
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('listings_page') }}">
+                        Apartments
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'listing_details',
+                            property_id=listing.id
+                        ) }}"
+                    >
+                        {{ listing.title }}
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Book a viewing
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <section
+        class="appointment-header"
+        aria-labelledby="appointment-title"
+    >
+        <div class="container">
+            <div class="appointment-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Property viewing
+                    </p>
+
+                    <h1 id="appointment-title">
+                        Book a viewing at {{ listing.title }}
+                    </h1>
+
+                    <p>
+                        Select your preferred date, time and viewing
+                        method. The property manager will review your
+                        request and send confirmation.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-speech-target="appointment-instructions"
+                    aria-label="Read viewing instructions aloud"
+                >
+                    <span aria-hidden="true">🔊</span>
+                    <span data-speech-label>
+                        Read instructions
+                    </span>
+                </button>
+            </div>
+
+            <div
+                id="appointment-instructions"
+                class="sr-only"
+            >
+                Book a property viewing for {{ listing.title }}.
+                Select an available unit, your preferred date and
+                time, and how you would like to attend. Appointment
+                requests must be confirmed by the property manager.
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment form -->
+    <section
+        class="appointment-section section"
+        aria-label="Viewing appointment request"
+    >
+        <div class="container">
+            <div class="appointment-layout">
+                <div class="appointment-form-column">
+                    {% if success_message %}
+                        <div
+                            class="alert alert-success"
+                            role="status"
+                        >
+                            {{ success_message }}
+                        </div>
+                    {% endif %}
+
+                    {% if error_message %}
+                        <div
+                            class="alert alert-error"
+                            role="alert"
+                        >
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
+
+                    <form
+                        id="viewing-appointment-form"
+                        class="appointment-form"
+                        method="post"
+                        action="{{ url_for(
+                            'listing_appointment',
+                            property_id=listing.id
+                        ) }}"
+                        data-appointment-form
+                    >
+                        {% if csrf_token %}
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token }}"
+                            >
+                        {% endif %}
+
+                        <!-- Unit -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="appointment-unit-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    1
+                                </span>
+
+                                <div>
+                                    <h2 id="appointment-unit-title">
+                                        Choose a unit
+                                    </h2>
+
+                                    <p>
+                                        Select the apartment you would
+                                        like to view.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                {% if units %}
+                                    <div class="form-group">
+                                        <label for="appointment-unit">
+                                            Available unit
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <select
+                                            id="appointment-unit"
+                                            name="unit_id"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select a unit
+                                            </option>
+
+                                            {% for unit in units %}
+                                                <option
+                                                    value="{{ unit.id }}"
+                                                    {% if (
+                                                        selected_unit
+                                                        and selected_unit.id
+                                                        == unit.id
+                                                    ) %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    {{ unit.unit_number
+                                                        |default(
+                                                            "Unit " ~ unit.id,
+                                                            true
+                                                        ) }}
+
+                                                    {% if unit.monthly_rent is not none %}
+                                                        —
+                                                        {{ "%.2f"|format(
+                                                            unit.monthly_rent
+                                                        ) }}
+                                                        per month
+                                                    {% endif %}
+
+                                                    {% if unit.bedrooms is not none %}
+                                                        —
+                                                        {% if unit.bedrooms == 0 %}
+                                                            Studio
+                                                        {% elif unit.bedrooms == 1 %}
+                                                            1 bedroom
+                                                        {% else %}
+                                                            {{ unit.bedrooms }}
+                                                            bedrooms
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <div
+                                        class="alert alert-warning"
+                                        role="alert"
+                                    >
+                                        This property does not currently
+                                        have an available unit.
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </section>
+
+                        <!-- Contact -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="appointment-contact-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    2
+                                </span>
+
+                                <div>
+                                    <h2 id="appointment-contact-title">
+                                        Your contact information
+                                    </h2>
+
+                                    <p>
+                                        We will use these details to
+                                        confirm the appointment.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <div class="appointment-form-grid">
+                                    <div class="form-group">
+                                        <label for="visitor-first-name">
+                                            First name
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="visitor-first-name"
+                                            name="first_name"
+                                            type="text"
+                                            required
+                                            maxlength="100"
+                                            autocomplete="given-name"
+                                            value="{{ current_user.first_name|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="visitor-last-name">
+                                            Last name
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="visitor-last-name"
+                                            name="last_name"
+                                            type="text"
+                                            required
+                                            maxlength="100"
+                                            autocomplete="family-name"
+                                            value="{{ current_user.last_name|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="visitor-email">
+                                            Email address
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="visitor-email"
+                                            name="email"
+                                            type="email"
+                                            required
+                                            maxlength="254"
+                                            autocomplete="email"
+                                            inputmode="email"
+                                            value="{{ current_user.email|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="visitor-phone">
+                                            Phone number
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <div class="voice-input-group">
+                                            <input
+                                                id="visitor-phone"
+                                                name="phone"
+                                                type="tel"
+                                                required
+                                                maxlength="30"
+                                                autocomplete="tel"
+                                                inputmode="tel"
+                                                value="{{ current_user.phone|default('', true) if current_user else '' }}"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="voice-button"
+                                                data-voice-input="visitor-phone"
+                                                aria-label="Enter phone number using voice"
+                                            >
+                                                <span aria-hidden="true">
+                                                    🎤
+                                                </span>
+
+                                                <span
+                                                    class="sr-only"
+                                                    data-voice-label
+                                                >
+                                                    Use voice
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group appointment-full-width">
+                                        <label for="visitor-language">
+                                            Preferred communication language
+                                        </label>
+
+                                        <select
+                                            id="visitor-language"
+                                            name="preferred_language"
+                                        >
+                                            <option value="en">
+                                                English
+                                            </option>
+                                            <option value="de">
+                                                Deutsch
+                                            </option>
+                                            <option value="fr">
+                                                Français
+                                            </option>
+                                            <option value="es">
+                                                Español
+                                            </option>
+                                            <option value="it">
+                                                Italiano
+                                            </option>
+                                            <option value="pt">
+                                                Português
+                                            </option>
+                                            <option value="nl">
+                                                Nederlands
+                                            </option>
+                                            <option value="pl">
+                                                Polski
+                                            </option>
+                                            <option value="tr">
+                                                Türkçe
+                                            </option>
+                                            <option value="ar">
+                                                العربية
+                                            </option>
+                                            <option value="hi">
+                                                हिन्दी
+                                            </option>
+                                            <option value="zh">
+                                                中文
+                                            </option>
+                                            <option value="ru">
+                                                Русский
+                                            </option>
+                                            <option value="sw">
+                                                Kiswahili
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Date and time -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="appointment-schedule-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    3
+                                </span>
+
+                                <div>
+                                    <h2 id="appointment-schedule-title">
+                                        Preferred date and time
+                                    </h2>
+
+                                    <p>
+                                        Provide a preferred appointment
+                                        and an optional alternative.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <div class="appointment-form-grid">
+                                    <div class="form-group">
+                                        <label for="preferred-date">
+                                            Preferred date
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="preferred-date"
+                                            name="preferred_date"
+                                            type="date"
+                                            required
+                                            data-future-date
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="preferred-time">
+                                            Preferred time
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="preferred-time"
+                                            name="preferred_time"
+                                            type="time"
+                                            required
+                                            step="900"
+                                        >
+
+                                        <p class="form-help">
+                                            Times are shown in the
+                                            property's local time zone.
+                                        </p>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="alternative-date">
+                                            Alternative date
+                                        </label>
+
+                                        <input
+                                            id="alternative-date"
+                                            name="alternative_date"
+                                            type="date"
+                                            data-future-date
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="alternative-time">
+                                            Alternative time
+                                        </label>
+
+                                        <input
+                                            id="alternative-time"
+                                            name="alternative_time"
+                                            type="time"
+                                            step="900"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="appointment-time-note"
+                                    role="note"
+                                >
+                                    <span aria-hidden="true">ℹ️</span>
+
+                                    <p>
+                                        This is an appointment request.
+                                        Do not travel to the property
+                                        until you receive confirmation
+                                        from the property manager.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Viewing type -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="viewing-type-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    4
+                                </span>
+
+                                <div>
+                                    <h2 id="viewing-type-title">
+                                        Choose a viewing method
+                                    </h2>
+
+                                    <p>
+                                        Select how you would prefer to
+                                        view the property.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <fieldset class="viewing-type-grid">
+                                    <legend class="sr-only">
+                                        Viewing method
+                                    </legend>
+
+                                    <label class="viewing-type-option">
+                                        <input
+                                            type="radio"
+                                            name="viewing_type"
+                                            value="in_person"
+                                            required
+                                            checked
+                                        >
+
+                                        <span
+                                            class="viewing-type-icon"
+                                            aria-hidden="true"
+                                        >
+                                            🏠
+                                        </span>
+
+                                        <span>
+                                            <strong>
+                                                In-person viewing
+                                            </strong>
+
+                                            <small>
+                                                Meet a representative
+                                                at the property.
+                                            </small>
+                                        </span>
+                                    </label>
+
+                                    <label class="viewing-type-option">
+                                        <input
+                                            type="radio"
+                                            name="viewing_type"
+                                            value="video_call"
+                                            required
+                                        >
+
+                                        <span
+                                            class="viewing-type-icon"
+                                            aria-hidden="true"
+                                        >
+                                            📹
+                                        </span>
+
+                                        <span>
+                                            <strong>
+                                                Live video viewing
+                                            </strong>
+
+                                            <small>
+                                                Join a guided property
+                                                tour by video call.
+                                            </small>
+                                        </span>
+                                    </label>
+
+                                    <label class="viewing-type-option">
+                                        <input
+                                            type="radio"
+                                            name="viewing_type"
+                                            value="recorded_tour"
+                                            required
+                                        >
+
+                                        <span
+                                            class="viewing-type-icon"
+                                            aria-hidden="true"
+                                        >
+                                            ▶️
+                                        </span>
+
+                                        <span>
+                                            <strong>
+                                                Recorded video tour
+                                            </strong>
+
+                                            <small>
+                                                Request a property
+                                                video to watch later.
+                                            </small>
+                                        </span>
+                                    </label>
+                                </fieldset>
+                            </div>
+                        </section>
+
+                        <!-- Accessibility accommodations -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="accommodations-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    5
+                                </span>
+
+                                <div>
+                                    <h2 id="accommodations-title">
+                                        Accessibility and communication
+                                    </h2>
+
+                                    <p>
+                                        Tell us whether you need
+                                        accommodations for the viewing.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <fieldset class="appointment-choice-group">
+                                    <legend>
+                                        Do you need an accommodation?
+                                    </legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="needs_accommodation"
+                                            value="false"
+                                            checked
+                                            data-accommodation-toggle="false"
+                                        >
+                                        No
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="needs_accommodation"
+                                            value="true"
+                                            data-accommodation-toggle="true"
+                                        >
+                                        Yes
+                                    </label>
+                                </fieldset>
+
+                                <div
+                                    class="form-group"
+                                    data-accommodation-details
+                                    hidden
+                                >
+                                    <label for="accommodation-details">
+                                        Accommodation request
+                                    </label>
+
+                                    <div class="voice-textarea-group">
+                                        <textarea
+                                            id="accommodation-details"
+                                            name="accommodation_details"
+                                            rows="4"
+                                            maxlength="1000"
+                                            placeholder="For example, step-free meeting point, sign-language interpreter or written communication"
+                                        ></textarea>
+
+                                        <button
+                                            type="button"
+                                            class="voice-button"
+                                            data-voice-input="accommodation-details"
+                                            aria-label="Enter accommodation request using voice"
+                                        >
+                                            <span aria-hidden="true">
+                                                🎤
+                                            </span>
+
+                                            <span data-voice-label>
+                                                Use voice
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="appointment-message">
+                                        Message to the property manager
+                                    </label>
+
+                                    <div class="voice-textarea-group">
+                                        <textarea
+                                            id="appointment-message"
+                                            name="message"
+                                            rows="5"
+                                            maxlength="1500"
+                                            placeholder="Add questions or useful details about your viewing request"
+                                        ></textarea>
+
+                                        <button
+                                            type="button"
+                                            class="voice-button"
+                                            data-voice-input="appointment-message"
+                                            aria-label="Enter appointment message using voice"
+                                        >
+                                            <span aria-hidden="true">
+                                                🎤
+                                            </span>
+
+                                            <span data-voice-label>
+                                                Use voice
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Reminders -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="reminders-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    6
+                                </span>
+
+                                <div>
+                                    <h2 id="reminders-title">
+                                        Appointment reminders
+                                    </h2>
+
+                                    <p>
+                                        Select how you want to receive
+                                        the 30-minute reminder.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <fieldset class="reminder-options">
+                                    <legend>
+                                        Reminder method
+                                    </legend>
+
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="reminder_email"
+                                            value="true"
+                                            checked
+                                        >
+                                        <span>Email reminder</span>
+                                    </label>
+
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="reminder_sms"
+                                            value="true"
+                                        >
+                                        <span>SMS reminder</span>
+                                    </label>
+
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="reminder_whatsapp"
+                                            value="true"
+                                        >
+                                        <span>WhatsApp reminder</span>
+                                    </label>
+
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="reminder_phone"
+                                            value="true"
+                                        >
+                                        <span>Automated phone reminder</span>
+                                    </label>
+                                </fieldset>
+
+                                <div
+                                    class="appointment-reminder-notice"
+                                    role="note"
+                                >
+                                    <span aria-hidden="true">⏰</span>
+
+                                    <p>
+                                        A reminder is scheduled
+                                        approximately 30 minutes before
+                                        a confirmed appointment. Message
+                                        delivery depends on the selected
+                                        communication provider.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Consent -->
+                        <section
+                            class="appointment-form-section"
+                            aria-labelledby="appointment-consent-title"
+                        >
+                            <header class="appointment-form-section-header">
+                                <span
+                                    class="appointment-section-number"
+                                    aria-hidden="true"
+                                >
+                                    7
+                                </span>
+
+                                <div>
+                                    <h2 id="appointment-consent-title">
+                                        Consent and confirmation
+                                    </h2>
+
+                                    <p>
+                                        Review these choices before
+                                        submitting your request.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="appointment-form-section-body">
+                                <div class="application-consents">
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="contact_consent"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I agree that the landlord
+                                            or property manager may
+                                            contact me about this
+                                            viewing request.
+                                        </span>
+                                    </label>
+
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="reminder_consent"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I agree to receive
+                                            appointment confirmations
+                                            and reminders using my
+                                            selected methods.
+                                        </span>
+                                    </label>
+
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="privacy_consent"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I have read the
+                                            <a
+                                                href="{{ url_for(
+                                                    'privacy_page'
+                                                ) }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                privacy notice
+                                                <span class="sr-only">
+                                                    opens in a new tab
+                                                </span>
+                                            </a>
+                                            and agree to the processing
+                                            of this appointment request.
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <footer class="appointment-form-actions">
+                            <a
+                                class="btn btn-secondary"
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {% if not units %}
+                                    disabled
+                                    aria-disabled="true"
+                                {% endif %}
+                            >
+                                Request viewing
+                            </button>
+                        </footer>
+
+                        <p
+                            class="appointment-form-status"
+                            data-appointment-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+
+                        <p
+                            class="voice-status"
+                            data-voice-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+                    </form>
+                </div>
+
+                <!-- Property summary -->
+                <aside
+                    class="appointment-sidebar"
+                    aria-labelledby="appointment-property-title"
+                >
+                    <article class="appointment-property-card">
+                        <img
+                            src="{{ listing.image_url }}"
+                            alt=""
+                            width="640"
+                            height="400"
+                            data-property-image
+                        >
+
+                        <div class="appointment-property-content">
+                            <p class="eyebrow">
+                                Viewing request
+                            </p>
+
+                            <h2 id="appointment-property-title">
+                                {{ listing.title }}
+                            </h2>
+
+                            <p class="listing-location">
+                                <span aria-hidden="true">📍</span>
+
+                                {% if listing.address %}
+                                    {{ listing.address }},
+                                {% endif %}
+
+                                {{ listing.city }}
+                            </p>
+
+                            {% if selected_unit %}
+                                <dl class="appointment-unit-summary">
+                                    <div>
+                                        <dt>Unit</dt>
+                                        <dd>
+                                            {{ selected_unit.unit_number
+                                                |default(
+                                                    "Unit " ~ selected_unit.id,
+                                                    true
+                                                ) }}
+                                        </dd>
+                                    </div>
+
+                                    {% if selected_unit.monthly_rent is not none %}
+                                        <div>
+                                            <dt>Monthly rent</dt>
+                                            <dd>
+                                                {{ "%.2f"|format(
+                                                    selected_unit.monthly_rent
+                                                ) }}
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if selected_unit.bedrooms is not none %}
+                                        <div>
+                                            <dt>Bedrooms</dt>
+                                            <dd>
+                                                {{ selected_unit.bedrooms }}
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if selected_unit.area_sqm is not none %}
+                                        <div>
+                                            <dt>Area</dt>
+                                            <dd>
+                                                {{ selected_unit.area_sqm }}
+                                                m²
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+                                </dl>
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Return to property details
+                            </a>
+                        </div>
+                    </article>
+
+                    <div class="appointment-information-card">
+                        <h2>
+                            Before your viewing
+                        </h2>
+
+                        <ul>
+                            <li>
+                                Wait for appointment confirmation.
+                            </li>
+                            <li>
+                                Bring identification only if requested.
+                            </li>
+                            <li>
+                                Do not make cash payments during a
+                                viewing.
+                            </li>
+                            <li>
+                                Tell the manager about accessibility
+                                needs in advance.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="appointment-information-card">
+                        <h2>
+                            <span aria-hidden="true">🔒</span>
+                            Privacy
+                        </h2>
+
+                        <p>
+                            Your contact information is used to manage
+                            this appointment request and its reminders.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}

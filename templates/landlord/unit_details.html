@@ -1,0 +1,904 @@
+{% extends "base.html" %}
+
+{% block title %}
+Unit {{ unit.unit_number }} | Smart Property AI
+{% endblock %}
+
+{% block description %}
+View and manage apartment unit {{ unit.unit_number }}, its rent, availability, accessibility features and lease status.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/property.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="property-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="property-breadcrumb"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('properties_page') }}">
+                        Properties
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'property_details',
+                            property_id=unit.property_id
+                        ) }}"
+                    >
+                        Property
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'units_page',
+                            property_id=unit.property_id
+                        ) }}"
+                    >
+                        Units
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Unit {{ unit.unit_number }}
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Status messages -->
+        {% if success %}
+            <div
+                class="property-alert property-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="property-alert property-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        <!-- Unit header -->
+        <header class="property-details-header">
+            <div class="property-details-title">
+                <div class="property-details-icon" aria-hidden="true">
+                    🚪
+                </div>
+
+                <div>
+                    <div class="property-heading-status">
+                        <p class="section-label">
+                            Apartment unit
+                        </p>
+
+                        <span
+                            class="
+                                unit-status
+                                unit-status--{{ unit.status.value }}
+                            "
+                        >
+                            {{ unit.status.value
+                                | replace('_', ' ')
+                                | title }}
+                        </span>
+                    </div>
+
+                    <h1>Unit {{ unit.unit_number }}</h1>
+
+                    <p class="unit-property-reference">
+                        Property ID:
+                        <span>{{ unit.property_id }}</span>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="property-details-actions">
+                <a
+                    href="{{ url_for(
+                        'units_page',
+                        property_id=unit.property_id
+                    ) }}"
+                    class="button button--outline"
+                >
+                    All units
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'edit_unit_page',
+                        unit_id=unit.id
+                    ) }}#unit-form-panel"
+                    class="button button--primary"
+                >
+                    Edit unit
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Summary cards -->
+        <section
+            class="unit-detail-statistics"
+            aria-labelledby="unit-summary-heading"
+        >
+            <h2
+                id="unit-summary-heading"
+                class="sr-only"
+            >
+                Apartment-unit summary
+            </h2>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Monthly rent
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ unit.currency }}
+                    {{ "%.2f" | format(unit.monthly_rent) }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Total rooms
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ unit.rooms }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Bedrooms
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ unit.bedrooms }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Bathrooms
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ unit.bathrooms }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Area
+                </span>
+
+                <strong class="property-statistic-value">
+                    {% if unit.area_square_metres is not none %}
+                        {{ unit.area_square_metres }} m²
+                    {% else %}
+                        —
+                    {% endif %}
+                </strong>
+            </article>
+        </section>
+
+
+        <div class="property-details-grid">
+
+            <!-- Main column -->
+            <div class="property-details-main">
+
+                <!-- Unit information -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Apartment information
+                            </p>
+
+                            <h2>Unit details</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'edit_unit_page',
+                                unit_id=unit.id
+                            ) }}#unit-form-panel"
+                            class="property-action-link"
+                        >
+                            Edit
+                        </a>
+                    </header>
+
+
+                    <dl class="unit-detail-list">
+                        <div>
+                            <dt>Unit number</dt>
+                            <dd>{{ unit.unit_number }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Floor</dt>
+                            <dd>
+                                {{ unit.floor | default(
+                                    'Not recorded',
+                                    true
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Total rooms</dt>
+                            <dd>{{ unit.rooms }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Bedrooms</dt>
+                            <dd>{{ unit.bedrooms }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Bathrooms</dt>
+                            <dd>{{ unit.bathrooms }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Area</dt>
+                            <dd>
+                                {% if unit.area_square_metres is not none %}
+                                    {{ unit.area_square_metres }} m²
+                                {% else %}
+                                    Not recorded
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+                </article>
+
+
+                <!-- Rent -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Financial information
+                            </p>
+
+                            <h2>Rent and deposit</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'edit_unit_page',
+                                unit_id=unit.id
+                            ) }}#unit-form-panel"
+                            class="property-action-link"
+                        >
+                            Edit
+                        </a>
+                    </header>
+
+
+                    <dl class="unit-financial-summary">
+                        <div>
+                            <dt>Monthly rent</dt>
+
+                            <dd>
+                                {{ unit.currency }}
+                                {{ "%.2f" | format(
+                                    unit.monthly_rent
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Deposit</dt>
+
+                            <dd>
+                                {% if unit.deposit_amount is not none %}
+                                    {{ unit.currency }}
+                                    {{ "%.2f" | format(
+                                        unit.deposit_amount
+                                    ) }}
+                                {% else %}
+                                    Not recorded
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Currency</dt>
+                            <dd>{{ unit.currency }}</dd>
+                        </div>
+                    </dl>
+
+                    <p class="property-panel-note">
+                        Payment details and transaction information should
+                        be managed through the protected lease and payment
+                        services, not through general property notes.
+                    </p>
+                </article>
+
+
+                <!-- Features -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Accessibility and occupancy
+                            </p>
+
+                            <h2>Unit features</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'edit_unit_page',
+                                unit_id=unit.id
+                            ) }}#unit-form-panel"
+                            class="property-action-link"
+                        >
+                            Edit
+                        </a>
+                    </header>
+
+
+                    <div class="unit-detail-features">
+                        <article
+                            class="
+                                unit-detail-feature
+                                {% if unit.wheelchair_accessible %}
+                                    unit-detail-feature--active
+                                {% endif %}
+                            "
+                        >
+                            <span
+                                class="unit-detail-feature-icon"
+                                aria-hidden="true"
+                            >
+                                ♿
+                            </span>
+
+                            <div>
+                                <h3>Wheelchair accessibility</h3>
+
+                                <p>
+                                    {% if unit.wheelchair_accessible %}
+                                        This unit is recorded as wheelchair
+                                        accessible.
+                                    {% else %}
+                                        Wheelchair accessibility has not
+                                        been confirmed for this unit.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </article>
+
+
+                        <article
+                            class="
+                                unit-detail-feature
+                                {% if unit.pets_allowed %}
+                                    unit-detail-feature--active
+                                {% endif %}
+                            "
+                        >
+                            <span
+                                class="unit-detail-feature-icon"
+                                aria-hidden="true"
+                            >
+                                🐾
+                            </span>
+
+                            <div>
+                                <h3>Pets</h3>
+
+                                <p>
+                                    {% if unit.pets_allowed %}
+                                        Pets are recorded as allowed in
+                                        this unit.
+                                    {% else %}
+                                        Pets are not currently recorded as
+                                        allowed.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <p class="property-panel-note">
+                        Confirm accessibility and pet information before
+                        publishing it in a public listing.
+                    </p>
+                </article>
+
+
+                <!-- Lease -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Tenancy
+                            </p>
+
+                            <h2>Current lease</h2>
+                        </div>
+                    </header>
+
+
+                    {% if active_lease %}
+                        <div class="unit-lease-status">
+                            <div
+                                class="unit-lease-status-icon"
+                                aria-hidden="true"
+                            >
+                                📄
+                            </div>
+
+                            <div>
+                                <h3>Active lease</h3>
+
+                                <p>
+                                    This unit is connected to an active
+                                    tenancy.
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <dl class="unit-detail-list">
+                            <div>
+                                <dt>Lease status</dt>
+
+                                <dd>
+                                    {{ active_lease.status.value
+                                        | replace('_', ' ')
+                                        | title }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Start date</dt>
+
+                                <dd>
+                                    {{ active_lease.start_date.strftime(
+                                        '%d %B %Y'
+                                    ) }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>End date</dt>
+
+                                <dd>
+                                    {% if active_lease.end_date %}
+                                        {{ active_lease.end_date.strftime(
+                                            '%d %B %Y'
+                                        ) }}
+                                    {% else %}
+                                        Open-ended
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Lease rent</dt>
+
+                                <dd>
+                                    {{ active_lease.currency }}
+                                    {{ "%.2f" | format(
+                                        active_lease.monthly_rent
+                                    ) }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Payment due day</dt>
+
+                                <dd>
+                                    Day
+                                    {{ active_lease.payment_due_day }}
+                                    of each month
+                                </dd>
+                            </div>
+                        </dl>
+
+                        <p class="property-panel-note">
+                            Tenant names and private lease documents should
+                            be displayed only through the protected lease
+                            management section.
+                        </p>
+                    {% else %}
+                        <div class="property-panel-empty">
+                            <div
+                                class="property-empty-icon"
+                                aria-hidden="true"
+                            >
+                                📄
+                            </div>
+
+                            <h3>No active lease</h3>
+
+                            <p>
+                                This unit is not currently connected to an
+                                active or expiring lease.
+                            </p>
+                        </div>
+                    {% endif %}
+                </article>
+
+            </div>
+
+
+            <!-- Sidebar -->
+            <aside class="property-details-sidebar">
+
+                <!-- Status -->
+                <section class="property-sidebar-panel">
+                    <h2>Unit status</h2>
+
+                    <p>
+                        Current status:
+                    </p>
+
+                    <p>
+                        <span
+                            class="
+                                unit-status
+                                unit-status--{{ unit.status.value }}
+                            "
+                        >
+                            {{ unit.status.value
+                                | replace('_', ' ')
+                                | title }}
+                        </span>
+                    </p>
+
+
+                    <form
+                        action="{{ url_for(
+                            'change_unit_status',
+                            unit_id=unit.id
+                        ) }}"
+                        method="POST"
+                        class="unit-status-form"
+                    >
+                        <div class="property-form-group">
+                            <label for="new-unit-status">
+                                Change status
+                            </label>
+
+                            <select
+                                id="new-unit-status"
+                                name="new_status"
+                                required
+                            >
+                                {% for status_option in unit_statuses %}
+                                    <option
+                                        value="{{ status_option.value }}"
+                                        {% if unit.status == status_option %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ status_option.value
+                                            | replace('_', ' ')
+                                            | title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="button button--primary button--full"
+                        >
+                            Update status
+                        </button>
+                    </form>
+
+
+                    {% if unit.status.value != 'unavailable' %}
+                        <form
+                            action="{{ url_for(
+                                'deactivate_unit',
+                                unit_id=unit.id
+                            ) }}"
+                            method="POST"
+                            data-confirm-form
+                            data-confirm-message="Mark unit {{ unit.unit_number }} as unavailable?"
+                        >
+                            <button
+                                type="submit"
+                                class="button button--outline button--full"
+                            >
+                                Mark unavailable
+                            </button>
+                        </form>
+                    {% endif %}
+                </section>
+
+
+                <!-- Record information -->
+                <section class="property-sidebar-panel">
+                    <h2>Record information</h2>
+
+                    <dl class="property-information-list">
+                        <div>
+                            <dt>Unit ID</dt>
+
+                            <dd class="property-id">
+                                {{ unit.id }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Property ID</dt>
+
+                            <dd class="property-id">
+                                {{ unit.property_id }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Created</dt>
+
+                            <dd>
+                                {{ unit.created_at.strftime(
+                                    '%d %B %Y'
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Last updated</dt>
+
+                            <dd>
+                                {{ unit.updated_at.strftime(
+                                    '%d %B %Y'
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Has history</dt>
+
+                            <dd>
+                                {% if has_history %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    {% if history_message %}
+                        <p class="property-panel-note">
+                            {{ history_message }}
+                        </p>
+                    {% endif %}
+                </section>
+
+
+                <!-- Quick links -->
+                <section class="property-sidebar-panel">
+                    <h2>Quick actions</h2>
+
+                    <div class="property-quick-actions">
+                        <a
+                            href="{{ url_for(
+                                'edit_unit_page',
+                                unit_id=unit.id
+                            ) }}#unit-form-panel"
+                            class="button button--outline button--full"
+                        >
+                            Edit unit
+                        </a>
+
+                        <a
+                            href="{{ url_for(
+                                'units_page',
+                                property_id=unit.property_id
+                            ) }}"
+                            class="button button--outline button--full"
+                        >
+                            View all units
+                        </a>
+
+                        <a
+                            href="{{ url_for(
+                                'property_details',
+                                property_id=unit.property_id
+                            ) }}"
+                            class="button button--outline button--full"
+                        >
+                            View property
+                        </a>
+                    </div>
+                </section>
+
+
+                <!-- Delete section -->
+                <section class="property-sidebar-panel property-delete-panel">
+                    <h2>Remove unit</h2>
+
+                    {% if has_history %}
+                        <p>
+                            This unit has lease or listing history and
+                            cannot be permanently deleted. Mark it
+                            unavailable instead.
+                        </p>
+
+                        {% if unit.status.value != 'unavailable' %}
+                            <form
+                                action="{{ url_for(
+                                    'deactivate_unit',
+                                    unit_id=unit.id
+                                ) }}"
+                                method="POST"
+                                data-confirm-form
+                                data-confirm-message="Mark unit {{ unit.unit_number }} as unavailable?"
+                            >
+                                <button
+                                    type="submit"
+                                    class="button property-danger-button button--full"
+                                >
+                                    Mark unavailable
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p>
+                            This unit has no lease or listing history. It
+                            can be permanently deleted.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="button property-danger-button button--full"
+                            data-delete-unit-button="{{ unit.id }}"
+                            data-unit-number="{{ unit.unit_number }}"
+                        >
+                            Delete unit
+                        </button>
+                    {% endif %}
+                </section>
+
+
+                <!-- Privacy -->
+                <section class="property-sidebar-panel property-privacy-panel">
+                    <div aria-hidden="true">
+                        🔐
+                    </div>
+
+                    <h2>Protected information</h2>
+
+                    <p>
+                        Unit and lease details are available only to
+                        authorized property-management users.
+                    </p>
+                </section>
+
+            </aside>
+        </div>
+
+
+        <!-- Delete confirmation dialog -->
+        {% if not has_history %}
+            <dialog
+                id="delete-unit-dialog"
+                class="property-dialog"
+                aria-labelledby="delete-unit-title"
+            >
+                <form
+                    method="POST"
+                    id="delete-unit-form"
+                    action="{{ url_for(
+                        'delete_unit',
+                        unit_id=unit.id
+                    ) }}"
+                >
+                    <header class="property-dialog-header">
+                        <div
+                            class="property-dialog-icon"
+                            aria-hidden="true"
+                        >
+                            ⚠️
+                        </div>
+
+                        <div>
+                            <p class="section-label">
+                                Permanent action
+                            </p>
+
+                            <h2 id="delete-unit-title">
+                                Delete unit {{ unit.unit_number }}
+                            </h2>
+                        </div>
+                    </header>
+
+                    <p>
+                        This action permanently deletes the unit. It
+                        cannot be reversed.
+                    </p>
+
+                    <div class="property-form-group">
+                        <label for="confirm-unit-number">
+                            Enter
+                            <strong>{{ unit.unit_number }}</strong>
+                            to confirm
+                        </label>
+
+                        <input
+                            type="text"
+                            id="confirm-unit-number"
+                            name="confirm_unit_number"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+
+                    <div class="property-dialog-actions">
+                        <button
+                            type="button"
+                            id="cancel-delete-unit"
+                            class="button button--outline"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="button property-danger-button"
+                        >
+                            Permanently delete
+                        </button>
+                    </div>
+                </form>
+            </dialog>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/property.js') }}"></script>
+{% endblock %}

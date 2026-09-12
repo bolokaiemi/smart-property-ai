@@ -1,0 +1,834 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Guided apartment search") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {{ page_description|default(
+        "Find an apartment using accessible step-by-step guidance."
+    ) }}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="guided-search-page"
+    tabindex="-1"
+>
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('listings_page') }}">
+                        Apartments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Guided search
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <section
+        class="guided-search-introduction"
+        aria-labelledby="guided-search-title"
+    >
+        <div class="container">
+            <div class="guided-introduction-grid">
+                <div>
+                    <p class="eyebrow">
+                        Accessible apartment search
+                    </p>
+
+                    <h1 id="guided-search-title">
+                        Let us find your next home together
+                    </h1>
+
+                    <p>
+                        Answer a few questions one step at a time.
+                        You can type, use voice input or ask the page
+                        to read each step aloud.
+                    </p>
+                </div>
+
+                <aside
+                    class="guided-search-help"
+                    aria-labelledby="guided-help-title"
+                >
+                    <h2 id="guided-help-title">
+                        How guided search works
+                    </h2>
+
+                    <ol>
+                        <li>Tell us where you want to live.</li>
+                        <li>Choose your rent and apartment size.</li>
+                        <li>Select important property features.</li>
+                        <li>Review your choices and search.</li>
+                    </ol>
+
+                    <p>
+                        Your draft is stored only in this browser and
+                        is removed when you submit or clear the form.
+                    </p>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="guided-search-section section"
+        aria-labelledby="guided-form-title"
+    >
+        <div class="container">
+            <form
+                id="guided-search-form"
+                class="guided-search-form"
+                method="get"
+                action="{{ url_for('search_listings') }}"
+                data-guided-search
+                novalidate
+            >
+                <header class="guided-search-form-header">
+                    <div>
+                        <h2 id="guided-form-title">
+                            Your apartment preferences
+                        </h2>
+
+                        <p data-guided-progress-text>
+                            Step 1 of 5
+                        </p>
+                    </div>
+
+                    <label class="guided-speech-option">
+                        <input
+                            type="checkbox"
+                            data-guided-speech-toggle
+                        >
+
+                        <span aria-hidden="true">🔊</span>
+                        Read each step aloud
+                    </label>
+
+                    <progress
+                        class="guided-search-progress"
+                        data-guided-progress
+                        value="1"
+                        max="5"
+                        aria-label="Guided-search progress"
+                    >
+                        Step 1 of 5
+                    </progress>
+                </header>
+
+                <!-- Step 1: Location -->
+                <section
+                    class="guided-search-step"
+                    data-search-step
+                    data-speech-text="Step one. Tell us where you would like to live. You may enter a city, postcode or address."
+                    aria-labelledby="location-step-title"
+                >
+                    <div class="guided-step-heading">
+                        <span
+                            class="guided-step-number"
+                            aria-hidden="true"
+                        >
+                            1
+                        </span>
+
+                        <div>
+                            <p class="guided-step-label">
+                                Location
+                            </p>
+
+                            <h2
+                                id="location-step-title"
+                                data-step-heading
+                                tabindex="-1"
+                            >
+                                Where would you like to live?
+                            </h2>
+
+                            <p>
+                                Enter a location, or select one of the
+                                available cities.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="guided-step-content">
+                        <div class="form-group">
+                            <label for="guided-query">
+                                City, postcode, address or property
+                                <span
+                                    class="required-indicator"
+                                    aria-hidden="true"
+                                >
+                                    *
+                                </span>
+                            </label>
+
+                            <div class="voice-input-group">
+                                <input
+                                    id="guided-query"
+                                    name="q"
+                                    type="search"
+                                    required
+                                    maxlength="200"
+                                    autocomplete="off"
+                                    placeholder="For example, Berlin"
+                                    data-summary-label="Search location"
+                                    data-search-suggestions
+                                    aria-describedby="guided-query-help"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="voice-button"
+                                    data-voice-input="guided-query"
+                                    aria-label="Enter your preferred location using voice"
+                                >
+                                    <span aria-hidden="true">🎤</span>
+
+                                    <span
+                                        class="sr-only"
+                                        data-voice-label
+                                    >
+                                        Use voice
+                                    </span>
+                                </button>
+                            </div>
+
+                            <p
+                                id="guided-query-help"
+                                class="form-help"
+                            >
+                                Required. Type a location or use your
+                                microphone.
+                            </p>
+
+                            <div
+                                class="search-suggestions"
+                                data-search-suggestions-list
+                                hidden
+                            ></div>
+                        </div>
+
+                        {% if filter_options.cities %}
+                            <div class="form-group">
+                                <label for="guided-city">
+                                    Available city
+                                </label>
+
+                                <select
+                                    id="guided-city"
+                                    name="city"
+                                    data-summary-label="City"
+                                >
+                                    <option value="">
+                                        Select a city
+                                    </option>
+
+                                    {% for city in filter_options.cities %}
+                                        <option value="{{ city }}">
+                                            {{ city }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <!-- Step 2: Budget -->
+                <section
+                    class="guided-search-step"
+                    data-search-step
+                    data-speech-text="Step two. Enter your minimum and maximum monthly rent. Maximum rent is required."
+                    aria-labelledby="budget-step-title"
+                    hidden
+                >
+                    <div class="guided-step-heading">
+                        <span
+                            class="guided-step-number"
+                            aria-hidden="true"
+                        >
+                            2
+                        </span>
+
+                        <div>
+                            <p class="guided-step-label">
+                                Monthly budget
+                            </p>
+
+                            <h2
+                                id="budget-step-title"
+                                data-step-heading
+                                tabindex="-1"
+                            >
+                                What monthly rent can you afford?
+                            </h2>
+
+                            <p>
+                                Enter the rental range you are
+                                comfortable paying each month.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="guided-step-content">
+                        <div class="guided-form-grid">
+                            <div class="form-group">
+                                <label for="guided-minimum-rent">
+                                    Minimum monthly rent
+                                </label>
+
+                                <input
+                                    id="guided-minimum-rent"
+                                    name="minimum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    placeholder="No minimum"
+                                    data-summary-label="Minimum monthly rent"
+                                >
+
+                                {% if filter_options.rent_range.minimum is not none %}
+                                    <p class="form-help">
+                                        Available listings currently
+                                        start near
+                                        {{ filter_options.rent_range.minimum }}.
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guided-maximum-rent">
+                                    Maximum monthly rent
+                                    <span
+                                        class="required-indicator"
+                                        aria-hidden="true"
+                                    >
+                                        *
+                                    </span>
+                                </label>
+
+                                <input
+                                    id="guided-maximum-rent"
+                                    name="maximum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    required
+                                    placeholder="Your maximum rent"
+                                    data-summary-label="Maximum monthly rent"
+                                >
+
+                                <p class="form-help">
+                                    Required. Do not include utility
+                                    costs unless they are part of rent.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Size and property type -->
+                <section
+                    class="guided-search-step"
+                    data-search-step
+                    data-speech-text="Step three. Choose your preferred property type, minimum bedrooms, bathrooms and floor area."
+                    aria-labelledby="size-step-title"
+                    hidden
+                >
+                    <div class="guided-step-heading">
+                        <span
+                            class="guided-step-number"
+                            aria-hidden="true"
+                        >
+                            3
+                        </span>
+
+                        <div>
+                            <p class="guided-step-label">
+                                Apartment size
+                            </p>
+
+                            <h2
+                                id="size-step-title"
+                                data-step-heading
+                                tabindex="-1"
+                            >
+                                What kind of home do you need?
+                            </h2>
+
+                            <p>
+                                Choose the size and type of property
+                                that best suits your household.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="guided-step-content">
+                        <div class="guided-form-grid">
+                            <div class="form-group">
+                                <label for="guided-property-type">
+                                    Property type
+                                </label>
+
+                                <select
+                                    id="guided-property-type"
+                                    name="property_type"
+                                    data-summary-label="Property type"
+                                >
+                                    <option value="">
+                                        Any property type
+                                    </option>
+
+                                    {% for property_type in filter_options.property_types %}
+                                        <option value="{{ property_type }}">
+                                            {{ property_type
+                                                |replace("_", " ")
+                                                |title }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guided-bedrooms">
+                                    Minimum bedrooms
+                                </label>
+
+                                <select
+                                    id="guided-bedrooms"
+                                    name="bedrooms"
+                                    data-summary-label="Minimum bedrooms"
+                                >
+                                    <option value="">
+                                        Any number
+                                    </option>
+
+                                    {% if filter_options.bedrooms %}
+                                        {% for bedroom_count in filter_options.bedrooms %}
+                                            <option value="{{ bedroom_count }}">
+                                                {% if bedroom_count == 0 %}
+                                                    Studio
+                                                {% elif bedroom_count == 1 %}
+                                                    1 bedroom
+                                                {% else %}
+                                                    {{ bedroom_count }}
+                                                    bedrooms
+                                                {% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="0">Studio</option>
+                                        <option value="1">1 bedroom</option>
+                                        <option value="2">2 bedrooms</option>
+                                        <option value="3">3 bedrooms</option>
+                                        <option value="4">4 bedrooms</option>
+                                        <option value="5">5+ bedrooms</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guided-bathrooms">
+                                    Minimum bathrooms
+                                </label>
+
+                                <select
+                                    id="guided-bathrooms"
+                                    name="bathrooms"
+                                    data-summary-label="Minimum bathrooms"
+                                >
+                                    <option value="">
+                                        Any number
+                                    </option>
+
+                                    {% for bathroom_count in range(1, 6) %}
+                                        <option value="{{ bathroom_count }}">
+                                            {{ bathroom_count }}
+                                            {% if bathroom_count == 1 %}
+                                                bathroom
+                                            {% else %}
+                                                bathrooms
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guided-minimum-area">
+                                    Minimum floor area in m²
+                                </label>
+
+                                <input
+                                    id="guided-minimum-area"
+                                    name="minimum_area"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    inputmode="decimal"
+                                    placeholder="Any size"
+                                    data-summary-label="Minimum floor area"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 4: Features -->
+                <section
+                    class="guided-search-step"
+                    data-search-step
+                    data-speech-text="Step four. Select the accessibility and property features that are important to you."
+                    aria-labelledby="features-step-title"
+                    hidden
+                >
+                    <div class="guided-step-heading">
+                        <span
+                            class="guided-step-number"
+                            aria-hidden="true"
+                        >
+                            4
+                        </span>
+
+                        <div>
+                            <p class="guided-step-label">
+                                Important features
+                            </p>
+
+                            <h2
+                                id="features-step-title"
+                                data-step-heading
+                                tabindex="-1"
+                            >
+                                Which features do you need?
+                            </h2>
+
+                            <p>
+                                Select every option that is important
+                                for your apartment search.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="guided-step-content">
+                        <fieldset class="guided-feature-grid">
+                            <legend class="sr-only">
+                                Required property features
+                            </legend>
+
+                            <label class="guided-feature-option">
+                                <input
+                                    type="checkbox"
+                                    name="accessible"
+                                    value="true"
+                                    data-summary-label="Accessibility"
+                                    data-summary-value="Accessible or step-free"
+                                >
+
+                                <span
+                                    class="guided-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    ♿
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        Accessible or step-free
+                                    </strong>
+
+                                    <small>
+                                        Prioritize properties with
+                                        accessibility information.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <label class="guided-feature-option">
+                                <input
+                                    type="checkbox"
+                                    name="furnished"
+                                    value="true"
+                                    data-summary-label="Furnishing"
+                                    data-summary-value="Furnished"
+                                >
+
+                                <span
+                                    class="guided-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    🪑
+                                </span>
+
+                                <span>
+                                    <strong>Furnished</strong>
+
+                                    <small>
+                                        Show units offered with
+                                        furniture.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <label class="guided-feature-option">
+                                <input
+                                    type="checkbox"
+                                    name="pets_allowed"
+                                    value="true"
+                                    data-summary-label="Pets"
+                                    data-summary-value="Pets allowed"
+                                >
+
+                                <span
+                                    class="guided-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    🐾
+                                </span>
+
+                                <span>
+                                    <strong>Pets allowed</strong>
+
+                                    <small>
+                                        Show properties that accept
+                                        pets.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <label class="guided-feature-option">
+                                <input
+                                    type="checkbox"
+                                    name="parking"
+                                    value="true"
+                                    data-summary-label="Parking"
+                                    data-summary-value="Parking available"
+                                >
+
+                                <span
+                                    class="guided-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    🚗
+                                </span>
+
+                                <span>
+                                    <strong>Parking available</strong>
+
+                                    <small>
+                                        Show properties with a parking
+                                        option.
+                                    </small>
+                                </span>
+                            </label>
+                        </fieldset>
+                    </div>
+                </section>
+
+                <!-- Step 5: Review -->
+                <section
+                    class="guided-search-step"
+                    data-search-step
+                    data-speech-text="Final step. Review your apartment preferences. Select search apartments when you are ready."
+                    aria-labelledby="review-step-title"
+                    hidden
+                >
+                    <div class="guided-step-heading">
+                        <span
+                            class="guided-step-number"
+                            aria-hidden="true"
+                        >
+                            5
+                        </span>
+
+                        <div>
+                            <p class="guided-step-label">
+                                Review
+                            </p>
+
+                            <h2
+                                id="review-step-title"
+                                data-step-heading
+                                tabindex="-1"
+                            >
+                                Review your search preferences
+                            </h2>
+
+                            <p>
+                                Go back to make changes or submit the
+                                search to view matching apartments.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="guided-step-content">
+                        <div class="guided-review-card">
+                            <h3>Your selections</h3>
+
+                            <dl
+                                class="guided-summary"
+                                data-guided-summary
+                            >
+                                <div class="guided-summary-placeholder">
+                                    <dt>Search preferences</dt>
+                                    <dd>
+                                        Your selected preferences will
+                                        appear here.
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div class="privacy-notice">
+                            <span
+                                class="privacy-notice-icon"
+                                aria-hidden="true"
+                            >
+                                🔒
+                            </span>
+
+                            <div>
+                                <h3>Privacy information</h3>
+
+                                <p>
+                                    Your guided-search draft is stored
+                                    locally in this browser. It is
+                                    deleted when you submit or clear
+                                    this form.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form navigation -->
+                <footer class="guided-search-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-guided-previous
+                        hidden
+                    >
+                        <span aria-hidden="true">←</span>
+                        Previous
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary guided-clear-button"
+                        data-guided-clear
+                    >
+                        Clear search
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary guided-next-button"
+                        data-guided-next
+                    >
+                        Next
+                        <span aria-hidden="true">→</span>
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary guided-submit-button"
+                        data-guided-submit
+                        hidden
+                    >
+                        <span aria-hidden="true">🔎</span>
+                        Search apartments
+                    </button>
+                </footer>
+
+                <p
+                    class="guided-search-status"
+                    data-guided-search-status
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></p>
+
+                <p
+                    class="voice-status"
+                    data-voice-status
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></p>
+
+                <p
+                    class="speech-status"
+                    data-speech-status
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></p>
+            </form>
+        </div>
+    </section>
+
+    <section
+        class="guided-search-alternative section section-muted"
+        aria-labelledby="alternative-search-title"
+    >
+        <div class="container">
+            <div class="guided-alternative-content">
+                <div>
+                    <h2 id="alternative-search-title">
+                        Prefer to use all filters at once?
+                    </h2>
+
+                    <p>
+                        Open the standard apartment search to view all
+                        available filters on one page.
+                    </p>
+                </div>
+
+                <a
+                    class="btn btn-secondary"
+                    href="{{ url_for('search_listings') }}"
+                >
+                    Open standard search
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}

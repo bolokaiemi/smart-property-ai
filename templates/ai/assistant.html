@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("AI Assistant") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {{ page_description|default(
+        "Use the multilingual Smart Property AI assistant."
+    ) }}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/ai-assistant.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="ai-assistant-page"
+    tabindex="-1"
+>
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    AI Assistant
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <section
+        class="ai-assistant-header"
+        aria-labelledby="ai-assistant-title"
+    >
+        <div class="container">
+            <div class="ai-assistant-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Multilingual property support
+                    </p>
+
+                    <h1 id="ai-assistant-title">
+                        Smart Property AI Assistant
+                    </h1>
+
+                    <p>
+                        Ask for help with apartment searches, viewing
+                        appointments, rental applications, tenant
+                        services, maintenance requests and landlord
+                        tools.
+                    </p>
+                </div>
+
+                <div class="ai-assistant-header-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="ai-assistant-introduction"
+                        aria-label="Read the AI assistant introduction aloud"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>
+                            Read instructions
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                id="ai-assistant-introduction"
+                class="sr-only"
+            >
+                Welcome to the Smart Property AI Assistant.
+                Enter a message or use voice input. The assistant can
+                help with apartment searches, tenant services,
+                maintenance requests and landlord tools. Do not enter
+                passwords, payment card numbers or unnecessary
+                sensitive personal information.
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="ai-assistant-section section"
+        aria-label="AI assistant conversation"
+    >
+        <div class="container">
+            <div class="ai-assistant-layout">
+
+                <!-- Chat panel -->
+                <section
+                    class="ai-chat-panel"
+                    aria-labelledby="conversation-title"
+                >
+                    <header class="ai-chat-header">
+                        <div class="ai-status-indicator">
+                            <span
+                                class="ai-status-dot"
+                                aria-hidden="true"
+                            ></span>
+
+                            <div>
+                                <h2 id="conversation-title">
+                                    Property assistant
+                                </h2>
+
+                                <p>
+                                    Online · AI-assisted information
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-small"
+                            data-clear-conversation
+                        >
+                            <span aria-hidden="true">🗑</span>
+                            Clear conversation
+                        </button>
+                    </header>
+
+                    <div
+                        id="ai-conversation"
+                        class="ai-conversation"
+                        data-ai-conversation
+                        role="log"
+                        aria-live="polite"
+                        aria-relevant="additions"
+                        aria-label="Conversation with Smart Property AI"
+                        tabindex="0"
+                    >
+                        <article class="chat-message assistant-message">
+                            <div
+                                class="chat-avatar"
+                                aria-hidden="true"
+                            >
+                                AI
+                            </div>
+
+                            <div class="chat-message-content">
+                                <p class="chat-message-author">
+                                    Smart Property AI
+                                </p>
+
+                                <div class="chat-message-bubble">
+                                    <p>
+                                        Hello! How can I help with your
+                                        property needs today?
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="chat-speech-button"
+                                    data-read-message
+                                    aria-label="Read this message aloud"
+                                >
+                                    <span aria-hidden="true">🔊</span>
+                                    Read aloud
+                                </button>
+                            </div>
+                        </article>
+
+                        {% if conversation %}
+                            {% for message in conversation %}
+                                <article
+                                    class="chat-message {% if message.role == 'user' %}user-message{% else %}assistant-message{% endif %}"
+                                >
+                                    <div
+                                        class="chat-avatar"
+                                        aria-hidden="true"
+                                    >
+                                        {% if message.role == "user" %}
+                                            You
+                                        {% else %}
+                                            AI
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="chat-message-content">
+                                        <p class="chat-message-author">
+                                            {% if message.role == "user" %}
+                                                You
+                                            {% else %}
+                                                Smart Property AI
+                                            {% endif %}
+                                        </p>
+
+                                        <div class="chat-message-bubble">
+                                            <p>{{ message.content }}</p>
+                                        </div>
+
+                                        {% if message.role == "assistant" %}
+                                            <button
+                                                type="button"
+                                                class="chat-speech-button"
+                                                data-read-message
+                                                aria-label="Read this message aloud"
+                                            >
+                                                <span aria-hidden="true">
+                                                    🔊
+                                                </span>
+                                                Read aloud
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        {% endif %}
+
+                        <div
+                            class="chat-message assistant-message ai-typing-message"
+                            data-typing-indicator
+                            hidden
+                        >
+                            <div
+                                class="chat-avatar"
+                                aria-hidden="true"
+                            >
+                                AI
+                            </div>
+
+                            <div class="chat-message-content">
+                                <p class="chat-message-author">
+                                    Smart Property AI
+                                </p>
+
+                                <div
+                                    class="chat-message-bubble"
+                                    role="status"
+                                >
+                                    <span class="typing-dot"></span>
+                                    <span class="typing-dot"></span>
+                                    <span class="typing-dot"></span>
+
+                                    <span class="sr-only">
+                                        The assistant is preparing a response.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form
+                        id="ai-chat-form"
+                        class="ai-chat-form"
+                        data-ai-chat-form
+                        data-chat-url="{{ url_for('ai_chat') }}"
+                        data-clear-url="{{ url_for('clear_ai_conversation') }}"
+                    >
+                        <input
+                            type="hidden"
+                            name="conversation_id"
+                            value="{{ conversation_id }}"
+                            data-conversation-id
+                        >
+
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token }}"
+                            data-csrf-token
+                        >
+
+                        <div class="ai-message-field">
+                            <label
+                                for="ai-message"
+                                class="sr-only"
+                            >
+                                Message for the AI assistant
+                            </label>
+
+                            <textarea
+                                id="ai-message"
+                                name="message"
+                                rows="3"
+                                maxlength="3000"
+                                required
+                                placeholder="Ask about apartments, rent, maintenance or property services…"
+                                aria-describedby="ai-message-help ai-chat-status"
+                                data-ai-message
+                            ></textarea>
+
+                            <button
+                                type="button"
+                                class="voice-button ai-voice-button"
+                                data-voice-input="ai-message"
+                                aria-label="Enter your AI message using voice"
+                            >
+                                <span aria-hidden="true">🎤</span>
+                                <span class="sr-only" data-voice-label>
+                                    Use voice
+                                </span>
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary ai-send-button"
+                                data-send-button
+                            >
+                                <span aria-hidden="true">➤</span>
+                                <span>Send</span>
+                            </button>
+                        </div>
+
+                        <div class="ai-form-information">
+                            <p id="ai-message-help">
+                                Press Enter to send. Press Shift+Enter
+                                to start a new line.
+                            </p>
+
+                            <p data-message-counter>
+                                0 / 3000
+                            </p>
+                        </div>
+
+                        <p
+                            id="ai-chat-status"
+                            class="ai-chat-status"
+                            data-ai-chat-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+
+                        <p
+                            class="voice-status"
+                            data-voice-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+                    </form>
+                </section>
+
+                <!-- Assistant sidebar -->
+                <aside
+                    class="ai-assistant-sidebar"
+                    aria-label="AI assistant tools and information"
+                >
+                    <section
+                        class="ai-sidebar-card"
+                        aria-labelledby="quick-actions-title"
+                    >
+                        <h2 id="quick-actions-title">
+                            Quick questions
+                        </h2>
+
+                        <div class="ai-quick-actions">
+                            <button
+                                type="button"
+                                data-ai-prompt="Help me find an apartment."
+                            >
+                                <span aria-hidden="true">🏠</span>
+                                Help me find an apartment
+                            </button>
+
+                            <button
+                                type="button"
+                                data-ai-prompt="Guide me through the apartment search."
+                            >
+                                <span aria-hidden="true">🧭</span>
+                                Start guided search
+                            </button>
+
+                            <button
+                                type="button"
+                                data-ai-prompt="How do I book a property viewing?"
+                            >
+                                <span aria-hidden="true">📅</span>
+                                Book a viewing
+                            </button>
+
+                            <button
+                                type="button"
+                                data-ai-prompt="How do I submit a maintenance request?"
+                            >
+                                <span aria-hidden="true">🛠</span>
+                                Report maintenance
+                            </button>
+
+                            <button
+                                type="button"
+                                data-ai-prompt="What can I do in the tenant portal?"
+                            >
+                                <span aria-hidden="true">👤</span>
+                                Tenant portal help
+                            </button>
+
+                            <button
+                                type="button"
+                                data-ai-prompt="What can I do in the landlord portal?"
+                            >
+                                <span aria-hidden="true">🏢</span>
+                                Landlord portal help
+                            </button>
+                        </div>
+                    </section>
+
+                    <section
+                        class="ai-sidebar-card"
+                        aria-labelledby="assistant-navigation-title"
+                    >
+                        <h2 id="assistant-navigation-title">
+                            Useful links
+                        </h2>
+
+                        <nav aria-label="AI assistant useful links">
+                            <ul class="ai-useful-links">
+                                <li>
+                                    <a href="{{ url_for('listings_page') }}">
+                                        Find an apartment
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('guided_search') }}">
+                                        Guided search
+                                    </a>
+                                </li>
+
+                                {% if is_authenticated %}
+                                    <li>
+                                        <a href="{{ url_for('properties_page') }}">
+                                            Landlord properties
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="{{ url_for('privacy_page') }}">
+                                        Privacy information
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url_for('ai_disclosure_page') }}">
+                                        AI disclosure
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </section>
+
+                    <section
+                        class="ai-sidebar-card ai-safety-card"
+                        aria-labelledby="ai-safety-title"
+                    >
+                        <h2 id="ai-safety-title">
+                            <span aria-hidden="true">🔒</span>
+                            Protect your information
+                        </h2>
+
+                        <p>
+                            Do not enter passwords, card numbers,
+                            banking login details or unnecessary
+                            identity-document information.
+                        </p>
+                    </section>
+
+                    <section
+                        class="ai-sidebar-card ai-disclosure-card"
+                        aria-labelledby="ai-disclosure-title"
+                    >
+                        <h2 id="ai-disclosure-title">
+                            AI disclosure
+                        </h2>
+
+                        <p>
+                            {{ ai_disclosure }}
+                        </p>
+
+                        <p>
+                            The current assistant provides guided
+                            platform information. A trained property
+                            model has not yet been connected.
+                        </p>
+
+                        <a href="{{ url_for('ai_disclosure_page') }}">
+                            Read the complete AI disclosure
+                        </a>
+                    </section>
+
+                    <section
+                        class="ai-sidebar-card emergency-card"
+                        aria-labelledby="emergency-title"
+                    >
+                        <h2 id="emergency-title">
+                            Emergency?
+                        </h2>
+
+                        <p>
+                            Do not wait for an AI response during an
+                            immediate emergency.
+                        </p>
+
+                        <ul>
+                            <li>
+                                Germany fire or medical emergency:
+                                <a href="tel:112">112</a>
+                            </li>
+
+                            <li>
+                                Germany police:
+                                <a href="tel:110">110</a>
+                            </li>
+                        </ul>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/ai-assistant.js') }}"
+        defer
+    ></script>
+{% endblock %}

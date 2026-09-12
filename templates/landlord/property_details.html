@@ -1,0 +1,769 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ property.name }} | Smart Property AI
+{% endblock %}
+
+{% block description %}
+View and manage {{ property.name }}, its apartment units, manager assignment, listings and availability.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/property.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="property-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="property-breadcrumb"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('properties_page') }}">
+                        Properties
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    {{ property.name }}
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Status messages -->
+        {% if success %}
+            <div
+                class="property-alert property-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="property-alert property-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        <!-- Property header -->
+        <header class="property-details-header">
+            <div class="property-details-title">
+                <div class="property-details-icon" aria-hidden="true">
+                    🏢
+                </div>
+
+                <div>
+                    <div class="property-heading-status">
+                        <p class="section-label">
+                            {{ property.property_type
+                                | replace('_', ' ')
+                                | title }}
+                        </p>
+
+                        <span
+                            class="
+                                property-status
+                                property-status--{{ property.status.value }}
+                            "
+                        >
+                            {{ property.status.value
+                                | replace('_', ' ')
+                                | title }}
+                        </span>
+                    </div>
+
+                    <h1>{{ property.name }}</h1>
+
+                    <address class="property-address">
+                        <span aria-hidden="true">📍</span>
+
+                        <span>
+                            {{ property.street_address }},
+                            {{ property.postal_code }}
+                            {{ property.city }}
+
+                            {% if property.state %}
+                                , {{ property.state }}
+                            {% endif %}
+
+                            <br>
+                            {{ property.country }}
+                        </span>
+                    </address>
+                </div>
+            </div>
+
+
+            <div class="property-details-actions">
+                <a
+                    href="{{ url_for(
+                        'edit_property_page',
+                        property_id=property.id
+                    ) }}"
+                    class="button button--outline"
+                >
+                    Edit property
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'units_page',
+                        property_id=property.id
+                    ) }}"
+                    class="button button--primary"
+                >
+                    Manage units
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Statistics -->
+        <section
+            class="property-statistics"
+            aria-labelledby="property-statistics-heading"
+        >
+            <h2
+                id="property-statistics-heading"
+                class="sr-only"
+            >
+                Property statistics
+            </h2>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Total units
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.total_units }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Vacant
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.vacant_units }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Occupied
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.occupied_units }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Maintenance
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.maintenance_units }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Listings
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.total_listings }}
+                </strong>
+            </article>
+
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Published
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.published_listings }}
+                </strong>
+            </article>
+        </section>
+
+
+        <!-- Main content -->
+        <div class="property-details-grid">
+
+            <div class="property-details-main">
+
+                <!-- Description -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Overview
+                            </p>
+
+                            <h2>Property description</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'edit_property_page',
+                                property_id=property.id
+                            ) }}"
+                            class="property-action-link"
+                        >
+                            Edit
+                        </a>
+                    </header>
+
+                    {% if property.description %}
+                        <p class="property-description-full">
+                            {{ property.description }}
+                        </p>
+                    {% else %}
+                        <div class="property-panel-empty">
+                            <p>
+                                No description has been added for this
+                                property.
+                            </p>
+
+                            <a
+                                href="{{ url_for(
+                                    'edit_property_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="text-link"
+                            >
+                                Add a description
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </article>
+
+
+                <!-- Units -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Apartments
+                            </p>
+
+                            <h2>Property units</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'units_page',
+                                property_id=property.id
+                            ) }}"
+                            class="button button--primary"
+                        >
+                            Manage units
+                        </a>
+                    </header>
+
+
+                    {% if statistics.total_units > 0 %}
+                        <div class="property-unit-summary">
+                            <div>
+                                <span>Total</span>
+                                <strong>
+                                    {{ statistics.total_units }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Vacant</span>
+                                <strong>
+                                    {{ statistics.vacant_units }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Occupied</span>
+                                <strong>
+                                    {{ statistics.occupied_units }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Maintenance</span>
+                                <strong>
+                                    {{ statistics.maintenance_units }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Unavailable</span>
+                                <strong>
+                                    {{ statistics.unavailable_units }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'units_page',
+                                property_id=property.id
+                            ) }}"
+                            class="text-link"
+                        >
+                            View all property units
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    {% else %}
+                        <div class="property-panel-empty">
+                            <div
+                                class="property-empty-icon"
+                                aria-hidden="true"
+                            >
+                                🚪
+                            </div>
+
+                            <h3>No units added</h3>
+
+                            <p>
+                                Add apartments or units before creating
+                                rental listings or leases.
+                            </p>
+
+                            <a
+                                href="{{ url_for(
+                                    'units_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="button button--primary"
+                            >
+                                Add first unit
+                            </a>
+                        </div>
+                    {% endif %}
+                </article>
+
+
+                <!-- Listings -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Advertising
+                            </p>
+
+                            <h2>Property listings</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for('listings_page') }}?property_id={{ property.id }}"
+                            class="button button--outline"
+                        >
+                            View listings
+                        </a>
+                    </header>
+
+
+                    <div class="property-listing-summary">
+                        <div>
+                            <span class="property-listing-label">
+                                Total listings
+                            </span>
+
+                            <strong>
+                                {{ statistics.total_listings }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="property-listing-label">
+                                Published listings
+                            </span>
+
+                            <strong>
+                                {{ statistics.published_listings }}
+                            </strong>
+                        </div>
+                    </div>
+
+
+                    {% if statistics.total_units == 0 %}
+                        <p class="property-panel-note">
+                            Add at least one apartment unit before
+                            creating a unit-specific listing.
+                        </p>
+                    {% elif property.status.value != 'active' %}
+                        <p class="property-panel-note">
+                            Activate the property before publishing its
+                            listings.
+                        </p>
+                    {% else %}
+                        <p class="property-panel-note">
+                            Listing creation will be available in the
+                            public-property-listing development stage.
+                        </p>
+                    {% endif %}
+                </article>
+
+
+                <!-- Coordinates -->
+                <article class="property-details-panel">
+                    <header class="property-panel-header">
+                        <div>
+                            <p class="section-label">
+                                Location
+                            </p>
+
+                            <h2>Map information</h2>
+                        </div>
+
+                        <a
+                            href="{{ url_for(
+                                'edit_property_page',
+                                property_id=property.id
+                            ) }}"
+                            class="property-action-link"
+                        >
+                            Edit coordinates
+                        </a>
+                    </header>
+
+
+                    {% if
+                        property.latitude is not none
+                        and property.longitude is not none
+                    %}
+                        <dl class="property-coordinate-list">
+                            <div>
+                                <dt>Latitude</dt>
+                                <dd>{{ property.latitude }}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Longitude</dt>
+                                <dd>{{ property.longitude }}</dd>
+                            </div>
+                        </dl>
+
+                        <a
+                            href="https://www.openstreetmap.org/?mlat={{ property.latitude }}&mlon={{ property.longitude }}#map=17/{{ property.latitude }}/{{ property.longitude }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="button button--outline"
+                        >
+                            Open map
+                        </a>
+                    {% else %}
+                        <div class="property-panel-empty">
+                            <p>
+                                Map coordinates have not been added.
+                            </p>
+
+                            <a
+                                href="{{ url_for(
+                                    'edit_property_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="text-link"
+                            >
+                                Add coordinates
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </article>
+
+            </div>
+
+
+            <!-- Sidebar -->
+            <aside class="property-details-sidebar">
+
+                <!-- Record information -->
+                <section class="property-sidebar-panel">
+                    <h2>Property information</h2>
+
+                    <dl class="property-information-list">
+                        <div>
+                            <dt>Property type</dt>
+
+                            <dd>
+                                {{ property.property_type
+                                    | replace('_', ' ')
+                                    | title }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Status</dt>
+
+                            <dd>
+                                <span
+                                    class="
+                                        property-status
+                                        property-status--{{ property.status.value }}
+                                    "
+                                >
+                                    {{ property.status.value
+                                        | replace('_', ' ')
+                                        | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Manager</dt>
+
+                            <dd>
+                                {% if property.manager_id %}
+                                    Assigned
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Created</dt>
+
+                            <dd>
+                                {{ property.created_at.strftime(
+                                    '%d %B %Y'
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Last updated</dt>
+
+                            <dd>
+                                {{ property.updated_at.strftime(
+                                    '%d %B %Y'
+                                ) }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Property ID</dt>
+
+                            <dd class="property-id">
+                                {{ property.id }}
+                            </dd>
+                        </div>
+                    </dl>
+                </section>
+
+
+                <!-- Property manager -->
+                <section class="property-sidebar-panel">
+                    <h2>Property manager</h2>
+
+                    {% if property.manager_id %}
+                        <div class="property-manager-status">
+                            <span
+                                class="property-manager-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <div>
+                                <strong>Manager assigned</strong>
+
+                                <small>
+                                    ID: {{ property.manager_id }}
+                                </small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p>
+                            No property manager is currently assigned.
+                        </p>
+                    {% endif %}
+
+
+                    {% if
+                        current_user.role.value == 'administrator'
+                        or property.owner_id == current_user.id
+                    %}
+                        {% if available_managers %}
+                            <form
+                                action="{{ url_for(
+                                    'assign_property_manager',
+                                    property_id=property.id
+                                ) }}"
+                                method="POST"
+                                class="property-manager-form"
+                            >
+                                <div class="property-form-group">
+                                    <label for="manager-id">
+                                        Select manager
+                                    </label>
+
+                                    <select
+                                        id="manager-id"
+                                        name="manager_id"
+                                        required
+                                    >
+                                        <option value="">
+                                            Choose a manager
+                                        </option>
+
+                                        {% for manager in available_managers %}
+                                            <option
+                                                value="{{ manager.id }}"
+                                                {% if
+                                                    property.manager_id
+                                                    == manager.id
+                                                %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ manager.full_name }}
+                                                ({{ manager.email }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="button button--primary button--full"
+                                >
+                                    {% if property.manager_id %}
+                                        Change manager
+                                    {% else %}
+                                        Assign manager
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% else %}
+                            <p class="property-panel-note">
+                                No active property-manager accounts are
+                                currently available.
+                            </p>
+                        {% endif %}
+
+
+                        {% if property.manager_id %}
+                            <form
+                                action="{{ url_for(
+                                    'remove_property_manager',
+                                    property_id=property.id
+                                ) }}"
+                                method="POST"
+                                data-confirm-form
+                                data-confirm-message="Remove the assigned property manager?"
+                            >
+                                <button
+                                    type="submit"
+                                    class="property-remove-manager-button"
+                                >
+                                    Remove manager
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </section>
+
+
+                <!-- Status controls -->
+                <section class="property-sidebar-panel">
+                    <h2>Property status</h2>
+
+                    {% if property.status.value == 'active' %}
+                        <p>
+                            This property is active. Deactivating it will
+                            pause all published listings.
+                        </p>
+
+                        <form
+                            action="{{ url_for(
+                                'deactivate_property',
+                                property_id=property.id
+                            ) }}"
+                            method="POST"
+                            data-confirm-form
+                            data-confirm-message="Deactivate this property? Published listings will be paused."
+                        >
+                            <button
+                                type="submit"
+                                class="button property-danger-button button--full"
+                            >
+                                Deactivate property
+                            </button>
+                        </form>
+                    {% else %}
+                        <p>
+                            Activate this property when its information
+                            is ready.
+                        </p>
+
+                        <form
+                            action="{{ url_for(
+                                'activate_property',
+                                property_id=property.id
+                            ) }}"
+                            method="POST"
+                        >
+                            <button
+                                type="submit"
+                                class="button button--primary button--full"
+                            >
+                                Activate property
+                            </button>
+                        </form>
+                    {% endif %}
+                </section>
+
+
+                <!-- Privacy notice -->
+                <section class="property-sidebar-panel property-privacy-panel">
+                    <div aria-hidden="true">🔐</div>
+
+                    <h2>Private management area</h2>
+
+                    <p>
+                        Property details are available only to authorized
+                        landlords, assigned managers and administrators.
+                    </p>
+                </section>
+
+            </aside>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/property.js') }}"></script>
+{% endblock %}

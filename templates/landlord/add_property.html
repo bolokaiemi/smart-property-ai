@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Property | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Add a new property to the secure Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/property.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="property-page">
+    <div class="container property-form-container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="property-breadcrumb"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('properties_page') }}">
+                        Properties
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Add property
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="property-form-header">
+            <div>
+                <p class="section-label">
+                    Property management
+                </p>
+
+                <h1>Add a new property</h1>
+
+                <p>
+                    Enter the property information below. The property
+                    will initially be saved with draft status.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('properties_page') }}"
+                class="button button--outline"
+            >
+                Cancel
+            </a>
+        </header>
+
+
+        <!-- Error messages -->
+        {% if error %}
+            <div
+                class="property-alert property-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        {% if errors %}
+            <div
+                class="property-alert property-alert--error"
+                id="property-error-summary"
+                role="alert"
+                aria-live="assertive"
+                tabindex="-1"
+            >
+                <p>
+                    Please correct the following information:
+                </p>
+
+                <ul>
+                    {% for form_error in errors %}
+                        <li>{{ form_error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <!-- Property form -->
+        <form
+            action="{{ url_for('add_property_submit') }}"
+            method="POST"
+            class="property-form"
+            id="add-property-form"
+        >
+
+            <!-- Basic information -->
+            <fieldset class="property-form-section">
+                <legend>Basic property information</legend>
+
+                <p class="property-form-section-description">
+                    Give the property a clear internal name and select
+                    the type of building.
+                </p>
+
+                <div class="property-form-grid">
+
+                    <div class="property-form-group">
+                        <label for="property-name">
+                            Property name
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="property-name"
+                            name="name"
+                            value="{{ form_data.name | default('') }}"
+                            placeholder="For example, Herne Garden Apartments"
+                            autocomplete="organization"
+                            minlength="2"
+                            maxlength="200"
+                            required
+                            autofocus
+                        >
+
+                        <small class="property-form-help">
+                            This name is used inside your property
+                            dashboard.
+                        </small>
+                    </div>
+
+
+                    <div class="property-form-group">
+                        <label for="property-type">
+                            Property type
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select
+                            id="property-type"
+                            name="property_type"
+                            required
+                        >
+                            <option value="">
+                                Select a property type
+                            </option>
+
+                            {% for type_value, type_label
+                                in property_types.items() %}
+                                <option
+                                    value="{{ type_value }}"
+                                    {% if form_data.property_type
+                                        == type_value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ type_label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="property-form-group">
+                    <label for="property-description">
+                        Property description
+                        <span class="property-optional">
+                            Optional
+                        </span>
+                    </label>
+
+                    <textarea
+                        id="property-description"
+                        name="description"
+                        rows="6"
+                        maxlength="10000"
+                        placeholder="Describe the property, its facilities, location and other useful information."
+                        aria-describedby="description-help description-counter"
+                    >{{ form_data.description | default('') }}</textarea>
+
+                    <div class="property-help-row">
+                        <small
+                            id="description-help"
+                            class="property-form-help"
+                        >
+                            Do not enter private tenant information.
+                        </small>
+
+                        <small
+                            id="description-counter"
+                            class="property-character-counter"
+                            aria-live="polite"
+                        >
+                            0 / 10,000
+                        </small>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <!-- Address -->
+            <fieldset class="property-form-section">
+                <legend>Property address</legend>
+
+                <p class="property-form-section-description">
+                    Enter the physical location of the property.
+                </p>
+
+                <div class="property-form-group">
+                    <label for="street-address">
+                        Street and house number
+                        <span aria-hidden="true">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="street-address"
+                        name="street_address"
+                        value="{{ form_data.street_address | default('') }}"
+                        placeholder="For example, Bahnhofstraße 10"
+                        autocomplete="street-address"
+                        minlength="4"
+                        maxlength="255"
+                        required
+                    >
+                </div>
+
+
+                <div class="property-form-grid property-form-grid--address">
+
+                    <div class="property-form-group">
+                        <label for="postal-code">
+                            Postal code
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="postal-code"
+                            name="postal_code"
+                            value="{{ form_data.postal_code | default('') }}"
+                            placeholder="44623"
+                            autocomplete="postal-code"
+                            minlength="3"
+                            maxlength="20"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="property-form-group">
+                        <label for="property-city">
+                            City
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="property-city"
+                            name="city"
+                            value="{{ form_data.city | default('') }}"
+                            placeholder="Herne"
+                            autocomplete="address-level2"
+                            minlength="2"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="property-form-grid">
+
+                    <div class="property-form-group">
+                        <label for="property-state">
+                            State or region
+                            <span class="property-optional">
+                                Optional
+                            </span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="property-state"
+                            name="state"
+                            value="{{ form_data.state | default('') }}"
+                            placeholder="North Rhine-Westphalia"
+                            autocomplete="address-level1"
+                            maxlength="100"
+                        >
+                    </div>
+
+
+                    <div class="property-form-group">
+                        <label for="property-country">
+                            Country
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="property-country"
+                            name="country"
+                            value="{{ form_data.country | default('Germany') }}"
+                            placeholder="Germany"
+                            autocomplete="country-name"
+                            minlength="2"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                </div>
+            </fieldset>
+
+
+            <!-- Coordinates -->
+            <fieldset class="property-form-section">
+                <legend>Map coordinates</legend>
+
+                <p class="property-form-section-description">
+                    Coordinates are optional. They can later be obtained
+                    automatically through the map service.
+                </p>
+
+                <div class="property-form-grid">
+
+                    <div class="property-form-group">
+                        <label for="property-latitude">
+                            Latitude
+                            <span class="property-optional">
+                                Optional
+                            </span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="property-latitude"
+                            name="latitude"
+                            value="{{ form_data.latitude | default('') }}"
+                            placeholder="51.5380"
+                            min="-90"
+                            max="90"
+                            step="0.0000001"
+                            inputmode="decimal"
+                            aria-describedby="latitude-help"
+                        >
+
+                        <small
+                            id="latitude-help"
+                            class="property-form-help"
+                        >
+                            A value between −90 and 90.
+                        </small>
+                    </div>
+
+
+                    <div class="property-form-group">
+                        <label for="property-longitude">
+                            Longitude
+                            <span class="property-optional">
+                                Optional
+                            </span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="property-longitude"
+                            name="longitude"
+                            value="{{ form_data.longitude | default('') }}"
+                            placeholder="7.2257"
+                            min="-180"
+                            max="180"
+                            step="0.0000001"
+                            inputmode="decimal"
+                            aria-describedby="longitude-help"
+                        >
+
+                        <small
+                            id="longitude-help"
+                            class="property-form-help"
+                        >
+                            A value between −180 and 180.
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="use-current-location"
+                    class="button button--outline"
+                >
+                    <span aria-hidden="true">📍</span>
+                    Use current location
+                </button>
+
+                <p
+                    id="location-status"
+                    class="property-location-status"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+            </fieldset>
+
+
+            <!-- Privacy notice -->
+            <aside class="property-form-notice">
+                <div
+                    class="property-form-notice-icon"
+                    aria-hidden="true"
+                >
+                    🔐
+                </div>
+
+                <div>
+                    <h2>Property-data notice</h2>
+
+                    <p>
+                        Enter only information required to manage the
+                        property. Do not include tenant names, passwords,
+                        payment-card information or confidential lease
+                        details in the public property description.
+                    </p>
+                </div>
+            </aside>
+
+
+            <!-- Form actions -->
+            <div class="property-form-actions">
+                <a
+                    href="{{ url_for('properties_page') }}"
+                    class="button button--outline"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="button button--primary"
+                >
+                    Save property
+                </button>
+            </div>
+
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/property.js') }}"></script>
+
+{% if errors or error %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const errorSummary = document.getElementById(
+            "property-error-summary"
+        );
+
+        if (errorSummary) {
+            errorSummary.focus();
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

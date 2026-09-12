@@ -1,0 +1,1159 @@
+{% extends "base.html" %}
+
+{% block title %}
+Units — {{ property.name }} | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Manage apartment units, rents, availability and accessibility information for {{ property.name }}.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/property.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="property-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="property-breadcrumb"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('properties_page') }}">
+                        Properties
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'property_details',
+                            property_id=property.id
+                        ) }}"
+                    >
+                        {{ property.name }}
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Units
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="property-page-header">
+            <div>
+                <p class="section-label">
+                    Apartment management
+                </p>
+
+                <h1>Units at {{ property.name }}</h1>
+
+                <address class="property-address">
+                    <span aria-hidden="true">📍</span>
+
+                    <span>
+                        {{ property.street_address }},
+                        {{ property.postal_code }}
+                        {{ property.city }}
+                    </span>
+                </address>
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'property_details',
+                    property_id=property.id
+                ) }}"
+                class="button button--outline"
+            >
+                Property details
+            </a>
+        </header>
+
+
+        <!-- Status messages -->
+        {% if success %}
+            <div
+                class="property-alert property-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="property-alert property-alert--error"
+                role="alert"
+                aria-live="assertive"
+                tabindex="-1"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div
+                class="property-alert property-alert--error"
+                id="unit-error-summary"
+                role="alert"
+                aria-live="assertive"
+                tabindex="-1"
+            >
+                <p>
+                    Please correct the following:
+                </p>
+
+                <ul>
+                    {% for form_error in errors %}
+                        <li>{{ form_error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <!-- Unit statistics -->
+        <section
+            class="property-statistics"
+            aria-labelledby="unit-statistics-heading"
+        >
+            <h2
+                id="unit-statistics-heading"
+                class="sr-only"
+            >
+                Apartment-unit statistics
+            </h2>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Total units
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.total_units }}
+                </strong>
+            </article>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Vacant
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.vacant_units }}
+                </strong>
+            </article>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Occupied
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.occupied_units }}
+                </strong>
+            </article>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Maintenance
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.maintenance_units }}
+                </strong>
+            </article>
+
+            <article class="property-statistic-card">
+                <span class="property-statistic-label">
+                    Unavailable
+                </span>
+
+                <strong class="property-statistic-value">
+                    {{ statistics.unavailable_units }}
+                </strong>
+            </article>
+        </section>
+
+
+        <!-- Rent summary -->
+        <section
+            class="unit-rent-summary"
+            aria-labelledby="rent-summary-heading"
+        >
+            <div>
+                <h2 id="rent-summary-heading">
+                    Monthly rent summary
+                </h2>
+
+                <p>
+                    Values are based on the rent saved for each unit.
+                    Units can use different currencies, so totals should
+                    be compared only when the same currency is used.
+                </p>
+            </div>
+
+            <dl>
+                <div>
+                    <dt>All units</dt>
+                    <dd>
+                        {{ "%.2f" | format(
+                            statistics.total_monthly_rent
+                        ) }}
+                    </dd>
+                </div>
+
+                <div>
+                    <dt>Occupied units</dt>
+                    <dd>
+                        {{ "%.2f" | format(
+                            statistics.occupied_monthly_rent
+                        ) }}
+                    </dd>
+                </div>
+
+                <div>
+                    <dt>Potential rent</dt>
+                    <dd>
+                        {{ "%.2f" | format(
+                            statistics.potential_monthly_rent
+                        ) }}
+                    </dd>
+                </div>
+            </dl>
+        </section>
+
+
+        <div class="unit-management-grid">
+
+            <!-- ==========================================================
+                 Add or edit form
+                 ========================================================== -->
+
+            <aside
+                class="unit-form-panel"
+                id="unit-form-panel"
+            >
+                <header class="unit-form-header">
+                    {% if form_mode == 'edit' and editing_unit %}
+                        <p class="section-label">
+                            Edit apartment
+                        </p>
+
+                        <h2>
+                            Edit unit {{ editing_unit.unit_number }}
+                        </h2>
+
+                        <p>
+                            Update the unit details below.
+                        </p>
+                    {% else %}
+                        <p class="section-label">
+                            New apartment
+                        </p>
+
+                        <h2>Add a unit</h2>
+
+                        <p>
+                            Add an apartment or rentable unit to this
+                            property.
+                        </p>
+                    {% endif %}
+                </header>
+
+
+                {% if form_mode == 'edit' and editing_unit %}
+                    <form
+                        action="{{ url_for(
+                            'edit_unit_submit',
+                            unit_id=editing_unit.id
+                        ) }}"
+                        method="POST"
+                        class="unit-form"
+                        id="edit-unit-form"
+                    >
+                {% else %}
+                    <form
+                        action="{{ url_for(
+                            'add_unit_submit',
+                            property_id=property.id
+                        ) }}"
+                        method="POST"
+                        class="unit-form"
+                        id="add-unit-form"
+                    >
+                {% endif %}
+
+                    <div class="property-form-group">
+                        <label for="unit-number">
+                            Unit number or name
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="unit-number"
+                            name="unit_number"
+                            value="{{ form_data.unit_number | default('') }}"
+                            placeholder="For example, 2A"
+                            maxlength="50"
+                            required
+                        >
+
+                        <small class="property-form-help">
+                            The unit number must be unique within this
+                            property.
+                        </small>
+                    </div>
+
+
+                    <div class="unit-form-row">
+                        <div class="property-form-group">
+                            <label for="unit-floor">
+                                Floor
+                            </label>
+
+                            <input
+                                type="text"
+                                id="unit-floor"
+                                name="floor"
+                                value="{{ form_data.floor | default('') }}"
+                                placeholder="For example, 2"
+                                maxlength="30"
+                            >
+                        </div>
+
+                        <div class="property-form-group">
+                            <label for="unit-rooms">
+                                Total rooms
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <input
+                                type="number"
+                                id="unit-rooms"
+                                name="rooms"
+                                value="{{ form_data.rooms | default('') }}"
+                                placeholder="3"
+                                min="0.5"
+                                max="100"
+                                step="0.5"
+                                inputmode="decimal"
+                                required
+                            >
+                        </div>
+                    </div>
+
+
+                    <div class="unit-form-row">
+                        <div class="property-form-group">
+                            <label for="unit-bedrooms">
+                                Bedrooms
+                            </label>
+
+                            <input
+                                type="number"
+                                id="unit-bedrooms"
+                                name="bedrooms"
+                                value="{{ form_data.bedrooms | default(0) }}"
+                                min="0"
+                                max="100"
+                                step="1"
+                                inputmode="numeric"
+                                required
+                            >
+                        </div>
+
+                        <div class="property-form-group">
+                            <label for="unit-bathrooms">
+                                Bathrooms
+                            </label>
+
+                            <input
+                                type="number"
+                                id="unit-bathrooms"
+                                name="bathrooms"
+                                value="{{ form_data.bathrooms | default(1) }}"
+                                min="0"
+                                max="100"
+                                step="1"
+                                inputmode="numeric"
+                                required
+                            >
+                        </div>
+                    </div>
+
+
+                    <div class="property-form-group">
+                        <label for="unit-area">
+                            Area in square metres
+                        </label>
+
+                        <input
+                            type="number"
+                            id="unit-area"
+                            name="area_square_metres"
+                            value="{{ form_data.area_square_metres | default('') }}"
+                            placeholder="75.50"
+                            min="1"
+                            max="1000000"
+                            step="0.01"
+                            inputmode="decimal"
+                        >
+                    </div>
+
+
+                    <fieldset class="unit-rent-fields">
+                        <legend>Rent information</legend>
+
+                        <div class="property-form-group">
+                            <label for="unit-rent">
+                                Monthly rent
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <input
+                                type="number"
+                                id="unit-rent"
+                                name="monthly_rent"
+                                value="{{ form_data.monthly_rent | default('') }}"
+                                placeholder="850.00"
+                                min="0"
+                                max="100000000"
+                                step="0.01"
+                                inputmode="decimal"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="property-form-group">
+                            <label for="unit-deposit">
+                                Deposit
+                            </label>
+
+                            <input
+                                type="number"
+                                id="unit-deposit"
+                                name="deposit_amount"
+                                value="{{ form_data.deposit_amount | default('') }}"
+                                placeholder="1700.00"
+                                min="0"
+                                max="100000000"
+                                step="0.01"
+                                inputmode="decimal"
+                            >
+                        </div>
+
+
+                        <div class="property-form-group">
+                            <label for="unit-currency">
+                                Currency
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <select
+                                id="unit-currency"
+                                name="currency"
+                                required
+                            >
+                                {% for currency in currencies %}
+                                    <option
+                                        value="{{ currency }}"
+                                        {% if
+                                            form_data.currency
+                                            | default('EUR')
+                                            == currency
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ currency }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </fieldset>
+
+
+                    <fieldset class="unit-feature-fields">
+                        <legend>Unit features</legend>
+
+                        <label class="unit-checkbox">
+                            <input
+                                type="checkbox"
+                                name="wheelchair_accessible"
+                                value="yes"
+                                {% if form_data.wheelchair_accessible %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span>
+                                Wheelchair accessible
+                            </span>
+                        </label>
+
+                        <label class="unit-checkbox">
+                            <input
+                                type="checkbox"
+                                name="pets_allowed"
+                                value="yes"
+                                {% if form_data.pets_allowed %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span>
+                                Pets allowed
+                            </span>
+                        </label>
+                    </fieldset>
+
+
+                    <div class="unit-form-actions">
+                        {% if form_mode == 'edit' and editing_unit %}
+                            <a
+                                href="{{ url_for(
+                                    'units_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="button button--outline"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="button button--primary"
+                            >
+                                Save changes
+                            </button>
+                        {% else %}
+                            <button
+                                type="submit"
+                                class="button button--primary button--full"
+                            >
+                                Add unit
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </form>
+            </aside>
+
+
+            <!-- ==========================================================
+                 Unit list
+                 ========================================================== -->
+
+            <div class="unit-list-panel">
+
+                <!-- Search and filter -->
+                <form
+                    action="{{ url_for(
+                        'units_page',
+                        property_id=property.id
+                    ) }}"
+                    method="GET"
+                    class="unit-filter-form"
+                >
+                    <div class="property-filter-group">
+                        <label for="unit-search">
+                            Search units
+                        </label>
+
+                        <input
+                            type="search"
+                            id="unit-search"
+                            name="search"
+                            value="{{ search | default('') }}"
+                            placeholder="Search by unit number"
+                            maxlength="100"
+                        >
+                    </div>
+
+
+                    <div class="property-filter-group">
+                        <label for="unit-status-filter">
+                            Status
+                        </label>
+
+                        <select
+                            id="unit-status-filter"
+                            name="status"
+                        >
+                            <option value="">
+                                All statuses
+                            </option>
+
+                            {% for status_option in unit_statuses %}
+                                <option
+                                    value="{{ status_option.value }}"
+                                    {% if
+                                        selected_status
+                                        == status_option.value
+                                    %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ status_option.value
+                                        | replace('_', ' ')
+                                        | title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="button button--primary"
+                    >
+                        Apply
+                    </button>
+
+                    {% if search or selected_status %}
+                        <a
+                            href="{{ url_for(
+                                'units_page',
+                                property_id=property.id
+                            ) }}"
+                            class="button button--outline"
+                        >
+                            Clear
+                        </a>
+                    {% endif %}
+                </form>
+
+
+                <div class="unit-list-heading">
+                    <div>
+                        <h2>Apartment units</h2>
+
+                        <p>
+                            {% if total_units == 1 %}
+                                1 unit found
+                            {% else %}
+                                {{ total_units }} units found
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    {% if total_pages > 1 %}
+                        <span>
+                            Page {{ page }} of {{ total_pages }}
+                        </span>
+                    {% endif %}
+                </div>
+
+
+                {% if units %}
+                    <div class="unit-table-wrapper">
+                        <table class="unit-table">
+                            <caption class="sr-only">
+                                Apartment units for {{ property.name }}
+                            </caption>
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Rooms</th>
+                                    <th scope="col">Rent</th>
+                                    <th scope="col">Features</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for unit in units %}
+                                    <tr>
+                                        <td data-label="Unit">
+                                            <a
+                                                href="{{ url_for(
+                                                    'unit_details',
+                                                    unit_id=unit.id
+                                                ) }}"
+                                                class="unit-name-link"
+                                            >
+                                                {{ unit.unit_number }}
+                                            </a>
+
+                                            {% if unit.floor %}
+                                                <small>
+                                                    Floor {{ unit.floor }}
+                                                </small>
+                                            {% endif %}
+                                        </td>
+
+
+                                        <td data-label="Rooms">
+                                            <strong>
+                                                {{ unit.rooms }}
+                                            </strong>
+
+                                            <small>
+                                                {{ unit.bedrooms }}
+                                                bedroom{% if unit.bedrooms != 1 %}s{% endif %},
+                                                {{ unit.bathrooms }}
+                                                bathroom{% if unit.bathrooms != 1 %}s{% endif %}
+                                            </small>
+
+                                            {% if unit.area_square_metres %}
+                                                <small>
+                                                    {{ unit.area_square_metres }}
+                                                    m²
+                                                </small>
+                                            {% endif %}
+                                        </td>
+
+
+                                        <td data-label="Rent">
+                                            <strong>
+                                                {{ unit.currency }}
+                                                {{ "%.2f" | format(
+                                                    unit.monthly_rent
+                                                ) }}
+                                            </strong>
+
+                                            <small>per month</small>
+
+                                            {% if unit.deposit_amount is not none %}
+                                                <small>
+                                                    Deposit:
+                                                    {{ unit.currency }}
+                                                    {{ "%.2f" | format(
+                                                        unit.deposit_amount
+                                                    ) }}
+                                                </small>
+                                            {% endif %}
+                                        </td>
+
+
+                                        <td data-label="Features">
+                                            <div class="unit-feature-badges">
+                                                {% if unit.wheelchair_accessible %}
+                                                    <span
+                                                        class="unit-feature-badge"
+                                                        title="Wheelchair accessible"
+                                                    >
+                                                        ♿ Accessible
+                                                    </span>
+                                                {% endif %}
+
+                                                {% if unit.pets_allowed %}
+                                                    <span
+                                                        class="unit-feature-badge"
+                                                        title="Pets allowed"
+                                                    >
+                                                        🐾 Pets
+                                                    </span>
+                                                {% endif %}
+
+                                                {% if
+                                                    not unit.wheelchair_accessible
+                                                    and not unit.pets_allowed
+                                                %}
+                                                    <span class="text-muted">
+                                                        None recorded
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+
+
+                                        <td data-label="Status">
+                                            <span
+                                                class="
+                                                    unit-status
+                                                    unit-status--{{ unit.status.value }}
+                                                "
+                                            >
+                                                {{ unit.status.value
+                                                    | replace('_', ' ')
+                                                    | title }}
+                                            </span>
+                                        </td>
+
+
+                                        <td data-label="Actions">
+                                            <div class="unit-actions">
+                                                <a
+                                                    href="{{ url_for(
+                                                        'unit_details',
+                                                        unit_id=unit.id
+                                                    ) }}"
+                                                    class="unit-action-link"
+                                                >
+                                                    View
+                                                </a>
+
+                                                <a
+                                                    href="{{ url_for(
+                                                        'edit_unit_page',
+                                                        unit_id=unit.id
+                                                    ) }}#unit-form-panel"
+                                                    class="unit-action-link"
+                                                >
+                                                    Edit
+                                                </a>
+
+                                                <button
+                                                    type="button"
+                                                    class="unit-menu-button"
+                                                    data-unit-menu-button="{{ unit.id }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="unit-menu-{{ unit.id }}"
+                                                >
+                                                    More
+                                                </button>
+
+                                                <div
+                                                    id="unit-menu-{{ unit.id }}"
+                                                    class="unit-action-menu"
+                                                    hidden
+                                                >
+                                                    <form
+                                                        action="{{ url_for(
+                                                            'change_unit_status',
+                                                            unit_id=unit.id
+                                                        ) }}"
+                                                        method="POST"
+                                                    >
+                                                        <label
+                                                            for="new-status-{{ unit.id }}"
+                                                            class="sr-only"
+                                                        >
+                                                            Change status for
+                                                            unit {{ unit.unit_number }}
+                                                        </label>
+
+                                                        <select
+                                                            id="new-status-{{ unit.id }}"
+                                                            name="new_status"
+                                                            required
+                                                        >
+                                                            {% for status_option
+                                                                in unit_statuses %}
+                                                                <option
+                                                                    value="{{ status_option.value }}"
+                                                                    {% if
+                                                                        unit.status
+                                                                        == status_option
+                                                                    %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                >
+                                                                    {{ status_option.value
+                                                                        | replace('_', ' ')
+                                                                        | title }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                        <button
+                                                            type="submit"
+                                                            class="unit-menu-action"
+                                                        >
+                                                            Update status
+                                                        </button>
+                                                    </form>
+
+
+                                                    {% if unit.status.value
+                                                        != 'unavailable' %}
+                                                        <form
+                                                            action="{{ url_for(
+                                                                'deactivate_unit',
+                                                                unit_id=unit.id
+                                                            ) }}"
+                                                            method="POST"
+                                                            data-confirm-form
+                                                            data-confirm-message="Mark unit {{ unit.unit_number }} as unavailable?"
+                                                        >
+                                                            <button
+                                                                type="submit"
+                                                                class="unit-menu-action"
+                                                            >
+                                                                Mark unavailable
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="
+                                                            unit-menu-action
+                                                            unit-menu-action--danger
+                                                        "
+                                                        data-delete-unit-button="{{ unit.id }}"
+                                                        data-unit-number="{{ unit.unit_number }}"
+                                                    >
+                                                        Delete unit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <!-- Pagination -->
+                    {% if total_pages > 1 %}
+                        <nav
+                            class="property-pagination"
+                            aria-label="Apartment-unit result pages"
+                        >
+                            {% if page > 1 %}
+                                <a
+                                    href="{{ url_for(
+                                        'units_page',
+                                        property_id=property.id
+                                    ) }}?page={{ page - 1 }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                                    class="property-pagination-link"
+                                >
+                                    ← Previous
+                                </a>
+                            {% else %}
+                                <span
+                                    class="
+                                        property-pagination-link
+                                        property-pagination-link--disabled
+                                    "
+                                    aria-disabled="true"
+                                >
+                                    ← Previous
+                                </span>
+                            {% endif %}
+
+
+                            <div class="property-pagination-pages">
+                                {% for page_number
+                                    in range(1, total_pages + 1) %}
+
+                                    {% if
+                                        page_number == 1
+                                        or page_number == total_pages
+                                        or (
+                                            page_number >= page - 2
+                                            and page_number <= page + 2
+                                        )
+                                    %}
+                                        <a
+                                            href="{{ url_for(
+                                                'units_page',
+                                                property_id=property.id
+                                            ) }}?page={{ page_number }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                                            class="
+                                                property-pagination-number
+                                                {% if page_number == page %}
+                                                    property-pagination-number--active
+                                                {% endif %}
+                                            "
+                                            {% if page_number == page %}
+                                                aria-current="page"
+                                            {% endif %}
+                                        >
+                                            {{ page_number }}
+                                        </a>
+
+                                    {% elif
+                                        page_number == page - 3
+                                        or page_number == page + 3
+                                    %}
+                                        <span
+                                            class="property-pagination-ellipsis"
+                                            aria-hidden="true"
+                                        >
+                                            …
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+
+                            {% if page < total_pages %}
+                                <a
+                                    href="{{ url_for(
+                                        'units_page',
+                                        property_id=property.id
+                                    ) }}?page={{ page + 1 }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                                    class="property-pagination-link"
+                                >
+                                    Next →
+                                </a>
+                            {% else %}
+                                <span
+                                    class="
+                                        property-pagination-link
+                                        property-pagination-link--disabled
+                                    "
+                                    aria-disabled="true"
+                                >
+                                    Next →
+                                </span>
+                            {% endif %}
+                        </nav>
+                    {% endif %}
+
+                {% else %}
+                    <section class="property-empty-state">
+                        <div
+                            class="property-empty-icon"
+                            aria-hidden="true"
+                        >
+                            🚪
+                        </div>
+
+                        {% if search or selected_status %}
+                            <h2>No matching units</h2>
+
+                            <p>
+                                No apartment units match the current search
+                                or status filter.
+                            </p>
+
+                            <a
+                                href="{{ url_for(
+                                    'units_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="button button--outline"
+                            >
+                                Clear filters
+                            </a>
+                        {% else %}
+                            <h2>No units added yet</h2>
+
+                            <p>
+                                Use the form to add the first apartment
+                                unit to this property.
+                            </p>
+
+                            <a
+                                href="#unit-form-panel"
+                                class="button button--primary"
+                            >
+                                Add first unit
+                            </a>
+                        {% endif %}
+                    </section>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Delete confirmation dialog -->
+        <dialog
+            id="delete-unit-dialog"
+            class="property-dialog"
+            aria-labelledby="delete-unit-title"
+        >
+            <form
+                method="POST"
+                id="delete-unit-form"
+            >
+                <header class="property-dialog-header">
+                    <div
+                        class="property-dialog-icon"
+                        aria-hidden="true"
+                    >
+                        ⚠️
+                    </div>
+
+                    <div>
+                        <p class="section-label">
+                            Permanent action
+                        </p>
+
+                        <h2 id="delete-unit-title">
+                            Delete apartment unit
+                        </h2>
+                    </div>
+                </header>
+
+                <p>
+                    This permanently deletes the unit when it has no lease
+                    or listing history. Units with historical records
+                    should be marked unavailable instead.
+                </p>
+
+                <div class="property-form-group">
+                    <label for="confirm-unit-number">
+                        Enter
+                        <strong id="delete-unit-number"></strong>
+                        to confirm
+                    </label>
+
+                    <input
+                        type="text"
+                        id="confirm-unit-number"
+                        name="confirm_unit_number"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+
+                <div class="property-dialog-actions">
+                    <button
+                        type="button"
+                        id="cancel-delete-unit"
+                        class="button button--outline"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="button property-danger-button"
+                    >
+                        Permanently delete
+                    </button>
+                </div>
+            </form>
+        </dialog>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/property.js') }}"></script>
+
+{% if errors or error %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const errorSummary = document.getElementById(
+            "unit-error-summary"
+        );
+
+        if (errorSummary) {
+            errorSummary.focus();
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

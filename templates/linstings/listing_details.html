@@ -1,0 +1,822 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ listing.title }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {% if listing.description %}
+        {{ listing.description|striptags|truncate(155, true, "…") }}
+    {% else %}
+        View available units at {{ listing.title }} with Smart Property AI.
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="listing-details-page"
+    tabindex="-1"
+>
+    <!-- Breadcrumbs -->
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('listings_page') }}">
+                        Apartments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    {{ listing.title }}
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Property header -->
+    <section
+        class="listing-details-header"
+        aria-labelledby="listing-title"
+    >
+        <div class="container">
+            <div class="listing-details-heading">
+                <div>
+                    <div class="listing-heading-badges">
+                        {% if listing.is_featured %}
+                            <span class="listing-badge">
+                                Featured
+                            </span>
+                        {% endif %}
+
+                        {% if listing.status %}
+                            <span class="status-badge status-active">
+                                {{ listing.status
+                                    |replace("_", " ")
+                                    |title }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <h1 id="listing-title">
+                        {{ listing.title }}
+                    </h1>
+
+                    <p class="listing-full-address">
+                        <span aria-hidden="true">📍</span>
+
+                        {% if listing.address %}
+                            {{ listing.address }},
+                        {% endif %}
+
+                        {% if listing.city %}
+                            {{ listing.city }}
+                        {% endif %}
+
+                        {% if listing.state %}
+                            , {{ listing.state }}
+                        {% endif %}
+
+                        {% if listing.postal_code %}
+                            {{ listing.postal_code }}
+                        {% endif %}
+
+                        {% if listing.country %}
+                            , {{ listing.country }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="listing-heading-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="property-readable-summary"
+                        aria-label="Read property details aloud"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>Read aloud</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-share-listing
+                        data-share-title="{{ listing.title }}"
+                        data-share-url="{{ request.url }}"
+                    >
+                        <span aria-hidden="true">↗</span>
+                        Share
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-print-listing
+                    >
+                        <span aria-hidden="true">🖨</span>
+                        Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main property image -->
+    <section
+        class="property-gallery"
+        aria-label="Property images"
+    >
+        <div class="container">
+            <figure class="property-main-image">
+                <img
+                    src="{{ listing.image_url }}"
+                    alt="Exterior or main view of {{ listing.title }}"
+                    width="1280"
+                    height="720"
+                    data-property-image
+                >
+            </figure>
+        </div>
+    </section>
+
+    <!-- Property content -->
+    <section class="listing-details-content section">
+        <div class="container">
+            <div class="listing-details-layout">
+                <div class="listing-details-main">
+
+                    <!-- Overview -->
+                    <article
+                        class="details-card"
+                        aria-labelledby="property-overview-title"
+                    >
+                        <header class="details-card-header">
+                            <h2 id="property-overview-title">
+                                Property overview
+                            </h2>
+                        </header>
+
+                        <div
+                            id="property-readable-summary"
+                            class="details-card-body readable-content"
+                        >
+                            <p>
+                                {{ listing.title }} is located
+                                {% if listing.city %}
+                                    in {{ listing.city }}
+                                {% else %}
+                                    at the address shown on this page
+                                {% endif %}.
+                            </p>
+
+                            {% if listing.description %}
+                                <div class="property-description">
+                                    {% for paragraph in listing.description.split("\n") %}
+                                        {% if paragraph.strip() %}
+                                            <p>{{ paragraph }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>
+                                    Contact the property manager for
+                                    additional information about this
+                                    property.
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        <dl class="property-overview-grid">
+                            {% if listing.property_type %}
+                                <div>
+                                    <dt>Property type</dt>
+                                    <dd>
+                                        {{ listing.property_type
+                                            |replace("_", " ")
+                                            |title }}
+                                    </dd>
+                                </div>
+                            {% endif %}
+
+                            <div>
+                                <dt>Available units</dt>
+                                <dd>{{ listing.available_units }}</dd>
+                            </div>
+
+                            {% if listing.minimum_rent is not none %}
+                                <div>
+                                    <dt>Rent from</dt>
+                                    <dd>
+                                        {{ "%.2f"|format(
+                                            listing.minimum_rent
+                                        ) }}
+                                        per month
+                                    </dd>
+                                </div>
+                            {% endif %}
+
+                            {% if listing.minimum_bedrooms is not none %}
+                                <div>
+                                    <dt>Bedrooms</dt>
+                                    <dd>
+                                        {% if (
+                                            listing.maximum_bedrooms is not none
+                                            and listing.maximum_bedrooms
+                                            != listing.minimum_bedrooms
+                                        ) %}
+                                            {{ listing.minimum_bedrooms }}–{{
+                                                listing.maximum_bedrooms
+                                            }}
+                                        {% else %}
+                                            {{ listing.minimum_bedrooms }}
+                                        {% endif %}
+                                    </dd>
+                                </div>
+                            {% endif %}
+                        </dl>
+                    </article>
+
+                    <!-- Available units -->
+                    <section
+                        class="details-card available-units-section"
+                        aria-labelledby="available-units-title"
+                    >
+                        <header class="details-card-header">
+                            <div>
+                                <h2 id="available-units-title">
+                                    Available units
+                                </h2>
+
+                                <p>
+                                    Select a unit to apply or request a
+                                    viewing appointment.
+                                </p>
+                            </div>
+                        </header>
+
+                        <div class="details-card-body">
+                            {% if units %}
+                                <div class="available-unit-list">
+                                    {% for unit in units %}
+                                        <article
+                                            class="available-unit-card"
+                                            id="unit-{{ unit.id }}"
+                                        >
+                                            <header class="unit-card-header">
+                                                <div>
+                                                    <p class="unit-label">
+                                                        Available apartment
+                                                    </p>
+
+                                                    <h3>
+                                                        {{ unit.unit_number
+                                                            |default(
+                                                                "Unit " ~ unit.id,
+                                                                true
+                                                            ) }}
+                                                    </h3>
+                                                </div>
+
+                                                {% if unit.monthly_rent is not none %}
+                                                    <p class="unit-price">
+                                                        <strong>
+                                                            {{ "%.2f"|format(
+                                                                unit.monthly_rent
+                                                            ) }}
+                                                        </strong>
+                                                        <span>per month</span>
+                                                    </p>
+                                                {% endif %}
+                                            </header>
+
+                                            <ul
+                                                class="unit-facts"
+                                                aria-label="Unit information"
+                                            >
+                                                {% if unit.bedrooms is not none %}
+                                                    <li>
+                                                        <span aria-hidden="true">
+                                                            🛏
+                                                        </span>
+
+                                                        {% if unit.bedrooms == 0 %}
+                                                            Studio
+                                                        {% elif unit.bedrooms == 1 %}
+                                                            1 bedroom
+                                                        {% else %}
+                                                            {{ unit.bedrooms }}
+                                                            bedrooms
+                                                        {% endif %}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if unit.bathrooms is not none %}
+                                                    <li>
+                                                        <span aria-hidden="true">
+                                                            🛁
+                                                        </span>
+
+                                                        {{ unit.bathrooms }}
+
+                                                        {% if unit.bathrooms == 1 %}
+                                                            bathroom
+                                                        {% else %}
+                                                            bathrooms
+                                                        {% endif %}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if unit.area_sqm is not none %}
+                                                    <li>
+                                                        <span aria-hidden="true">
+                                                            ↔
+                                                        </span>
+                                                        {{ unit.area_sqm }} m²
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if unit.floor is not none %}
+                                                    <li>
+                                                        <span aria-hidden="true">
+                                                            🏢
+                                                        </span>
+                                                        Floor {{ unit.floor }}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if unit.is_furnished %}
+                                                    <li>
+                                                        <span aria-hidden="true">
+                                                            🪑
+                                                        </span>
+                                                        Furnished
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+
+                                            {% if unit.description %}
+                                                <p class="unit-description">
+                                                    {{ unit.description }}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if unit.available_from %}
+                                                <p class="unit-availability">
+                                                    <strong>Available from:</strong>
+                                                    {{ unit.available_from }}
+                                                </p>
+                                            {% endif %}
+
+                                            <div class="unit-card-actions">
+                                                <a
+                                                    class="btn btn-primary"
+                                                    href="{{ url_for(
+                                                        'listing_application',
+                                                        property_id=listing.id
+                                                    ) }}?unit_id={{ unit.id }}"
+                                                >
+                                                    Apply for this unit
+                                                </a>
+
+                                                <a
+                                                    class="btn btn-secondary"
+                                                    href="{{ url_for(
+                                                        'listing_appointment',
+                                                        property_id=listing.id
+                                                    ) }}?unit_id={{ unit.id }}"
+                                                >
+                                                    Book a viewing
+                                                </a>
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-icon"
+                                                    data-speech-target="unit-summary-{{ unit.id }}"
+                                                    aria-label="Read details for {{ unit.unit_number }}"
+                                                >
+                                                    <span aria-hidden="true">
+                                                        🔊
+                                                    </span>
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                id="unit-summary-{{ unit.id }}"
+                                                class="sr-only"
+                                            >
+                                                {{ unit.unit_number }}.
+                                                {% if unit.monthly_rent is not none %}
+                                                    Monthly rent:
+                                                    {{ unit.monthly_rent }}.
+                                                {% endif %}
+                                                {% if unit.bedrooms is not none %}
+                                                    {{ unit.bedrooms }}
+                                                    bedrooms.
+                                                {% endif %}
+                                                {% if unit.bathrooms is not none %}
+                                                    {{ unit.bathrooms }}
+                                                    bathrooms.
+                                                {% endif %}
+                                                {% if unit.area_sqm is not none %}
+                                                    Area:
+                                                    {{ unit.area_sqm }}
+                                                    square metres.
+                                                {% endif %}
+                                                {{ unit.description }}
+                                            </div>
+                                        </article>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <span
+                                        class="empty-state-icon"
+                                        aria-hidden="true"
+                                    >
+                                        🏠
+                                    </span>
+
+                                    <h3>No units currently available</h3>
+
+                                    <p>
+                                        This property does not currently
+                                        have an available unit. Check
+                                        again later for updates.
+                                    </p>
+
+                                    <a
+                                        class="btn btn-primary"
+                                        href="{{ url_for('search_listings') }}"
+                                    >
+                                        Search other properties
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <!-- Amenities -->
+                    {% if listing.amenities %}
+                        <section
+                            class="details-card"
+                            aria-labelledby="amenities-title"
+                        >
+                            <header class="details-card-header">
+                                <h2 id="amenities-title">
+                                    Amenities
+                                </h2>
+                            </header>
+
+                            <div class="details-card-body">
+                                <ul class="amenity-grid">
+                                    {% if listing.amenities is string %}
+                                        {% for amenity in listing.amenities.split(",") %}
+                                            {% if amenity.strip() %}
+                                                <li>
+                                                    <span aria-hidden="true">
+                                                        ✓
+                                                    </span>
+                                                    {{ amenity.strip() }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for amenity in listing.amenities %}
+                                            <li>
+                                                <span aria-hidden="true">
+                                                    ✓
+                                                </span>
+                                                {{ amenity }}
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </section>
+                    {% endif %}
+
+                    <!-- Accessibility -->
+                    <section
+                        class="details-card"
+                        aria-labelledby="accessibility-features-title"
+                    >
+                        <header class="details-card-header">
+                            <h2 id="accessibility-features-title">
+                                Accessibility information
+                            </h2>
+                        </header>
+
+                        <div class="details-card-body">
+                            {% if listing.accessibility_features %}
+                                <ul class="amenity-grid">
+                                    {% if listing.accessibility_features is string %}
+                                        {% for feature in listing.accessibility_features.split(",") %}
+                                            {% if feature.strip() %}
+                                                <li>
+                                                    <span aria-hidden="true">
+                                                        ♿
+                                                    </span>
+                                                    {{ feature.strip() }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for feature in listing.accessibility_features %}
+                                            <li>
+                                                <span aria-hidden="true">
+                                                    ♿
+                                                </span>
+                                                {{ feature }}
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            {% else %}
+                                <p>
+                                    Accessibility information has not
+                                    yet been provided for this property.
+                                    Please request confirmation before
+                                    making travel or housing decisions.
+                                </p>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <!-- Location -->
+                    <section
+                        class="details-card"
+                        aria-labelledby="property-location-title"
+                    >
+                        <header class="details-card-header">
+                            <h2 id="property-location-title">
+                                Location
+                            </h2>
+                        </header>
+
+                        <div class="details-card-body">
+                            <address class="property-address">
+                                {% if listing.address %}
+                                    {{ listing.address }}<br>
+                                {% endif %}
+
+                                {% if listing.address_line_2 %}
+                                    {{ listing.address_line_2 }}<br>
+                                {% endif %}
+
+                                {% if listing.postal_code %}
+                                    {{ listing.postal_code }}
+                                {% endif %}
+
+                                {% if listing.city %}
+                                    {{ listing.city }}<br>
+                                {% endif %}
+
+                                {% if listing.state %}
+                                    {{ listing.state }}<br>
+                                {% endif %}
+
+                                {% if listing.country %}
+                                    {{ listing.country }}
+                                {% endif %}
+                            </address>
+
+                            {% if listing.latitude and listing.longitude %}
+                                <p>
+                                    <a
+                                        class="btn btn-secondary"
+                                        href="https://www.openstreetmap.org/?mlat={{ listing.latitude }}&mlon={{ listing.longitude }}#map=16/{{ listing.latitude }}/{{ listing.longitude }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Open location map
+                                        <span class="sr-only">
+                                            in a new tab
+                                        </span>
+                                    </a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Sidebar -->
+                <aside
+                    class="listing-details-sidebar"
+                    aria-label="Property actions"
+                >
+                    <div class="details-sidebar-card">
+                        <h2>Interested in this property?</h2>
+
+                        {% if units %}
+                            <p>
+                                Choose an available unit and submit an
+                                application or arrange a viewing.
+                            </p>
+
+                            <a
+                                class="btn btn-primary btn-block"
+                                href="{{ url_for(
+                                    'listing_application',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Start application
+                            </a>
+
+                            <a
+                                class="btn btn-secondary btn-block"
+                                href="{{ url_for(
+                                    'listing_appointment',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Book a viewing
+                            </a>
+                        {% else %}
+                            <p>
+                                There are no available units at this
+                                time.
+                            </p>
+
+                            <a
+                                class="btn btn-primary btn-block"
+                                href="{{ url_for('search_listings') }}"
+                            >
+                                Find another property
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="details-sidebar-card">
+                        <h2>Need help?</h2>
+
+                        <p>
+                            Use guided search for step-by-step help
+                            finding an apartment that meets your needs.
+                        </p>
+
+                        <a
+                            class="btn btn-secondary btn-block"
+                            href="{{ url_for('guided_search') }}"
+                        >
+                            Open guided search
+                        </a>
+                    </div>
+
+                    <div class="details-sidebar-card security-notice">
+                        <h2>
+                            <span aria-hidden="true">🔒</span>
+                            Stay safe
+                        </h2>
+
+                        <p>
+                            Never send money or sensitive identity
+                            documents outside the secure Smart Property
+                            AI application process.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Read our privacy information
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Similar listings -->
+    {% if similar_listings %}
+        <section
+            class="similar-listings section section-muted"
+            aria-labelledby="similar-listings-title"
+        >
+            <div class="container">
+                <header class="section-header">
+                    <div>
+                        <p class="eyebrow">You may also like</p>
+                        <h2 id="similar-listings-title">
+                            Similar properties
+                        </h2>
+                    </div>
+
+                    <a
+                        class="btn btn-secondary"
+                        href="{{ url_for('search_listings') }}"
+                    >
+                        View all listings
+                    </a>
+                </header>
+
+                <div class="listing-grid">
+                    {% for similar in similar_listings %}
+                        <article class="listing-card">
+                            <a
+                                class="listing-card-image-link"
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=similar.id
+                                ) }}"
+                            >
+                                <img
+                                    class="listing-card-image"
+                                    src="{{ similar.image_url }}"
+                                    alt=""
+                                    width="640"
+                                    height="400"
+                                    loading="lazy"
+                                    data-property-image
+                                >
+                            </a>
+
+                            <div class="listing-card-content">
+                                <p class="listing-location">
+                                    <span aria-hidden="true">📍</span>
+                                    {{ similar.city
+                                        |default(
+                                            "Location available on request",
+                                            true
+                                        ) }}
+                                </p>
+
+                                <h3>
+                                    <a
+                                        href="{{ url_for(
+                                            'listing_details',
+                                            property_id=similar.id
+                                        ) }}"
+                                    >
+                                        {{ similar.title }}
+                                    </a>
+                                </h3>
+
+                                {% if similar.minimum_rent is not none %}
+                                    <p class="listing-price">
+                                        {{ "%.2f"|format(
+                                            similar.minimum_rent
+                                        ) }}
+                                        <span>per month</span>
+                                    </p>
+                                {% endif %}
+
+                                <a
+                                    class="btn btn-primary"
+                                    href="{{ url_for(
+                                        'listing_details',
+                                        property_id=similar.id
+                                    ) }}"
+                                >
+                                    View property
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <p
+        id="speech-status"
+        class="speech-status sr-only"
+        data-speech-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+
+    <p
+        class="share-status sr-only"
+        data-share-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}

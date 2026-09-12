@@ -15,6 +15,14 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncIterator
 
+
+
+from fastapi import FastAPI
+
+app = FastAPI()
+from routes.ai_routes import router as ai_router
+app.include_router(ai_router)
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError

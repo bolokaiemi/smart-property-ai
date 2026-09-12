@@ -1,0 +1,532 @@
+/*
+ * Smart Property AI
+ * Accessibility styles
+ *
+ * Load after style.css and before responsive.css.
+ */
+
+/* Screen-reader-only content */
+.sr-only,
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.sr-only-focusable:focus,
+.visually-hidden-focusable:focus {
+    position: fixed !important;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10001;
+    width: auto !important;
+    height: auto !important;
+    padding: 0.75rem 1rem !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+}
+
+/* Skip navigation */
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 10000;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    background: #111827;
+    border: 3px solid #facc15;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-180%);
+    transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+/* Visible keyboard focus */
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+):focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"]
+):focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Accessible form controls */
+label {
+    cursor: pointer;
+}
+
+label,
+legend {
+    font-weight: 600;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 0.75rem;
+}
+
+input,
+select,
+textarea,
+button {
+    font: inherit;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    min-height: 44px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--primary-color, #2563eb);
+}
+
+::placeholder {
+    color: #64748b;
+    opacity: 1;
+}
+
+.required-indicator {
+    color: #b91c1c;
+    font-weight: 700;
+}
+
+.form-help,
+.help-text {
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+.form-error,
+.error-message,
+[role="alert"] {
+    color: #991b1b;
+    font-weight: 600;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"],
+.has-error {
+    border-color: #b91c1c !important;
+    box-shadow: 0 0 0 2px rgb(185 28 28 / 18%);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled,
+[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* Buttons and interactive targets */
+button,
+.button,
+.btn,
+[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+button:focus-visible,
+.button:focus-visible,
+.btn:focus-visible {
+    box-shadow: 0 0 0 4px rgb(245 158 11 / 25%);
+}
+
+[role="button"]:not(button) {
+    cursor: pointer;
+}
+
+/* Links */
+main a:not(.button):not(.btn),
+footer a:not(.button):not(.btn) {
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+}
+
+main a:not(.button):not(.btn):hover,
+main a:not(.button):not(.btn):focus-visible,
+footer a:not(.button):not(.btn):hover,
+footer a:not(.button):not(.btn):focus-visible {
+    text-decoration: underline;
+}
+
+/* Accessibility control panel */
+.accessibility-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.accessibility-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+    color: var(--text-color, #172033);
+    background: var(--surface-color, #ffffff);
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.accessibility-button:hover {
+    background: var(--surface-muted, #f1f5f9);
+}
+
+.accessibility-button[aria-pressed="true"] {
+    color: #ffffff;
+    background: var(--primary-color, #1d4ed8);
+    border-color: var(--primary-color, #1d4ed8);
+}
+
+.language-selector select {
+    min-width: 8rem;
+    min-height: 44px;
+}
+
+/* Voice controls */
+.voice-control,
+.voice-button,
+[data-voice-input] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+}
+
+.voice-button.is-listening,
+[data-voice-input][aria-pressed="true"] {
+    color: #ffffff;
+    background: #b91c1c;
+    border-color: #b91c1c;
+    animation: voice-pulse 1.4s infinite;
+}
+
+.voice-status {
+    min-height: 1.5rem;
+}
+
+@keyframes voice-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgb(185 28 28 / 35%);
+    }
+
+    50% {
+        box-shadow: 0 0 0 0.5rem rgb(185 28 28 / 0%);
+    }
+}
+
+/* Live regions and notices */
+[aria-live] {
+    overflow-wrap: anywhere;
+}
+
+.status-message,
+.alert,
+.notice {
+    padding: 1rem;
+    border: 1px solid currentColor;
+    border-radius: 0.625rem;
+}
+
+.alert-success {
+    color: #166534;
+    background: #f0fdf4;
+}
+
+.alert-warning {
+    color: #854d0e;
+    background: #fefce8;
+}
+
+.alert-error,
+.alert-danger {
+    color: #991b1b;
+    background: #fef2f2;
+}
+
+.alert-info {
+    color: #1e40af;
+    background: #eff6ff;
+}
+
+/* Dialog and modal accessibility */
+dialog::backdrop,
+.modal-backdrop {
+    background: rgb(15 23 42 / 70%);
+}
+
+dialog[open] {
+    max-width: min(42rem, calc(100% - 2rem));
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+}
+
+.modal-close,
+.dialog-close {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+}
+
+caption {
+    padding: 0.75rem;
+    font-weight: 700;
+    text-align: left;
+}
+
+th {
+    text-align: left;
+}
+
+th[scope="col"],
+th[scope="row"] {
+    font-weight: 700;
+}
+
+/* Details and summaries */
+summary {
+    min-height: 44px;
+    cursor: pointer;
+}
+
+summary::marker {
+    color: var(--primary-color, #2563eb);
+}
+
+/* Improve content readability */
+.legal-content,
+.readable-content {
+    max-width: 75ch;
+}
+
+.legal-content p,
+.readable-content p {
+    line-height: 1.75;
+}
+
+abbr[title] {
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+}
+
+/* Text-size preferences set by main.js */
+html[data-font-size="large"] {
+    font-size: 112.5%;
+}
+
+html[data-font-size="extra-large"] {
+    font-size: 125%;
+}
+
+/* High-contrast mode set by main.js */
+html.high-contrast,
+body.high-contrast,
+html[data-contrast="high"] {
+    --primary-color: #ffff00;
+    --secondary-color: #00ffff;
+    --text-color: #ffffff;
+    --background-color: #000000;
+    --surface-color: #000000;
+    --surface-muted: #111111;
+    --border-color: #ffffff;
+    color-scheme: dark;
+}
+
+html.high-contrast body,
+body.high-contrast,
+html[data-contrast="high"] body {
+    color: #ffffff;
+    background: #000000;
+}
+
+html.high-contrast a,
+body.high-contrast a,
+html[data-contrast="high"] a {
+    color: #ffff00;
+}
+
+html.high-contrast button,
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea,
+body.high-contrast button,
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea,
+html[data-contrast="high"] button,
+html[data-contrast="high"] input,
+html[data-contrast="high"] select,
+html[data-contrast="high"] textarea {
+    color: #ffffff;
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+html.high-contrast .card,
+html.high-contrast .property-card,
+html.high-contrast .unit-card,
+body.high-contrast .card,
+body.high-contrast .property-card,
+body.high-contrast .unit-card,
+html[data-contrast="high"] .card,
+html[data-contrast="high"] .property-card,
+html[data-contrast="high"] .unit-card {
+    color: #ffffff;
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+/* Dyslexia-friendly mode set by main.js */
+html.dyslexia-friendly,
+body.dyslexia-friendly,
+html[data-reading-mode="dyslexia"] {
+    font-family: "OpenDyslexic", Arial, Verdana, sans-serif;
+    letter-spacing: 0.04em;
+    word-spacing: 0.12em;
+}
+
+html.dyslexia-friendly p,
+body.dyslexia-friendly p,
+html[data-reading-mode="dyslexia"] p {
+    line-height: 1.8;
+}
+
+/* Reduced-motion class set by main.js */
+html.reduce-motion *,
+body.reduce-motion *,
+html[data-reduce-motion="true"] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+}
+
+/* Browser preferences */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .voice-button.is-listening,
+    [data-voice-input][aria-pressed="true"] {
+        animation: none;
+    }
+}
+
+@media (prefers-contrast: more) {
+    :where(
+        a,
+        button,
+        input,
+        select,
+        textarea,
+        summary,
+        [role="button"]
+    ):focus-visible {
+        outline-width: 4px;
+    }
+
+    input,
+    select,
+    textarea,
+    button,
+    .button,
+    .btn,
+    .card {
+        border-width: 2px;
+    }
+}
+
+/* Windows forced-colors mode */
+@media (forced-colors: active) {
+    .skip-link,
+    button,
+    .button,
+    .btn,
+    input,
+    select,
+    textarea {
+        forced-color-adjust: auto;
+    }
+
+    :focus-visible {
+        outline: 3px solid Highlight;
+    }
+
+    .voice-button.is-listening {
+        border: 3px solid Highlight;
+    }
+}
+
+/* Printing */
+@media print {
+    .skip-link,
+    .accessibility-controls,
+    .voice-controls,
+    .voice-button,
+    [aria-live="polite"]:empty,
+    [aria-live="assertive"]:empty {
+        display: none !important;
+    }
+}

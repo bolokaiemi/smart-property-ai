@@ -1,0 +1,698 @@
+{% extends "base.html" %}
+
+{% block title %}
+Properties | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Manage properties, apartment units and property status through the secure Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/property.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<section class="property-page">
+    <div class="container">
+
+        <!-- ==============================================================
+             Page header
+             ============================================================== -->
+
+        <header class="property-page-header">
+            <div>
+                <p class="section-label">
+                    Landlord portal
+                </p>
+
+                <h1>Your properties</h1>
+
+                <p>
+                    Manage properties, apartment units, availability,
+                    managers and listing activity from one place.
+                </p>
+            </div>
+
+            {% if current_user.role.value in
+                ['landlord', 'administrator'] %}
+                <a
+                    href="{{ url_for('add_property_page') }}"
+                    class="button button--primary"
+                >
+                    <span aria-hidden="true">＋</span>
+                    Add property
+                </a>
+            {% endif %}
+        </header>
+
+
+        <!-- ==============================================================
+             Status messages
+             ============================================================== -->
+
+        {% if success %}
+            <div
+                class="property-alert property-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="property-alert property-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        <!-- ==============================================================
+             Summary cards
+             ============================================================== -->
+
+        <section
+            class="property-summary"
+            aria-labelledby="property-summary-heading"
+        >
+            <h2
+                id="property-summary-heading"
+                class="sr-only"
+            >
+                Property-management summary
+            </h2>
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    🏢
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        Total properties
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.total_properties | default(0) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    ✓
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        Active properties
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.active_properties | default(0) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    🚪
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        Total units
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.total_units | default(0) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    🔑
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        Occupied units
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.occupied_units | default(0) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    🏠
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        Vacant units
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.vacant_units | default(0) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="property-summary-card">
+                <span
+                    class="property-summary-icon"
+                    aria-hidden="true"
+                >
+                    🔧
+                </span>
+
+                <div>
+                    <span class="property-summary-label">
+                        In maintenance
+                    </span>
+
+                    <strong class="property-summary-value">
+                        {{ summary.maintenance_units | default(0) }}
+                    </strong>
+                </div>
+            </article>
+        </section>
+
+
+        <!-- ==============================================================
+             Search and filters
+             ============================================================== -->
+
+        <section
+            class="property-filter-section"
+            aria-labelledby="property-filter-heading"
+        >
+            <h2
+                id="property-filter-heading"
+                class="sr-only"
+            >
+                Search and filter properties
+            </h2>
+
+            <form
+                action="{{ url_for('properties_page') }}"
+                method="GET"
+                class="property-filter-form"
+                id="property-filter-form"
+            >
+                <div class="property-filter-group">
+                    <label for="property-search">
+                        Search properties
+                    </label>
+
+                    <input
+                        type="search"
+                        id="property-search"
+                        name="search"
+                        value="{{ search | default('') }}"
+                        placeholder="Name, address, city or postal code"
+                        maxlength="150"
+                    >
+                </div>
+
+
+                <div class="property-filter-group">
+                    <label for="property-status-filter">
+                        Status
+                    </label>
+
+                    <select
+                        id="property-status-filter"
+                        name="status"
+                    >
+                        <option value="">
+                            All statuses
+                        </option>
+
+                        {% for status_option in property_statuses %}
+                            <option
+                                value="{{ status_option.value }}"
+                                {% if selected_status == status_option.value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ status_option.value
+                                    | replace('_', ' ')
+                                    | title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="property-filter-actions">
+                    <button
+                        type="submit"
+                        class="button button--primary"
+                    >
+                        Apply filters
+                    </button>
+
+                    {% if search or selected_status %}
+                        <a
+                            href="{{ url_for('properties_page') }}"
+                            class="button button--outline"
+                        >
+                            Clear
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </section>
+
+
+        <!-- ==============================================================
+             Result information
+             ============================================================== -->
+
+        <div class="property-result-header">
+            <div>
+                <h2>
+                    Property list
+                </h2>
+
+                <p>
+                    {% if total_properties == 1 %}
+                        1 property found
+                    {% else %}
+                        {{ total_properties | default(0) }}
+                        properties found
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if total_pages > 1 %}
+                <p class="property-page-indicator">
+                    Page {{ page }} of {{ total_pages }}
+                </p>
+            {% endif %}
+        </div>
+
+
+        <!-- ==============================================================
+             Property cards
+             ============================================================== -->
+
+        {% if properties %}
+            <div class="property-card-grid">
+
+                {% for property in properties %}
+                    <article class="property-card">
+
+                        <div class="property-card-image">
+                            <div
+                                class="property-card-placeholder"
+                                aria-hidden="true"
+                            >
+                                🏢
+                            </div>
+
+                            <span
+                                class="
+                                    property-status
+                                    property-status--{{ property.status.value }}
+                                "
+                            >
+                                {{ property.status.value
+                                    | replace('_', ' ')
+                                    | title }}
+                            </span>
+                        </div>
+
+
+                        <div class="property-card-content">
+                            <div class="property-card-heading">
+                                <div>
+                                    <p class="property-type">
+                                        {{ property.property_type
+                                            | replace('_', ' ')
+                                            | title }}
+                                    </p>
+
+                                    <h3>
+                                        <a
+                                            href="{{ url_for(
+                                                'property_details',
+                                                property_id=property.id
+                                            ) }}"
+                                        >
+                                            {{ property.name }}
+                                        </a>
+                                    </h3>
+                                </div>
+                            </div>
+
+
+                            <address class="property-address">
+                                <span aria-hidden="true">📍</span>
+
+                                <span>
+                                    {{ property.street_address }}<br>
+                                    {{ property.postal_code }}
+                                    {{ property.city }}
+
+                                    {% if property.state %}
+                                        , {{ property.state }}
+                                    {% endif %}
+
+                                    <br>
+                                    {{ property.country }}
+                                </span>
+                            </address>
+
+
+                            {% if property.description %}
+                                <p class="property-card-description">
+                                    {{ property.description | truncate(170) }}
+                                </p>
+                            {% else %}
+                                <p
+                                    class="
+                                        property-card-description
+                                        property-card-description--empty
+                                    "
+                                >
+                                    No property description has been
+                                    added yet.
+                                </p>
+                            {% endif %}
+
+
+                            <dl class="property-card-information">
+                                <div>
+                                    <dt>Owner</dt>
+
+                                    <dd>
+                                        {% if property.owner_id
+                                            == current_user.id %}
+                                            You
+                                        {% else %}
+                                            Assigned landlord
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Manager</dt>
+
+                                    <dd>
+                                        {% if property.manager_id %}
+                                            Assigned
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Created</dt>
+
+                                    <dd>
+                                        {{ property.created_at.strftime(
+                                            '%d %b %Y'
+                                        ) }}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+
+                        <footer class="property-card-actions">
+                            <a
+                                href="{{ url_for(
+                                    'property_details',
+                                    property_id=property.id
+                                ) }}"
+                                class="button button--primary"
+                            >
+                                View details
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'units_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="button button--outline"
+                            >
+                                Manage units
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'edit_property_page',
+                                    property_id=property.id
+                                ) }}"
+                                class="property-action-link"
+                            >
+                                Edit
+                            </a>
+                        </footer>
+
+
+                        <div class="property-card-status-actions">
+                            {% if property.status.value != 'active' %}
+                                <form
+                                    action="{{ url_for(
+                                        'activate_property',
+                                        property_id=property.id
+                                    ) }}"
+                                    method="POST"
+                                    class="property-inline-form"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="
+                                            property-status-button
+                                            property-status-button--activate
+                                        "
+                                    >
+                                        Activate
+                                    </button>
+                                </form>
+                            {% endif %}
+
+
+                            {% if property.status.value != 'inactive' %}
+                                <form
+                                    action="{{ url_for(
+                                        'deactivate_property',
+                                        property_id=property.id
+                                    ) }}"
+                                    method="POST"
+                                    class="property-inline-form"
+                                    data-confirm-form
+                                    data-confirm-message="Deactivate this property? Published listings connected to it will be paused."
+                                >
+                                    <button
+                                        type="submit"
+                                        class="
+                                            property-status-button
+                                            property-status-button--deactivate
+                                        "
+                                    >
+                                        Deactivate
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                    </article>
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ==========================================================
+                 Pagination
+                 ========================================================== -->
+
+            {% if total_pages > 1 %}
+                <nav
+                    class="property-pagination"
+                    aria-label="Property result pages"
+                >
+                    {% if page > 1 %}
+                        <a
+                            href="{{ url_for('properties_page') }}?page={{ page - 1 }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                            class="property-pagination-link"
+                            aria-label="Previous property page"
+                        >
+                            ← Previous
+                        </a>
+                    {% else %}
+                        <span
+                            class="
+                                property-pagination-link
+                                property-pagination-link--disabled
+                            "
+                            aria-disabled="true"
+                        >
+                            ← Previous
+                        </span>
+                    {% endif %}
+
+
+                    <div class="property-pagination-pages">
+                        {% for page_number in range(1, total_pages + 1) %}
+
+                            {% if
+                                page_number == 1
+                                or page_number == total_pages
+                                or (
+                                    page_number >= page - 2
+                                    and page_number <= page + 2
+                                )
+                            %}
+                                <a
+                                    href="{{ url_for('properties_page') }}?page={{ page_number }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                                    class="
+                                        property-pagination-number
+                                        {% if page_number == page %}
+                                            property-pagination-number--active
+                                        {% endif %}
+                                    "
+                                    {% if page_number == page %}
+                                        aria-current="page"
+                                    {% endif %}
+                                >
+                                    {{ page_number }}
+                                </a>
+
+                            {% elif
+                                page_number == page - 3
+                                or page_number == page + 3
+                            %}
+                                <span
+                                    class="property-pagination-ellipsis"
+                                    aria-hidden="true"
+                                >
+                                    …
+                                </span>
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+
+
+                    {% if page < total_pages %}
+                        <a
+                            href="{{ url_for('properties_page') }}?page={{ page + 1 }}&search={{ search | urlencode }}&status={{ selected_status | urlencode }}"
+                            class="property-pagination-link"
+                            aria-label="Next property page"
+                        >
+                            Next →
+                        </a>
+                    {% else %}
+                        <span
+                            class="
+                                property-pagination-link
+                                property-pagination-link--disabled
+                            "
+                            aria-disabled="true"
+                        >
+                            Next →
+                        </span>
+                    {% endif %}
+                </nav>
+            {% endif %}
+
+
+        {% else %}
+            <!-- ==========================================================
+                 Empty state
+                 ========================================================== -->
+
+            <section class="property-empty-state">
+                <div
+                    class="property-empty-icon"
+                    aria-hidden="true"
+                >
+                    🏘️
+                </div>
+
+                {% if search or selected_status %}
+                    <h2>No matching properties</h2>
+
+                    <p>
+                        No properties match the current search or status
+                        filter. Try changing or clearing your filters.
+                    </p>
+
+                    <a
+                        href="{{ url_for('properties_page') }}"
+                        class="button button--primary"
+                    >
+                        Clear filters
+                    </a>
+                {% else %}
+                    <h2>No properties added yet</h2>
+
+                    {% if current_user.role.value in
+                        ['landlord', 'administrator'] %}
+                        <p>
+                            Add your first property to begin managing
+                            units, listings, tenants and maintenance
+                            requests.
+                        </p>
+
+                        <a
+                            href="{{ url_for('add_property_page') }}"
+                            class="button button--primary"
+                        >
+                            Add your first property
+                        </a>
+                    {% else %}
+                        <p>
+                            No properties are currently assigned to your
+                            property-manager account.
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </section>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/property.js') }}"></script>
+{% endblock %}

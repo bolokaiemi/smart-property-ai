@@ -1,0 +1,781 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Find an apartment") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {{ page_description|default(
+        "Search accessible apartments and rental properties with Smart Property AI."
+    ) }}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main id="main-content" class="listings-page" tabindex="-1">
+
+    <!-- Hero and search -->
+    <section
+        class="listing-hero"
+        aria-labelledby="listing-hero-title"
+    >
+        <div class="container">
+            <div class="listing-hero-grid">
+                <div class="listing-hero-content">
+                    <p class="eyebrow">
+                        Accessible apartment search
+                    </p>
+
+                    <h1 id="listing-hero-title">
+                        Find a home that fits your life
+                    </h1>
+
+                    <p class="listing-hero-description">
+                        Search available apartments by location, rent,
+                        accessibility, size and the features that matter
+                        to you.
+                    </p>
+
+                    <div class="listing-hero-actions">
+                        <a
+                            class="btn btn-secondary"
+                            href="{{ url_for('guided_search') }}"
+                        >
+                            <span aria-hidden="true">🧭</span>
+                            Start guided search
+                        </a>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary speech-button"
+                            data-speech-target="listing-hero-title"
+                            aria-label="Read the apartment search introduction aloud"
+                        >
+                            <span aria-hidden="true">🔊</span>
+                            <span data-speech-label>Read aloud</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="listing-search-panel">
+                    <form
+                        id="listing-search-form"
+                        class="listing-search-form"
+                        method="get"
+                        action="{{ url_for('search_listings') }}"
+                        role="search"
+                        aria-labelledby="search-form-title"
+                    >
+                        <h2 id="search-form-title">
+                            Search available apartments
+                        </h2>
+
+                        <div class="form-group">
+                            <label for="listing-query">
+                                Location or property
+                            </label>
+
+                            <div class="voice-input-group">
+                                <input
+                                    id="listing-query"
+                                    name="q"
+                                    type="search"
+                                    maxlength="200"
+                                    autocomplete="off"
+                                    placeholder="City, postcode, address or property"
+                                    aria-describedby="listing-query-help"
+                                    data-search-suggestions
+                                >
+
+                                <button
+                                    type="button"
+                                    class="voice-button"
+                                    data-voice-input="listing-query"
+                                    aria-label="Enter location using your voice"
+                                    title="Use voice input"
+                                >
+                                    <span aria-hidden="true">🎤</span>
+                                    <span class="sr-only" data-voice-label>
+                                        Use voice
+                                    </span>
+                                </button>
+                            </div>
+
+                            <p
+                                id="listing-query-help"
+                                class="form-help"
+                            >
+                                Type a location or use the microphone.
+                            </p>
+
+                            <div
+                                class="search-suggestions"
+                                data-search-suggestions-list
+                                hidden
+                            ></div>
+                        </div>
+
+                        <div class="listing-search-fields">
+                            <div class="form-group">
+                                <label for="listing-city">
+                                    City
+                                </label>
+
+                                <select
+                                    id="listing-city"
+                                    name="city"
+                                >
+                                    <option value="">
+                                        All cities
+                                    </option>
+
+                                    {% for city in filter_options.cities %}
+                                        <option value="{{ city }}">
+                                            {{ city }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listing-property-type">
+                                    Property type
+                                </label>
+
+                                <select
+                                    id="listing-property-type"
+                                    name="property_type"
+                                >
+                                    <option value="">
+                                        All property types
+                                    </option>
+
+                                    {% for property_type in filter_options.property_types %}
+                                        <option value="{{ property_type }}">
+                                            {{ property_type
+                                                |replace("_", " ")
+                                                |title }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listing-minimum-rent">
+                                    Minimum monthly rent
+                                </label>
+
+                                <input
+                                    id="listing-minimum-rent"
+                                    name="minimum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    placeholder="No minimum"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listing-maximum-rent">
+                                    Maximum monthly rent
+                                </label>
+
+                                <input
+                                    id="listing-maximum-rent"
+                                    name="maximum_rent"
+                                    type="number"
+                                    min="0"
+                                    step="50"
+                                    inputmode="decimal"
+                                    placeholder="No maximum"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listing-bedrooms">
+                                    Minimum bedrooms
+                                </label>
+
+                                <select
+                                    id="listing-bedrooms"
+                                    name="bedrooms"
+                                >
+                                    <option value="">
+                                        Any number
+                                    </option>
+
+                                    {% if filter_options.bedrooms %}
+                                        {% for bedroom_count in filter_options.bedrooms %}
+                                            <option value="{{ bedroom_count }}">
+                                                {% if bedroom_count == 0 %}
+                                                    Studio
+                                                {% elif bedroom_count == 1 %}
+                                                    1 bedroom
+                                                {% else %}
+                                                    {{ bedroom_count }} bedrooms
+                                                {% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="0">Studio</option>
+                                        <option value="1">1 bedroom</option>
+                                        <option value="2">2 bedrooms</option>
+                                        <option value="3">3 bedrooms</option>
+                                        <option value="4">4+ bedrooms</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listing-sort">
+                                    Sort results
+                                </label>
+
+                                <select
+                                    id="listing-sort"
+                                    name="sort"
+                                >
+                                    <option value="newest">
+                                        Newest first
+                                    </option>
+                                    <option value="rent_low">
+                                        Lowest rent first
+                                    </option>
+                                    <option value="rent_high">
+                                        Highest rent first
+                                    </option>
+                                    <option value="bedrooms_high">
+                                        Most bedrooms
+                                    </option>
+                                    <option value="city">
+                                        City A–Z
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <fieldset class="quick-features">
+                            <legend>
+                                Important features
+                            </legend>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="accessible"
+                                    value="true"
+                                >
+                                <span>
+                                    Step-free or wheelchair accessible
+                                </span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="furnished"
+                                    value="true"
+                                >
+                                <span>Furnished</span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="pets_allowed"
+                                    value="true"
+                                >
+                                <span>Pets allowed</span>
+                            </label>
+
+                            <label class="checkbox-option">
+                                <input
+                                    type="checkbox"
+                                    name="parking"
+                                    value="true"
+                                >
+                                <span>Parking available</span>
+                            </label>
+                        </fieldset>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary search-submit-button"
+                        >
+                            <span aria-hidden="true">🔎</span>
+                            Search apartments
+                        </button>
+
+                        <p
+                            id="voice-status"
+                            class="voice-status"
+                            data-voice-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search methods -->
+    <section
+        class="search-methods section"
+        aria-labelledby="search-methods-title"
+    >
+        <div class="container">
+            <header class="section-header">
+                <div>
+                    <p class="eyebrow">Search your way</p>
+
+                    <h2 id="search-methods-title">
+                        Apartment search made accessible
+                    </h2>
+                </div>
+            </header>
+
+            <div class="search-method-grid">
+                <article class="search-method-card">
+                    <span
+                        class="search-method-icon"
+                        aria-hidden="true"
+                    >
+                        🧭
+                    </span>
+
+                    <h3>Guided search</h3>
+
+                    <p>
+                        Answer one question at a time with clear
+                        instructions and optional spoken guidance.
+                    </p>
+
+                    <a
+                        class="card-link"
+                        href="{{ url_for('guided_search') }}"
+                    >
+                        Begin guided search
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </article>
+
+                <article class="search-method-card">
+                    <span
+                        class="search-method-icon"
+                        aria-hidden="true"
+                    >
+                        🎤
+                    </span>
+
+                    <h3>Voice-assisted forms</h3>
+
+                    <p>
+                        Use your microphone to enter locations and
+                        search preferences without typing.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="card-link button-link"
+                        data-focus-target="listing-query"
+                    >
+                        Try voice search
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </article>
+
+                <article class="search-method-card">
+                    <span
+                        class="search-method-icon"
+                        aria-hidden="true"
+                    >
+                        🌍
+                    </span>
+
+                    <h3>Multilingual access</h3>
+
+                    <p>
+                        Select your preferred language from the
+                        accessibility controls in the navigation.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="card-link button-link"
+                        data-open-language-selector
+                    >
+                        Select language
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured listings -->
+    <section
+        class="featured-listings section section-muted"
+        aria-labelledby="featured-listings-title"
+    >
+        <div class="container">
+            <header class="section-header">
+                <div>
+                    <p class="eyebrow">Available homes</p>
+
+                    <h2 id="featured-listings-title">
+                        Featured properties
+                    </h2>
+
+                    <p>
+                        Explore highlighted properties with currently
+                        available rental units.
+                    </p>
+                </div>
+
+                <a
+                    class="btn btn-secondary"
+                    href="{{ url_for('search_listings') }}"
+                >
+                    View all listings
+                </a>
+            </header>
+
+            {% if featured_listings %}
+                <div
+                    class="listing-grid"
+                    aria-label="Featured property listings"
+                >
+                    {% for listing in featured_listings %}
+                        <article class="listing-card">
+                            <a
+                                class="listing-card-image-link"
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=listing.id
+                                ) }}"
+                                aria-label="View {{ listing.title }}"
+                            >
+                                <img
+                                    class="listing-card-image"
+                                    src="{{ listing.image_url }}"
+                                    alt=""
+                                    loading="lazy"
+                                    width="640"
+                                    height="400"
+                                    data-property-image
+                                >
+
+                                {% if listing.is_featured %}
+                                    <span class="listing-badge">
+                                        Featured
+                                    </span>
+                                {% endif %}
+                            </a>
+
+                            <div class="listing-card-content">
+                                <div class="listing-card-heading">
+                                    <div>
+                                        <p class="listing-location">
+                                            <span aria-hidden="true">📍</span>
+
+                                            {% if listing.city %}
+                                                {{ listing.city }}
+                                            {% else %}
+                                                Location available on request
+                                            {% endif %}
+                                        </p>
+
+                                        <h3>
+                                            <a
+                                                href="{{ url_for(
+                                                    'listing_details',
+                                                    property_id=listing.id
+                                                ) }}"
+                                            >
+                                                {{ listing.title }}
+                                            </a>
+                                        </h3>
+                                    </div>
+
+                                    {% if listing.minimum_rent is not none %}
+                                        <p class="listing-price">
+                                            <span class="sr-only">
+                                                Rent from
+                                            </span>
+                                            {{ "%.2f"|format(
+                                                listing.minimum_rent
+                                            ) }}
+                                            <span>/ month</span>
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                {% if listing.description %}
+                                    <p class="listing-description">
+                                        {{ listing.description|truncate(
+                                            150,
+                                            true,
+                                            "…"
+                                        ) }}
+                                    </p>
+                                {% endif %}
+
+                                <ul
+                                    class="listing-facts"
+                                    aria-label="Property summary"
+                                >
+                                    <li>
+                                        <strong>
+                                            {{ listing.available_units }}
+                                        </strong>
+                                        available
+                                        {% if listing.available_units == 1 %}
+                                            unit
+                                        {% else %}
+                                            units
+                                        {% endif %}
+                                    </li>
+
+                                    {% if listing.minimum_bedrooms is not none %}
+                                        <li>
+                                            <strong>
+                                                {{ listing.minimum_bedrooms }}
+                                            </strong>
+                                            {% if listing.minimum_bedrooms == 1 %}
+                                                bedroom
+                                            {% else %}
+                                                bedrooms
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+
+                                    {% if listing.property_type %}
+                                        <li>
+                                            {{ listing.property_type
+                                                |replace("_", " ")
+                                                |title }}
+                                        </li>
+                                    {% endif %}
+                                </ul>
+
+                                {% if listing.accessibility_features %}
+                                    <div class="listing-accessibility">
+                                        <strong>
+                                            Accessibility features:
+                                        </strong>
+
+                                        {% if listing.accessibility_features is string %}
+                                            {{ listing.accessibility_features }}
+                                        {% else %}
+                                            {{ listing.accessibility_features
+                                                |join(", ") }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="listing-card-actions">
+                                    <a
+                                        class="btn btn-primary"
+                                        href="{{ url_for(
+                                            'listing_details',
+                                            property_id=listing.id
+                                        ) }}"
+                                    >
+                                        View property
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-icon"
+                                        data-speech-target="listing-card-{{ listing.id }}"
+                                        aria-label="Read {{ listing.title }} aloud"
+                                        title="Read listing aloud"
+                                    >
+                                        <span aria-hidden="true">🔊</span>
+                                    </button>
+                                </div>
+
+                                <div
+                                    id="listing-card-{{ listing.id }}"
+                                    class="sr-only"
+                                >
+                                    {{ listing.title }}.
+                                    Located in {{ listing.city }}.
+                                    {{ listing.available_units }}
+                                    units available.
+                                    {% if listing.minimum_rent is not none %}
+                                        Rent starts from
+                                        {{ listing.minimum_rent }}
+                                        per month.
+                                    {% endif %}
+                                    {{ listing.description }}
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <span
+                        class="empty-state-icon"
+                        aria-hidden="true"
+                    >
+                        🏠
+                    </span>
+
+                    <h3>No featured listings yet</h3>
+
+                    <p>
+                        Published properties will appear here when
+                        landlords make units available.
+                    </p>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for('search_listings') }}"
+                    >
+                        Search all apartments
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Accessibility highlights -->
+    <section
+        class="listing-accessibility-section section"
+        aria-labelledby="listing-accessibility-title"
+    >
+        <div class="container">
+            <div class="accessibility-feature-grid">
+                <div class="accessibility-feature-content">
+                    <p class="eyebrow">
+                        Designed for everyone
+                    </p>
+
+                    <h2 id="listing-accessibility-title">
+                        A property search you can see, hear and control
+                    </h2>
+
+                    <p>
+                        Smart Property AI combines keyboard-friendly
+                        navigation, voice input, speech output,
+                        multilingual controls and guided forms.
+                    </p>
+
+                    <ul class="check-list">
+                        <li>Keyboard-accessible search controls</li>
+                        <li>Voice-assisted form entry</li>
+                        <li>Optional text-to-speech guidance</li>
+                        <li>High-contrast and larger-text modes</li>
+                        <li>Screen-reader-friendly property details</li>
+                    </ul>
+
+                    <a
+                        class="btn btn-secondary"
+                        href="{{ url_for('accessibility_page') }}"
+                    >
+                        Read our accessibility statement
+                    </a>
+                </div>
+
+                <aside
+                    class="accessibility-help-card"
+                    aria-labelledby="accessibility-help-title"
+                >
+                    <h3 id="accessibility-help-title">
+                        Need help finding a home?
+                    </h3>
+
+                    <p>
+                        Use guided search to answer simple questions one
+                        at a time. Your preferences are saved on your
+                        device while you work.
+                    </p>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for('guided_search') }}"
+                    >
+                        Open guided search
+                    </a>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to action -->
+    <section
+        class="listing-cta"
+        aria-labelledby="listing-cta-title"
+    >
+        <div class="container">
+            <div class="listing-cta-content">
+                <div>
+                    <h2 id="listing-cta-title">
+                        Are you a landlord?
+                    </h2>
+
+                    <p>
+                        Manage properties, units, tenant activity,
+                        maintenance requests and rental communications
+                        from one secure portal.
+                    </p>
+                </div>
+
+                <div class="listing-cta-actions">
+                    {% if is_authenticated %}
+                        <a
+                            class="btn btn-light"
+                            href="{{ url_for('properties_page') }}"
+                        >
+                            Open landlord portal
+                        </a>
+                    {% else %}
+                        <a
+                            class="btn btn-light"
+                            href="{{ url_for('register_page') }}"
+                        >
+                            Create landlord account
+                        </a>
+
+                        <a
+                            class="btn btn-outline-light"
+                            href="{{ url_for('login_page') }}"
+                        >
+                            Sign in
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <p
+        id="speech-status"
+        class="speech-status sr-only"
+        data-speech-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}

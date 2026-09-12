@@ -1,0 +1,791 @@
+/*
+|--------------------------------------------------------------------------
+| Smart Property AI — Accessibility
+|--------------------------------------------------------------------------
+| Provides:
+| - Keyboard focus indicators
+| - Skip navigation
+| - Text-size controls
+| - High-contrast mode
+| - Screen-reader utilities
+| - Reduced-motion support
+| - Touch-target improvements
+| - Form accessibility
+|--------------------------------------------------------------------------
+*/
+
+
+/* ==========================================================================
+   Screen-reader utility
+   ========================================================================== */
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    white-space: normal !important;
+    clip: auto !important;
+    clip-path: none !important;
+}
+
+
+/* ==========================================================================
+   Skip link
+   ========================================================================== */
+
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 10000;
+    padding: 0.8rem 1rem;
+    transform: translateY(-180%);
+    border: 3px solid #f59e0b;
+    border-radius: 0.5rem;
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.3);
+    transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    color: #ffffff;
+}
+
+
+/* ==========================================================================
+   Keyboard focus
+   ========================================================================== */
+
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+main:focus {
+    outline: none;
+}
+
+
+/* ==========================================================================
+   Accessibility toolbar
+   ========================================================================== */
+
+.accessibility-toolbar {
+    position: relative;
+    z-index: 1100;
+}
+
+.accessibility-toolbar__inner {
+    min-height: 44px;
+}
+
+.accessibility-button,
+.language-control select {
+    min-height: 36px;
+}
+
+.accessibility-button[aria-pressed="true"] {
+    border-color: #ffffff;
+    background: #ffffff;
+    color: #0f172a;
+}
+
+.accessibility-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+
+/* ==========================================================================
+   Text resizing
+   ========================================================================== */
+
+body.text-size-large {
+    font-size: 1.125rem;
+}
+
+body.text-size-extra-large {
+    font-size: 1.25rem;
+}
+
+body.text-size-large input,
+body.text-size-large select,
+body.text-size-large textarea,
+body.text-size-large button {
+    font-size: 1rem;
+}
+
+body.text-size-extra-large input,
+body.text-size-extra-large select,
+body.text-size-extra-large textarea,
+body.text-size-extra-large button {
+    font-size: 1.08rem;
+}
+
+body.text-size-large .container,
+body.text-size-extra-large .container {
+    max-width: 100%;
+}
+
+
+/* ==========================================================================
+   High-contrast mode
+   ========================================================================== */
+
+body.high-contrast {
+    --color-primary: #ffff00;
+    --color-primary-dark: #ffffff;
+    --color-primary-light: #171717;
+
+    --color-secondary: #00ffff;
+    --color-secondary-dark: #ffffff;
+    --color-secondary-light: #171717;
+
+    --color-accent: #ffff00;
+
+    --color-background: #000000;
+    --color-surface: #000000;
+    --color-surface-soft: #171717;
+
+    --color-heading: #ffffff;
+    --color-text: #ffffff;
+    --color-text-light: #f1f5f9;
+    --color-border: #ffffff;
+
+    --color-dark: #000000;
+    --color-dark-soft: #171717;
+
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast,
+body.high-contrast main,
+body.high-contrast section,
+body.high-contrast article,
+body.high-contrast aside,
+body.high-contrast header,
+body.high-contrast footer,
+body.high-contrast nav {
+    border-color: #ffffff;
+}
+
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast h5,
+body.high-contrast h6,
+body.high-contrast p,
+body.high-contrast li,
+body.high-contrast dt,
+body.high-contrast dd,
+body.high-contrast address,
+body.high-contrast label,
+body.high-contrast small,
+body.high-contrast span {
+    color: inherit;
+}
+
+body.high-contrast a {
+    color: #ffff00;
+    text-decoration: underline;
+}
+
+body.high-contrast a:hover {
+    color: #00ffff;
+}
+
+body.high-contrast a:visited {
+    color: #ffb3ff;
+}
+
+body.high-contrast .site-header,
+body.high-contrast .primary-navigation,
+body.high-contrast .site-footer,
+body.high-contrast .accessibility-toolbar {
+    border-color: #ffffff;
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast .primary-navigation a:hover,
+body.high-contrast .primary-navigation a[aria-current="page"] {
+    background: #ffff00;
+    color: #000000;
+}
+
+body.high-contrast .site-logo {
+    color: #ffffff;
+}
+
+body.high-contrast .site-logo__icon {
+    border: 2px solid #ffffff;
+    background: #000000;
+}
+
+body.high-contrast .navigation-toggle {
+    border: 2px solid #ffffff;
+    background: #000000;
+}
+
+body.high-contrast .navigation-toggle span {
+    background: #ffffff;
+}
+
+body.high-contrast .button {
+    border-width: 2px;
+    box-shadow: none;
+}
+
+body.high-contrast .button--primary,
+body.high-contrast .button--light {
+    border-color: #ffff00;
+    background: #ffff00;
+    color: #000000;
+}
+
+body.high-contrast .button--primary:hover,
+body.high-contrast .button--light:hover {
+    border-color: #00ffff;
+    background: #00ffff;
+    color: #000000;
+}
+
+body.high-contrast .button--outline,
+body.high-contrast .button--transparent {
+    border-color: #ffffff;
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast .button--outline:hover,
+body.high-contrast .button--transparent:hover {
+    border-color: #ffffff;
+    background: #ffffff;
+    color: #000000;
+}
+
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+    border: 2px solid #ffffff !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast input::placeholder,
+body.high-contrast textarea::placeholder {
+    color: #d1d5db;
+    opacity: 1;
+}
+
+body.high-contrast input:focus,
+body.high-contrast select:focus,
+body.high-contrast textarea:focus {
+    border-color: #ffff00 !important;
+    box-shadow: 0 0 0 3px #ffff00 !important;
+}
+
+body.high-contrast input[type="checkbox"],
+body.high-contrast input[type="radio"] {
+    accent-color: #ffff00;
+}
+
+body.high-contrast .hero-section,
+body.high-contrast .quick-search-section,
+body.high-contrast .pathways-section,
+body.high-contrast .features-section,
+body.high-contrast .automation-section,
+body.high-contrast .accessibility-section,
+body.high-contrast .trust-section,
+body.high-contrast .cta-section,
+body.high-contrast .auth-page,
+body.high-contrast .property-page,
+body.high-contrast .legal-page {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast .hero-assistant-card,
+body.high-contrast .quick-search-card,
+body.high-contrast .pathway-card,
+body.high-contrast .feature-card,
+body.high-contrast .dashboard-preview,
+body.high-contrast .metric-card,
+body.high-contrast .auth-card,
+body.high-contrast .legal-content,
+body.high-contrast .property-card,
+body.high-contrast .property-form-section,
+body.high-contrast .property-details-panel,
+body.high-contrast .property-sidebar-panel,
+body.high-contrast .unit-form-panel,
+body.high-contrast .unit-list-panel {
+    border: 2px solid #ffffff !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+body.high-contrast .assistant-message--ai,
+body.high-contrast .assistant-message--user {
+    border: 2px solid #ffffff;
+    background: #171717;
+    color: #ffffff;
+}
+
+body.high-contrast .section-label {
+    color: #00ffff;
+}
+
+body.high-contrast .property-status,
+body.high-contrast .unit-status,
+body.high-contrast .unit-feature-badge {
+    border: 2px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast .property-alert,
+body.high-contrast .auth-alert,
+body.high-contrast .site-message {
+    border: 2px solid currentColor;
+    background: #000000;
+}
+
+body.high-contrast .property-alert--success,
+body.high-contrast .auth-alert--success,
+body.high-contrast .site-message--success {
+    color: #00ff66;
+}
+
+body.high-contrast .property-alert--error,
+body.high-contrast .auth-alert--error,
+body.high-contrast .site-message--error {
+    color: #ff8080;
+}
+
+body.high-contrast .property-alert--information,
+body.high-contrast .auth-alert--information,
+body.high-contrast .site-message--information {
+    color: #00ffff;
+}
+
+body.high-contrast table,
+body.high-contrast th,
+body.high-contrast td {
+    border-color: #ffffff !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast dialog {
+    border: 3px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast dialog::backdrop {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+label {
+    cursor: pointer;
+}
+
+input,
+select,
+textarea,
+button {
+    min-height: 44px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    min-width: 1.1rem;
+    min-height: 1.1rem;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled {
+    cursor: not-allowed;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: #dc2626 !important;
+}
+
+input[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus {
+    outline-color: #dc2626;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+}
+
+[role="alert"] {
+    scroll-margin-top: 8rem;
+}
+
+[role="status"] {
+    scroll-margin-top: 8rem;
+}
+
+
+/* ==========================================================================
+   Links and interactive controls
+   ========================================================================== */
+
+a,
+button,
+input,
+select,
+textarea,
+summary {
+    touch-action: manipulation;
+}
+
+summary {
+    cursor: pointer;
+}
+
+summary:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+button:not(:disabled):hover,
+a:hover {
+    text-decoration-thickness: 0.12em;
+}
+
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+table {
+    border-spacing: 0;
+}
+
+th {
+    text-align: left;
+}
+
+caption {
+    text-align: left;
+}
+
+.unit-table-wrapper {
+    scrollbar-color: #64748b #e2e8f0;
+    scrollbar-width: thin;
+}
+
+
+/* ==========================================================================
+   Images and media
+   ========================================================================== */
+
+img:not([alt]) {
+    outline: 4px dashed #dc2626;
+}
+
+video,
+audio {
+    max-width: 100%;
+}
+
+body.high-contrast img {
+    filter: contrast(1.15);
+}
+
+
+/* ==========================================================================
+   Direction support
+   ========================================================================== */
+
+html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] .skip-link {
+    right: 0.75rem;
+    left: auto;
+}
+
+html[dir="rtl"] .property-breadcrumb li:not(:last-child)::after {
+    margin-right: 0.45rem;
+    margin-left: 0;
+}
+
+html[dir="rtl"] .check-list li {
+    padding-right: 1.8rem;
+    padding-left: 0;
+}
+
+html[dir="rtl"] .check-list li::before {
+    right: 0;
+    left: auto;
+}
+
+html[dir="rtl"] .auth-password-control input {
+    padding-right: 0.9rem;
+    padding-left: 4.8rem;
+}
+
+html[dir="rtl"] .auth-password-toggle {
+    right: auto;
+    left: 0.45rem;
+}
+
+
+/* ==========================================================================
+   Zoom and reflow support
+   ========================================================================== */
+
+p,
+li,
+dd,
+address,
+label,
+button,
+a {
+    overflow-wrap: break-word;
+}
+
+pre,
+code {
+    overflow-wrap: normal;
+}
+
+pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+    }
+
+    .skip-link {
+        transition: none;
+    }
+}
+
+
+/* JavaScript may add this class from a user preference. */
+
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+}
+
+
+/* ==========================================================================
+   Increased contrast operating-system preference
+   ========================================================================== */
+
+@media (prefers-contrast: more) {
+    :focus-visible {
+        outline-width: 4px;
+    }
+
+    input,
+    select,
+    textarea,
+    button,
+    .button,
+    .property-card,
+    .feature-card,
+    .pathway-card {
+        border-width: 2px;
+    }
+
+    body {
+        --color-text-light: #475569;
+        --color-border: #64748b;
+    }
+}
+
+
+/* ==========================================================================
+   Forced-colors mode
+   ========================================================================== */
+
+@media (forced-colors: active) {
+    :focus-visible {
+        outline: 3px solid Highlight;
+    }
+
+    .button,
+    button,
+    input,
+    select,
+    textarea,
+    .property-status,
+    .unit-status,
+    .property-card,
+    .feature-card,
+    .pathway-card {
+        border: 1px solid ButtonText;
+        forced-color-adjust: auto;
+    }
+
+    .assistant-status {
+        background: Highlight;
+    }
+}
+
+
+/* ==========================================================================
+   Mobile and touch accessibility
+   ========================================================================== */
+
+@media (pointer: coarse) {
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary {
+        min-height: 44px;
+    }
+
+    .primary-navigation a,
+    .footer-links a {
+        display: inline-flex;
+        align-items: center;
+        padding-top: 0.55rem;
+        padding-bottom: 0.55rem;
+    }
+
+    .property-pagination-number {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+
+/* ==========================================================================
+   Small screens
+   ========================================================================== */
+
+@media (max-width: 600px) {
+    body.text-size-extra-large {
+        font-size: 1.15rem;
+    }
+
+    .accessibility-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .accessibility-button {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   Print accessibility
+   ========================================================================== */
+
+@media print {
+    .skip-link,
+    .accessibility-toolbar,
+    .navigation-toggle,
+    .assistant-launcher,
+    button,
+    .button {
+        display: none !important;
+    }
+
+    a {
+        color: #000000 !important;
+        text-decoration: underline;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    li,
+    dt,
+    dd {
+        color: #000000 !important;
+    }
+}

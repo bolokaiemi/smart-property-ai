@@ -1,625 +1,1005 @@
+/*
+ * Smart Property AI
+ * Main frontend functionality
+ */
+
 "use strict";
 
-/*
-|--------------------------------------------------------------------------
-| Smart Property AI
-|--------------------------------------------------------------------------
-| Navigation, accessibility, language and voice controls.
-|--------------------------------------------------------------------------
-*/
-
 document.addEventListener("DOMContentLoaded", () => {
-    initializeNavigation();
-    initializeTextSizeControls();
-    initializeContrastControl();
-    initializeReadAloud();
-    initializeLanguageSelector();
-    initializeHeroVoiceButton();
-    initializeExternalLinkSecurity();
-});
+    const root = document.documentElement;
+    const body = document.body;
 
-
-/* ==========================================================================
-   Helpers
-   ========================================================================== */
-
-function getStoredValue(key, fallback = null) {
-    try {
-        const value = localStorage.getItem(key);
-        return value === null ? fallback : value;
-    } catch (error) {
-        return fallback;
-    }
-}
-
-
-function setStoredValue(key, value) {
-    try {
-        localStorage.setItem(key, value);
-    } catch (error) {
-        console.warn("Browser storage is unavailable.");
-    }
-}
-
-
-function updateStatus(message) {
-    const statusElement = document.getElementById("voice-status");
-
-    if (statusElement) {
-        statusElement.textContent = message;
-    }
-}
-
-
-/* ==========================================================================
-   Responsive navigation
-   ========================================================================== */
-
-function initializeNavigation() {
-    const navigationToggle = document.getElementById(
-        "navigation-toggle"
-    );
-
-    const primaryNavigation = document.getElementById(
-        "primary-navigation"
-    );
-
-    if (!navigationToggle || !primaryNavigation) {
-        return;
-    }
-
-    const closeNavigation = () => {
-        navigationToggle.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        navigationToggle.setAttribute(
-            "aria-label",
-            "Open navigation menu"
-        );
-
-        primaryNavigation.classList.remove("is-open");
-        document.body.classList.remove("navigation-open");
+    const STORAGE_KEYS = {
+        theme: "smart_property_theme",
+        contrast: "smart_property_contrast",
+        fontSize: "smart_property_font_size",
+        reducedMotion: "smart_property_reduced_motion"
     };
 
-    const openNavigation = () => {
-        navigationToggle.setAttribute(
-            "aria-expanded",
-            "true"
+    /* =====================================================
+       Safe storage helpers
+       ===================================================== */
+
+    function getStoredValue(key, fallback = null) {
+        try {
+            return localStorage.getItem(key) ?? fallback;
+        } catch (error) {
+            console.warn(
+                `Could not read ${key} from local storage.`,
+                error
+            );
+
+            return fallback;
+        }
+    }
+
+    function setStoredValue(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (error) {
+            console.warn(
+                `Could not save ${key} to local storage.`,
+                error
+            );
+        }
+    }
+
+    function removeStoredValue(key) {
+        try {
+            localStorage.removeItem(key);
+        } catch (error) {
+            console.warn(
+                `Could not remove ${key} from local storage.`,
+                error
+            );
+        }
+    }
+
+    /* =====================================================
+       Live announcements
+       ===================================================== */
+
+    function getGlobalStatusRegion() {
+        let region = document.querySelector(
+            "[data-global-status]"
         );
 
-        navigationToggle.setAttribute(
-            "aria-label",
-            "Close navigation menu"
+        if (region) {
+            return region;
+        }
+
+        region = document.createElement("div");
+        region.className = "sr-only";
+        region.dataset.globalStatus = "";
+        region.setAttribute("role", "status");
+        region.setAttribute("aria-live", "polite");
+        region.setAttribute("aria-atomic", "true");
+
+        body.appendChild(region);
+
+        return region;
+    }
+
+    function announce(message, type = "info") {
+        const region = getGlobalStatusRegion();
+
+        region.setAttribute(
+            "role",
+            type === "error" ? "alert" : "status"
         );
 
-        primaryNavigation.classList.add("is-open");
-        document.body.classList.add("navigation-open");
-    };
+        region.setAttribute(
+            "aria-live",
+            type === "error" ? "assertive" : "polite"
+        );
 
-    navigationToggle.addEventListener("click", () => {
-        const isExpanded =
-            navigationToggle.getAttribute("aria-expanded") === "true";
+        /*
+         * Clear the region first so repeated messages are announced.
+         */
+        region.textContent = "";
 
-        if (isExpanded) {
-            closeNavigation();
-        } else {
-            openNavigation();
+        window.setTimeout(() => {
+            region.textContent = message;
+        }, 50);
+    }
+
+    /* =====================================================
+       Mobile navigation
+       ===================================================== */
+
+    const menuButtons = document.querySelectorAll(
+        "[data-menu-toggle], .menu-toggle, .mobile-menu-toggle"
+    );
+
+    function findNavigation(button) {
+        const controls = button.getAttribute("aria-controls");
+
+        if (controls) {
+            const controlledNavigation =
+                document.getElementById(controls);
+
+            if (controlledNavigation) {
+                return controlledNavigation;
+            }
         }
-    });
 
-    primaryNavigation.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", closeNavigation);
-    });
+        const navigationContainer = button.closest(
+            ".navbar, .nav-container, header"
+        );
 
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            closeNavigation();
-            navigationToggle.focus();
+        return (
+            navigationContainer?.querySelector(
+                ".nav-links, .navbar-nav, .navigation-menu"
+            ) ||
+            document.querySelector(
+                ".nav-links, .navbar-nav, .navigation-menu"
+            )
+        );
+    }
+
+    function closeNavigation(button, navigation) {
+        button.setAttribute("aria-expanded", "false");
+
+        navigation.classList.remove(
+            "is-open",
+            "active"
+        );
+
+        body.classList.remove("navigation-open");
+    }
+
+    function openNavigation(button, navigation) {
+        button.setAttribute("aria-expanded", "true");
+        navigation.classList.add("is-open");
+        body.classList.add("navigation-open");
+    }
+
+    menuButtons.forEach((button, index) => {
+        const navigation = findNavigation(button);
+
+        if (!navigation) {
+            return;
         }
-    });
 
-    document.addEventListener("click", (event) => {
-        const clickedInsideNavigation =
-            primaryNavigation.contains(event.target);
-
-        const clickedToggle =
-            navigationToggle.contains(event.target);
-
-        if (!clickedInsideNavigation && !clickedToggle) {
-            closeNavigation();
+        if (!navigation.id) {
+            navigation.id = `main-navigation-${index + 1}`;
         }
+
+        button.type = "button";
+        button.setAttribute(
+            "aria-controls",
+            navigation.id
+        );
+
+        if (!button.hasAttribute("aria-expanded")) {
+            button.setAttribute("aria-expanded", "false");
+        }
+
+        button.addEventListener("click", () => {
+            const expanded =
+                button.getAttribute("aria-expanded") === "true";
+
+            if (expanded) {
+                closeNavigation(button, navigation);
+            } else {
+                openNavigation(button, navigation);
+            }
+        });
+
+        navigation.addEventListener("click", (event) => {
+            if (
+                event.target.closest("a") &&
+                window.matchMedia("(max-width: 991px)").matches
+            ) {
+                closeNavigation(button, navigation);
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (
+                button.getAttribute("aria-expanded") !== "true"
+            ) {
+                return;
+            }
+
+            if (
+                !button.contains(event.target) &&
+                !navigation.contains(event.target)
+            ) {
+                closeNavigation(button, navigation);
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (
+                event.key === "Escape" &&
+                button.getAttribute("aria-expanded") === "true"
+            ) {
+                closeNavigation(button, navigation);
+                button.focus();
+            }
+        });
     });
 
     window.addEventListener("resize", () => {
-        if (window.innerWidth > 1050) {
-            closeNavigation();
+        if (!window.matchMedia("(min-width: 992px)").matches) {
+            return;
+        }
+
+        menuButtons.forEach((button) => {
+            const navigation = findNavigation(button);
+
+            if (navigation) {
+                closeNavigation(button, navigation);
+            }
+        });
+    });
+
+    /* =====================================================
+       Dropdown menus
+       ===================================================== */
+
+    const dropdownButtons = document.querySelectorAll(
+        "[data-dropdown-toggle]"
+    );
+
+    function closeAllDropdowns(exceptButton = null) {
+        dropdownButtons.forEach((button) => {
+            if (button === exceptButton) {
+                return;
+            }
+
+            const menuId =
+                button.getAttribute("aria-controls");
+
+            const menu = menuId
+                ? document.getElementById(menuId)
+                : null;
+
+            button.setAttribute("aria-expanded", "false");
+
+            if (menu) {
+                menu.hidden = true;
+                menu.classList.remove("is-open");
+            }
+        });
+    }
+
+    dropdownButtons.forEach((button, index) => {
+        let menuId = button.getAttribute("aria-controls");
+
+        let menu = menuId
+            ? document.getElementById(menuId)
+            : button.nextElementSibling;
+
+        if (!menu) {
+            return;
+        }
+
+        if (!menu.id) {
+            menu.id = `dropdown-menu-${index + 1}`;
+        }
+
+        menuId = menu.id;
+
+        button.type = "button";
+        button.setAttribute("aria-controls", menuId);
+        button.setAttribute("aria-expanded", "false");
+
+        menu.hidden = true;
+
+        button.addEventListener("click", () => {
+            const expanded =
+                button.getAttribute("aria-expanded") === "true";
+
+            closeAllDropdowns(button);
+
+            button.setAttribute(
+                "aria-expanded",
+                String(!expanded)
+            );
+
+            menu.hidden = expanded;
+            menu.classList.toggle("is-open", !expanded);
+        });
+
+        menu.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape") {
+                return;
+            }
+
+            menu.hidden = true;
+            menu.classList.remove("is-open");
+            button.setAttribute("aria-expanded", "false");
+            button.focus();
+        });
+    });
+
+    document.addEventListener("click", (event) => {
+        if (
+            !event.target.closest("[data-dropdown-toggle]") &&
+            !event.target.closest(".dropdown-menu")
+        ) {
+            closeAllDropdowns();
         }
     });
-}
 
+    /* =====================================================
+       Theme controls
+       ===================================================== */
 
-/* ==========================================================================
-   Text-size controls
-   ========================================================================== */
-
-function initializeTextSizeControls() {
-    const decreaseButton = document.getElementById(
-        "decrease-text"
+    const themeButtons = document.querySelectorAll(
+        "[data-theme-toggle]"
     );
 
-    const increaseButton = document.getElementById(
-        "increase-text"
+    function preferredTheme() {
+        const storedTheme = getStoredValue(
+            STORAGE_KEYS.theme
+        );
+
+        if (
+            storedTheme === "light" ||
+            storedTheme === "dark"
+        ) {
+            return storedTheme;
+        }
+
+        return window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches
+            ? "dark"
+            : "light";
+    }
+
+    function applyTheme(theme, save = true) {
+        const selectedTheme =
+            theme === "dark" ? "dark" : "light";
+
+        root.dataset.theme = selectedTheme;
+        root.style.colorScheme = selectedTheme;
+
+        themeButtons.forEach((button) => {
+            const isDark = selectedTheme === "dark";
+
+            button.setAttribute(
+                "aria-pressed",
+                String(isDark)
+            );
+
+            button.setAttribute(
+                "aria-label",
+                isDark
+                    ? "Switch to light mode"
+                    : "Switch to dark mode"
+            );
+
+            const label = button.querySelector(
+                "[data-theme-label]"
+            );
+
+            if (label) {
+                label.textContent = isDark
+                    ? "Light mode"
+                    : "Dark mode";
+            }
+
+            const icon = button.querySelector(
+                "[data-theme-icon]"
+            );
+
+            if (icon) {
+                icon.textContent = isDark ? "☀️" : "🌙";
+            }
+        });
+
+        if (save) {
+            setStoredValue(
+                STORAGE_KEYS.theme,
+                selectedTheme
+            );
+        }
+    }
+
+    applyTheme(preferredTheme(), false);
+
+    themeButtons.forEach((button) => {
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            const currentTheme =
+                root.dataset.theme || "light";
+
+            const nextTheme =
+                currentTheme === "dark"
+                    ? "light"
+                    : "dark";
+
+            applyTheme(nextTheme);
+            announce(`${nextTheme} theme enabled.`);
+        });
+    });
+
+    /* =====================================================
+       High-contrast controls
+       ===================================================== */
+
+    const contrastButtons = document.querySelectorAll(
+        "[data-contrast-toggle]"
     );
 
-    const availableSizes = [
+    function applyContrast(enabled, save = true) {
+        root.classList.toggle(
+            "high-contrast",
+            enabled
+        );
+
+        body.classList.toggle(
+            "high-contrast",
+            enabled
+        );
+
+        root.dataset.contrast =
+            enabled ? "high" : "normal";
+
+        contrastButtons.forEach((button) => {
+            button.setAttribute(
+                "aria-pressed",
+                String(enabled)
+            );
+        });
+
+        if (save) {
+            setStoredValue(
+                STORAGE_KEYS.contrast,
+                enabled ? "high" : "normal"
+            );
+        }
+    }
+
+    const savedContrast =
+        getStoredValue(STORAGE_KEYS.contrast) === "high";
+
+    applyContrast(savedContrast, false);
+
+    contrastButtons.forEach((button) => {
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            const enabled =
+                root.dataset.contrast !== "high";
+
+            applyContrast(enabled);
+
+            announce(
+                enabled
+                    ? "High contrast enabled."
+                    : "High contrast disabled."
+            );
+        });
+    });
+
+    /* =====================================================
+       Font-size controls
+       ===================================================== */
+
+    const increaseTextButtons = document.querySelectorAll(
+        "[data-font-increase], [data-text-increase]"
+    );
+
+    const decreaseTextButtons = document.querySelectorAll(
+        "[data-font-decrease], [data-text-decrease]"
+    );
+
+    const resetTextButtons = document.querySelectorAll(
+        "[data-font-reset], [data-text-reset]"
+    );
+
+    const fontSizes = [
         "normal",
         "large",
         "extra-large"
     ];
 
-    let currentSize = getStoredValue(
-        "smartPropertyTextSize",
-        "normal"
+    function applyFontSize(size, save = true) {
+        const selectedSize = fontSizes.includes(size)
+            ? size
+            : "normal";
+
+        if (selectedSize === "normal") {
+            delete root.dataset.fontSize;
+        } else {
+            root.dataset.fontSize = selectedSize;
+        }
+
+        if (save) {
+            setStoredValue(
+                STORAGE_KEYS.fontSize,
+                selectedSize
+            );
+        }
+    }
+
+    function currentFontSizeIndex() {
+        const current =
+            root.dataset.fontSize || "normal";
+
+        const index = fontSizes.indexOf(current);
+
+        return index >= 0 ? index : 0;
+    }
+
+    applyFontSize(
+        getStoredValue(
+            STORAGE_KEYS.fontSize,
+            "normal"
+        ),
+        false
     );
 
-    if (!availableSizes.includes(currentSize)) {
-        currentSize = "normal";
-    }
+    increaseTextButtons.forEach((button) => {
+        button.type = "button";
 
-    const applyTextSize = () => {
-        document.body.classList.remove(
-            "text-size-large",
-            "text-size-extra-large"
-        );
-
-        if (currentSize === "large") {
-            document.body.classList.add(
-                "text-size-large"
-            );
-        }
-
-        if (currentSize === "extra-large") {
-            document.body.classList.add(
-                "text-size-extra-large"
-            );
-        }
-
-        setStoredValue(
-            "smartPropertyTextSize",
-            currentSize
-        );
-    };
-
-    applyTextSize();
-
-    if (increaseButton) {
-        increaseButton.addEventListener("click", () => {
-            const currentIndex =
-                availableSizes.indexOf(currentSize);
-
+        button.addEventListener("click", () => {
             const nextIndex = Math.min(
-                currentIndex + 1,
-                availableSizes.length - 1
+                currentFontSizeIndex() + 1,
+                fontSizes.length - 1
             );
 
-            currentSize = availableSizes[nextIndex];
-            applyTextSize();
+            applyFontSize(fontSizes[nextIndex]);
+            announce("Text size increased.");
         });
-    }
+    });
 
-    if (decreaseButton) {
-        decreaseButton.addEventListener("click", () => {
-            const currentIndex =
-                availableSizes.indexOf(currentSize);
+    decreaseTextButtons.forEach((button) => {
+        button.type = "button";
 
+        button.addEventListener("click", () => {
             const nextIndex = Math.max(
-                currentIndex - 1,
+                currentFontSizeIndex() - 1,
                 0
             );
 
-            currentSize = availableSizes[nextIndex];
-            applyTextSize();
+            applyFontSize(fontSizes[nextIndex]);
+            announce("Text size decreased.");
         });
-    }
-}
+    });
 
+    resetTextButtons.forEach((button) => {
+        button.type = "button";
 
-/* ==========================================================================
-   High-contrast control
-   ========================================================================== */
+        button.addEventListener("click", () => {
+            applyFontSize("normal");
+            announce("Text size reset.");
+        });
+    });
 
-function initializeContrastControl() {
-    const contrastButton = document.getElementById(
-        "contrast-toggle"
+    /* =====================================================
+       Reduced-motion controls
+       ===================================================== */
+
+    const motionButtons = document.querySelectorAll(
+        "[data-motion-toggle]"
     );
 
-    if (!contrastButton) {
-        return;
-    }
-
-    const storedContrast = getStoredValue(
-        "smartPropertyHighContrast",
-        "false"
-    );
-
-    const applyContrast = (enabled) => {
-        document.body.classList.toggle(
-            "high-contrast",
+    function applyReducedMotion(enabled, save = true) {
+        root.classList.toggle(
+            "reduce-motion",
             enabled
         );
 
-        contrastButton.setAttribute(
-            "aria-pressed",
-            String(enabled)
+        body.classList.toggle(
+            "reduce-motion",
+            enabled
         );
 
-        setStoredValue(
-            "smartPropertyHighContrast",
-            String(enabled)
-        );
-    };
+        root.dataset.reduceMotion = String(enabled);
 
-    applyContrast(storedContrast === "true");
-
-    contrastButton.addEventListener("click", () => {
-        const enabled =
-            !document.body.classList.contains(
-                "high-contrast"
-            );
-
-        applyContrast(enabled);
-    });
-}
-
-
-/* ==========================================================================
-   Read page aloud
-   ========================================================================== */
-
-function initializeReadAloud() {
-    const readButton = document.getElementById(
-        "read-page-button"
-    );
-
-    const mainContent = document.getElementById(
-        "main-content"
-    );
-
-    if (!readButton || !mainContent) {
-        return;
-    }
-
-    if (!("speechSynthesis" in window)) {
-        readButton.disabled = true;
-        readButton.title =
-            "Speech output is not supported by this browser.";
-        return;
-    }
-
-    const stopReading = () => {
-        window.speechSynthesis.cancel();
-
-        readButton.setAttribute(
-            "aria-pressed",
-            "false"
-        );
-
-        readButton.textContent = "Read aloud";
-        updateStatus("Reading stopped.");
-    };
-
-    const beginReading = () => {
-        const readableText = mainContent.innerText
-            .replace(/\s+/g, " ")
-            .trim();
-
-        if (!readableText) {
-            updateStatus("There is no page content to read.");
-            return;
-        }
-
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(
-            readableText
-        );
-
-        const languageSelect = document.getElementById(
-            "language-select"
-        );
-
-        const selectedLanguage = languageSelect
-            ? languageSelect.value
-            : document.documentElement.lang || "en";
-
-        const languageMap = {
-            en: "en-US",
-            de: "de-DE",
-            fr: "fr-FR",
-            es: "es-ES",
-            it: "it-IT",
-            pt: "pt-PT",
-            ar: "ar-SA",
-            tr: "tr-TR",
-            pl: "pl-PL",
-            uk: "uk-UA"
-        };
-
-        utterance.lang =
-            languageMap[selectedLanguage] || selectedLanguage;
-
-        utterance.rate = 0.95;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-
-        utterance.onstart = () => {
-            readButton.setAttribute(
+        motionButtons.forEach((button) => {
+            button.setAttribute(
                 "aria-pressed",
-                "true"
-            );
-
-            readButton.textContent = "Stop reading";
-            updateStatus("The page is being read aloud.");
-        };
-
-        utterance.onend = () => {
-            readButton.setAttribute(
-                "aria-pressed",
-                "false"
-            );
-
-            readButton.textContent = "Read aloud";
-            updateStatus("Reading completed.");
-        };
-
-        utterance.onerror = (event) => {
-            readButton.setAttribute(
-                "aria-pressed",
-                "false"
-            );
-
-            readButton.textContent = "Read aloud";
-
-            if (event.error !== "canceled") {
-                updateStatus(
-                    "The page could not be read aloud."
-                );
-            }
-        };
-
-        window.speechSynthesis.speak(utterance);
-    };
-
-    readButton.addEventListener("click", () => {
-        const isReading =
-            readButton.getAttribute("aria-pressed") === "true";
-
-        if (isReading) {
-            stopReading();
-        } else {
-            beginReading();
-        }
-    });
-
-    window.addEventListener(
-        "beforeunload",
-        () => window.speechSynthesis.cancel()
-    );
-}
-
-
-/* ==========================================================================
-   Language selector
-   ========================================================================== */
-
-function initializeLanguageSelector() {
-    const languageSelect = document.getElementById(
-        "language-select"
-    );
-
-    if (!languageSelect) {
-        return;
-    }
-
-    languageSelect.addEventListener("change", async () => {
-        const selectedLanguage = languageSelect.value;
-
-        languageSelect.disabled = true;
-
-        try {
-            const response = await fetch(
-                "/api/language",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    credentials: "same-origin",
-                    body: JSON.stringify({
-                        language: selectedLanguage
-                    })
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(
-                    result.error ||
-                    "The language could not be changed."
-                );
-            }
-
-            document.documentElement.lang =
-                result.language;
-
-            setStoredValue(
-                "smartPropertyLanguage",
-                result.language
-            );
-
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-
-            updateStatus(
-                "The selected language could not be saved."
-            );
-
-            languageSelect.disabled = false;
-        }
-    });
-}
-
-
-/* ==========================================================================
-   Hero voice assistant
-   ========================================================================== */
-
-function initializeHeroVoiceButton() {
-    const voiceButton = document.getElementById(
-        "hero-voice-button"
-    );
-
-    if (!voiceButton) {
-        return;
-    }
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-        voiceButton.addEventListener("click", () => {
-            updateStatus(
-                "Voice recognition is not supported by this browser. " +
-                "You can continue using the written search form."
+                String(enabled)
             );
         });
 
-        return;
+        if (save) {
+            setStoredValue(
+                STORAGE_KEYS.reducedMotion,
+                String(enabled)
+            );
+        }
     }
 
-    const recognition = new SpeechRecognition();
+    const systemReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    const languageSelect = document.getElementById(
-        "language-select"
+    const savedMotion = getStoredValue(
+        STORAGE_KEYS.reducedMotion
     );
 
-    const languageMap = {
-        en: "en-US",
-        de: "de-DE",
-        fr: "fr-FR",
-        es: "es-ES",
-        it: "it-IT",
-        pt: "pt-PT",
-        ar: "ar-SA",
-        tr: "tr-TR",
-        pl: "pl-PL",
-        uk: "uk-UA"
-    };
+    applyReducedMotion(
+        savedMotion === null
+            ? systemReducedMotion
+            : savedMotion === "true",
+        false
+    );
 
-    voiceButton.addEventListener("click", () => {
-        const isListening =
-            voiceButton.getAttribute("aria-pressed") === "true";
+    motionButtons.forEach((button) => {
+        button.type = "button";
 
-        if (isListening) {
-            recognition.stop();
+        button.addEventListener("click", () => {
+            const enabled =
+                root.dataset.reduceMotion !== "true";
+
+            applyReducedMotion(enabled);
+
+            announce(
+                enabled
+                    ? "Reduced motion enabled."
+                    : "Reduced motion disabled."
+            );
+        });
+    });
+
+    /* =====================================================
+       Reset accessibility settings
+       ===================================================== */
+
+    const resetAccessibilityButtons =
+        document.querySelectorAll(
+            "[data-accessibility-reset]"
+        );
+
+    resetAccessibilityButtons.forEach((button) => {
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            removeStoredValue(STORAGE_KEYS.theme);
+            removeStoredValue(STORAGE_KEYS.contrast);
+            removeStoredValue(STORAGE_KEYS.fontSize);
+            removeStoredValue(
+                STORAGE_KEYS.reducedMotion
+            );
+
+            applyTheme(preferredTheme(), false);
+            applyContrast(false, false);
+            applyFontSize("normal", false);
+            applyReducedMotion(
+                systemReducedMotion,
+                false
+            );
+
+            announce(
+                "Accessibility settings reset."
+            );
+        });
+    });
+
+    /* =====================================================
+       Dismissible messages
+       ===================================================== */
+
+    const dismissButtons = document.querySelectorAll(
+        "[data-dismiss-alert], .alert-close"
+    );
+
+    dismissButtons.forEach((button) => {
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            const alert = button.closest(
+                ".alert, .notification, .toast"
+            );
+
+            if (!alert) {
+                return;
+            }
+
+            alert.remove();
+            announce("Message dismissed.");
+        });
+    });
+
+    document.querySelectorAll(
+        "[data-auto-dismiss]"
+    ).forEach((alert) => {
+        const delay = Number.parseInt(
+            alert.dataset.autoDismiss || "5000",
+            10
+        );
+
+        if (!Number.isFinite(delay) || delay < 0) {
             return;
         }
 
-        const selectedLanguage = languageSelect
-            ? languageSelect.value
-            : "en";
-
-        recognition.lang =
-            languageMap[selectedLanguage] || selectedLanguage;
-
-        try {
-            recognition.start();
-        } catch (error) {
-            updateStatus(
-                "Voice recognition is already active."
-            );
-        }
+        window.setTimeout(() => {
+            if (alert.isConnected) {
+                alert.remove();
+            }
+        }, delay);
     });
 
-    recognition.onstart = () => {
-        voiceButton.setAttribute(
-            "aria-pressed",
-            "true"
-        );
+    /* =====================================================
+       Password visibility
+       ===================================================== */
 
-        voiceButton.innerHTML =
-            '<span aria-hidden="true">⏹</span> Stop listening';
+    const passwordButtons = document.querySelectorAll(
+        "[data-password-toggle]"
+    );
 
-        updateStatus(
-            "Listening. Please describe the apartment you need."
-        );
-    };
+    passwordButtons.forEach((button) => {
+        const targetReference =
+            button.dataset.passwordToggle;
 
-    recognition.onresult = (event) => {
-        const transcript =
-            event.results[0][0].transcript.trim();
+        const input =
+            document.getElementById(targetReference) ||
+            document.querySelector(targetReference);
 
-        const locationInput = document.getElementById(
-            "search-location"
-        );
-
-        if (locationInput) {
-            locationInput.value = transcript;
-            locationInput.focus();
+        if (
+            !(input instanceof HTMLInputElement)
+        ) {
+            return;
         }
 
-        updateStatus(
-            `We heard: ${transcript}. ` +
-            "Please review the information before searching."
-        );
-    };
+        button.type = "button";
+        button.setAttribute("aria-pressed", "false");
 
-    recognition.onerror = (event) => {
-        const errorMessages = {
-            "not-allowed":
-                "Microphone permission was not granted.",
-            "no-speech":
-                "No speech was detected. Please try again.",
-            "audio-capture":
-                "No working microphone was detected.",
-            "network":
-                "Voice recognition could not reach its service."
-        };
+        button.addEventListener("click", () => {
+            const showPassword =
+                input.type === "password";
 
-        updateStatus(
-            errorMessages[event.error] ||
-            "Voice recognition could not complete the request."
-        );
-    };
+            input.type = showPassword
+                ? "text"
+                : "password";
 
-    recognition.onend = () => {
-        voiceButton.setAttribute(
-            "aria-pressed",
-            "false"
-        );
+            button.setAttribute(
+                "aria-pressed",
+                String(showPassword)
+            );
 
-        voiceButton.innerHTML =
-            '<span aria-hidden="true">🎤</span> Use voice assistance';
-    };
-}
+            button.setAttribute(
+                "aria-label",
+                showPassword
+                    ? "Hide password"
+                    : "Show password"
+            );
 
+            const label = button.querySelector(
+                "[data-password-label]"
+            );
 
-/* ==========================================================================
-   External-link security
-   ========================================================================== */
+            if (label) {
+                label.textContent = showPassword
+                    ? "Hide"
+                    : "Show";
+            }
 
-function initializeExternalLinkSecurity() {
+            input.focus();
+        });
+    });
+
+    /* =====================================================
+       Confirm actions
+       ===================================================== */
+
     document.querySelectorAll(
-        'a[target="_blank"]'
+        "[data-confirm]"
+    ).forEach((element) => {
+        element.addEventListener("click", (event) => {
+            const message =
+                element.dataset.confirm ||
+                "Are you sure you want to continue?";
+
+            if (!window.confirm(message)) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        });
+    });
+
+    /* =====================================================
+       Disable forms during submission
+       ===================================================== */
+
+    document.querySelectorAll(
+        "form[data-disable-on-submit]"
+    ).forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            if (!form.checkValidity()) {
+                return;
+            }
+
+            if (form.dataset.submitting === "true") {
+                event.preventDefault();
+                return;
+            }
+
+            form.dataset.submitting = "true";
+            form.setAttribute("aria-busy", "true");
+
+            form.querySelectorAll(
+                "button[type='submit'], input[type='submit']"
+            ).forEach((button) => {
+                button.disabled = true;
+
+                if (button instanceof HTMLButtonElement) {
+                    button.dataset.originalText =
+                        button.textContent;
+
+                    button.textContent =
+                        button.dataset.loadingText ||
+                        "Please wait…";
+                }
+            });
+        });
+    });
+
+    /* =====================================================
+       Character counters
+       ===================================================== */
+
+    document.querySelectorAll(
+        "[data-character-count]"
+    ).forEach((counter) => {
+        const targetReference =
+            counter.dataset.characterCount;
+
+        const field =
+            document.getElementById(targetReference);
+
+        if (
+            !(field instanceof HTMLInputElement) &&
+            !(field instanceof HTMLTextAreaElement)
+        ) {
+            return;
+        }
+
+        function updateCounter() {
+            const length = field.value.length;
+            const maximum = field.maxLength;
+
+            counter.textContent =
+                maximum > 0
+                    ? `${length} of ${maximum} characters used.`
+                    : `${length} characters used.`;
+        }
+
+        field.addEventListener("input", updateCounter);
+        updateCounter();
+    });
+
+    /* =====================================================
+       Date validation
+       ===================================================== */
+
+    document.querySelectorAll(
+        "input[type='date'][data-future-date]"
+    ).forEach((input) => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+        const day = String(
+            today.getDate()
+        ).padStart(2, "0");
+
+        const minimumDate = `${year}-${month}-${day}`;
+
+        if (!input.min) {
+            input.min = minimumDate;
+        }
+
+        input.addEventListener("change", () => {
+            if (
+                input.value &&
+                input.value < minimumDate
+            ) {
+                input.setCustomValidity(
+                    "Select today or a future date."
+                );
+            } else {
+                input.setCustomValidity("");
+            }
+        });
+    });
+
+    /* =====================================================
+       Dialog controls
+       ===================================================== */
+
+    document.querySelectorAll(
+        "[data-dialog-open]"
+    ).forEach((button) => {
+        const dialogId = button.dataset.dialogOpen;
+        const dialog = document.getElementById(dialogId);
+
+        if (!(dialog instanceof HTMLDialogElement)) {
+            return;
+        }
+
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            dialog.showModal();
+        });
+    });
+
+    document.querySelectorAll(
+        "[data-dialog-close]"
+    ).forEach((button) => {
+        const dialog = button.closest("dialog");
+
+        if (!(dialog instanceof HTMLDialogElement)) {
+            return;
+        }
+
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+            dialog.close();
+        });
+    });
+
+    document.querySelectorAll("dialog").forEach((dialog) => {
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    });
+
+    /* =====================================================
+       Smooth internal links
+       ===================================================== */
+
+    document.querySelectorAll(
+        "a[href^='#']:not([href='#'])"
+    ).forEach((link) => {
+        link.addEventListener("click", (event) => {
+            const targetId =
+                link.getAttribute("href").slice(1);
+
+            const target =
+                document.getElementById(targetId);
+
+            if (!target) {
+                return;
+            }
+
+            event.preventDefault();
+
+            target.scrollIntoView({
+                behavior:
+                    root.dataset.reduceMotion === "true"
+                        ? "auto"
+                        : "smooth",
+                block: "start"
+            });
+
+            if (!target.hasAttribute("tabindex")) {
+                target.setAttribute("tabindex", "-1");
+            }
+
+            target.focus({
+                preventScroll: true
+            });
+
+            window.history.pushState(
+                null,
+                "",
+                `#${targetId}`
+            );
+        });
+    });
+
+    /* =====================================================
+       External-link accessibility
+       ===================================================== */
+
+    document.querySelectorAll(
+        "a[target='_blank']"
     ).forEach((link) => {
         const currentRel = new Set(
             (link.getAttribute("rel") || "")
@@ -635,4 +1015,45 @@ function initializeExternalLinkSecurity() {
             Array.from(currentRel).join(" ")
         );
     });
-}
+
+    /* =====================================================
+       Global API
+       ===================================================== */
+
+    window.SmartProperty = {
+        announce,
+
+        setTheme(theme) {
+            applyTheme(theme);
+        },
+
+        enableHighContrast(enabled = true) {
+            applyContrast(Boolean(enabled));
+        },
+
+        setFontSize(size) {
+            applyFontSize(size);
+        },
+
+        setReducedMotion(enabled = true) {
+            applyReducedMotion(Boolean(enabled));
+        },
+
+        resetAccessibility() {
+            removeStoredValue(STORAGE_KEYS.theme);
+            removeStoredValue(STORAGE_KEYS.contrast);
+            removeStoredValue(STORAGE_KEYS.fontSize);
+            removeStoredValue(
+                STORAGE_KEYS.reducedMotion
+            );
+
+            applyTheme(preferredTheme(), false);
+            applyContrast(false, false);
+            applyFontSize("normal", false);
+            applyReducedMotion(
+                systemReducedMotion,
+                false
+            );
+        }
+    };
+});

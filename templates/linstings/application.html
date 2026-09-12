@@ -1,0 +1,1146 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Rental application") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Apply securely for an available unit at {{ listing.title }}.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/listings.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="application-page"
+    tabindex="-1"
+>
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('listings_page') }}">
+                        Apartments
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'listing_details',
+                            property_id=listing.id
+                        ) }}"
+                    >
+                        {{ listing.title }}
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Application
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <section
+        class="application-header"
+        aria-labelledby="application-title"
+    >
+        <div class="container">
+            <p class="eyebrow">
+                Secure rental application
+            </p>
+
+            <h1 id="application-title">
+                Apply for {{ listing.title }}
+            </h1>
+
+            <p>
+                Complete the form below to express your interest in an
+                available unit. Fields marked with an asterisk are
+                required.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-speech-target="application-introduction"
+                aria-label="Read the application instructions aloud"
+            >
+                <span aria-hidden="true">🔊</span>
+                <span data-speech-label>Read instructions</span>
+            </button>
+
+            <div
+                id="application-introduction"
+                class="sr-only"
+            >
+                Rental application for {{ listing.title }}.
+                Complete all required fields. You may use the
+                microphone buttons to enter text. Review your
+                information and privacy choices before submitting.
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="application-section section"
+        aria-label="Rental application form"
+    >
+        <div class="container">
+            <div class="application-layout">
+                <div class="application-form-column">
+                    {% if success_message %}
+                        <div
+                            class="alert alert-success"
+                            role="status"
+                        >
+                            {{ success_message }}
+                        </div>
+                    {% endif %}
+
+                    {% if error_message %}
+                        <div
+                            class="alert alert-error"
+                            role="alert"
+                        >
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
+
+                    <form
+                        id="rental-application-form"
+                        class="rental-application-form"
+                        method="post"
+                        action="{{ url_for(
+                            'listing_application',
+                            property_id=listing.id
+                        ) }}"
+                        enctype="multipart/form-data"
+                        data-application-form
+                    >
+                        {% if csrf_token %}
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token }}"
+                            >
+                        {% endif %}
+
+                        <!-- Selected property -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="unit-selection-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    1
+                                </span>
+
+                                <div>
+                                    <h2 id="unit-selection-title">
+                                        Select a unit
+                                    </h2>
+
+                                    <p>
+                                        Choose the apartment you want
+                                        to apply for.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                {% if units %}
+                                    <div class="form-group">
+                                        <label for="application-unit">
+                                            Available unit
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <select
+                                            id="application-unit"
+                                            name="unit_id"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select a unit
+                                            </option>
+
+                                            {% for unit in units %}
+                                                <option
+                                                    value="{{ unit.id }}"
+                                                    {% if (
+                                                        selected_unit
+                                                        and selected_unit.id
+                                                        == unit.id
+                                                    ) %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    {{ unit.unit_number
+                                                        |default(
+                                                            "Unit " ~ unit.id,
+                                                            true
+                                                        ) }}
+
+                                                    {% if unit.monthly_rent is not none %}
+                                                        —
+                                                        {{ "%.2f"|format(
+                                                            unit.monthly_rent
+                                                        ) }}
+                                                        per month
+                                                    {% endif %}
+
+                                                    {% if unit.bedrooms is not none %}
+                                                        —
+                                                        {% if unit.bedrooms == 0 %}
+                                                            Studio
+                                                        {% elif unit.bedrooms == 1 %}
+                                                            1 bedroom
+                                                        {% else %}
+                                                            {{ unit.bedrooms }}
+                                                            bedrooms
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <div
+                                        class="alert alert-warning"
+                                        role="alert"
+                                    >
+                                        No unit is currently available
+                                        for this property. You cannot
+                                        submit an application at this
+                                        time.
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </section>
+
+                        <!-- Applicant information -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="applicant-information-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    2
+                                </span>
+
+                                <div>
+                                    <h2 id="applicant-information-title">
+                                        Your information
+                                    </h2>
+
+                                    <p>
+                                        Enter your legal name and
+                                        contact information.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                <div class="application-form-grid">
+                                    <div class="form-group">
+                                        <label for="applicant-first-name">
+                                            First name
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="applicant-first-name"
+                                            name="first_name"
+                                            type="text"
+                                            required
+                                            maxlength="100"
+                                            autocomplete="given-name"
+                                            value="{{ current_user.first_name|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="applicant-last-name">
+                                            Last name
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="applicant-last-name"
+                                            name="last_name"
+                                            type="text"
+                                            required
+                                            maxlength="100"
+                                            autocomplete="family-name"
+                                            value="{{ current_user.last_name|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="applicant-email">
+                                            Email address
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="applicant-email"
+                                            name="email"
+                                            type="email"
+                                            required
+                                            maxlength="254"
+                                            autocomplete="email"
+                                            inputmode="email"
+                                            value="{{ current_user.email|default('', true) if current_user else '' }}"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="applicant-phone">
+                                            Phone number
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <div class="voice-input-group">
+                                            <input
+                                                id="applicant-phone"
+                                                name="phone"
+                                                type="tel"
+                                                required
+                                                maxlength="30"
+                                                autocomplete="tel"
+                                                inputmode="tel"
+                                                value="{{ current_user.phone|default('', true) if current_user else '' }}"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="voice-button"
+                                                data-voice-input="applicant-phone"
+                                                aria-label="Enter phone number using voice"
+                                            >
+                                                <span aria-hidden="true">
+                                                    🎤
+                                                </span>
+
+                                                <span
+                                                    class="sr-only"
+                                                    data-voice-label
+                                                >
+                                                    Use voice
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group application-full-width">
+                                        <label for="applicant-address">
+                                            Current address
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <div class="voice-input-group">
+                                            <input
+                                                id="applicant-address"
+                                                name="current_address"
+                                                type="text"
+                                                required
+                                                maxlength="250"
+                                                autocomplete="street-address"
+                                            >
+
+                                            <button
+                                                type="button"
+                                                class="voice-button"
+                                                data-voice-input="applicant-address"
+                                                aria-label="Enter current address using voice"
+                                            >
+                                                <span aria-hidden="true">
+                                                    🎤
+                                                </span>
+
+                                                <span
+                                                    class="sr-only"
+                                                    data-voice-label
+                                                >
+                                                    Use voice
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="applicant-city">
+                                            City
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="applicant-city"
+                                            name="current_city"
+                                            type="text"
+                                            required
+                                            maxlength="120"
+                                            autocomplete="address-level2"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="applicant-postal-code">
+                                            Postal code
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="applicant-postal-code"
+                                            name="postal_code"
+                                            type="text"
+                                            required
+                                            maxlength="20"
+                                            autocomplete="postal-code"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Household -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="household-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    3
+                                </span>
+
+                                <div>
+                                    <h2 id="household-title">
+                                        Household information
+                                    </h2>
+
+                                    <p>
+                                        Tell the landlord who would
+                                        live in the apartment.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                <div class="application-form-grid">
+                                    <div class="form-group">
+                                        <label for="adult-occupants">
+                                            Number of adult occupants
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="adult-occupants"
+                                            name="adult_occupants"
+                                            type="number"
+                                            required
+                                            min="1"
+                                            max="20"
+                                            value="1"
+                                            inputmode="numeric"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="child-occupants">
+                                            Number of child occupants
+                                        </label>
+
+                                        <input
+                                            id="child-occupants"
+                                            name="child_occupants"
+                                            type="number"
+                                            min="0"
+                                            max="20"
+                                            value="0"
+                                            inputmode="numeric"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="desired-move-in-date">
+                                            Desired move-in date
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="desired-move-in-date"
+                                            name="desired_move_in_date"
+                                            type="date"
+                                            required
+                                            data-future-date
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="lease-duration">
+                                            Preferred lease duration
+                                        </label>
+
+                                        <select
+                                            id="lease-duration"
+                                            name="lease_duration_months"
+                                        >
+                                            <option value="">
+                                                No preference
+                                            </option>
+                                            <option value="6">
+                                                6 months
+                                            </option>
+                                            <option value="12">
+                                                12 months
+                                            </option>
+                                            <option value="18">
+                                                18 months
+                                            </option>
+                                            <option value="24">
+                                                24 months
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <fieldset class="application-choice-group">
+                                    <legend>
+                                        Will any pets live in the unit?
+                                    </legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="has_pets"
+                                            value="false"
+                                            checked
+                                            data-pet-toggle="false"
+                                        >
+                                        No
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="has_pets"
+                                            value="true"
+                                            data-pet-toggle="true"
+                                        >
+                                        Yes
+                                    </label>
+                                </fieldset>
+
+                                <div
+                                    class="form-group"
+                                    data-pet-details
+                                    hidden
+                                >
+                                    <label for="pet-details">
+                                        Pet details
+                                    </label>
+
+                                    <textarea
+                                        id="pet-details"
+                                        name="pet_details"
+                                        rows="3"
+                                        maxlength="500"
+                                        placeholder="Type, number and approximate size of pets"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Employment and income -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="income-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    4
+                                </span>
+
+                                <div>
+                                    <h2 id="income-title">
+                                        Employment and income
+                                    </h2>
+
+                                    <p>
+                                        Provide enough information for
+                                        the landlord to assess your
+                                        application.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                <div class="application-form-grid">
+                                    <div class="form-group">
+                                        <label for="employment-status">
+                                            Employment status
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <select
+                                            id="employment-status"
+                                            name="employment_status"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select a status
+                                            </option>
+                                            <option value="employed">
+                                                Employed
+                                            </option>
+                                            <option value="self_employed">
+                                                Self-employed
+                                            </option>
+                                            <option value="student">
+                                                Student
+                                            </option>
+                                            <option value="retired">
+                                                Retired
+                                            </option>
+                                            <option value="benefits">
+                                                Benefits or assistance
+                                            </option>
+                                            <option value="other">
+                                                Other
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employer-name">
+                                            Employer or income source
+                                        </label>
+
+                                        <input
+                                            id="employer-name"
+                                            name="employer_name"
+                                            type="text"
+                                            maxlength="150"
+                                            autocomplete="organization"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="monthly-income">
+                                            Gross monthly household income
+                                            <span
+                                                class="required-indicator"
+                                                aria-hidden="true"
+                                            >
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="monthly-income"
+                                            name="monthly_income"
+                                            type="number"
+                                            required
+                                            min="0"
+                                            step="0.01"
+                                            inputmode="decimal"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="employment-length">
+                                            Time with employer or income source
+                                        </label>
+
+                                        <input
+                                            id="employment-length"
+                                            name="employment_length"
+                                            type="text"
+                                            maxlength="100"
+                                            placeholder="For example, 2 years"
+                                        >
+                                    </div>
+                                </div>
+
+                                <p class="privacy-field-notice">
+                                    Do not enter bank-account passwords,
+                                    card PINs or online banking login
+                                    information.
+                                </p>
+                            </div>
+                        </section>
+
+                        <!-- Message and documents -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="message-documents-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    5
+                                </span>
+
+                                <div>
+                                    <h2 id="message-documents-title">
+                                        Message and supporting documents
+                                    </h2>
+
+                                    <p>
+                                        Add an optional message and only
+                                        upload documents requested by
+                                        the landlord.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                <div class="form-group">
+                                    <label for="application-message">
+                                        Message to the landlord
+                                    </label>
+
+                                    <div class="voice-textarea-group">
+                                        <textarea
+                                            id="application-message"
+                                            name="message"
+                                            rows="6"
+                                            maxlength="2000"
+                                            placeholder="Introduce yourself or add relevant information"
+                                            aria-describedby="message-character-count"
+                                        ></textarea>
+
+                                        <button
+                                            type="button"
+                                            class="voice-button"
+                                            data-voice-input="application-message"
+                                            aria-label="Enter application message using voice"
+                                        >
+                                            <span aria-hidden="true">
+                                                🎤
+                                            </span>
+
+                                            <span data-voice-label>
+                                                Use voice
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <p
+                                        id="message-character-count"
+                                        class="form-help"
+                                        data-character-count="application-message"
+                                    >
+                                        Maximum 2,000 characters.
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="application-documents">
+                                        Supporting documents
+                                    </label>
+
+                                    <input
+                                        id="application-documents"
+                                        name="documents"
+                                        type="file"
+                                        multiple
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        aria-describedby="document-help"
+                                        data-file-input
+                                    >
+
+                                    <p
+                                        id="document-help"
+                                        class="form-help"
+                                    >
+                                        Optional. PDF, JPG or PNG only.
+                                        Do not upload passwords, payment
+                                        cards or unrelated medical data.
+                                    </p>
+
+                                    <ul
+                                        class="selected-file-list"
+                                        data-file-list
+                                        aria-live="polite"
+                                    ></ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Consent -->
+                        <section
+                            class="application-form-section"
+                            aria-labelledby="consent-title"
+                        >
+                            <header class="application-form-section-header">
+                                <span
+                                    class="application-section-number"
+                                    aria-hidden="true"
+                                >
+                                    6
+                                </span>
+
+                                <div>
+                                    <h2 id="consent-title">
+                                        Review and consent
+                                    </h2>
+
+                                    <p>
+                                        Confirm the information below
+                                        before submitting.
+                                    </p>
+                                </div>
+                            </header>
+
+                            <div class="application-form-section-body">
+                                <div class="application-consents">
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="information_confirmed"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I confirm that the
+                                            information in this
+                                            application is accurate to
+                                            the best of my knowledge.
+                                        </span>
+                                    </label>
+
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="privacy_consent"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I have read the
+                                            <a
+                                                href="{{ url_for(
+                                                    'privacy_page'
+                                                ) }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                privacy notice
+                                                <span class="sr-only">
+                                                    opens in a new tab
+                                                </span>
+                                            </a>
+                                            and consent to processing
+                                            my application data.
+                                        </span>
+                                    </label>
+
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="landlord_contact_consent"
+                                            value="true"
+                                            required
+                                        >
+
+                                        <span>
+                                            I agree that the landlord
+                                            or authorized property
+                                            manager may contact me about
+                                            this application.
+                                        </span>
+                                    </label>
+
+                                    <label class="consent-option">
+                                        <input
+                                            type="checkbox"
+                                            name="ai_assistance_consent"
+                                            value="true"
+                                        >
+
+                                        <span>
+                                            I agree that Smart Property
+                                            AI may help categorize and
+                                            summarize my application.
+                                            Final decisions must be made
+                                            by an authorized person.
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div
+                                    class="ai-disclosure-notice"
+                                    role="note"
+                                >
+                                    <h3>AI disclosure</h3>
+
+                                    <p>
+                                        AI assistance must not make a
+                                        final housing decision or
+                                        discriminate based on protected
+                                        personal characteristics.
+                                    </p>
+
+                                    <a
+                                        href="{{ url_for(
+                                            'ai_disclosure_page'
+                                        ) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Read the AI disclosure
+                                        <span class="sr-only">
+                                            opens in a new tab
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </section>
+
+                        <footer class="application-form-actions">
+                            <a
+                                class="btn btn-secondary"
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {% if not units %}
+                                    disabled
+                                    aria-disabled="true"
+                                {% endif %}
+                            >
+                                Submit application
+                            </button>
+                        </footer>
+
+                        <p
+                            class="application-form-status"
+                            data-application-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+
+                        <p
+                            class="voice-status"
+                            data-voice-status
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        ></p>
+                    </form>
+                </div>
+
+                <!-- Property summary -->
+                <aside
+                    class="application-sidebar"
+                    aria-labelledby="application-property-title"
+                >
+                    <article class="application-property-card">
+                        <img
+                            src="{{ listing.image_url }}"
+                            alt=""
+                            width="640"
+                            height="400"
+                            data-property-image
+                        >
+
+                        <div class="application-property-content">
+                            <p class="eyebrow">
+                                Your selected property
+                            </p>
+
+                            <h2 id="application-property-title">
+                                {{ listing.title }}
+                            </h2>
+
+                            <p class="listing-location">
+                                <span aria-hidden="true">📍</span>
+
+                                {% if listing.address %}
+                                    {{ listing.address }},
+                                {% endif %}
+
+                                {{ listing.city }}
+                            </p>
+
+                            {% if selected_unit %}
+                                <dl class="application-unit-summary">
+                                    <div>
+                                        <dt>Unit</dt>
+                                        <dd>
+                                            {{ selected_unit.unit_number
+                                                |default(
+                                                    "Unit " ~ selected_unit.id,
+                                                    true
+                                                ) }}
+                                        </dd>
+                                    </div>
+
+                                    {% if selected_unit.monthly_rent is not none %}
+                                        <div>
+                                            <dt>Monthly rent</dt>
+                                            <dd>
+                                                {{ "%.2f"|format(
+                                                    selected_unit.monthly_rent
+                                                ) }}
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if selected_unit.bedrooms is not none %}
+                                        <div>
+                                            <dt>Bedrooms</dt>
+                                            <dd>
+                                                {{ selected_unit.bedrooms }}
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+                                </dl>
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for(
+                                    'listing_details',
+                                    property_id=listing.id
+                                ) }}"
+                            >
+                                Return to property details
+                            </a>
+                        </div>
+                    </article>
+
+                    <div class="application-security-card">
+                        <h2>
+                            <span aria-hidden="true">🔒</span>
+                            Protect your information
+                        </h2>
+
+                        <ul>
+                            <li>
+                                Only upload necessary documents.
+                            </li>
+                            <li>
+                                Never provide passwords or card PINs.
+                            </li>
+                            <li>
+                                Verify payment requests before sending
+                                money.
+                            </li>
+                            <li>
+                                Report suspicious communications.
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/listings.js') }}"
+        defer
+    ></script>
+{% endblock %}
