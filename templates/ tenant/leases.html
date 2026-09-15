@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("My Leases") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review your current and previous rental leases.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/tenant.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="tenant-page"
+    tabindex="-1"
+>
+    <section
+        class="tenant-dashboard-header"
+        aria-labelledby="tenant-leases-title"
+    >
+        <div class="container">
+            <div class="tenant-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Tenant portal
+                    </p>
+
+                    <h1 id="tenant-leases-title">
+                        My leases
+                    </h1>
+
+                    <p>
+                        Review your active and previous rental
+                        agreements, payment terms and lease dates.
+                    </p>
+                </div>
+
+                <div class="tenant-header-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="lease-page-description"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>
+                            Read instructions
+                        </span>
+                    </button>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for('tenant_dashboard') }}"
+                    >
+                        Return to dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div
+                id="lease-page-description"
+                class="sr-only"
+            >
+                This page contains your current and previous rental
+                leases. Select View lease to see the complete lease
+                information.
+            </div>
+        </div>
+    </section>
+
+    <div class="container tenant-alert-container">
+        {% if success_message %}
+            <div
+                class="alert alert-success"
+                role="status"
+                data-auto-dismiss="6000"
+            >
+                <div>{{ success_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss message"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div
+                class="alert alert-error"
+                role="alert"
+            >
+                <div>{{ error_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss error"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <section
+        class="section"
+        aria-label="Tenant leases"
+    >
+        <div class="container">
+            <nav
+                class="tenant-dashboard-navigation"
+                aria-label="Tenant portal navigation"
+            >
+                <ul>
+                    <li>
+                        <a href="{{ url_for('tenant_dashboard') }}">
+                            <span aria-hidden="true">⌂</span>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="{{ url_for('tenant_leases') }}"
+                            class="active"
+                            aria-current="page"
+                        >
+                            <span aria-hidden="true">📄</span>
+                            Leases
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_payments') }}">
+                            <span aria-hidden="true">💳</span>
+                            Payments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for(
+                            'tenant_maintenance_requests'
+                        ) }}">
+                            <span aria-hidden="true">🛠</span>
+                            Maintenance
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_complaints') }}">
+                            <span aria-hidden="true">⚠</span>
+                            Complaints
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_documents') }}">
+                            <span aria-hidden="true">📁</span>
+                            Documents
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_messages') }}">
+                            <span aria-hidden="true">✉</span>
+                            Messages
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_appointments') }}">
+                            <span aria-hidden="true">📅</span>
+                            Appointments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_profile') }}">
+                            <span aria-hidden="true">👤</span>
+                            Profile
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            {% if active_lease %}
+                {% set active_status =
+                    active_lease.status.value
+                    |default(active_lease.status, true)
+                %}
+
+                <section
+                    class="tenant-content-card"
+                    aria-labelledby="active-lease-title"
+                >
+                    <header class="tenant-card-header">
+                        <div>
+                            <p class="tenant-card-eyebrow">
+                                Current tenancy
+                            </p>
+
+                            <h2 id="active-lease-title">
+                                Active lease
+                            </h2>
+                        </div>
+
+                        <span
+                            class="status-badge status-{{ active_status }}"
+                        >
+                            {{ active_status
+                                |replace("_", " ")
+                                |title }}
+                        </span>
+                    </header>
+
+                    <div class="tenant-card-body">
+                        <dl class="tenant-detail-grid">
+                            <div>
+                                <dt>Lease reference</dt>
+                                <dd>
+                                    {{ active_lease.id }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Start date</dt>
+                                <dd>
+                                    {{ active_lease.start_date }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>End date</dt>
+                                <dd>
+                                    {{ active_lease.end_date
+                                        |default(
+                                            "Open-ended",
+                                            true
+                                        ) }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Monthly rent</dt>
+                                <dd>
+                                    {{ "%.2f"|format(
+                                        active_lease.monthly_rent
+                                    ) }}
+                                    {{ active_lease.currency }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Payment due day</dt>
+                                <dd>
+                                    Day
+                                    {{ active_lease.payment_due_day }}
+                                    of each month
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Renewal reminder</dt>
+                                <dd>
+                                    {{ active_lease.renewal_reminder_days }}
+                                    days before expiry
+                                </dd>
+                            </div>
+                        </dl>
+
+                        <div class="tenant-form-actions">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-copy-reference="{{ active_lease.id }}"
+                            >
+                                Copy reference
+                            </button>
+
+                            <a
+                                class="btn btn-primary"
+                                href="{{ url_for(
+                                    'tenant_lease_details',
+                                    lease_id=active_lease.id
+                                ) }}"
+                            >
+                                View active lease
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+
+            <section
+                class="tenant-content-card"
+                aria-labelledby="all-leases-title"
+                style="margin-top: 1.5rem;"
+            >
+                <header class="tenant-card-header">
+                    <div>
+                        <p class="tenant-card-eyebrow">
+                            Lease history
+                        </p>
+
+                        <h2 id="all-leases-title">
+                            All leases
+                        </h2>
+                    </div>
+
+                    {% if leases %}
+                        <span>
+                            {{ leases|length }}
+
+                            {% if leases|length == 1 %}
+                                lease
+                            {% else %}
+                                leases
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </header>
+
+                <div class="tenant-card-body">
+                    {% if leases %}
+                        <div class="tenant-table-wrapper">
+                            <table class="tenant-table">
+                                <caption class="sr-only">
+                                    Current and previous rental leases
+                                </caption>
+
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            Reference
+                                        </th>
+                                        <th scope="col">
+                                            Dates
+                                        </th>
+                                        <th scope="col">
+                                            Monthly rent
+                                        </th>
+                                        <th scope="col">
+                                            Status
+                                        </th>
+                                        <th scope="col">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for lease in leases %}
+                                        {% set lease_status =
+                                            lease.status.value
+                                            |default(
+                                                lease.status,
+                                                true
+                                            )
+                                        %}
+
+                                        <tr
+                                            data-tenant-search-item
+                                            data-status="{{ lease_status }}"
+                                            data-search-text="{{ lease.id }} {{ lease_status }}"
+                                        >
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    class="tenant-reference-button"
+                                                    data-copy-reference="{{ lease.id }}"
+                                                    title="Copy lease reference"
+                                                >
+                                                    {{ lease.id|truncate(
+                                                        14,
+                                                        true,
+                                                        "…"
+                                                    ) }}
+                                                </button>
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    {{ lease.start_date }}
+                                                </strong>
+
+                                                <span class="tenant-table-secondary">
+                                                    to
+                                                    {{ lease.end_date
+                                                        |default(
+                                                            "open-ended",
+                                                            true
+                                                        ) }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                {{ "%.2f"|format(
+                                                    lease.monthly_rent
+                                                ) }}
+                                                {{ lease.currency }}
+                                            </td>
+
+                                            <td>
+                                                <span
+                                                    class="status-badge status-{{ lease_status }}"
+                                                >
+                                                    {{ lease_status
+                                                        |replace("_", " ")
+                                                        |title }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <a
+                                                    href="{{ url_for(
+                                                        'tenant_lease_details',
+                                                        lease_id=lease.id
+                                                    ) }}"
+                                                >
+                                                    View lease
+                                                    <span class="sr-only">
+                                                        {{ lease.id }}
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="tenant-empty-state">
+                            <span aria-hidden="true">📄</span>
+
+                            <h3>No leases found</h3>
+
+                            <p>
+                                There are no lease agreements connected
+                                to your tenant account.
+                            </p>
+
+                            <a
+                                class="btn btn-primary"
+                                href="{{ url_for('listings_page') }}"
+                            >
+                                Find an apartment
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section
+                class="tenant-content-card tenant-security-card"
+                aria-labelledby="lease-security-title"
+                style="margin-top: 1.5rem;"
+            >
+                <div class="tenant-card-body">
+                    <h2 id="lease-security-title">
+                        <span aria-hidden="true">🔒</span>
+                        Lease-document security
+                    </h2>
+
+                    <p>
+                        Lease information is private. Do not share
+                        lease documents or reference numbers with
+                        unauthorized people.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Read the privacy notice
+                    </a>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <p
+        class="sr-only"
+        data-tenant-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/tenant.js') }}"
+        defer
+    ></script>
+{% endblock %}

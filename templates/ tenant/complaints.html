@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Complaints | Smart Property AI{% endblock %}
+
+{% block meta_description %}Review and submit tenancy or property complaints through the secure tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">Complaints</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>Complaints</h1>
+                <p>Review concerns you have submitted and monitor their resolution status.</p>
+            </div>
+
+            <div class="tenant-header-actions">
+                <a class="button button-primary" href="{{ url_for('tenant_add_complaint') }}">
+                    Submit a complaint
+                </a>
+                <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                    Back to dashboard
+                </a>
+            </div>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to load your complaints.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <aside class="tenant-emergency-notice" aria-labelledby="complaint-emergency-heading">
+            <h2 id="complaint-emergency-heading">Emergency assistance</h2>
+            <p>
+                Complaints are not monitored as an emergency channel. In Germany, call
+                <strong>112</strong> for fire or medical emergencies and
+                <strong>110</strong> for police assistance.
+            </p>
+        </aside>
+
+        {% if complaints %}
+        <section class="tenant-card" aria-labelledby="complaints-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="complaints-heading">Submitted complaints</h2>
+                    <p>
+                        {{ complaints|length }}
+                        complaint{% if complaints|length != 1 %}s{% endif %} found.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tenant-table-wrapper">
+                <table class="tenant-table">
+                    <caption class="visually-hidden">
+                        Complaints submitted through your tenant account
+                    </caption>
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Complaint</th>
+                            <th scope="col">Property</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Submitted</th>
+                            <th scope="col"><span class="visually-hidden">Action</span></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for complaint in complaints %}
+                            {% set priority_value = complaint.priority.value if complaint.priority.value is defined else complaint.priority %}
+                            {% set status_value = complaint.status.value if complaint.status.value is defined else complaint.status %}
+                        <tr>
+                            <td data-label="Complaint">
+                                <strong>{{ complaint.subject }}</strong>
+                                <span class="tenant-reference-preview">
+                                    {{ complaint.description|striptags|truncate(120, true, '…') }}
+                                </span>
+                                <span class="tenant-reference">
+                                    Reference: {{ complaint.id }}
+                                </span>
+                            </td>
+
+                            <td data-label="Property">
+                                <code>{{ complaint.property_id }}</code>
+                            </td>
+
+                            <td data-label="Priority">
+                                <span class="priority-badge priority-{{ priority_value|string|lower|replace('_', '-') }}">
+                                    {{ priority_value|string|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+
+                            <td data-label="Status">
+                                <span class="status-badge status-{{ status_value|string|lower|replace('_', '-') }}">
+                                    {{ status_value|string|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+
+                            <td data-label="Submitted">
+                                {% if complaint.created_at %}
+                                <time datetime="{{ complaint.created_at.isoformat() }}">
+                                    {{ complaint.created_at.strftime('%d %b %Y at %H:%M') }}
+                                </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Action">
+                                <a class="button button-small button-secondary"
+                                   href="{{ url_for('tenant_complaint_details', complaint_id=complaint.id) }}"
+                                   aria-label="View complaint: {{ complaint.subject }}">
+                                    View details
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-complaints-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">📝</div>
+            <h2 id="no-complaints-heading">No complaints submitted</h2>
+            <p>
+                You have not submitted any complaints. If you have a property-management,
+                service, conduct, safety, or tenancy concern, you can report it securely.
+            </p>
+            <div class="form-actions">
+                <a class="button button-primary" href="{{ url_for('tenant_add_complaint') }}">
+                    Submit a complaint
+                </a>
+                <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                    Return to dashboard
+                </a>
+            </div>
+        </section>
+        {% endif %}
+
+        <aside class="tenant-privacy-notice" aria-labelledby="complaint-privacy-heading">
+            <h2 id="complaint-privacy-heading">Privacy</h2>
+            <p>
+                Complaint information is available only to authorized people responsible
+                for reviewing and resolving the concern. Avoid including passwords,
+                payment-card details, or unrelated sensitive information.
+            </p>
+            <a href="{{ url_for('privacy_page') }}">Read the privacy information</a>
+        </aside>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

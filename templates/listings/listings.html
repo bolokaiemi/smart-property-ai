@@ -737,21 +737,21 @@
                     {% if is_authenticated %}
                         <a
                             class="btn btn-light"
-                            href="{{ url_for('properties_page') }}"
+                            href="{{ url_for('properties') }}"
                         >
                             Open landlord portal
                         </a>
                     {% else %}
                         <a
                             class="btn btn-light"
-                            href="{{ url_for('register_page') }}"
+                            href="{{ url_for('register') }}"
                         >
                             Create landlord account
                         </a>
 
                         <a
                             class="btn btn-outline-light"
-                            href="{{ url_for('login_page') }}"
+                            href="{{ url_for('login') }}"
                         >
                             Sign in
                         </a>

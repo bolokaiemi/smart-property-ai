@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Maintenance Requests") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Submit, review and track maintenance requests for your home.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/tenant.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="tenant-page tenant-maintenance-page"
+    tabindex="-1"
+>
+    <section
+        class="tenant-dashboard-header"
+        aria-labelledby="maintenance-page-title"
+    >
+        <div class="container">
+            <div class="tenant-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Repairs and property services
+                    </p>
+
+                    <h1 id="maintenance-page-title">
+                        Maintenance requests
+                    </h1>
+
+                    <p>
+                        Report property problems and track the progress
+                        of requests you have already submitted.
+                    </p>
+                </div>
+
+                <div class="tenant-header-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="maintenance-page-instructions"
+                        aria-label="Read maintenance instructions aloud"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>
+                            Read instructions
+                        </span>
+                    </button>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for(
+                            'tenant_add_maintenance_request'
+                        ) }}"
+                    >
+                        <span aria-hidden="true">＋</span>
+                        New request
+                    </a>
+                </div>
+            </div>
+
+            <div
+                id="maintenance-page-instructions"
+                class="sr-only"
+            >
+                Use this page to review your maintenance requests.
+                Select New request to report a property problem.
+                For an immediate fire, medical or safety emergency,
+                leave the dangerous area and contact emergency
+                services.
+            </div>
+        </div>
+    </section>
+
+    <div class="container tenant-alert-container">
+        {% if success_message %}
+            <div
+                class="alert alert-success"
+                role="status"
+                data-auto-dismiss="6000"
+            >
+                <div>
+                    <strong>Success:</strong>
+                    {{ success_message }}
+                </div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss message"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div
+                class="alert alert-error"
+                role="alert"
+            >
+                <div>
+                    <strong>Error:</strong>
+                    {{ error_message }}
+                </div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss error"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <section
+        class="section"
+        aria-label="Maintenance request records"
+    >
+        <div class="container">
+            <nav
+                class="tenant-dashboard-navigation"
+                aria-label="Tenant portal navigation"
+            >
+                <ul>
+                    <li>
+                        <a href="{{ url_for('tenant_dashboard') }}">
+                            <span aria-hidden="true">⌂</span>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_leases') }}">
+                            <span aria-hidden="true">📄</span>
+                            Leases
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_payments') }}">
+                            <span aria-hidden="true">💳</span>
+                            Payments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="{{ url_for(
+                                'tenant_maintenance_requests'
+                            ) }}"
+                            class="active"
+                            aria-current="page"
+                        >
+                            <span aria-hidden="true">🛠</span>
+                            Maintenance
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_complaints') }}">
+                            <span aria-hidden="true">⚠</span>
+                            Complaints
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_documents') }}">
+                            <span aria-hidden="true">📁</span>
+                            Documents
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_messages') }}">
+                            <span aria-hidden="true">✉</span>
+                            Messages
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_appointments') }}">
+                            <span aria-hidden="true">📅</span>
+                            Appointments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_profile') }}">
+                            <span aria-hidden="true">👤</span>
+                            Profile
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Emergency warning -->
+            <section
+                class="maintenance-emergency-notice"
+                aria-labelledby="emergency-warning-title"
+            >
+                <span
+                    class="maintenance-emergency-icon"
+                    aria-hidden="true"
+                >
+                    !
+                </span>
+
+                <div>
+                    <h2 id="emergency-warning-title">
+                        Immediate emergency?
+                    </h2>
+
+                    <p>
+                        Do not wait for a maintenance response if there
+                        is fire, gas, severe flooding, a medical
+                        emergency or immediate danger.
+                    </p>
+
+                    <p>
+                        In Germany, call
+                        <a href="tel:112">112</a>
+                        for fire or medical emergencies and
+                        <a href="tel:110">110</a>
+                        for police.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                class="tenant-content-card"
+                aria-labelledby="maintenance-records-title"
+                style="margin-top: 1.5rem;"
+            >
+                <header class="tenant-card-header">
+                    <div>
+                        <p class="tenant-card-eyebrow">
+                            Request history
+                        </p>
+
+                        <h2 id="maintenance-records-title">
+                            Your maintenance requests
+                        </h2>
+                    </div>
+
+                    <a
+                        class="btn btn-primary btn-small"
+                        href="{{ url_for(
+                            'tenant_add_maintenance_request'
+                        ) }}"
+                    >
+                        New request
+                    </a>
+                </header>
+
+                <div class="tenant-card-body">
+                    {% if maintenance_requests %}
+                        <div class="tenant-toolbar">
+                            <div class="tenant-filter-controls">
+                                <div>
+                                    <label
+                                        for="maintenance-search"
+                                        class="sr-only"
+                                    >
+                                        Search maintenance requests
+                                    </label>
+
+                                    <input
+                                        id="maintenance-search"
+                                        type="search"
+                                        placeholder="Search requests"
+                                        data-tenant-filter
+                                    >
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="maintenance-status-filter"
+                                        class="sr-only"
+                                    >
+                                        Filter by status
+                                    </label>
+
+                                    <select
+                                        id="maintenance-status-filter"
+                                        data-status-filter
+                                    >
+                                        <option value="">
+                                            All statuses
+                                        </option>
+
+                                        <option value="open">
+                                            Open
+                                        </option>
+
+                                        <option value="acknowledged">
+                                            Acknowledged
+                                        </option>
+
+                                        <option value="in_progress">
+                                            In progress
+                                        </option>
+
+                                        <option value="waiting">
+                                            Waiting
+                                        </option>
+
+                                        <option value="resolved">
+                                            Resolved
+                                        </option>
+
+                                        <option value="closed">
+                                            Closed
+                                        </option>
+
+                                        <option value="cancelled">
+                                            Cancelled
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <p
+                                data-filter-result-count
+                                role="status"
+                                aria-live="polite"
+                            >
+                                {{ maintenance_requests|length }}
+                                {% if maintenance_requests|length == 1 %}
+                                    result
+                                {% else %}
+                                    results
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="maintenance-request-grid">
+                            {% for maintenance in maintenance_requests %}
+                                {% set request_status =
+                                    maintenance.status.value
+                                    |default(
+                                        maintenance.status,
+                                        true
+                                    )
+                                %}
+
+                                {% set request_priority =
+                                    maintenance.priority.value
+                                    |default(
+                                        maintenance.priority,
+                                        true
+                                    )
+                                %}
+
+                                <article
+                                    class="maintenance-request-card"
+                                    data-tenant-search-item
+                                    data-status="{{ request_status }}"
+                                    data-search-text="{{ maintenance.title }} {{ maintenance.description }} {{ maintenance.category|default('', true) }} {{ request_status }} {{ request_priority }} {{ maintenance.id }}"
+                                >
+                                    <header class="maintenance-card-header">
+                                        <div>
+                                            <p class="maintenance-reference">
+                                                Reference:
+                                                {{ maintenance.id
+                                                    |truncate(
+                                                        18,
+                                                        true,
+                                                        "…"
+                                                    ) }}
+                                            </p>
+
+                                            <h3>
+                                                <a
+                                                    href="{{ url_for(
+                                                        'tenant_maintenance_request_details',
+                                                        request_id=maintenance.id
+                                                    ) }}"
+                                                >
+                                                    {{ maintenance.title }}
+                                                </a>
+                                            </h3>
+                                        </div>
+
+                                        <span
+                                            class="status-badge status-{{ request_status }}"
+                                        >
+                                            {{ request_status
+                                                |replace("_", " ")
+                                                |title }}
+                                        </span>
+                                    </header>
+
+                                    <p class="maintenance-description">
+                                        {{ maintenance.description
+                                            |truncate(
+                                                180,
+                                                true,
+                                                "…"
+                                            ) }}
+                                    </p>
+
+                                    <dl class="maintenance-meta-grid">
+                                        <div>
+                                            <dt>Priority</dt>
+                                            <dd>
+                                                <span
+                                                    class="priority-badge priority-{{ request_priority }}"
+                                                >
+                                                    {{ request_priority
+                                                        |replace("_", " ")
+                                                        |title }}
+                                                </span>
+                                            </dd>
+                                        </div>
+
+                                        <div>
+                                            <dt>Category</dt>
+                                            <dd>
+                                                {{ maintenance.category
+                                                    |default(
+                                                        "General",
+                                                        true
+                                                    )
+                                                    |replace("_", " ")
+                                                    |title }}
+                                            </dd>
+                                        </div>
+
+                                        <div>
+                                            <dt>Submitted</dt>
+                                            <dd>
+                                                {% if maintenance.created_at %}
+                                                    <time
+                                                        datetime="{{ maintenance.created_at.isoformat() }}"
+                                                    >
+                                                        {{ maintenance.created_at.strftime(
+                                                            "%d.%m.%Y %H:%M"
+                                                        ) }}
+                                                    </time>
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </dd>
+                                        </div>
+
+                                        <div>
+                                            <dt>Last updated</dt>
+                                            <dd>
+                                                {% if maintenance.updated_at %}
+                                                    <time
+                                                        datetime="{{ maintenance.updated_at.isoformat() }}"
+                                                    >
+                                                        {{ maintenance.updated_at.strftime(
+                                                            "%d.%m.%Y %H:%M"
+                                                        ) }}
+                                                    </time>
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </dd>
+                                        </div>
+                                    </dl>
+
+                                    {% if maintenance.ai_summary %}
+                                        <div class="maintenance-ai-summary">
+                                            <strong>
+                                                AI-assisted summary
+                                            </strong>
+
+                                            <p>
+                                                {{ maintenance.ai_summary
+                                                    |truncate(
+                                                        160,
+                                                        true,
+                                                        "…"
+                                                    ) }}
+                                            </p>
+                                        </div>
+                                    {% endif %}
+
+                                    <footer class="maintenance-card-actions">
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary btn-small"
+                                            data-copy-reference="{{ maintenance.id }}"
+                                        >
+                                            Copy reference
+                                        </button>
+
+                                        <a
+                                            class="btn btn-primary btn-small"
+                                            href="{{ url_for(
+                                                'tenant_maintenance_request_details',
+                                                request_id=maintenance.id
+                                            ) }}"
+                                        >
+                                            View details
+                                        </a>
+                                    </footer>
+                                </article>
+                            {% endfor %}
+                        </div>
+
+                        <div
+                            class="tenant-empty-state"
+                            data-filter-empty
+                            hidden
+                        >
+                            <span aria-hidden="true">🔎</span>
+
+                            <h3>No matching requests</h3>
+
+                            <p>
+                                Change or clear the search filters.
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="tenant-empty-state">
+                            <span aria-hidden="true">🛠</span>
+
+                            <h3>No maintenance requests</h3>
+
+                            <p>
+                                You have not submitted a maintenance
+                                request yet.
+                            </p>
+
+                            <a
+                                class="btn btn-primary"
+                                href="{{ url_for(
+                                    'tenant_add_maintenance_request'
+                                ) }}"
+                            >
+                                Report a problem
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section
+                class="maintenance-guidance-grid"
+                aria-label="Maintenance guidance"
+            >
+                <article class="tenant-content-card">
+                    <header class="tenant-card-header">
+                        <h2>Information to include</h2>
+                    </header>
+
+                    <div class="tenant-card-body">
+                        <ul class="maintenance-guidance-list">
+                            <li>
+                                Where the problem is located.
+                            </li>
+                            <li>
+                                When you first noticed it.
+                            </li>
+                            <li>
+                                Whether water, electricity or heating
+                                is affected.
+                            </li>
+                            <li>
+                                Whether there is an immediate safety
+                                concern.
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="tenant-content-card tenant-security-card">
+                    <div class="tenant-card-body">
+                        <h2>
+                            <span aria-hidden="true">🔒</span>
+                            Protect your information
+                        </h2>
+
+                        <p>
+                            Do not include passwords, payment card
+                            information, banking details or unrelated
+                            medical information in a maintenance
+                            request.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Read the privacy notice
+                        </a>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </section>
+
+    <p
+        class="sr-only"
+        data-tenant-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/tenant.js') }}"
+        defer
+    ></script>
+{% endblock %}

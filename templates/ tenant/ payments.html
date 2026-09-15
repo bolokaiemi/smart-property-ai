@@ -1,0 +1,799 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Rent and Payments") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review your rent balance, upcoming payments, overdue payments,
+    payment status and transaction history.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/tenant.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="tenant-page tenant-payments-page"
+    tabindex="-1"
+>
+    <section
+        class="tenant-dashboard-header"
+        aria-labelledby="tenant-payments-title"
+    >
+        <div class="container">
+            <div class="tenant-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Tenant portal
+                    </p>
+
+                    <h1 id="tenant-payments-title">
+                        Rent and payments
+                    </h1>
+
+                    <p>
+                        Review your rent balance, upcoming due dates,
+                        overdue payments and payment history.
+                    </p>
+                </div>
+
+                <div class="tenant-header-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="payment-page-summary"
+                        aria-label="Read the payment summary aloud"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>
+                            Read summary
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-tenant-print
+                    >
+                        <span aria-hidden="true">🖨</span>
+                        Print
+                    </button>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for('tenant_dashboard') }}"
+                    >
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div
+                id="payment-page-summary"
+                class="sr-only"
+            >
+                Your outstanding rent is
+                {{ payment_summary.outstanding_total|default(0, true) }}
+                {{ payment_summary.currency|default("EUR", true) }}.
+
+                You have
+                {{ payment_summary.overdue_count|default(0, true) }}
+                overdue payments.
+            </div>
+        </div>
+    </section>
+
+    <div class="container tenant-alert-container">
+        {% if success_message %}
+            <div
+                class="alert alert-success"
+                role="status"
+                data-auto-dismiss="6000"
+            >
+                <div>{{ success_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss message"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div
+                class="alert alert-error"
+                role="alert"
+            >
+                <div>{{ error_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss error"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <section
+        class="section"
+        aria-label="Tenant rent and payment information"
+    >
+        <div class="container">
+            <nav
+                class="tenant-dashboard-navigation"
+                aria-label="Tenant portal navigation"
+            >
+                <ul>
+                    <li>
+                        <a href="{{ url_for('tenant_dashboard') }}">
+                            <span aria-hidden="true">⌂</span>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_leases') }}">
+                            <span aria-hidden="true">📄</span>
+                            Leases
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="{{ url_for('tenant_payments') }}"
+                            class="active"
+                            aria-current="page"
+                        >
+                            <span aria-hidden="true">💳</span>
+                            Payments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for(
+                            'tenant_maintenance_requests'
+                        ) }}">
+                            <span aria-hidden="true">🛠</span>
+                            Maintenance
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_complaints') }}">
+                            <span aria-hidden="true">⚠</span>
+                            Complaints
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_documents') }}">
+                            <span aria-hidden="true">📁</span>
+                            Documents
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_messages') }}">
+                            <span aria-hidden="true">✉</span>
+                            Messages
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_appointments') }}">
+                            <span aria-hidden="true">📅</span>
+                            Appointments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_profile') }}">
+                            <span aria-hidden="true">👤</span>
+                            Profile
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Payment statistics -->
+            <section
+                class="tenant-statistics"
+                aria-labelledby="payment-overview-title"
+            >
+                <h2
+                    id="payment-overview-title"
+                    class="sr-only"
+                >
+                    Payment overview
+                </h2>
+
+                <div class="tenant-statistics-grid">
+                    <article class="tenant-stat-card">
+                        <span
+                            class="tenant-stat-icon"
+                            aria-hidden="true"
+                        >
+                            💰
+                        </span>
+
+                        <div>
+                            <p class="tenant-stat-label">
+                                Total paid
+                            </p>
+
+                            <p class="tenant-stat-value">
+                                {{ "%.2f"|format(
+                                    payment_summary.paid_total
+                                    |default(0, true)
+                                ) }}
+
+                                <span>
+                                    {{ payment_summary.currency
+                                        |default("EUR", true) }}
+                                </span>
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="tenant-stat-card">
+                        <span
+                            class="tenant-stat-icon"
+                            aria-hidden="true"
+                        >
+                            🧾
+                        </span>
+
+                        <div>
+                            <p class="tenant-stat-label">
+                                Outstanding
+                            </p>
+
+                            <p class="tenant-stat-value">
+                                {{ "%.2f"|format(
+                                    payment_summary.outstanding_total
+                                    |default(0, true)
+                                ) }}
+
+                                <span>
+                                    {{ payment_summary.currency
+                                        |default("EUR", true) }}
+                                </span>
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="tenant-stat-card">
+                        <span
+                            class="tenant-stat-icon"
+                            aria-hidden="true"
+                        >
+                            ⚠
+                        </span>
+
+                        <div>
+                            <p class="tenant-stat-label">
+                                Overdue amount
+                            </p>
+
+                            <p class="tenant-stat-value">
+                                {{ "%.2f"|format(
+                                    payment_summary.overdue_total
+                                    |default(0, true)
+                                ) }}
+
+                                <span>
+                                    {{ payment_summary.currency
+                                        |default("EUR", true) }}
+                                </span>
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="tenant-stat-card">
+                        <span
+                            class="tenant-stat-icon"
+                            aria-hidden="true"
+                        >
+                            📅
+                        </span>
+
+                        <div>
+                            <p class="tenant-stat-label">
+                                Overdue payments
+                            </p>
+
+                            <p class="tenant-stat-value">
+                                {{ payment_summary.overdue_count
+                                    |default(0, true) }}
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            {% if payment_summary.overdue_count %}
+                <div
+                    class="overdue-payment-warning"
+                    role="alert"
+                >
+                    <strong>
+                        Payment attention required
+                    </strong>
+
+                    <p>
+                        You have
+                        {{ payment_summary.overdue_count }}
+                        overdue
+                        {% if payment_summary.overdue_count == 1 %}
+                            payment
+                        {% else %}
+                            payments
+                        {% endif %},
+                        totalling
+                        {{ "%.2f"|format(
+                            payment_summary.overdue_total
+                        ) }}
+                        {{ payment_summary.currency }}.
+                        Review the records below or contact property
+                        management if you believe this is incorrect.
+                    </p>
+
+                    <a
+                        class="btn btn-secondary"
+                        href="{{ url_for('tenant_messages') }}"
+                    >
+                        Contact property management
+                    </a>
+                </div>
+            {% endif %}
+
+            <div
+                class="tenant-dashboard-grid"
+                style="margin-top: 1.5rem;"
+            >
+                <div class="tenant-dashboard-main">
+                    <!-- Payment history -->
+                    <section
+                        class="tenant-content-card"
+                        aria-labelledby="payment-history-title"
+                    >
+                        <header class="tenant-card-header">
+                            <div>
+                                <p class="tenant-card-eyebrow">
+                                    Transaction records
+                                </p>
+
+                                <h2 id="payment-history-title">
+                                    Payment history
+                                </h2>
+                            </div>
+
+                            {% if payments %}
+                                <span>
+                                    {{ payments|length }}
+
+                                    {% if payments|length == 1 %}
+                                        record
+                                    {% else %}
+                                        records
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </header>
+
+                        <div class="tenant-card-body">
+                            {% if payments %}
+                                <div class="tenant-toolbar">
+                                    <div class="tenant-filter-controls">
+                                        <div>
+                                            <label
+                                                for="payment-search"
+                                                class="sr-only"
+                                            >
+                                                Search payments
+                                            </label>
+
+                                            <input
+                                                id="payment-search"
+                                                type="search"
+                                                placeholder="Search payments"
+                                                data-tenant-filter
+                                            >
+                                        </div>
+
+                                        <div>
+                                            <label
+                                                for="payment-status-filter"
+                                                class="sr-only"
+                                            >
+                                                Filter payment status
+                                            </label>
+
+                                            <select
+                                                id="payment-status-filter"
+                                                data-status-filter
+                                            >
+                                                <option value="">
+                                                    All statuses
+                                                </option>
+
+                                                <option value="pending">
+                                                    Pending
+                                                </option>
+
+                                                <option value="paid">
+                                                    Paid
+                                                </option>
+
+                                                <option value="partially_paid">
+                                                    Partially paid
+                                                </option>
+
+                                                <option value="overdue">
+                                                    Overdue
+                                                </option>
+
+                                                <option value="failed">
+                                                    Failed
+                                                </option>
+
+                                                <option value="refunded">
+                                                    Refunded
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <p
+                                        data-filter-result-count
+                                        role="status"
+                                        aria-live="polite"
+                                    >
+                                        {{ payments|length }}
+                                        {% if payments|length == 1 %}
+                                            result
+                                        {% else %}
+                                            results
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <div class="tenant-table-wrapper">
+                                    <table class="tenant-table">
+                                        <caption class="sr-only">
+                                            Tenant rent-payment history
+                                        </caption>
+
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">
+                                                    Due date
+                                                </th>
+
+                                                <th scope="col">
+                                                    Amount
+                                                </th>
+
+                                                <th scope="col">
+                                                    Status
+                                                </th>
+
+                                                <th scope="col">
+                                                    Paid date
+                                                </th>
+
+                                                <th scope="col">
+                                                    Reference
+                                                </th>
+
+                                                <th scope="col">
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for payment in payments %}
+                                                {% set payment_status =
+                                                    payment.status.value
+                                                    |default(
+                                                        payment.status,
+                                                        true
+                                                    )
+                                                %}
+
+                                                <tr
+                                                    data-tenant-search-item
+                                                    data-status="{{ payment_status }}"
+                                                    data-search-text="{{ payment.id }} {{ payment.payment_reference|default('', true) }} {{ payment.due_date }} {{ payment.amount }} {{ payment_status }}"
+                                                >
+                                                    <td>
+                                                        <time
+                                                            datetime="{{ payment.due_date }}"
+                                                        >
+                                                            {{ payment.due_date }}
+                                                        </time>
+                                                    </td>
+
+                                                    <td>
+                                                        <strong>
+                                                            {{ "%.2f"|format(
+                                                                payment.amount
+                                                            ) }}
+                                                            {{ payment.currency }}
+                                                        </strong>
+                                                    </td>
+
+                                                    <td>
+                                                        <span
+                                                            class="status-badge status-{{ payment_status }}"
+                                                        >
+                                                            {{ payment_status
+                                                                |replace("_", " ")
+                                                                |title }}
+                                                        </span>
+                                                    </td>
+
+                                                    <td>
+                                                        {% if payment.paid_at %}
+                                                            <time
+                                                                datetime="{{ payment.paid_at.isoformat() }}"
+                                                            >
+                                                                {{ payment.paid_at.strftime(
+                                                                    "%d.%m.%Y %H:%M"
+                                                                ) }}
+                                                            </time>
+                                                        {% else %}
+                                                            —
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>
+                                                        {% if payment.payment_reference %}
+                                                            <button
+                                                                type="button"
+                                                                class="tenant-reference-button"
+                                                                data-copy-reference="{{ payment.payment_reference }}"
+                                                                title="Copy payment reference"
+                                                            >
+                                                                {{ payment.payment_reference
+                                                                    |truncate(
+                                                                        16,
+                                                                        true,
+                                                                        "…"
+                                                                    ) }}
+                                                            </button>
+                                                        {% else %}
+                                                            —
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>
+                                                        <a
+                                                            href="{{ url_for(
+                                                                'tenant_payment_details',
+                                                                payment_id=payment.id
+                                                            ) }}"
+                                                        >
+                                                            Details
+                                                            <span class="sr-only">
+                                                                for payment due
+                                                                {{ payment.due_date }}
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div
+                                    class="tenant-empty-state compact"
+                                    data-filter-empty
+                                    hidden
+                                >
+                                    <span aria-hidden="true">🔎</span>
+
+                                    <h3>No matching payments</h3>
+
+                                    <p>
+                                        Change or clear the payment
+                                        search filters.
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div class="tenant-empty-state">
+                                    <span aria-hidden="true">💳</span>
+
+                                    <h3>No payment records</h3>
+
+                                    <p>
+                                        Your scheduled rent payments
+                                        and completed transactions will
+                                        appear here.
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+                <aside
+                    class="tenant-dashboard-sidebar"
+                    aria-label="Payment information"
+                >
+                    <!-- Next payment -->
+                    <section
+                        class="tenant-dashboard-card"
+                        aria-labelledby="next-payment-title"
+                    >
+                        <header class="tenant-card-header">
+                            <h2 id="next-payment-title">
+                                Next payment
+                            </h2>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            {% if payment_summary.next_payment %}
+                                {% set next_status =
+                                    payment_summary.next_payment.status.value
+                                    |default(
+                                        payment_summary.next_payment.status,
+                                        true
+                                    )
+                                %}
+
+                                <div class="next-payment">
+                                    <p class="next-payment-amount">
+                                        {{ "%.2f"|format(
+                                            payment_summary.next_payment.amount
+                                        ) }}
+                                        {{ payment_summary.next_payment.currency }}
+                                    </p>
+
+                                    <p>
+                                        Due on
+                                        <strong>
+                                            {{ payment_summary.next_payment.due_date }}
+                                        </strong>
+                                    </p>
+
+                                    <p>
+                                        <span
+                                            class="status-badge status-{{ next_status }}"
+                                        >
+                                            {{ next_status
+                                                |replace("_", " ")
+                                                |title }}
+                                        </span>
+                                    </p>
+
+                                    <a
+                                        class="btn btn-primary btn-block"
+                                        href="{{ url_for(
+                                            'tenant_payment_details',
+                                            payment_id=payment_summary.next_payment.id
+                                        ) }}"
+                                    >
+                                        View payment
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="tenant-empty-state compact">
+                                    <span aria-hidden="true">✓</span>
+
+                                    <p>
+                                        No upcoming payment is
+                                        currently scheduled.
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <!-- Payment actions -->
+                    <section
+                        class="tenant-dashboard-card"
+                        aria-labelledby="payment-actions-title"
+                    >
+                        <header class="tenant-card-header">
+                            <h2 id="payment-actions-title">
+                                Payment actions
+                            </h2>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            <div class="tenant-quick-actions">
+                                <a href="{{ url_for('tenant_leases') }}">
+                                    <span aria-hidden="true">📄</span>
+                                    Review lease terms
+                                </a>
+
+                                <a href="{{ url_for('tenant_documents') }}">
+                                    <span aria-hidden="true">📁</span>
+                                    View receipts and documents
+                                </a>
+
+                                <a href="{{ url_for('tenant_messages') }}">
+                                    <span aria-hidden="true">✉</span>
+                                    Ask about a payment
+                                </a>
+
+                                <button
+                                    type="button"
+                                    data-tenant-print
+                                >
+                                    <span aria-hidden="true">🖨</span>
+                                    Print payment history
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Security -->
+                    <section
+                        class="tenant-dashboard-card tenant-security-card"
+                        aria-labelledby="payment-security-title"
+                    >
+                        <div class="tenant-card-body">
+                            <h2 id="payment-security-title">
+                                <span aria-hidden="true">🔒</span>
+                                Payment security
+                            </h2>
+
+                            <p>
+                                Never send card PINs, banking passwords
+                                or login details through messages,
+                                email, WhatsApp or the AI assistant.
+                            </p>
+
+                            <p>
+                                Verify unexpected payment requests
+                                directly with your authorized landlord
+                                or property manager.
+                            </p>
+
+                            <a href="{{ url_for('privacy_page') }}">
+                                Read the privacy notice
+                            </a>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <p
+        class="sr-only"
+        data-tenant-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/tenant.js') }}"
+        defer
+    ></script>
+{% endblock %}

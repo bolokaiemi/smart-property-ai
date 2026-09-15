@@ -409,7 +409,7 @@ def read_email_verification_token(
     "/login",
     name="login",
 )
-async def login_page(
+async def login(
     request: Request,
     next: Optional[str] = None,
 ):
@@ -586,7 +586,7 @@ async def login_submit(
     "/register",
     name="register",
 )
-async def register_page(
+async def register(
     request: Request,
 ):
     """Display the registration form."""

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | Smart Property AI{% endblock %}
+
+{% block meta_description %}Review rent, lease, appointment, maintenance, and account notifications.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">Notifications</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>Notifications</h1>
+                <p>Review reminders and important updates concerning your tenancy.</p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Back to dashboard
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to load your notifications.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        {% if notifications %}
+            {% set unread_count = notifications|selectattr('is_read', 'equalto', false)|list|length %}
+
+        <section class="tenant-card" aria-labelledby="notification-list-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="notification-list-heading">Recent notifications</h2>
+                    <p>
+                        {{ unread_count }} unread notification{% if unread_count != 1 %}s{% endif %}
+                        out of {{ notifications|length }}.
+                    </p>
+                </div>
+            </div>
+
+            <div class="notification-list">
+                {% for notification in notifications %}
+                <article class="notification-item{% if not notification.is_read %} notification-unread{% endif %}"
+                         aria-labelledby="notification-title-{{ notification.id }}">
+                    <div class="notification-icon notification-type-{{ notification.notification_type|lower|replace('_', '-') }}"
+                         aria-hidden="true">
+                        {% set type_value = notification.notification_type|lower %}
+                        {% if 'payment' in type_value or 'rent' in type_value %}
+                            💳
+                        {% elif 'lease' in type_value or 'renewal' in type_value %}
+                            📄
+                        {% elif 'appointment' in type_value or 'viewing' in type_value %}
+                            📅
+                        {% elif 'maintenance' in type_value or 'repair' in type_value %}
+                            🔧
+                        {% elif 'message' in type_value %}
+                            💬
+                        {% elif 'security' in type_value or 'account' in type_value %}
+                            🔒
+                        {% else %}
+                            🔔
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-content">
+                        <div class="notification-heading">
+                            <h3 id="notification-title-{{ notification.id }}">
+                                {{ notification.title }}
+                            </h3>
+
+                            {% if notification.is_read %}
+                            <span class="status-badge status-read">Read</span>
+                            {% else %}
+                            <span class="status-badge status-unread">Unread</span>
+                            {% endif %}
+                        </div>
+
+                        <p>{{ notification.content }}</p>
+
+                        <div class="notification-meta">
+                            <span>
+                                {{ notification.notification_type|replace('_', ' ')|title }}
+                            </span>
+
+                            {% if notification.created_at %}
+                            <time datetime="{{ notification.created_at.isoformat() }}">
+                                {{ notification.created_at.strftime('%d %b %Y at %H:%M') }}
+                            </time>
+                            {% endif %}
+                        </div>
+
+                        <div class="notification-actions">
+                            {% if notification.action_url %}
+                            <a class="button button-small button-secondary"
+                               href="{{ notification.action_url }}">
+                                View related information
+                            </a>
+                            {% endif %}
+
+                            {% if not notification.is_read %}
+                            <form method="post"
+                                  action="{{ url_for('tenant_notification_read', notification_id=notification.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button class="button button-small button-primary" type="submit">
+                                    Mark as read
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-notifications-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">🔔</div>
+            <h2 id="no-notifications-heading">No notifications</h2>
+            <p>
+                Rent reminders, lease updates, appointment reminders, maintenance updates,
+                and other important notices will appear here.
+            </p>
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Return to dashboard
+            </a>
+        </section>
+        {% endif %}
+
+        <aside class="tenant-info-notice" aria-labelledby="notification-help-heading">
+            <h2 id="notification-help-heading">About notifications</h2>
+            <p>
+                Notifications support your property management activity but do not replace
+                formal legal notices or emergency communications. Verify important dates
+                using your lease and official documents.
+            </p>
+        </aside>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

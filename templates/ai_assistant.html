@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ current_language | default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant | Smart Property AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/ai-assistant.css') }}">
+</head>
+<body>
+    <main id="main-content" class="ai-assistant-page">
+        <section class="assistant-container">
+            <h1>AI Assistant</h1>
+            <div id="ai-chat-messages" class="ai-messages" data-ai-messages></div>
+            <form id="ai-chat-form" class="ai-chat-form" data-ai-chat-form method="post">
+                <input type="text" id="ai-message" name="message" placeholder="Ask a question..." required />
+                <select id="ai-language" name="language" data-ai-language>
+                    <option value="en" selected>English</option>
+                    <option value="de">Deutsch</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <!-- Add other language options as needed -->
+                </select>
+                <button type="submit" data-ai-submit>Send</button>
+                <button type="button" id="ai-read-reply" data-ai-read-reply>Read reply</button>
+                <button type="button" id="ai-stop-speech" data-ai-stop-speech>Stop</button>
+                <button type="button" id="ai-voice-input" data-ai-voice-input aria-pressed="false">Voice</button>
+            </form>
+            <div id="ai-status" class="ai-status" data-ai-status aria-live="polite"></div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', path='js/ai-assistant.js') }}"></script>
+</body>
+</html>

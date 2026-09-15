@@ -284,7 +284,7 @@
                                     </option>
 
                                     {% if filter_options.bedrooms %}
-                                        {% Dee for bedroom_count in filter_options.bedrooms %}
+                                        {% for bedroom_count in filter_options.bedrooms %}
                                             <option
                                                 value="{{ bedroom_count }}"
                                                 {% if filters.minimum_bedrooms == bedroom_count %}

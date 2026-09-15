@@ -10,10 +10,19 @@ from decimal import Decimal
 from typing import Any
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
+from decimal import Decimal, InvalidOperation
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
+
+from database.database import get_db
+from database.models import Listing, ListingStatus, Property, Unit
+
 
 from database.database import get_db
 from services.listing_service import (
@@ -398,9 +407,9 @@ def search_listings_page(
 
 
 @router.get(
-    "/guided-search",
+    "/guided_search_page",
     response_class=HTMLResponse,
-    name="guided_search",
+    name="guided_search_page",
 )
 def guided_search_page(
     request: Request,
@@ -697,3 +706,335 @@ def request_url_for_listing(property_id: int) -> str:
     """
 
     return f"/listings/{property_id}"
+
+
+
+
+
+templates = Jinja2Templates(directory="templates")
+
+
+def _decimal_or_none(value: Optional[str]) -> Optional[Decimal]:
+    if value is None or not value.strip():
+        return None
+
+    try:
+        amount = Decimal(value.strip())
+    except (InvalidOperation, ValueError):
+        return None
+
+    return amount if amount >= 0 else None
+
+
+def _listing_context(
+    request: Request,
+    listings: list[Listing],
+    properties: list[Property],
+    units: list[Unit],
+    **extra: object,
+) -> dict:
+    context = {
+        "request": request,
+        "listings": listings,
+        "properties_by_id": {item.id: item for item in properties},
+        "units_by_id": {item.id: item for item in units},
+        "current_user": request.session.get("user"),
+        "is_authenticated": bool(
+            request.session.get("user_id")
+            or request.session.get("username")
+            or request.session.get("user")
+        ),
+    }
+    context.update(extra)
+    return context
+
+
+def _filter_options(db: Session) -> dict:
+    cities = [
+        city
+        for (city,) in (
+            db.query(Property.city)
+            .filter(Property.city.isnot(None))
+            .distinct()
+            .order_by(Property.city.asc())
+            .all()
+        )
+        if city
+    ]
+
+    bedroom_values = [
+        bedrooms
+        for (bedrooms,) in (
+            db.query(Unit.bedrooms)
+            .filter(Unit.bedrooms.isnot(None))
+            .distinct()
+            .order_by(Unit.bedrooms.asc())
+            .all()
+        )
+    ]
+
+    return {
+        "cities": cities,
+        "bedrooms": bedroom_values,
+        "property_types": [
+            value
+            for (value,) in (
+                db.query(Property.property_type)
+                .filter(Property.property_type.isnot(None))
+                .distinct()
+                .order_by(Property.property_type.asc())
+                .all()
+            )
+            if value
+        ],
+    }
+
+
+def _search_published_listings(
+    db: Session,
+    search_text: Optional[str] = None,
+    city: Optional[str] = None,
+    property_type: Optional[str] = None,
+    min_rent: Optional[str] = None,
+    max_rent: Optional[str] = None,
+    bedrooms: Optional[int] = None,
+    wheelchair_accessible: bool = False,
+    pets_allowed: bool = False,
+) -> tuple[list[Listing], list[Property], list[Unit]]:
+    query = (
+        db.query(Listing)
+        .join(Property, Property.id == Listing.property_id)
+        .outerjoin(Unit, Unit.id == Listing.unit_id)
+        .filter(Listing.status == ListingStatus.PUBLISHED)
+    )
+
+    if search_text and search_text.strip():
+        term = f"%{search_text.strip()}%"
+        query = query.filter(
+            or_(
+                Listing.title.ilike(term),
+                Listing.description.ilike(term),
+                Property.name.ilike(term),
+                Property.city.ilike(term),
+                Property.postal_code.ilike(term),
+            )
+        )
+
+    if city and city.strip():
+        query = query.filter(Property.city.ilike(city.strip()))
+
+    if property_type and property_type.strip():
+        query = query.filter(Property.property_type == property_type.strip())
+
+    minimum = _decimal_or_none(min_rent)
+    maximum = _decimal_or_none(max_rent)
+
+    if minimum is not None:
+        query = query.filter(Listing.monthly_rent >= minimum)
+
+    if maximum is not None:
+        query = query.filter(Listing.monthly_rent <= maximum)
+
+    if bedrooms is not None and bedrooms >= 0:
+        query = query.filter(Unit.bedrooms >= bedrooms)
+
+    if wheelchair_accessible:
+        query = query.filter(Unit.wheelchair_accessible.is_(True))
+
+    if pets_allowed:
+        query = query.filter(Unit.pets_allowed.is_(True))
+
+    listings = (
+        query.order_by(
+            Listing.published_at.desc(),
+            Listing.created_at.desc(),
+        )
+        .distinct()
+        .all()
+    )
+
+    property_ids = {listing.property_id for listing in listings}
+    unit_ids = {listing.unit_id for listing in listings if listing.unit_id}
+
+    properties = (
+        db.query(Property).filter(Property.id.in_(property_ids)).all()
+        if property_ids
+        else []
+    )
+    units = (
+        db.query(Unit).filter(Unit.id.in_(unit_ids)).all()
+        if unit_ids
+        else []
+    )
+
+    return listings, properties, units
+
+
+@router.get("/apartments", name="listings_page")
+def listings_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    listings, properties, units = _search_published_listings(db)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="listings/listings.html",
+        context=_listing_context(
+            request,
+            listings,
+            properties,
+            units,
+            filter_options=_filter_options(db),
+            filters={},
+        ),
+    )
+
+
+@router.get("/find-an-apartment", name="find_apartment")
+def find_apartment():
+    return RedirectResponse(
+        url="/apartments",
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.get("/find-apartment", name="find_apartment_alias")
+def find_apartment_alias():
+    return RedirectResponse(
+        url="/apartments",
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.get("/listings", name="listings_alias")
+def listings_alias():
+    return RedirectResponse(
+        url="/apartments",
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.get("/apartments/search", name="search_results")
+def search_results(
+    request: Request,
+    q: Optional[str] = Query(default=None, max_length=150),
+    city: Optional[str] = Query(default=None, max_length=100),
+    property_type: Optional[str] = Query(default=None, max_length=50),
+    min_rent: Optional[str] = Query(default=None, max_length=20),
+    max_rent: Optional[str] = Query(default=None, max_length=20),
+    bedrooms: Optional[int] = Query(default=None, ge=0, le=20),
+    wheelchair_accessible: bool = Query(default=False),
+    pets_allowed: bool = Query(default=False),
+    db: Session = Depends(get_db),
+):
+    listings, properties, units = _search_published_listings(
+        db=db,
+        search_text=q,
+        city=city,
+        property_type=property_type,
+        min_rent=min_rent,
+        max_rent=max_rent,
+        bedrooms=bedrooms,
+        wheelchair_accessible=wheelchair_accessible,
+        pets_allowed=pets_allowed,
+    )
+
+    filters = {
+        "q": q or "",
+        "city": city or "",
+        "property_type": property_type or "",
+        "min_rent": min_rent or "",
+        "max_rent": max_rent or "",
+        "bedrooms": bedrooms,
+        "wheelchair_accessible": wheelchair_accessible,
+        "pets_allowed": pets_allowed,
+    }
+
+    return templates.TemplateResponse(
+        request=request,
+        name="listings/search_results.html",
+        context=_listing_context(
+            request,
+            listings,
+            properties,
+            units,
+            query=q or "",
+            filters=filters,
+            filter_options=_filter_options(db),
+            result_count=len(listings),
+        ),
+    )
+
+
+@router.get("/guided-search", name="guided_search")
+def guided_search(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="listings/guided_search.html",
+        context={
+            "request": request,
+            "filter_options": _filter_options(db),
+            "current_user": request.session.get("user"),
+            "is_authenticated": bool(
+                request.session.get("user_id")
+                or request.session.get("username")
+                or request.session.get("user")
+            ),
+        },
+    )
+
+
+@router.get("/apartments/{listing_id}", name="listing_details")
+def listing_details(
+    listing_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    listing = (
+        db.query(Listing)
+        .filter(
+            Listing.id == listing_id,
+            Listing.status == ListingStatus.PUBLISHED,
+        )
+        .first()
+    )
+
+    if listing is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Listing not found.",
+        )
+
+    property_item = (
+        db.query(Property)
+        .filter(Property.id == listing.property_id)
+        .first()
+    )
+    unit = (
+        db.query(Unit)
+        .filter(Unit.id == listing.unit_id)
+        .first()
+        if listing.unit_id
+        else None
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="listings/listing_details.html",
+        context={
+            "request": request,
+            "listing": listing,
+            "property": property_item,
+            "unit": unit,
+            "current_user": request.session.get("user"),
+            "is_authenticated": bool(
+                request.session.get("user_id")
+                or request.session.get("username")
+                or request.session.get("user")
+            ),
+        },
+    )

@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
+from typing import Literal, Optional
 from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -69,7 +70,7 @@ class AIChatResponse(BaseModel):
     """Response returned by the AI chat API."""
 
     success: bool
-    response: str
+    reply: str
     conversation_id: str
     language: str
     human_review_required: bool = False
@@ -255,6 +256,7 @@ def detect_emergency(message: str) -> bool:
 
     lowered = message.lower()
 
+    # token is valid, proceed
     return any(
         term in lowered
         for term in emergency_terms
@@ -603,13 +605,16 @@ def verify_csrf_token(
     header. This protects cookie-authenticated requests.
     """
 
+    logger.debug(f"CSRF verification: request headers: {dict(request.headers)}")
     session = get_session(request)
     expected_token = session.get("csrf_token")
 
     if not expected_token:
+        logger.debug("CSRF token missing in session")
         return
 
     if not submitted_token:
+        logger.debug(f"CSRF token not submitted: expected {expected_token}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Missing form security token.",
@@ -619,18 +624,19 @@ def verify_csrf_token(
         str(expected_token),
         str(submitted_token),
     ):
+        logger.debug(f"CSRF token mismatch: expected {expected_token}, got {submitted_token}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid form security token.",
         )
 
+    logger.debug("CSRF token verified successfully")
+    # token is valid, proceed
 
-@router.get(
-    "/ai-assistant",
-    response_class=HTMLResponse,
-    name="ai_assistant_page",
-)
-def ai_assistant_page(request: Request):
+
+@router.get("/ai-assistant", name="ai_assistant")
+@router.get("/ai-assistant", name="ai_assistant")
+def ai_assistant(request: Request):
     """
     Display the Smart Property AI assistant.
 
@@ -639,7 +645,7 @@ def ai_assistant_page(request: Request):
     """
 
     if not is_authenticated(request):
-        login_url = request.url_for("login_page")
+        login_url = request.url_for("login")
 
         return RedirectResponse(
             url=f"{login_url}?next=/ai-assistant",
@@ -669,7 +675,7 @@ def ai_assistant_page(request: Request):
 
     return templates.TemplateResponse(
         request=request,
-        name="ai/assistant.html",
+        name="ai_assistant.html",
         context={
             "request": request,
             "page_title": "AI Assistant",
@@ -710,12 +716,14 @@ def ai_chat(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Sign in to use the AI assistant.",
         )
+    logger.info(f"AI chat request received from user {get_current_user_id(request)}")
 
     verify_csrf_token(
         request,
         request.headers.get("X-CSRF-Token"),
     )
 
+    logger.debug(f"AI chat payload: {payload}")
     message = sanitize_message(payload.message)
     language = normalize_language(payload.language)
     session = get_session(request)
@@ -771,7 +779,7 @@ def ai_chat(
 
     return AIChatResponse(
         success=True,
-        response=response_text,
+        reply=response_text,
         conversation_id=conversation_id,
         language=language,
         human_review_required=human_review_required,
@@ -835,4 +843,167 @@ def ai_status() -> dict[str, Any]:
         "speech_output": True,
         "human_review_required_for_housing_decisions": True,
         "timestamp": utc_now_iso(),
+    }
+
+
+
+
+
+templates = Jinja2Templates(directory="templates")
+
+
+SUPPORTED_LANGUAGES = {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "pt": "Português",
+    "ar": "العربية",
+    "tr": "Türkçe",
+    "pl": "Polski",
+    "uk": "Українська",
+}
+
+
+class AIChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
+    language: str = Field(default="en", min_length=2, max_length=10)
+    conversation_id: Optional[str] = Field(default=None, max_length=100)
+
+
+class AIChatResponse(BaseModel):
+    reply: str
+    language: str
+    conversation_id: Optional[str] = None
+    source: Literal["local-rules"] = "local-rules"
+    disclaimer: str
+
+
+def _authenticated_user_id(request: Request) -> Optional[str]:
+    return (
+        request.session.get("user_id")
+        or request.session.get("username")
+        or request.session.get("user")
+    )
+
+
+def _normalize_language(language: str) -> str:
+    language_code = language.strip().lower().split("-")[0]
+    return language_code if language_code in SUPPORTED_LANGUAGES else "en"
+
+
+def _assistant_reply(message: str, language: str) -> str:
+    text = message.casefold()
+
+    replies = {
+        "en": {
+            "greeting": "Hello! I can help with apartment searches, applications, appointments, rent, leases, maintenance, and tenant services.",
+            "search": "Open Find an Apartment to search by city, rent, bedrooms, accessibility, and pet requirements.",
+            "maintenance": "Open the tenant portal and select Maintenance Requests. If anyone is in immediate danger in Germany, call 112 for fire or medical emergencies or 110 for police.",
+            "rent": "You can review rent amounts, due dates, and payment status from the Payments section of your tenant dashboard.",
+            "lease": "Open Lease Details in the tenant portal to review dates, rent, deposit, and renewal information.",
+            "appointment": "You can request a viewing from a property listing. Appointment reminders can be sent 30 minutes before the scheduled time.",
+            "privacy": "Smart Property AI should collect only necessary information. You can review how information is handled on the Privacy and AI Disclosure pages.",
+            "fallback": "I can help with apartment searches, applications, appointments, payments, leases, maintenance requests, complaints, and documents. Please describe what you need.",
+        },
+        "de": {
+            "greeting": "Hallo! Ich kann bei Wohnungssuche, Bewerbungen, Terminen, Miete, Mietverträgen und Reparaturanfragen helfen.",
+            "search": "Öffnen Sie „Wohnung finden“, um nach Stadt, Miete, Zimmern, Barrierefreiheit und Haustieren zu suchen.",
+            "maintenance": "Öffnen Sie im Mieterportal den Bereich „Reparaturanfragen“. Bei akuter Gefahr wählen Sie in Deutschland 112 oder für die Polizei 110.",
+            "rent": "Mietbeträge, Fälligkeiten und Zahlungsstatus finden Sie im Bereich „Zahlungen“ Ihres Mieterportals.",
+            "lease": "Unter „Mietvertragsdetails“ finden Sie Laufzeit, Miete, Kaution und Verlängerungsinformationen.",
+            "appointment": "Über ein Wohnungsangebot können Sie einen Besichtigungstermin anfragen. Eine Erinnerung kann 30 Minuten vorher gesendet werden.",
+            "privacy": "Smart Property AI sollte nur notwendige Daten verarbeiten. Einzelheiten finden Sie unter Datenschutz und KI-Hinweise.",
+            "fallback": "Ich kann bei Wohnungssuche, Bewerbungen, Terminen, Zahlungen, Mietverträgen, Reparaturen, Beschwerden und Dokumenten helfen.",
+        },
+    }
+
+    selected = replies.get(language, replies["en"])
+
+    if any(word in text for word in ("hello", "hi", "hey", "hallo", "guten tag")):
+        return selected["greeting"]
+    if any(word in text for word in ("apartment", "listing", "search", "wohnung", "suchen")):
+        return selected["search"]
+    if any(word in text for word in ("repair", "maintenance", "broken", "leak", "reparatur", "defekt")):
+        return selected["maintenance"]
+    if any(word in text for word in ("rent", "payment", "invoice", "miete", "zahlung")):
+        return selected["rent"]
+    if any(word in text for word in ("lease", "renewal", "contract", "mietvertrag", "verlängerung")):
+        return selected["lease"]
+    if any(word in text for word in ("appointment", "viewing", "inspection", "termin", "besichtigung")):
+        return selected["appointment"]
+    if any(word in text for word in ("privacy", "data", "ai", "datenschutz", "daten", "ki")):
+        return selected["privacy"]
+
+    return selected["fallback"]
+
+
+
+def ai_assistant_page(request: Request):
+    if not _authenticated_user_id(request):
+        return RedirectResponse(
+            url="/login?next=/ai-assistant",
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="ai/assistant.html",
+        context={
+            "request": request,
+            "current_user": request.session.get("user"),
+            "supported_languages": SUPPORTED_LANGUAGES,
+            "selected_language": request.session.get("language", "en"),
+        },
+    )
+
+
+@router.get("/assistant", name="ai_assistant_alias")
+def ai_assistant_alias():
+    return RedirectResponse(
+        url="/ai-assistant",
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.post(
+    "/api/ai/chat",
+    name="ai_chat",
+    response_model=AIChatResponse,
+)
+def ai_chat(payload: AIChatRequest, request: Request):
+    if not _authenticated_user_id(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please log in to use the AI assistant.",
+        )
+
+    language = _normalize_language(payload.language)
+    message = payload.message.strip()
+
+    if not message:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="A message is required.",
+        )
+
+    return AIChatResponse(
+        reply=_assistant_reply(message, language),
+        language=language,
+        conversation_id=payload.conversation_id,
+        disclaimer=(
+            "AI-generated information may contain mistakes. Verify important "
+            "legal, financial, safety, and tenancy information."
+        ),
+    )
+
+
+@router.get("/api/ai/status", name="ai_status")
+def ai_status():
+    return {
+        "status": "available",
+        "engine": "local-rules",
+        "trained_model_connected": False,
+        "supported_languages": list(SUPPORTED_LANGUAGES.keys()),
     }

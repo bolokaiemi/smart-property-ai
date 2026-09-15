@@ -1,0 +1,706 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title|default("Lease Details") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review your rental lease dates, rent, payment terms and related records.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/tenant.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+{% set lease_status =
+    lease.status.value
+    |default(lease.status, true)
+%}
+
+<main
+    id="main-content"
+    class="tenant-page tenant-lease-details-page"
+    tabindex="-1"
+>
+    <div class="container">
+        <nav
+            class="breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('tenant_dashboard') }}">
+                        Tenant portal
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('tenant_leases') }}">
+                        My leases
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Lease details
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <section
+        class="tenant-dashboard-header"
+        aria-labelledby="lease-details-title"
+    >
+        <div class="container">
+            <div class="tenant-header-content">
+                <div>
+                    <p class="eyebrow">
+                        Rental agreement
+                    </p>
+
+                    <h1 id="lease-details-title">
+                        Lease details
+                    </h1>
+
+                    <p>
+                        Review your lease period, rent, deposit,
+                        payment schedule and related payment records.
+                    </p>
+                </div>
+
+                <div class="tenant-header-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-speech-target="lease-readable-summary"
+                        aria-label="Read the lease summary aloud"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span data-speech-label>
+                            Read summary
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-tenant-print
+                    >
+                        <span aria-hidden="true">🖨</span>
+                        Print
+                    </button>
+
+                    <a
+                        class="btn btn-primary"
+                        href="{{ url_for('tenant_leases') }}"
+                    >
+                        Back to leases
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container tenant-alert-container">
+        {% if success_message %}
+            <div
+                class="alert alert-success"
+                role="status"
+                data-auto-dismiss="6000"
+            >
+                <div>{{ success_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss message"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div
+                class="alert alert-error"
+                role="alert"
+            >
+                <div>{{ error_message }}</div>
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    data-dismiss-alert
+                    aria-label="Dismiss error"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <section
+        class="section"
+        aria-label="Lease information"
+    >
+        <div class="container">
+            <nav
+                class="tenant-dashboard-navigation"
+                aria-label="Tenant portal navigation"
+            >
+                <ul>
+                    <li>
+                        <a href="{{ url_for('tenant_dashboard') }}">
+                            <span aria-hidden="true">⌂</span>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="{{ url_for('tenant_leases') }}"
+                            class="active"
+                            aria-current="page"
+                        >
+                            <span aria-hidden="true">📄</span>
+                            Leases
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_payments') }}">
+                            <span aria-hidden="true">💳</span>
+                            Payments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for(
+                            'tenant_maintenance_requests'
+                        ) }}">
+                            <span aria-hidden="true">🛠</span>
+                            Maintenance
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_complaints') }}">
+                            <span aria-hidden="true">⚠</span>
+                            Complaints
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_documents') }}">
+                            <span aria-hidden="true">📁</span>
+                            Documents
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_messages') }}">
+                            <span aria-hidden="true">✉</span>
+                            Messages
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_appointments') }}">
+                            <span aria-hidden="true">📅</span>
+                            Appointments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('tenant_profile') }}">
+                            <span aria-hidden="true">👤</span>
+                            Profile
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="tenant-dashboard-grid">
+                <div class="tenant-dashboard-main">
+                    <!-- Lease summary -->
+                    <section
+                        class="tenant-content-card"
+                        aria-labelledby="lease-summary-title"
+                    >
+                        <header class="tenant-card-header">
+                            <div>
+                                <p class="tenant-card-eyebrow">
+                                    Lease summary
+                                </p>
+
+                                <h2 id="lease-summary-title">
+                                    Rental agreement
+                                </h2>
+                            </div>
+
+                            <span
+                                class="status-badge status-{{ lease_status }}"
+                            >
+                                {{ lease_status
+                                    |replace("_", " ")
+                                    |title }}
+                            </span>
+                        </header>
+
+                        <div
+                            id="lease-readable-summary"
+                            class="tenant-card-body"
+                        >
+                            <p>
+                                This lease began on
+                                {{ lease.start_date }}.
+
+                                {% if lease.end_date %}
+                                    It is scheduled to end on
+                                    {{ lease.end_date }}.
+                                {% else %}
+                                    It currently has no recorded end
+                                    date.
+                                {% endif %}
+
+                                The monthly rent is
+                                {{ "%.2f"|format(lease.monthly_rent) }}
+                                {{ lease.currency }}.
+                            </p>
+
+                            <dl class="tenant-detail-grid">
+                                <div>
+                                    <dt>Lease reference</dt>
+                                    <dd>
+                                        {{ lease.id }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Status</dt>
+                                    <dd>
+                                        {{ lease_status
+                                            |replace("_", " ")
+                                            |title }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Property reference</dt>
+                                    <dd>
+                                        {{ lease.property_id }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Unit reference</dt>
+                                    <dd>
+                                        {{ lease.unit_id }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Start date</dt>
+                                    <dd>
+                                        {{ lease.start_date }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>End date</dt>
+                                    <dd>
+                                        {{ lease.end_date
+                                            |default(
+                                                "Open-ended",
+                                                true
+                                            ) }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Monthly rent</dt>
+                                    <dd>
+                                        {{ "%.2f"|format(
+                                            lease.monthly_rent
+                                        ) }}
+                                        {{ lease.currency }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Security deposit</dt>
+                                    <dd>
+                                        {% if lease.deposit_amount is not none %}
+                                            {{ "%.2f"|format(
+                                                lease.deposit_amount
+                                            ) }}
+                                            {{ lease.currency }}
+                                        {% else %}
+                                            Not recorded
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Monthly payment due</dt>
+                                    <dd>
+                                        Day
+                                        {{ lease.payment_due_day }}
+                                        of each month
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Renewal reminder</dt>
+                                    <dd>
+                                        {{ lease.renewal_reminder_days }}
+                                        days before lease expiry
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Tenant reference</dt>
+                                    <dd>
+                                        {{ lease.tenant_id }}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Landlord reference</dt>
+                                    <dd>
+                                        {{ lease.landlord_id }}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <footer class="tenant-form-actions">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-copy-reference="{{ lease.id }}"
+                            >
+                                Copy lease reference
+                            </button>
+
+                            <a
+                                class="btn btn-primary"
+                                href="{{ url_for('tenant_documents') }}"
+                            >
+                                View lease documents
+                            </a>
+                        </footer>
+                    </section>
+
+                    <!-- Payment history -->
+                    <section
+                        class="tenant-content-card"
+                        aria-labelledby="lease-payments-title"
+                    >
+                        <header class="tenant-card-header">
+                            <div>
+                                <p class="tenant-card-eyebrow">
+                                    Rent records
+                                </p>
+
+                                <h2 id="lease-payments-title">
+                                    Payments for this lease
+                                </h2>
+                            </div>
+
+                            <a
+                                class="tenant-card-link"
+                                href="{{ url_for('tenant_payments') }}"
+                            >
+                                All payments
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            {% if payments %}
+                                <div class="tenant-table-wrapper">
+                                    <table class="tenant-table">
+                                        <caption class="sr-only">
+                                            Payments connected to lease
+                                            {{ lease.id }}
+                                        </caption>
+
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">
+                                                    Due date
+                                                </th>
+
+                                                <th scope="col">
+                                                    Amount
+                                                </th>
+
+                                                <th scope="col">
+                                                    Status
+                                                </th>
+
+                                                <th scope="col">
+                                                    Paid date
+                                                </th>
+
+                                                <th scope="col">
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for payment in payments %}
+                                                {% set payment_status =
+                                                    payment.status.value
+                                                    |default(
+                                                        payment.status,
+                                                        true
+                                                    )
+                                                %}
+
+                                                <tr>
+                                                    <td>
+                                                        {{ payment.due_date }}
+                                                    </td>
+
+                                                    <td>
+                                                        {{ "%.2f"|format(
+                                                            payment.amount
+                                                        ) }}
+                                                        {{ payment.currency }}
+                                                    </td>
+
+                                                    <td>
+                                                        <span
+                                                            class="status-badge status-{{ payment_status }}"
+                                                        >
+                                                            {{ payment_status
+                                                                |replace("_", " ")
+                                                                |title }}
+                                                        </span>
+                                                    </td>
+
+                                                    <td>
+                                                        {% if payment.paid_at %}
+                                                            {{ payment.paid_at.strftime(
+                                                                "%d.%m.%Y"
+                                                            ) }}
+                                                        {% else %}
+                                                            —
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>
+                                                        <a
+                                                            href="{{ url_for(
+                                                                'tenant_payment_details',
+                                                                payment_id=payment.id
+                                                            ) }}"
+                                                        >
+                                                            Details
+                                                            <span class="sr-only">
+                                                                for payment due
+                                                                {{ payment.due_date }}
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="tenant-empty-state compact">
+                                    <span aria-hidden="true">💳</span>
+
+                                    <h3>No payments recorded</h3>
+
+                                    <p>
+                                        No payment records are currently
+                                        associated with this lease.
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <!-- Important information -->
+                    <section
+                        class="tenant-content-card"
+                        aria-labelledby="lease-information-title"
+                    >
+                        <header class="tenant-card-header">
+                            <h2 id="lease-information-title">
+                                Important information
+                            </h2>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            <ul class="lease-information-list">
+                                <li>
+                                    Make rent payments only through a
+                                    verified payment method.
+                                </li>
+
+                                <li>
+                                    Keep copies of your lease,
+                                    payment receipts and important
+                                    landlord communications.
+                                </li>
+
+                                <li>
+                                    Report maintenance problems as
+                                    soon as reasonably possible.
+                                </li>
+
+                                <li>
+                                    Contact the landlord or property
+                                    manager if lease information on
+                                    this page appears incorrect.
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+
+                <aside
+                    class="tenant-dashboard-sidebar"
+                    aria-label="Lease actions and information"
+                >
+                    <section
+                        class="tenant-dashboard-card"
+                        aria-labelledby="lease-actions-title"
+                    >
+                        <header class="tenant-card-header">
+                            <h2 id="lease-actions-title">
+                                Lease actions
+                            </h2>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            <div class="tenant-quick-actions">
+                                <a href="{{ url_for('tenant_payments') }}">
+                                    <span aria-hidden="true">💳</span>
+                                    Review payments
+                                </a>
+
+                                <a href="{{ url_for('tenant_documents') }}">
+                                    <span aria-hidden="true">📁</span>
+                                    Open documents
+                                </a>
+
+                                <a href="{{ url_for(
+                                    'tenant_add_maintenance_request'
+                                ) }}">
+                                    <span aria-hidden="true">🛠</span>
+                                    Report maintenance
+                                </a>
+
+                                <a href="{{ url_for(
+                                    'tenant_add_complaint'
+                                ) }}">
+                                    <span aria-hidden="true">⚠</span>
+                                    Submit complaint
+                                </a>
+
+                                <a href="{{ url_for('tenant_messages') }}">
+                                    <span aria-hidden="true">✉</span>
+                                    Contact management
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="tenant-dashboard-card"
+                        aria-labelledby="lease-renewal-title"
+                    >
+                        <header class="tenant-card-header">
+                            <h2 id="lease-renewal-title">
+                                Lease renewal
+                            </h2>
+                        </header>
+
+                        <div class="tenant-card-body">
+                            {% if lease.end_date %}
+                                <p>
+                                    Current end date:
+                                    <strong>
+                                        {{ lease.end_date }}
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    A renewal reminder is configured
+                                    for approximately
+                                    {{ lease.renewal_reminder_days }}
+                                    days before the end date.
+                                </p>
+                            {% else %}
+                                <p>
+                                    This lease currently has no
+                                    recorded end date.
+                                </p>
+                            {% endif %}
+
+                            <a
+                                class="btn btn-secondary btn-block"
+                                href="{{ url_for('tenant_messages') }}"
+                            >
+                                Ask about renewal
+                            </a>
+                        </div>
+                    </section>
+
+                    <section
+                        class="tenant-dashboard-card tenant-security-card"
+                        aria-labelledby="lease-privacy-title"
+                    >
+                        <div class="tenant-card-body">
+                            <h2 id="lease-privacy-title">
+                                <span aria-hidden="true">🔒</span>
+                                Private information
+                            </h2>
+
+                            <p>
+                                Do not share this lease reference or
+                                lease documents with unauthorized
+                                people.
+                            </p>
+
+                            <a href="{{ url_for('privacy_page') }}">
+                                Read the privacy notice
+                            </a>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <p
+        class="sr-only"
+        data-tenant-status
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></p>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/tenant.js') }}"
+        defer
+    ></script>
+{% endblock %}

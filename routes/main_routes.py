@@ -9,6 +9,8 @@ File:
 from datetime import datetime, timezone
 from typing import Optional
 from urllib.parse import urlparse
+import re
+import os
 
 from fastapi import (
     APIRouter,
@@ -144,9 +146,9 @@ async def home(request: Request):
 
 @router.get(
     "/contact",
-    name="contact_page",
+    name="contact",
 )
-async def contact_page(request: Request):
+async def contact(request: Request):
     """
     Display the public contact form.
     """
@@ -165,9 +167,9 @@ async def contact_page(request: Request):
 
 @router.post(
     "/contact",
-    name="submit_contact",
+    name="contact_submit",
 )
-async def submit_contact(
+async def contact_submit(
     request: Request,
     name: str = Form(...),
     email: str = Form(...),
@@ -539,4 +541,286 @@ async def health_check():
                 timezone.utc
             ).isoformat(),
         },
+    )
+
+CONTACT_CATEGORIES = {
+    "apartment_search",
+    "rental_application",
+    "tenant_support",
+    "landlord_support",
+    "maintenance",
+    "payment",
+    "accessibility",
+    "privacy",
+    "technical_support",
+    "other",
+}
+
+EMAIL_PATTERN = re.compile(
+    r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@"
+    r"[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$"
+)
+
+
+def create_csrf_token(request: Request) -> str:
+    token = request.session.get("csrf_token")
+
+    if not token:
+        token = secrets.token_urlsafe(32)
+        request.session["csrf_token"] = token
+
+    return token
+
+
+def csrf_token_is_valid(
+    request: Request,
+    submitted_token: str,
+) -> bool:
+    stored_token = request.session.get("csrf_token")
+
+    if not stored_token or not submitted_token:
+        return False
+
+    return secrets.compare_digest(
+        str(stored_token),
+        str(submitted_token),
+    )
+
+
+def send_contact_email(
+    *,
+    full_name: str,
+    email: str,
+    phone_number: str,
+    preferred_language: str,
+    category: str,
+    subject: str,
+    message: str,
+) -> None:
+    """
+    Send the contact message through SMTP.
+
+    The message content is not written to application logs.
+    """
+
+    smtp_host = os.getenv("SMTP_HOST", "").strip()
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_username = os.getenv("SMTP_USERNAME", "").strip()
+    smtp_password = os.getenv("SMTP_PASSWORD", "")
+    smtp_from_email = os.getenv(
+        "SMTP_FROM_EMAIL",
+        smtp_username,
+    ).strip()
+    contact_recipient = os.getenv(
+        "CONTACT_RECIPIENT_EMAIL",
+        "",
+    ).strip()
+
+    if not smtp_host or not smtp_from_email or not contact_recipient:
+        raise RuntimeError(
+            "Contact email delivery has not been configured."
+        )
+
+    # Prevent email-header injection.
+    safe_name = full_name.replace("\r", " ").replace("\n", " ")
+    safe_subject = subject.replace("\r", " ").replace("\n", " ")
+    safe_email = email.replace("\r", "").replace("\n", "")
+
+    email_message = EmailMessage()
+    email_message["Subject"] = (
+        f"Smart Property AI contact: {safe_subject}"
+    )
+    email_message["From"] = smtp_from_email
+    email_message["To"] = contact_recipient
+    email_message["Reply-To"] = safe_email
+
+    email_message.set_content(
+        "\n".join(
+            [
+                "A new Smart Property AI contact message was submitted.",
+                "",
+                f"Name: {safe_name}",
+                f"Email: {safe_email}",
+                f"Phone: {phone_number or 'Not provided'}",
+                f"Preferred language: {preferred_language}",
+                f"Category: {category}",
+                "",
+                "Message:",
+                message,
+            ]
+        )
+    )
+
+    if smtp_port == 465:
+        with smtplib.SMTP_SSL(
+            smtp_host,
+            smtp_port,
+            timeout=20,
+        ) as smtp:
+            if smtp_username and smtp_password:
+                smtp.login(
+                    smtp_username,
+                    smtp_password,
+                )
+
+            smtp.send_message(email_message)
+    else:
+        with smtplib.SMTP(
+            smtp_host,
+            smtp_port,
+            timeout=20,
+        ) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+
+            if smtp_username and smtp_password:
+                smtp.login(
+                    smtp_username,
+                    smtp_password,
+                )
+
+            smtp.send_message(email_message)
+
+
+@router.get(
+    "/contact",
+    name="contact_page",
+)
+async def contact_page(request: Request):
+    csrf_token = create_csrf_token(request)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="contact.html",
+        context={
+            "request": request,
+            "csrf_token": csrf_token,
+            "current_language": request.session.get(
+                "language",
+                "en",
+            ),
+            "form_data": {},
+            "error": None,
+            "errors": [],
+            "success": request.query_params.get("success"),
+        },
+    )
+
+
+@router.post(
+    "/contact",
+    name="contact_submit",
+)
+async def contact_submit(
+    request: Request,
+    csrf_token: str = Form(...),
+    full_name: str = Form(...),
+    email: str = Form(...),
+    phone_number: str = Form(""),
+    preferred_language: str = Form("en"),
+    category: str = Form(...),
+    subject: str = Form(...),
+    message: str = Form(...),
+    privacy_consent: bool = Form(False),
+):
+    form_data = {
+        "full_name": full_name.strip(),
+        "email": email.strip().lower(),
+        "phone_number": phone_number.strip(),
+        "preferred_language": preferred_language.strip().lower(),
+        "category": category.strip(),
+        "subject": subject.strip(),
+        "message": message.strip(),
+    }
+
+    validation_errors = []
+
+    if not csrf_token_is_valid(request, csrf_token):
+        validation_errors.append(
+            "Your form session expired. Refresh the page and try again."
+        )
+
+    if len(form_data["full_name"]) < 2:
+        validation_errors.append(
+            "Enter your full name."
+        )
+
+    if not EMAIL_PATTERN.fullmatch(form_data["email"]):
+        validation_errors.append(
+            "Enter a valid email address."
+        )
+
+    if form_data["category"] not in CONTACT_CATEGORIES:
+        validation_errors.append(
+            "Select a valid help category."
+        )
+
+    if len(form_data["subject"]) < 3:
+        validation_errors.append(
+            "The subject must contain at least 3 characters."
+        )
+
+    if len(form_data["message"]) < 10:
+        validation_errors.append(
+            "The message must contain at least 10 characters."
+        )
+
+    if len(form_data["message"]) > 5000:
+        validation_errors.append(
+            "The message must not exceed 5,000 characters."
+        )
+
+    if not privacy_consent:
+        validation_errors.append(
+            "You must accept the privacy information."
+        )
+
+    if validation_errors:
+        return templates.TemplateResponse(
+            request=request,
+            name="contact.html",
+            context={
+                "request": request,
+                "csrf_token": create_csrf_token(request),
+                "current_language": form_data[
+                    "preferred_language"
+                ],
+                "form_data": form_data,
+                "error": None,
+                "errors": validation_errors,
+                "success": None,
+            },
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+
+    try:
+        send_contact_email(**form_data)
+    except (OSError, RuntimeError, smtplib.SMTPException):
+        return templates.TemplateResponse(
+            request=request,
+            name="contact.html",
+            context={
+                "request": request,
+                "csrf_token": create_csrf_token(request),
+                "current_language": form_data[
+                    "preferred_language"
+                ],
+                "form_data": form_data,
+                "error": (
+                    "The message could not be delivered. "
+                    "Please try again later."
+                ),
+                "errors": [],
+                "success": None,
+            },
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+    # Rotate the token after a successful submission.
+    request.session["csrf_token"] = secrets.token_urlsafe(32)
+
+    return RedirectResponse(
+        url="/contact?success=Your+message+was+sent+successfully.",
+        status_code=status.HTTP_303_SEE_OTHER,
     )

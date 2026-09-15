@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments | Smart Property AI{% endblock %}
+
+{% block meta_description %}Review viewing, inspection, maintenance, and tenancy appointments in the tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">Appointments</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>Appointments</h1>
+                <p>Review your property viewings, inspections, maintenance visits, and meetings.</p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Back to dashboard
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to load your appointments.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <aside class="tenant-info-notice" aria-labelledby="appointment-reminder-heading">
+            <h2 id="appointment-reminder-heading">Appointment reminders</h2>
+            <p>
+                Smart Property AI can send a reminder before a scheduled appointment.
+                Keep your account contact details current so you do not miss important updates.
+            </p>
+        </aside>
+
+        {% if appointments %}
+        <section class="tenant-card" aria-labelledby="appointment-list-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="appointment-list-heading">Scheduled and previous appointments</h2>
+                    <p>
+                        {{ appointments|length }}
+                        appointment{% if appointments|length != 1 %}s{% endif %} found.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tenant-table-wrapper">
+                <table class="tenant-table">
+                    <caption class="visually-hidden">
+                        Your scheduled and previous property appointments
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Appointment</th>
+                            <th scope="col">Date and time</th>
+                            <th scope="col">Property</th>
+                            <th scope="col">Reminder</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Action</span></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for appointment in appointments %}
+                            {% set appointment_type = appointment.appointment_type.value if appointment.appointment_type.value is defined else appointment.appointment_type %}
+                            {% set status_value = appointment.status.value if appointment.status.value is defined else appointment.status %}
+                        <tr>
+                            <td data-label="Appointment">
+                                <strong>
+                                    {{ appointment_type|string|replace('_', ' ')|title if appointment_type else 'Property appointment' }}
+                                </strong>
+                                <span class="tenant-reference">
+                                    Reference: {{ appointment.id }}
+                                </span>
+                            </td>
+
+                            <td data-label="Date and time">
+                                {% if appointment.scheduled_at %}
+                                <time datetime="{{ appointment.scheduled_at.isoformat() }}">
+                                    {{ appointment.scheduled_at.strftime('%d %b %Y at %H:%M') }}
+                                </time>
+                                {% else %}
+                                    Not scheduled
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Property">
+                                {% if appointment.property_id %}
+                                    <code>{{ appointment.property_id }}</code>
+                                {% elif appointment.listing_id %}
+                                    Listing <code>{{ appointment.listing_id }}</code>
+                                {% else %}
+                                    Not specified
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Reminder">
+                                {% if appointment.reminder_minutes is not none %}
+                                    {{ appointment.reminder_minutes }} minutes before
+                                    {% if appointment.reminder_sent_at %}
+                                        <span class="status-badge status-sent">Sent</span>
+                                    {% endif %}
+                                {% else %}
+                                    No reminder
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Status">
+                                <span class="status-badge status-{{ status_value|string|lower|replace('_', '-') }}">
+                                    {{ status_value|string|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+
+                            <td data-label="Action">
+                                <a class="button button-small button-secondary"
+                                   href="{{ url_for('tenant_appointment_details', appointment_id=appointment.id) }}"
+                                   aria-label="View appointment {{ appointment.id }}">
+                                    View details
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-appointments-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">📅</div>
+            <h2 id="no-appointments-heading">No appointments found</h2>
+            <p>
+                Property viewings, inspections, maintenance visits, and other scheduled
+                appointments will appear here.
+            </p>
+            <div class="form-actions">
+                <a class="button button-primary" href="{{ url_for('listings_page') }}">
+                    Find an apartment
+                </a>
+                <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                    Return to dashboard
+                </a>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

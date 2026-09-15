@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | Smart Property AI{% endblock %}
+
+{% block meta_description %}Manage your tenant contact, emergency, language, and accessibility information.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">My profile</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>My profile</h1>
+                <p>Keep your contact, emergency, and accessibility information current.</p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Back to dashboard
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>We could not update your profile.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if errors %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Please correct the following:</strong>
+            <ul>
+                {% for validation_error in errors %}
+                <li>{{ validation_error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        {% set account_user = current_user if current_user is defined and current_user else user %}
+
+        <div class="tenant-details-layout">
+            <section class="tenant-card" aria-labelledby="account-heading">
+                <div class="tenant-card-header">
+                    <div>
+                        <h2 id="account-heading">Account information</h2>
+                        <p>Your verified sign-in details.</p>
+                    </div>
+                </div>
+
+                <dl class="tenant-detail-list">
+                    <div class="tenant-detail-row">
+                        <dt>Full name</dt>
+                        <dd>{{ account_user.full_name or 'Not provided' }}</dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Email address</dt>
+                        <dd>
+                            <a href="mailto:{{ account_user.email }}">{{ account_user.email }}</a>
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Username</dt>
+                        <dd>{{ account_user.username or 'Not provided' }}</dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Phone number</dt>
+                        <dd>{{ account_user.phone_number or 'Not provided' }}</dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Account role</dt>
+                        <dd>
+                            {% set role_value = account_user.role.value if account_user.role.value is defined else account_user.role %}
+                            {{ role_value|string|replace('_', ' ')|title }}
+                        </dd>
+                    </div>
+                </dl>
+
+                <p class="form-help">
+                    Contact support if your name, email address, or username must be changed.
+                </p>
+            </section>
+
+            <aside class="tenant-card" aria-labelledby="profile-privacy-heading">
+                <div class="tenant-card-header">
+                    <h2 id="profile-privacy-heading">Privacy and safety</h2>
+                </div>
+
+                <p>
+                    Profile information is available only to authorized people who manage
+                    your tenancy or respond to a service request.
+                </p>
+                <p>
+                    Do not enter passwords, payment-card details, medical diagnoses, or
+                    unrelated sensitive information.
+                </p>
+                <a href="{{ url_for('privacy_page') }}">Read the privacy information</a>
+            </aside>
+        </div>
+
+        <section class="tenant-card" aria-labelledby="profile-form-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="profile-form-heading">Emergency and accessibility details</h2>
+                    <p>Fields marked with an asterisk (*) are required.</p>
+                </div>
+            </div>
+
+            <form class="tenant-form"
+                  method="post"
+                  action="{{ url_for('tenant_profile_submit') }}"
+                  enctype="application/x-www-form-urlencoded"
+                  data-profile-form>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div class="form-grid form-grid-two-columns">
+                    <div class="form-group">
+                        <label for="emergency_contact_name">Emergency contact name</label>
+                        <input id="emergency_contact_name"
+                               name="emergency_contact_name"
+                               type="text"
+                               value="{{ form_data.get('emergency_contact_name', profile.emergency_contact_name or '') if form_data else profile.emergency_contact_name or '' }}"
+                               maxlength="150"
+                               autocomplete="name"
+                               data-voice-input>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergency_contact_phone">Emergency contact phone</label>
+                        <input id="emergency_contact_phone"
+                               name="emergency_contact_phone"
+                               type="tel"
+                               value="{{ form_data.get('emergency_contact_phone', profile.emergency_contact_phone or '') if form_data else profile.emergency_contact_phone or '' }}"
+                               maxlength="40"
+                               autocomplete="tel"
+                               inputmode="tel"
+                               placeholder="+49 123 456789">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessibility_requirements">Accessibility requirements</label>
+                    <textarea id="accessibility_requirements"
+                              name="accessibility_requirements"
+                              rows="6"
+                              maxlength="2000"
+                              data-voice-input
+                              aria-describedby="accessibility-help"
+                              placeholder="Describe communication, mobility, visual, hearing, or appointment-access support you require.">{{ form_data.get('accessibility_requirements', profile.accessibility_requirements or '') if form_data else profile.accessibility_requirements or '' }}</textarea>
+                    <small id="accessibility-help" class="form-help">
+                        Share only the practical accommodations required. A medical diagnosis is not necessary.
+                    </small>
+                </div>
+
+                <div class="form-confirmation">
+                    <input id="profile_accuracy"
+                           name="profile_accuracy"
+                           type="checkbox"
+                           value="yes"
+                           required>
+                    <label for="profile_accuracy">
+                        I confirm that these emergency-contact and support details are current.
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="button button-primary" type="submit" data-submit-button>
+                        Save profile changes
+                    </button>
+                    <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

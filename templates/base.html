@@ -49,13 +49,23 @@
         href="{{ url_for('static', path='css/accessibility.css') }}"
     >
 
+<link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/contact.css') }}"
+    >
+
+    {% block extra_css %}
+{% endblock %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/tenant.css') }}"
+    >
+
     <link
         rel="stylesheet"
         href="{{ url_for('static', path='css/responsive.css') }}"
     >
-
-    {% block extra_css %}
-    {% endblock %}
 </head>
 
 <body>
@@ -175,6 +185,7 @@
                     class="accessibility-button"
                     aria-label="Decrease text size"
                     title="Decrease text size"
+                    data-font-decrease
                 >
                     A−
                 </button>
@@ -185,6 +196,7 @@
                     class="accessibility-button"
                     aria-label="Increase text size"
                     title="Increase text size"
+                    data-font-increase
                 >
                     A+
                 </button>
@@ -195,6 +207,7 @@
                     class="accessibility-button"
                     aria-pressed="false"
                     title="Toggle high contrast"
+                    data-contrast-toggle
                 >
                     High contrast
                 </button>
@@ -205,6 +218,7 @@
                     class="accessibility-button"
                     aria-pressed="false"
                     title="Read the page aloud"
+                    data-speech-target="#main-content"
                 >
                     Read aloud
                 </button>
@@ -236,7 +250,8 @@
             <button
                 type="button"
                 id="navigation-toggle"
-                class="navigation-toggle"
+                class="navigation-toggle menu-toggle"
+                data-menu-toggle
                 aria-label="Open navigation menu"
                 aria-expanded="false"
                 aria-controls="primary-navigation"
@@ -282,7 +297,7 @@
                     </li>
 
                     <li>
-                        <a href="{{ url_for('ai_assistant_page') }}">
+                        <a href="{{ url_for('ai_assistant') }}">
                             AI assistant
                         </a>
                     </li>
@@ -410,15 +425,18 @@
     <!-- Dynamic page content -->
     <main id="main-content" tabindex="-1">
 
+
         {% block content %}
         {% endblock %}
+
+
 
     </main>
 
 
     <!-- AI assistant launcher -->
     <a
-        href="{{ url_for('ai_assistant_page') }}"
+        href="{{ url_for('ai_assistant') }}"
         class="assistant-launcher"
         aria-label="Open the Smart Property AI assistant"
         title="Ask Smart Property AI"
@@ -466,13 +484,13 @@
                     </li>
 
                     <li>
-                        <a href="{{ url_for('ai_assistant_page') }}">
+                        <a href="{{ url_for('ai_assistant') }}">
                             AI assistant
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ url_for('contact_page') }}">
+                        <a href="{{ url_for('contact') }}">
                             Contact
                         </a>
                     </li>
@@ -594,13 +612,13 @@
     <script src="{{ url_for('static', path='js/speech-output.js') }}"></script>
 
 <script src="{{ url_for('static', path='js/auth.js') }}"></script>
+    <script src="{{ url_for('static', path='js/ai-assistant.js') }}" defer></script>
+    <script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
 
     {% block scripts %}
     {% endblock %}
 
-<script
-    src="{{ url_for('static', path='js/ai-assistant.js') }}"
-    defer
-></script>
+
+
 </body>
 </html>

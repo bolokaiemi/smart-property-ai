@@ -1,10 +1,3 @@
-"""
-Smart Property AI SQLAlchemy models.
-
-File:
-    database/models.py
-"""
-
 import enum
 import uuid
 from datetime import date, datetime, timezone
@@ -13,6 +6,7 @@ from typing import Optional
 
 from sqlalchemy import (
     Boolean,
+    Column,
     Date,
     DateTime,
     Enum,
@@ -24,7 +18,8 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+import builtins
 
 from database.database import Base
 
@@ -1806,3 +1801,641 @@ class AuditLog(Base):
         nullable=False,
         index=True,
     )
+
+# ============================================================
+# Rental applications
+# ============================================================
+
+
+class RentalApplication(Base):
+    """
+    A prospective tenant's application for an available rental unit.
+
+    Sensitive application information must only be accessible to the
+    applicant, the property's authorized landlord or manager, and an
+    administrator with a legitimate business purpose.
+    """
+
+    __tablename__ = "rental_applications"
+
+    id = Column(
+        String(36),
+        primary_key=True,
+        default=generate_uuid,
+        index=True,
+    )
+
+    property_id = Column(
+        String(36),
+        ForeignKey(
+            "properties.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    unit_id = Column(
+        String(36),
+        ForeignKey(
+            "units.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    applicant_user_id = Column(
+        String(36),
+        ForeignKey(
+            "users.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    # Applicant identity
+    first_name = Column(
+        String(100),
+        nullable=False,
+    )
+
+    last_name = Column(
+        String(100),
+        nullable=False,
+    )
+
+    email = Column(
+        String(254),
+        nullable=False,
+        index=True,
+    )
+
+    phone = Column(
+        String(30),
+        nullable=False,
+    )
+
+    # Current address
+    current_address = Column(
+        String(250),
+        nullable=False,
+    )
+
+    current_city = Column(
+        String(120),
+        nullable=False,
+    )
+
+    postal_code = Column(
+        String(20),
+        nullable=False,
+    )
+
+    # Household
+    adult_occupants = Column(
+        Integer,
+        nullable=False,
+        default=1,
+    )
+
+    child_occupants = Column(
+        Integer,
+        nullable=False,
+        default=0,
+    )
+
+    desired_move_in_date = Column(
+        Date,
+        nullable=False,
+        index=True,
+    )
+
+    lease_duration_months = Column(
+        Integer,
+        nullable=True,
+    )
+
+    has_pets = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    pet_details = Column(
+        Text,
+        nullable=True,
+    )
+
+    # Employment and income
+    employment_status = Column(
+        String(50),
+        nullable=False,
+    )
+
+    employer_name = Column(
+        String(150),
+        nullable=True,
+    )
+
+    monthly_income = Column(
+        Numeric(
+            precision=12,
+            scale=2,
+        ),
+        nullable=False,
+    )
+
+    employment_length = Column(
+        String(100),
+        nullable=True,
+    )
+
+    message = Column(
+        Text,
+        nullable=True,
+    )
+
+    # Workflow:
+    # submitted, under_review, additional_information_required,
+    # approved, rejected, withdrawn, archived
+    status = Column(
+        String(50),
+        nullable=False,
+        default="submitted",
+        index=True,
+    )
+
+    landlord_notes = Column(
+        Text,
+        nullable=True,
+    )
+
+    reviewed_by_user_id = Column(
+        String(36),
+        ForeignKey(
+            "users.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    reviewed_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    rejection_reason = Column(
+        Text,
+        nullable=True,
+    )
+
+    # Consent evidence
+    information_confirmed = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    privacy_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    landlord_contact_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    ai_assistance_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    submitted_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        index=True,
+    )
+
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    # Relationships do not use back_populates, so you do not have
+    # to modify your existing Property, Unit or User classes yet.
+    property = relationship(
+        "Property",
+        foreign_keys=[property_id],
+        lazy="joined",
+    )
+
+    unit = relationship(
+        "Unit",
+        foreign_keys=[unit_id],
+        lazy="joined",
+    )
+
+    applicant = relationship(
+        "User",
+        foreign_keys=[applicant_user_id],
+        lazy="joined",
+    )
+
+    reviewed_by = relationship(
+        "User",
+        foreign_keys=[reviewed_by_user_id],
+        lazy="joined",
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_rental_applications_property_status",
+            "property_id",
+            "status",
+        ),
+        Index(
+            "ix_rental_applications_unit_status",
+            "unit_id",
+            "status",
+        ),
+        Index(
+            "ix_rental_applications_applicant_created",
+            "applicant_user_id",
+            "created_at",
+        ),
+    )
+
+    @builtins.property
+    def applicant_full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}".strip()
+
+    @builtins.property
+    def is_open(self) -> bool:
+        return self.status in {
+            "submitted",
+            "under_review",
+            "additional_information_required",
+        }
+
+    def __repr__(self) -> str:
+        return (
+            f"<RentalApplication("
+            f"id={self.id}, "
+            f"property_id={self.property_id}, "
+            f"unit_id={self.unit_id}, "
+            f"status={self.status!r}"
+            f")>"
+        )
+
+
+# ============================================================
+# Viewing appointments
+# ============================================================
+
+
+class ViewingAppointment(Base):
+    """
+    A request to view an available property unit.
+
+    The preferred appointment is stored in UTC. The timezone_name
+    field preserves the timezone used when the request was submitted.
+    """
+
+    __tablename__ = "viewing_appointments"
+
+    id = Column(
+        String(36),
+        primary_key=True,
+        default=generate_uuid,
+        index=True,
+    )
+
+    property_id = Column(
+        String(36),
+        ForeignKey(
+            "properties.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    unit_id = Column(
+        String(36),
+        ForeignKey(
+            "units.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    requester_user_id = Column(
+        String(36),
+        ForeignKey(
+            "users.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    # Visitor contact information
+    first_name = Column(
+        String(100),
+        nullable=False,
+    )
+
+    last_name = Column(
+        String(100),
+        nullable=False,
+    )
+
+    email = Column(
+        String(254),
+        nullable=False,
+        index=True,
+    )
+
+    phone = Column(
+        String(30),
+        nullable=False,
+    )
+
+    preferred_language = Column(
+        String(20),
+        nullable=False,
+        default="en",
+    )
+
+    # Appointment times are stored in UTC.
+    preferred_datetime = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        index=True,
+    )
+
+    alternative_datetime = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    timezone_name = Column(
+        String(100),
+        nullable=False,
+        default="UTC",
+    )
+
+    # in_person, video_call, recorded_tour
+    viewing_type = Column(
+        String(50),
+        nullable=False,
+        default="in_person",
+    )
+
+    needs_accommodation = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    accommodation_details = Column(
+        Text,
+        nullable=True,
+    )
+
+    message = Column(
+        Text,
+        nullable=True,
+    )
+
+    # Reminder choices
+    reminder_email = Column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
+    reminder_sms = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    reminder_whatsapp = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    reminder_phone = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    reminder_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        index=True,
+    )
+
+    reminder_sent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        index=True,
+    )
+
+    reminder_sent_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    reminder_error = Column(
+        Text,
+        nullable=True,
+    )
+
+    # requested, confirmed, declined, cancelled,
+    # completed, no_show
+    status = Column(
+        String(50),
+        nullable=False,
+        default="requested",
+        index=True,
+    )
+
+    confirmation_message = Column(
+        Text,
+        nullable=True,
+    )
+
+    meeting_url = Column(
+        String(500),
+        nullable=True,
+    )
+
+    confirmed_by_user_id = Column(
+        String(36),
+        ForeignKey(
+            "users.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    confirmed_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    cancelled_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    cancellation_reason = Column(
+        Text,
+        nullable=True,
+    )
+
+    # Consent evidence
+    contact_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    reminder_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    privacy_consent = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    property = relationship(
+        "Property",
+        foreign_keys=[property_id],
+        lazy="joined",
+    )
+
+    unit = relationship(
+        "Unit",
+        foreign_keys=[unit_id],
+        lazy="joined",
+    )
+
+    requester = relationship(
+        "User",
+        foreign_keys=[requester_user_id],
+        lazy="joined",
+    )
+
+    confirmed_by = relationship(
+        "User",
+        foreign_keys=[confirmed_by_user_id],
+        lazy="joined",
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_viewing_appointments_property_datetime",
+            "property_id",
+            "preferred_datetime",
+        ),
+        Index(
+            "ix_viewing_appointments_unit_datetime",
+            "unit_id",
+            "preferred_datetime",
+        ),
+        Index(
+            "ix_viewing_appointments_reminder_queue",
+            "reminder_sent",
+            "reminder_at",
+            "status",
+        ),
+        Index(
+            "ix_viewing_appointments_requester_created",
+            "requester_user_id",
+            "created_at",
+        ),
+    )
+
+    @builtins.property
+    def requester_full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}".strip()
+
+    @builtins.property
+    def reminder_requested(self) -> bool:
+        return any(
+            (
+                self.reminder_email,
+                self.reminder_sms,
+                self.reminder_whatsapp,
+                self.reminder_phone,
+            )
+        )
+
+    @builtins.property
+    def is_upcoming(self) -> bool:
+        if self.status not in {"requested", "confirmed"}:
+            return False
+
+        appointment_time = self.preferred_datetime
+
+        if appointment_time is None:
+            return False
+
+        if appointment_time.tzinfo is None:
+            appointment_time = appointment_time.replace(
+                tzinfo=timezone.utc
+            )
+
+        return appointment_time > datetime.now(timezone.utc)
+
+    def __repr__(self) -> str:
+        return (
+            f"<ViewingAppointment("
+            f"id={self.id}, "
+            f"property_id={self.property_id}, "
+            f"unit_id={self.unit_id}, "
+            f"status={self.status!r}, "
+            f"preferred_datetime={self.preferred_datetime!r}"
+            f")>"
+        )

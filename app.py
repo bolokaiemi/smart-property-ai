@@ -7,39 +7,36 @@ Run locally with:
     uvicorn app:app --reload
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import secrets
 import time
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import AsyncIterator
-
-
-
-from fastapi import FastAPI
-
-app = FastAPI()
-from routes.ai_routes import router as ai_router
-app.include_router(ai_router)
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import (
-    HTMLResponse,
-    JSONResponse,
-    RedirectResponse,
-)
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from routes.auth_routes import router as auth_router
-from routes.main_routes import router as main_router
 
 from database.database import create_database_tables
+from routes.ai_routes import router as ai_router
+from routes.application_routes import router as application_router
+from routes.auth_routes import router as auth_router
+from routes.listing_routes import router as listing_router
+from routes.main_routes import router as main_router
+from routes.tenant_routes import router as tenant_router
+
+
 # ==========================================================================
 # 1. Environment configuration
 # ==========================================================================
@@ -52,35 +49,18 @@ STATIC_DIR = BASE_DIR / "static"
 UPLOADS_DIR = BASE_DIR / "uploads"
 LOGS_DIR = BASE_DIR / "logs"
 
-ENVIRONMENT = os.getenv(
-    "ENVIRONMENT",
-    "development",
-).strip().lower()
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development").strip().lower()
 
-DEBUG = os.getenv(
-    "DEBUG",
-    "true",
-).strip().lower() in {
+DEBUG = os.getenv("DEBUG", "true").strip().lower() in {
     "true",
     "1",
     "yes",
     "on",
 }
 
-APP_NAME = os.getenv(
-    "APP_NAME",
-    "Smart Property AI",
-)
-
-APP_VERSION = os.getenv(
-    "APP_VERSION",
-    "1.0.0",
-)
-
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "",
-)
+APP_NAME = os.getenv("APP_NAME", "Smart Property AI")
+APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
+SECRET_KEY = os.getenv("SECRET_KEY", "")
 
 SESSION_COOKIE_NAME = os.getenv(
     "SESSION_COOKIE_NAME",
@@ -96,9 +76,6 @@ SESSION_MAX_AGE = int(
 
 IS_PRODUCTION = ENVIRONMENT == "production"
 
-
-# Generate a development key when SECRET_KEY is missing.
-# Production must always use a permanent secure environment value.
 if not SECRET_KEY:
     if IS_PRODUCTION:
         raise RuntimeError(
@@ -113,43 +90,21 @@ if not SECRET_KEY:
 # 2. Required directories
 # ==========================================================================
 
-STATIC_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
-
-TEMPLATES_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
-
-UPLOADS_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
-
-LOGS_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
+TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ==========================================================================
 # 3. Logging
 # ==========================================================================
 
-LOG_LEVEL = (
-    logging.DEBUG
-    if DEBUG
-    else logging.INFO
-)
+LOG_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 
 logging.basicConfig(
     level=LOG_LEVEL,
-    format=(
-        "%(asctime)s | %(levelname)s | "
-        "%(name)s | %(message)s"
-    ),
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler(
@@ -159,18 +114,14 @@ logging.basicConfig(
     ],
 )
 
-logger = logging.getLogger(
-    "smart_property_ai"
-)
+logger = logging.getLogger("smart_property_ai")
 
 
 # ==========================================================================
 # 4. Jinja templates
 # ==========================================================================
 
-templates = Jinja2Templates(
-    directory=str(TEMPLATES_DIR)
-)
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 
 # ==========================================================================
@@ -178,14 +129,9 @@ templates = Jinja2Templates(
 # ==========================================================================
 
 @asynccontextmanager
-async def lifespan(
-    application: FastAPI,
-) -> AsyncIterator[None]:
+async def lifespan(application: FastAPI) -> AsyncIterator[None]:
     """
-    Run startup and shutdown tasks.
-
-    Database setup, model loading and automation startup can
-    be added here later.
+    Run application startup and shutdown tasks.
     """
 
     logger.info(
@@ -195,51 +141,29 @@ async def lifespan(
         ENVIRONMENT,
     )
 
-    # Future database startup:
-    #
-    # from database.database import engine, Base
-    # from database import models
-    #
-    # Base.metadata.create_all(bind=engine)
+    create_database_tables()
+    logger.info("Database tables are ready.")
 
-    # Future scheduler startup:
-    #
-    # from automation.scheduler import scheduler
-    # scheduler.start()
-
-    # Future AI model loading:
+    # Later, the trained AI model can be loaded here:
     #
     # application.state.ai_model = load_ai_model()
-
-    create_database_tables()
-
-    logger.info(
-        "Database tables are ready."
-    )
+    #
+    # A reminder scheduler can also be started here.
 
     yield
 
-    # Future scheduler shutdown:
-    #
-    # if scheduler.running:
-    #     scheduler.shutdown(wait=False)
-
-    logger.info(
-        "Shutting down %s.",
-        APP_NAME,
-    )
+    logger.info("Shutting down %s.", APP_NAME)
 
 
 # ==========================================================================
-# 6. Create FastAPI application
+# 6. Create one FastAPI application
 # ==========================================================================
 
 app = FastAPI(
     title=APP_NAME,
     description=(
-        "A multilingual, accessible property-management "
-        "and apartment-search platform powered by a "
-        "custom Smart Property AI system."
+        "A multilingual, accessible property-management and "
+        "apartment-search platform powered by Smart Property AI."
     ),
     version=APP_VERSION,
     debug=DEBUG,
@@ -267,77 +191,56 @@ app.add_middleware(
 # 8. Security and request middleware
 # ==========================================================================
 
-class SecurityHeadersMiddleware(
-    BaseHTTPMiddleware
-):
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """
-    Add basic browser security headers to every response.
+    Add browser security headers to every response.
     """
 
-    async def dispatch(
-        self,
-        request: Request,
-        call_next,
-    ):
+    async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
 
-        response.headers[
-            "X-Content-Type-Options"
-        ] = "nosniff"
-
-        response.headers[
-            "X-Frame-Options"
-        ] = "SAMEORIGIN"
-
-        response.headers[
-            "Referrer-Policy"
-        ] = "strict-origin-when-cross-origin"
-
-        response.headers[
-            "Permissions-Policy"
-        ] = (
-            "camera=(self), "
-            "microphone=(self), "
-            "geolocation=(self)"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["Referrer-Policy"] = (
+            "strict-origin-when-cross-origin"
         )
-
-        response.headers[
-            "Cross-Origin-Opener-Policy"
-        ] = "same-origin"
+        response.headers["Permissions-Policy"] = (
+            "camera=(self), microphone=(self), geolocation=(self)"
+        )
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
 
         if IS_PRODUCTION:
-            response.headers[
-                "Strict-Transport-Security"
-            ] = (
-                "max-age=31536000; "
-                "includeSubDomains"
+            response.headers["Strict-Transport-Security"] = (
+                "max-age=31536000; includeSubDomains"
             )
 
         return response
 
 
-class RequestLoggingMiddleware(
-    BaseHTTPMiddleware
-):
+class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """
-    Log request method, path, response status and duration.
+    Log the method, path, status code, and duration.
 
-    Sensitive form data, message content, passwords and
-    authentication tokens are never logged here.
+    Form data, passwords, tokens, message content, and document
+    contents are never logged here.
     """
 
-    async def dispatch(
-        self,
-        request: Request,
-        call_next,
-    ):
+    async def dispatch(self, request: Request, call_next):
         started_at = time.perf_counter()
 
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception:
+            duration_ms = (time.perf_counter() - started_at) * 1000
+            logger.exception(
+                "%s %s -> unhandled error %.2fms",
+                request.method,
+                request.url.path,
+                duration_ms,
+            )
+            raise
 
-        duration_ms = (
-            time.perf_counter() - started_at
-        ) * 1000
+        duration_ms = (time.perf_counter() - started_at) * 1000
 
         logger.info(
             "%s %s -> %s %.2fms",
@@ -350,13 +253,8 @@ class RequestLoggingMiddleware(
         return response
 
 
-app.add_middleware(
-    SecurityHeadersMiddleware
-)
-
-app.add_middleware(
-    RequestLoggingMiddleware
-)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
 
 
 # ==========================================================================
@@ -365,39 +263,51 @@ app.add_middleware(
 
 app.mount(
     "/static",
-    StaticFiles(
-        directory=str(STATIC_DIR)
-    ),
+    StaticFiles(directory=str(STATIC_DIR)),
     name="static",
 )
 
-
-# Do not mount /uploads publicly.
-# Private documents and tenant files must be returned through
-# protected routes after checking authorization.
+# Do not mount /uploads publicly. Private tenant documents must be
+# returned through an authenticated route after an authorization check.
 
 
 # ==========================================================================
-# 10. Register main routes
+# 10. Register every router exactly once
 # ==========================================================================
 
 app.include_router(main_router)
 app.include_router(auth_router)
+app.include_router(listing_router)
+app.include_router(application_router)
+app.include_router(ai_router)
+app.include_router(tenant_router)
 
 
 # ==========================================================================
-# 11. Temporary routes required by base.html and index.html
+# 11. Health check
 # ==========================================================================
 
-def temporary_page(
-    title: str,
-    message: str,
-) -> HTMLResponse:
+@app.get(
+    "/health",
+    name="health_check",
+    include_in_schema=False,
+)
+async def health_check():
+    return {
+        "status": "healthy",
+        "application": APP_NAME,
+        "version": APP_VERSION,
+        "environment": ENVIRONMENT,
+    }
+
+
+# ==========================================================================
+# 12. Temporary pages for modules not yet connected
+# ==========================================================================
+
+def temporary_page(title: str, message: str) -> HTMLResponse:
     """
-    Generate a temporary HTML page.
-
-    Replace these temporary endpoints with their respective
-    route modules as development continues.
+    Return a temporary page for a module that has not been built yet.
     """
 
     return HTMLResponse(
@@ -406,39 +316,21 @@ def temporary_page(
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1.0"
             >
-
             <title>{title} | Smart Property AI</title>
-
-            <link
-                rel="stylesheet"
-                href="/static/css/style.css"
-            >
+            <link rel="stylesheet" href="/static/css/style.css">
         </head>
-
         <body>
-            <main
-                id="main-content"
-                class="auth-page"
-            >
+            <main id="main-content" class="auth-page">
                 <section class="auth-container">
                     <div class="auth-card">
-                        <p class="section-label">
-                            Smart Property AI
-                        </p>
-
+                        <p class="section-label">Smart Property AI</p>
                         <h1>{title}</h1>
-
                         <p>{message}</p>
-
-                        <a
-                            href="/"
-                            class="button button--primary"
-                        >
+                        <a href="/" class="button button--primary">
                             Return to homepage
                         </a>
                     </div>
@@ -451,83 +343,24 @@ def temporary_page(
     )
 
 
+def session_is_authenticated(request: Request) -> bool:
+    """
+    Support the current user_id session and the earlier username session.
+    """
 
-# --------------------------------------------------------------------------
-# Temporary listing routes
-# --------------------------------------------------------------------------
-
-@app.get(
-    "/listings",
-    name="listings_page",
-)
-async def temporary_listings_page():
-    return temporary_page(
-        title="Property listings",
-        message=(
-            "Public property listings will be connected through "
-            "routes/listing_routes.py."
-        ),
+    return bool(
+        request.session.get("user_id")
+        or request.session.get("username")
+        or request.session.get("user")
     )
 
-
-@app.get(
-    "/listings/search",
-    name="search_listings",
-)
-async def temporary_search_listings():
-    return temporary_page(
-        title="Property search results",
-        message=(
-            "Property search results will appear here after "
-            "the listing service and database are connected."
-        ),
-    )
-
-
-@app.get(
-    "/listings/guided-search",
-    name="guided_search_page",
-)
-async def temporary_guided_search_page():
-    return temporary_page(
-        title="Guided apartment search",
-        message=(
-            "The multilingual voice-guided search will be "
-            "connected through routes/listing_routes.py."
-        ),
-    )
-
-
-# --------------------------------------------------------------------------
-# Temporary AI assistant route
-# --------------------------------------------------------------------------
-
-@app.get(
-    "/ai/assistant",
-    name="ai_assistant_page",
-)
-async def temporary_ai_assistant_page():
-    return temporary_page(
-        title="Smart Property AI Assistant",
-        message=(
-            "The multilingual conversational assistant will "
-            "be connected through routes/ai_routes.py."
-        ),
-    )
-
-
-# --------------------------------------------------------------------------
-# Temporary dashboard routes
-# --------------------------------------------------------------------------
 
 @app.get(
     "/landlord/dashboard",
     name="landlord_dashboard",
 )
-async def temporary_landlord_dashboard(
-    request: Request,
-):
-    if not request.session.get("username"):
+async def temporary_landlord_dashboard(request: Request):
+    if not session_is_authenticated(request):
         return RedirectResponse(
             url="/login?next=/landlord/dashboard",
             status_code=status.HTTP_303_SEE_OTHER,
@@ -536,30 +369,8 @@ async def temporary_landlord_dashboard(
     return temporary_page(
         title="Landlord dashboard",
         message=(
-            "The property-management dashboard will be "
-            "connected through routes/landlord_routes.py."
-        ),
-    )
-
-
-@app.get(
-    "/tenant/dashboard",
-    name="tenant_dashboard",
-)
-async def temporary_tenant_dashboard(
-    request: Request,
-):
-    if not request.session.get("username"):
-        return RedirectResponse(
-            url="/login?next=/tenant/dashboard",
-            status_code=status.HTTP_303_SEE_OTHER,
-        )
-
-    return temporary_page(
-        title="Tenant dashboard",
-        message=(
-            "The tenant portal will be connected through "
-            "routes/tenant_routes.py."
+            "The property-management dashboard will be connected "
+            "through routes/landlord_routes.py."
         ),
     )
 
@@ -568,16 +379,16 @@ async def temporary_tenant_dashboard(
     "/admin/dashboard",
     name="admin_dashboard",
 )
-async def temporary_admin_dashboard(
-    request: Request,
-):
-    if not request.session.get("username"):
+async def temporary_admin_dashboard(request: Request):
+    if not session_is_authenticated(request):
         return RedirectResponse(
             url="/login?next=/admin/dashboard",
             status_code=status.HTTP_303_SEE_OTHER,
         )
 
-    if request.session.get("role") != "administrator":
+    role = str(request.session.get("role", "")).lower()
+
+    if role not in {"administrator", "admin"}:
         return temporary_page(
             title="Access denied",
             message=(
@@ -596,7 +407,7 @@ async def temporary_admin_dashboard(
 
 
 # ==========================================================================
-# 12. Favicon shortcut
+# 13. Favicon
 # ==========================================================================
 
 @app.get(
@@ -604,10 +415,6 @@ async def temporary_admin_dashboard(
     include_in_schema=False,
 )
 async def favicon():
-    """
-    Redirect conventional favicon requests to the static file.
-    """
-
     return RedirectResponse(
         url="/static/images/favicon.ico",
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
@@ -615,21 +422,60 @@ async def favicon():
 
 
 # ==========================================================================
-# 13. Error handlers
+# 14. Error response helper
 # ==========================================================================
 
-@app.exception_handler(
-    StarletteHTTPException
-)
+def temporary_error_response(
+    status_code: int,
+    title: str,
+    message: str,
+) -> HTMLResponse:
+    """
+    Return a fallback page when a dedicated error template is unavailable.
+    """
+
+    return HTMLResponse(
+        content=f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0"
+            >
+            <title>{status_code} | Smart Property AI</title>
+            <link rel="stylesheet" href="/static/css/style.css">
+        </head>
+        <body>
+            <main class="auth-page">
+                <section class="auth-container">
+                    <div class="auth-card">
+                        <p class="section-label">Error {status_code}</p>
+                        <h1>{title}</h1>
+                        <p>{message}</p>
+                        <a href="/" class="button button--primary">
+                            Return to homepage
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </body>
+        </html>
+        """,
+        status_code=status_code,
+    )
+
+
+# ==========================================================================
+# 15. Error handlers
+# ==========================================================================
+
+@app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(
     request: Request,
     exception: StarletteHTTPException,
 ):
-    """
-    Render HTML error pages for browser requests and JSON
-    responses for API requests.
-    """
-
     if request.url.path.startswith("/api/"):
         return JSONResponse(
             status_code=exception.status_code,
@@ -649,35 +495,24 @@ async def http_exception_handler(
         500: "errors/500.html",
     }
 
-    template_name = error_templates.get(
-        exception.status_code
-    )
+    template_name = error_templates.get(exception.status_code)
 
-    if template_name:
-        template_path = (
-            TEMPLATES_DIR / template_name
+    if (
+        template_name
+        and (TEMPLATES_DIR / template_name).exists()
+    ):
+        return templates.TemplateResponse(
+            request=request,
+            name=template_name,
+            context={
+                "request": request,
+                "current_year": datetime.now(timezone.utc).year,
+                "current_language": request.session.get("language", "en"),
+                "status_code": exception.status_code,
+                "error": str(exception.detail),
+            },
+            status_code=exception.status_code,
         )
-
-        if template_path.exists():
-            return templates.TemplateResponse(
-                request=request,
-                name=template_name,
-                context={
-                    "request": request,
-                    "current_year": datetime.now(
-                        timezone.utc
-                    ).year,
-                    "current_language": (
-                        request.session.get(
-                            "language",
-                            "en",
-                        )
-                    ),
-                    "status_code": exception.status_code,
-                    "error": str(exception.detail),
-                },
-                status_code=exception.status_code,
-            )
 
     return temporary_error_response(
         status_code=exception.status_code,
@@ -686,17 +521,11 @@ async def http_exception_handler(
     )
 
 
-@app.exception_handler(
-    RequestValidationError
-)
+@app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
     request: Request,
     exception: RequestValidationError,
 ):
-    """
-    Return validation errors without exposing sensitive data.
-    """
-
     if request.url.path.startswith("/api/"):
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -717,18 +546,11 @@ async def validation_exception_handler(
     )
 
 
-@app.exception_handler(
-    Exception
-)
+@app.exception_handler(Exception)
 async def unexpected_exception_handler(
     request: Request,
     exception: Exception,
 ):
-    """
-    Handle unexpected errors without exposing internal
-    application details to the user.
-    """
-
     logger.exception(
         "Unhandled error while processing %s %s",
         request.method,
@@ -740,15 +562,11 @@ async def unexpected_exception_handler(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
                 "success": False,
-                "error": (
-                    "An unexpected server error occurred."
-                ),
+                "error": "An unexpected server error occurred.",
             },
         )
 
-    error_template = (
-        TEMPLATES_DIR / "errors" / "500.html"
-    )
+    error_template = TEMPLATES_DIR / "errors" / "500.html"
 
     if error_template.exists():
         return templates.TemplateResponse(
@@ -756,19 +574,10 @@ async def unexpected_exception_handler(
             name="errors/500.html",
             context={
                 "request": request,
-                "current_year": datetime.now(
-                    timezone.utc
-                ).year,
-                "current_language": (
-                    request.session.get(
-                        "language",
-                        "en",
-                    )
-                ),
+                "current_year": datetime.now(timezone.utc).year,
+                "current_language": request.session.get("language", "en"),
                 "status_code": 500,
-                "error": (
-                    "An unexpected server error occurred."
-                ),
+                "error": "An unexpected server error occurred.",
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
@@ -783,66 +592,8 @@ async def unexpected_exception_handler(
     )
 
 
-def temporary_error_response(
-    status_code: int,
-    title: str,
-    message: str,
-) -> HTMLResponse:
-    """
-    Return a fallback error page when a dedicated template
-    has not been created.
-    """
-
-    return HTMLResponse(
-        content=f"""
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-            >
-
-            <title>{status_code} | Smart Property AI</title>
-
-            <link
-                rel="stylesheet"
-                href="/static/css/style.css"
-            >
-        </head>
-
-        <body>
-            <main class="auth-page">
-                <section class="auth-container">
-                    <div class="auth-card">
-                        <p class="section-label">
-                            Error {status_code}
-                        </p>
-
-                        <h1>{title}</h1>
-
-                        <p>{message}</p>
-
-                        <a
-                            href="/"
-                            class="button button--primary"
-                        >
-                            Return to homepage
-                        </a>
-                    </div>
-                </section>
-            </main>
-        </body>
-        </html>
-        """,
-        status_code=status_code,
-    )
-
-
 # ==========================================================================
-# 14. Direct execution
+# 16. Direct execution
 # ==========================================================================
 
 if __name__ == "__main__":
@@ -851,12 +602,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="127.0.0.1",
-        port=int(
-            os.getenv(
-                "PORT",
-                "8000",
-            )
-        ),
+        port=int(os.getenv("PORT", "8000")),
         reload=DEBUG and not IS_PRODUCTION,
         log_level="debug" if DEBUG else "info",
     )

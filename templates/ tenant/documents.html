@@ -1,0 +1,177 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Documents | Smart Property AI{% endblock %}
+
+{% block meta_description %}Securely review your lease and property documents in the Smart Property AI tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">Documents</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>My documents</h1>
+                <p>Review documents connected to your lease, property, and tenancy.</p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Back to dashboard
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to load your documents.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <aside class="tenant-privacy-notice" aria-labelledby="document-security-heading">
+            <h2 id="document-security-heading">Secure document access</h2>
+            <p>
+                Documents may contain personal information. Do not share document links or
+                leave them open on a public device. Always sign out when you finish.
+            </p>
+        </aside>
+
+        {% if documents %}
+        <section class="tenant-card" aria-labelledby="documents-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="documents-heading">Available documents</h2>
+                    <p>
+                        {{ documents|length }} document{% if documents|length != 1 %}s{% endif %}
+                        available to your account.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tenant-table-wrapper">
+                <table class="tenant-table">
+                    <caption class="visually-hidden">
+                        Documents available through your tenant account
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Document</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Connected to</th>
+                            <th scope="col">Added</th>
+                            <th scope="col">Access</th>
+                            <th scope="col"><span class="visually-hidden">Action</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for document in documents %}
+                            {% set document_type = document.document_type.value if document.document_type.value is defined else document.document_type %}
+                            {% set display_name = document.original_filename or document.filename or 'Document' %}
+                        <tr>
+                            <td data-label="Document">
+                                <strong>{{ display_name }}</strong>
+                                <span class="tenant-reference">
+                                    Reference: {{ document.id }}
+                                </span>
+                            </td>
+
+                            <td data-label="Type">
+                                {% if document_type %}
+                                    {{ document_type|string|replace('_', ' ')|title }}
+                                {% else %}
+                                    General document
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Connected to">
+                                {% if document.lease_id %}
+                                    <span>Lease</span>
+                                    <code>{{ document.lease_id }}</code>
+                                {% elif document.property_id %}
+                                    <span>Property</span>
+                                    <code>{{ document.property_id }}</code>
+                                {% elif document.maintenance_request_id %}
+                                    <span>Maintenance request</span>
+                                    <code>{{ document.maintenance_request_id }}</code>
+                                {% else %}
+                                    Account document
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Added">
+                                {% if document.created_at %}
+                                <time datetime="{{ document.created_at.isoformat() }}">
+                                    {{ document.created_at.strftime('%d %b %Y') }}
+                                </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Access">
+                                {% if document.is_private %}
+                                <span class="status-badge status-private">Private</span>
+                                {% else %}
+                                <span class="status-badge status-shared">Shared</span>
+                                {% endif %}
+
+                                {% if document.expires_at %}
+                                <span class="document-expiry">
+                                    Expires
+                                    <time datetime="{{ document.expires_at.isoformat() }}">
+                                        {{ document.expires_at.strftime('%d %b %Y') }}
+                                    </time>
+                                </span>
+                                {% endif %}
+                            </td>
+
+                            <td data-label="Action">
+                                <a class="button button-small button-secondary"
+                                   href="{{ url_for('tenant_document_details', document_id=document.id) }}"
+                                   aria-label="View {{ display_name }}">
+                                    View details
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-documents-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">📄</div>
+            <h2 id="no-documents-heading">No documents available</h2>
+            <p>
+                Documents shared with your tenant account will appear here. Contact your
+                landlord or property manager if an expected document is missing.
+            </p>
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Return to dashboard
+            </a>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Submit a Complaint | Smart Property AI{% endblock %}
+
+{% block meta_description %}Submit a private property-related complaint through the Smart Property AI tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li><a href="{{ url_for('tenant_complaints') }}">Complaints</a></li>
+                <li aria-current="page">New complaint</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>Submit a complaint</h1>
+                <p>
+                    Report a property-management, service, conduct, safety, or tenancy
+                    concern securely.
+                </p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_complaints') }}">
+                Back to complaints
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>We could not submit your complaint.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if errors %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Please correct the following:</strong>
+            <ul>
+                {% for validation_error in errors %}
+                <li>{{ validation_error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <aside class="tenant-emergency-notice" aria-labelledby="complaint-emergency-heading">
+            <h2 id="complaint-emergency-heading">Immediate danger or emergency</h2>
+            <p>
+                This form is not monitored as an emergency channel. In Germany, call
+                <strong>112</strong> for fire or medical emergencies and
+                <strong>110</strong> for police assistance.
+            </p>
+        </aside>
+
+        {% if leases %}
+        <section class="tenant-card" aria-labelledby="complaint-form-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="complaint-form-heading">Complaint details</h2>
+                    <p>Fields marked with an asterisk (*) are required.</p>
+                </div>
+            </div>
+
+            <form class="tenant-form"
+                  method="post"
+                  action="{{ url_for('tenant_add_complaint_submit') }}"
+                  enctype="application/x-www-form-urlencoded"
+                  data-complaint-form>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div class="form-group">
+                    <label for="property_id">
+                        Property <span aria-hidden="true">*</span>
+                    </label>
+                    <select id="property_id"
+                            name="property_id"
+                            required
+                            aria-describedby="property-help">
+                        <option value="">Select a property</option>
+                        {% for lease in leases %}
+                        <option value="{{ lease.property_id }}"
+                                {% if form_data and form_data.get('property_id') == lease.property_id %}selected{% endif %}>
+                            Property reference {{ lease.property_id }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small id="property-help" class="form-help">
+                        Choose the property connected to your complaint.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">
+                        Subject <span aria-hidden="true">*</span>
+                    </label>
+                    <input id="subject"
+                           name="subject"
+                           type="text"
+                           value="{{ form_data.get('subject', '') if form_data else '' }}"
+                           minlength="3"
+                           maxlength="200"
+                           autocomplete="off"
+                           placeholder="For example: Repeated delay in resolving reported issue"
+                           required
+                           data-voice-input
+                           aria-describedby="subject-help">
+                    <small id="subject-help" class="form-help">
+                        Give your complaint a short, clear title. Voice input is available.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">
+                        Description <span aria-hidden="true">*</span>
+                    </label>
+                    <textarea id="description"
+                              name="description"
+                              rows="8"
+                              minlength="10"
+                              maxlength="5000"
+                              placeholder="Explain what happened, when it happened, who was involved, and what resolution you are requesting."
+                              required
+                              data-voice-input
+                              aria-describedby="description-help">{{ form_data.get('description', '') if form_data else '' }}</textarea>
+                    <small id="description-help" class="form-help">
+                        Include relevant facts, dates, and earlier attempts to resolve the issue.
+                        Do not include passwords, payment-card details, or unnecessary medical information.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="priority">
+                        Priority <span aria-hidden="true">*</span>
+                    </label>
+                    {% set selected_priority = form_data.get('priority', 'normal') if form_data else 'normal' %}
+                    <select id="priority"
+                            name="priority"
+                            required
+                            aria-describedby="priority-help complaint-priority-warning">
+                        <option value="low" {% if selected_priority == 'low' %}selected{% endif %}>
+                            Low — general concern
+                        </option>
+                        <option value="normal" {% if selected_priority == 'normal' %}selected{% endif %}>
+                            Normal
+                        </option>
+                        <option value="high" {% if selected_priority == 'high' %}selected{% endif %}>
+                            High — significant or continuing impact
+                        </option>
+                        <option value="urgent" {% if selected_priority == 'urgent' %}selected{% endif %}>
+                            Urgent — serious safety or tenancy concern
+                        </option>
+                    </select>
+                    <small id="priority-help" class="form-help">
+                        Select the level that best reflects the impact and urgency.
+                    </small>
+                    <p id="complaint-priority-warning"
+                       class="form-warning"
+                       data-priority-warning
+                       role="status"
+                       aria-live="polite"
+                       hidden>
+                        An urgent complaint is prioritized, but this form does not contact emergency services.
+                    </p>
+                </div>
+
+                <div class="form-confirmation">
+                    <input id="accuracy_confirmed"
+                           name="accuracy_confirmed"
+                           type="checkbox"
+                           value="yes"
+                           required>
+                    <label for="accuracy_confirmed">
+                        I confirm that the information provided is accurate to the best of my knowledge.
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="button button-primary" type="submit" data-submit-button>
+                        Submit complaint
+                    </button>
+                    <a class="button button-secondary" href="{{ url_for('tenant_complaints') }}">
+                        Cancel
+                    </a>
+                </div>
+
+                <p class="form-privacy-note">
+                    Your complaint is available only to authorized people responsible for
+                    reviewing and resolving it. Learn more in our
+                    <a href="{{ url_for('privacy_page') }}">privacy information</a>.
+                </p>
+            </form>
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-lease-heading">
+            <h2 id="no-lease-heading">No active lease found</h2>
+            <p>
+                A complaint must be connected to a property in one of your active leases.
+                Contact your landlord or property manager if your lease is missing.
+            </p>
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Return to dashboard
+            </a>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

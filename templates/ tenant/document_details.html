@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Document Details | Smart Property AI{% endblock %}
+
+{% block meta_description %}Review secure document information in the Smart Property AI tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li><a href="{{ url_for('tenant_documents') }}">Documents</a></li>
+                <li aria-current="page">Document details</li>
+            </ol>
+        </nav>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to access this document.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if document %}
+            {% set document_type = document.document_type.value if document.document_type.value is defined else document.document_type %}
+            {% set display_name = document.original_filename or 'Document' %}
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Secure document</p>
+                <h1>{{ display_name }}</h1>
+                <p class="tenant-reference">Reference: <code>{{ document.id }}</code></p>
+            </div>
+
+            <div class="tenant-header-actions">
+                {% if document.is_private %}
+                <span class="status-badge status-private">Private</span>
+                {% else %}
+                <span class="status-badge status-shared">Shared</span>
+                {% endif %}
+
+                <a class="button button-secondary" href="{{ url_for('tenant_documents') }}">
+                    Back to documents
+                </a>
+            </div>
+        </header>
+
+        <aside class="tenant-privacy-notice" aria-labelledby="secure-access-heading">
+            <h2 id="secure-access-heading">Protect this document</h2>
+            <p>
+                This file may contain personal or legally sensitive information. Download it
+                only to a trusted device, do not share its access link, and sign out when using
+                a shared computer.
+            </p>
+        </aside>
+
+        <div class="tenant-details-layout">
+            <section class="tenant-card document-overview-card" aria-labelledby="document-overview-heading">
+                <div class="tenant-card-header">
+                    <div>
+                        <p class="tenant-eyebrow">Document information</p>
+                        <h2 id="document-overview-heading">Overview</h2>
+                    </div>
+                </div>
+
+                <div class="document-detail-icon" aria-hidden="true">📄</div>
+
+                <dl class="tenant-detail-list">
+                    <div class="tenant-detail-row">
+                        <dt>Filename</dt>
+                        <dd>{{ display_name }}</dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Document type</dt>
+                        <dd>
+                            {{ document_type|string|replace('_', ' ')|title if document_type else 'General document' }}
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>File format</dt>
+                        <dd>{{ document.mime_type or 'Not available' }}</dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>File size</dt>
+                        <dd>
+                            {% if document.file_size is not none %}
+                                {% if document.file_size >= 1048576 %}
+                                    {{ '%.2f'|format(document.file_size / 1048576) }} MB
+                                {% elif document.file_size >= 1024 %}
+                                    {{ '%.1f'|format(document.file_size / 1024) }} KB
+                                {% else %}
+                                    {{ document.file_size }} bytes
+                                {% endif %}
+                            {% else %}
+                                Not available
+                            {% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Privacy</dt>
+                        <dd>{{ 'Private document' if document.is_private else 'Shared document' }}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="tenant-card" aria-labelledby="document-links-heading">
+                <div class="tenant-card-header">
+                    <h2 id="document-links-heading">Connected records</h2>
+                </div>
+
+                <dl class="tenant-detail-list">
+                    <div class="tenant-detail-row">
+                        <dt>Property</dt>
+                        <dd>
+                            {% if document.property_id %}
+                                <code>{{ document.property_id }}</code>
+                            {% else %}
+                                Not connected
+                            {% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Lease</dt>
+                        <dd>
+                            {% if document.lease_id %}
+                                <a href="{{ url_for('tenant_lease_details', lease_id=document.lease_id) }}">
+                                    {{ document.lease_id }}
+                                </a>
+                            {% else %}
+                                Not connected
+                            {% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Maintenance request</dt>
+                        <dd>
+                            {% if document.maintenance_request_id %}
+                                <a href="{{ url_for('tenant_maintenance_request_details', request_id=document.maintenance_request_id) }}">
+                                    {{ document.maintenance_request_id }}
+                                </a>
+                            {% else %}
+                                Not connected
+                            {% endif %}
+                        </dd>
+                    </div>
+
+                    <div class="tenant-detail-row">
+                        <dt>Uploaded by</dt>
+                        <dd><code>{{ document.uploaded_by_id }}</code></dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
+
+        <section class="tenant-card" aria-labelledby="document-dates-heading">
+            <div class="tenant-card-header">
+                <h2 id="document-dates-heading">Availability</h2>
+            </div>
+
+            <dl class="tenant-detail-list">
+                <div class="tenant-detail-row">
+                    <dt>Added</dt>
+                    <dd>
+                        {% if document.created_at %}
+                        <time datetime="{{ document.created_at.isoformat() }}">
+                            {{ document.created_at.strftime('%d %B %Y at %H:%M') }}
+                        </time>
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </dd>
+                </div>
+
+                <div class="tenant-detail-row">
+                    <dt>Expiration</dt>
+                    <dd>
+                        {% if document.expires_at %}
+                        <time datetime="{{ document.expires_at.isoformat() }}">
+                            {{ document.expires_at.strftime('%d %B %Y at %H:%M') }}
+                        </time>
+                        {% else %}
+                            No expiration date
+                        {% endif %}
+                    </dd>
+                </div>
+
+                {% if document.checksum %}
+                <div class="tenant-detail-row">
+                    <dt>Integrity reference</dt>
+                    <dd><code class="document-checksum">{{ document.checksum }}</code></dd>
+                </div>
+                {% endif %}
+            </dl>
+        </section>
+
+        <section class="tenant-card document-action-card" aria-labelledby="document-actions-heading">
+            <div>
+                <h2 id="document-actions-heading">Open or download</h2>
+                <p>Access is checked by the server before the file is provided.</p>
+            </div>
+
+            <div class="form-actions">
+                {% if download_url %}
+                <a class="button button-primary"
+                   href="{{ download_url }}"
+                   download="{{ display_name }}"
+                   rel="nofollow">
+                    Download document
+                </a>
+                {% else %}
+                <button class="button button-primary" type="button" disabled>
+                    Download unavailable
+                </button>
+                {% endif %}
+
+                <a class="button button-secondary" href="{{ url_for('tenant_documents') }}">
+                    Return to documents
+                </a>
+            </div>
+
+            {% if not download_url %}
+            <p class="form-help" role="status">
+                The secure download route has not provided a download link for this document.
+            </p>
+            {% endif %}
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="document-not-found-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">📄</div>
+            <h1 id="document-not-found-heading">Document not found</h1>
+            <p>
+                This document may not exist, may have expired, or may not be available to
+                your tenant account.
+            </p>
+            <a class="button button-secondary" href="{{ url_for('tenant_documents') }}">
+                Return to documents
+            </a>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}

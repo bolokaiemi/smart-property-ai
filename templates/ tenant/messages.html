@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Messages | Smart Property AI{% endblock %}
+
+{% block meta_description %}Review secure property and tenancy messages in the Smart Property AI tenant portal.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="tenant-page" id="main-content">
+    <div class="tenant-container">
+        <nav class="tenant-breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('tenant_dashboard') }}">Tenant dashboard</a></li>
+                <li aria-current="page">Messages</li>
+            </ol>
+        </nav>
+
+        <header class="tenant-page-header">
+            <div>
+                <p class="tenant-eyebrow">Tenant portal</p>
+                <h1>Messages</h1>
+                <p>Review communications about your tenancy, property, and service requests.</p>
+            </div>
+
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Back to dashboard
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert" aria-live="assertive">
+            <strong>Unable to load your messages.</strong>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success" role="status" aria-live="polite">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <aside class="tenant-privacy-notice" aria-labelledby="message-privacy-heading">
+            <h2 id="message-privacy-heading">Private communications</h2>
+            <p>
+                Messages may contain tenancy information. Do not include passwords,
+                payment-card details, or unnecessary sensitive personal information.
+            </p>
+        </aside>
+
+        {% if messages %}
+        {% set viewer_id = current_user.id if current_user is defined and current_user else request.session.get('user_id') %}
+        <section class="tenant-card" aria-labelledby="message-list-heading">
+            <div class="tenant-card-header">
+                <div>
+                    <h2 id="message-list-heading">Your conversations</h2>
+                    <p>
+                        {{ messages|length }} message{% if messages|length != 1 %}s{% endif %}
+                        available.
+                    </p>
+                </div>
+            </div>
+
+            <div class="message-list">
+                {% for message in messages %}
+                    {% set channel_value = message.channel.value if message.channel.value is defined else message.channel %}
+                    {% set is_received = viewer_id and message.recipient_id == viewer_id %}
+                    {% set is_unread = is_received and not message.read_at %}
+
+                <article class="message-list-item{% if is_unread %} message-unread{% endif %}">
+                    <a class="message-list-link"
+                       href="{{ url_for('tenant_message_details', message_id=message.id) }}"
+                       aria-label="Open message: {{ message.subject or 'Message without subject' }}">
+                        <div class="message-list-icon channel-{{ channel_value|string|lower }}"
+                             aria-hidden="true">
+                            {% if channel_value|string|lower == 'email' %}
+                                ✉️
+                            {% elif channel_value|string|lower == 'whatsapp' %}
+                                💬
+                            {% elif channel_value|string|lower == 'phone' %}
+                                📞
+                            {% else %}
+                                📨
+                            {% endif %}
+                        </div>
+
+                        <div class="message-list-content">
+                            <div class="message-list-heading">
+                                <h3>{{ message.subject or 'No subject' }}</h3>
+
+                                {% if is_unread %}
+                                <span class="status-badge status-unread">Unread</span>
+                                {% elif is_received %}
+                                <span class="status-badge status-read">Read</span>
+                                {% else %}
+                                <span class="status-badge status-sent">Sent</span>
+                                {% endif %}
+                            </div>
+
+                            <p class="message-preview">
+                                {{ message.content|striptags|truncate(160, true, '…') }}
+                            </p>
+
+                            <div class="message-meta">
+                                <span>
+                                    {% if is_received %}
+                                        From <code>{{ message.sender_id }}</code>
+                                    {% else %}
+                                        To <code>{{ message.recipient_id }}</code>
+                                    {% endif %}
+                                </span>
+
+                                <span>
+                                    Channel:
+                                    {{ channel_value|string|replace('_', ' ')|title if channel_value else 'Platform' }}
+                                </span>
+
+                                {% if message.language %}
+                                <span>Language: {{ message.language|upper }}</span>
+                                {% endif %}
+
+                                {% if message.created_at %}
+                                <time datetime="{{ message.created_at.isoformat() }}">
+                                    {{ message.created_at.strftime('%d %b %Y at %H:%M') }}
+                                </time>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <span class="message-list-arrow" aria-hidden="true">›</span>
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <section class="tenant-card tenant-empty-state" aria-labelledby="no-messages-heading">
+            <div class="tenant-empty-icon" aria-hidden="true">💬</div>
+            <h2 id="no-messages-heading">No messages yet</h2>
+            <p>
+                Messages from your landlord or property manager will appear here when they
+                become available.
+            </p>
+            <a class="button button-secondary" href="{{ url_for('tenant_dashboard') }}">
+                Return to dashboard
+            </a>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+{% endblock %}
