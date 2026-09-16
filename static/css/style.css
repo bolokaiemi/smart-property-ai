@@ -144,7 +144,7 @@ button {
 
 a {
     color: var(--color-primary);
-    text-decoration-thickness: 0.08em;
+    text-decoration: none;
     text-underline-offset: 0.18em;
 }
 
@@ -1388,7 +1388,7 @@ body.high-contrast .dashboard-preview {
 
 .footer-links a:hover {
     color: var(--color-white);
-    text-decoration: underline;
+    text-decoration:none;
 }
 
 .site-footer__bottom {
@@ -1989,7 +1989,7 @@ body.high-contrast .dashboard-preview {
 
     a {
         color: #000000;
-        text-decoration: underline;
+        text-decoration: none;
     }
 
     .legal-content {
@@ -1997,4 +1997,9 @@ body.high-contrast .dashboard-preview {
         border: 0;
         box-shadow: none;
     }
+}
+
+#primary-navigation a{
+    text-decoration: none;
+
 }
