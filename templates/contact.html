@@ -1,292 +1,703 @@
 {% extends "base.html" %}
 
-{% block title %}Contact Us | Smart Property AI{% endblock %}
 
-{% block meta_description %}Contact Smart Property AI for apartment search, tenant, landlord, accessibility, privacy, or technical support.{% endblock %}
+{% block title %}
+Contact Us | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Contact Smart Property AI for apartment search, tenant, landlord,
+accessibility, privacy, or technical support.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/contact.css') }}"
+>
+{% endblock %}
+
 
 {% block content %}
-<main class="contact-page" id="main-content">
-    <div class="page-container">
-        <nav class="page-breadcrumbs" aria-label="Breadcrumb">
+
+<!--
+    Unique contact-page wrapper.
+
+    All contact.css selectors should begin with:
+    .contact-wrapper
+-->
+<div class="contact-wrapper">
+
+    <div class="contact-wrapper__container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="contact-wrapper__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
             <ol>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li aria-current="page">Contact</li>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Contact
+                </li>
             </ol>
         </nav>
 
-        <header class="page-header contact-header">
-            <p class="section-label">Smart Property AI support</p>
-            <h1>Contact us</h1>
+
+        <!-- Contact page header -->
+        <header class="contact-wrapper__header">
+            <p class="contact-wrapper__section-label">
+                Smart Property AI support
+            </p>
+
+            <h1>
+                Contact us
+            </h1>
+
             <p>
-                Send us a question about apartment searches, tenancy, property management,
-                accessibility, privacy, or technical support.
+                Send us a question about apartment searches, tenancy,
+                property management, accessibility, privacy, or
+                technical support.
             </p>
         </header>
 
+
+        <!-- Error message -->
         {% if error %}
-        <div class="alert alert-error" role="alert" aria-live="assertive">
-            <strong>We could not send your message.</strong>
-            <span>{{ error }}</span>
-        </div>
+            <div
+                class="contact-wrapper__alert
+                       contact-wrapper__alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                <strong>
+                    We could not send your message.
+                </strong>
+
+                <span>
+                    {{ error }}
+                </span>
+            </div>
         {% endif %}
 
+
+        <!-- Validation errors -->
         {% if errors %}
-        <div class="alert alert-error" role="alert" aria-live="assertive">
-            <strong>Please correct the following:</strong>
-            <ul>
-                {% for validation_error in errors %}
-                <li>{{ validation_error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div
+                class="contact-wrapper__alert
+                       contact-wrapper__alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                <strong>
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% for validation_error in errors %}
+                        <li>
+                            {{ validation_error }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
 
+
+        <!-- Success message -->
         {% if success %}
-        <div class="alert alert-success" role="status" aria-live="polite">
-            {{ success }}
-        </div>
+            <div
+                class="contact-wrapper__alert
+                       contact-wrapper__alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
         {% endif %}
 
-        <div class="contact-layout">
-            <section class="contact-form-card" aria-labelledby="contact-form-heading">
-                <div class="section-heading">
+
+        <div class="contact-wrapper__layout">
+
+            <!-- Contact form -->
+            <section
+                class="contact-wrapper__form-card"
+                aria-labelledby="contact-form-heading"
+            >
+                <div class="contact-wrapper__form-heading">
+
                     <div>
-                        <p class="section-label">Send a message</p>
-                        <h2 id="contact-form-heading">How can we help?</h2>
-                        <p>Fields marked with an asterisk (*) are required.</p>
+                        <p class="contact-wrapper__section-label">
+                            Send a message
+                        </p>
+
+                        <h2 id="contact-form-heading">
+                            How can we help?
+                        </h2>
+
+                        <p>
+                            Fields marked with an asterisk (*) are
+                            required.
+                        </p>
                     </div>
 
-                    <button type="button"
-                            class="button button-secondary"
-                            data-speech-read
-                            data-speech-target="#contact-form">
+                    <button
+                        type="button"
+                        class="contact-wrapper__read-button"
+                        aria-pressed="false"
+                        aria-label="Read the contact form aloud"
+                        title="Read the contact form aloud"
+                        data-speech-target="#contact-form"
+                        data-speech-read-label="Read form aloud"
+                        data-speech-stop-label="Stop reading"
+                    >
                         Read form aloud
                     </button>
                 </div>
 
-                <form id="contact-form"
-                      class="contact-form"
-                      method="post"
-                      action="{{ url_for('contact_submit') }}"
-                      enctype="application/x-www-form-urlencoded">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-                    <div class="form-grid form-grid-two-columns">
-                        <div class="form-group">
+                <form
+                    id="contact-form"
+                    class="contact-wrapper__form"
+                    method="post"
+                    action="{{ url_for('contact_submit') }}"
+                    enctype="application/x-www-form-urlencoded"
+                    novalidate
+                >
+                    <!-- CSRF protection -->
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token | default(request.session.get('csrf_token', '')) }}"
+                    >
+
+
+                    <!-- Name and email -->
+                    <div class="contact-wrapper__form-grid">
+
+                        <div class="contact-wrapper__form-group">
                             <label for="full_name">
-                                Full name <span aria-hidden="true">*</span>
+                                Full name
+                                <span aria-hidden="true">*</span>
                             </label>
-                            <input id="full_name"
-                                   name="full_name"
-                                   type="text"
-                                   value="{{ form_data.get('full_name', '') if form_data else '' }}"
-                                   minlength="2"
-                                   maxlength="150"
-                                   autocomplete="name"
-                                   required
-                                   data-voice-input>
+
+                            <input
+                                id="full_name"
+                                name="full_name"
+                                type="text"
+                                value="{{ form_data.get('full_name', '') if form_data else '' }}"
+                                minlength="2"
+                                maxlength="150"
+                                autocomplete="name"
+                                required
+                                data-voice-input
+                            >
                         </div>
 
-                        <div class="form-group">
+
+                        <div class="contact-wrapper__form-group">
                             <label for="email">
-                                Email address <span aria-hidden="true">*</span>
+                                Email address
+                                <span aria-hidden="true">*</span>
                             </label>
-                            <input id="email"
-                                   name="email"
-                                   type="email"
-                                   value="{{ form_data.get('email', '') if form_data else '' }}"
-                                   maxlength="254"
-                                   autocomplete="email"
-                                   inputmode="email"
-                                   required>
+
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                value="{{ form_data.get('email', '') if form_data else '' }}"
+                                maxlength="254"
+                                autocomplete="email"
+                                inputmode="email"
+                                required
+                            >
                         </div>
+
                     </div>
 
-                    <div class="form-grid form-grid-two-columns">
-                        <div class="form-group">
-                            <label for="phone_number">Phone number</label>
-                            <input id="phone_number"
-                                   name="phone_number"
-                                   type="tel"
-                                   value="{{ form_data.get('phone_number', '') if form_data else '' }}"
-                                   maxlength="40"
-                                   autocomplete="tel"
-                                   inputmode="tel"
-                                   placeholder="+49 123 456789">
+
+                    <!-- Telephone and language -->
+                    <div class="contact-wrapper__form-grid">
+
+                        <div class="contact-wrapper__form-group">
+                            <label for="phone_number">
+                                Phone number
+                            </label>
+
+                            <input
+                                id="phone_number"
+                                name="phone_number"
+                                type="tel"
+                                value="{{ form_data.get('phone_number', '') if form_data else '' }}"
+                                maxlength="40"
+                                autocomplete="tel"
+                                inputmode="tel"
+                                placeholder="+49 123 456789"
+                            >
                         </div>
 
-                        <div class="form-group">
-                            <label for="preferred_language">Preferred language</label>
-                            {% set selected_language = form_data.get('preferred_language', current_language|default('en')) if form_data else current_language|default('en') %}
-                            <select id="preferred_language" name="preferred_language">
-                                <option value="en" {% if selected_language == 'en' %}selected{% endif %}>English</option>
-                                <option value="de" {% if selected_language == 'de' %}selected{% endif %}>Deutsch</option>
-                                <option value="fr" {% if selected_language == 'fr' %}selected{% endif %}>Français</option>
-                                <option value="es" {% if selected_language == 'es' %}selected{% endif %}>Español</option>
-                                <option value="it" {% if selected_language == 'it' %}selected{% endif %}>Italiano</option>
-                                <option value="pt" {% if selected_language == 'pt' %}selected{% endif %}>Português</option>
-                                <option value="ar" {% if selected_language == 'ar' %}selected{% endif %}>العربية</option>
-                                <option value="tr" {% if selected_language == 'tr' %}selected{% endif %}>Türkçe</option>
-                                <option value="pl" {% if selected_language == 'pl' %}selected{% endif %}>Polski</option>
-                                <option value="uk" {% if selected_language == 'uk' %}selected{% endif %}>Українська</option>
+
+                        <div class="contact-wrapper__form-group">
+                            <label for="preferred_language">
+                                Preferred language
+                            </label>
+
+                            {% set selected_language =
+                                form_data.get(
+                                    'preferred_language',
+                                    current_language | default(
+                                        request.session.get(
+                                            'language',
+                                            'en'
+                                        )
+                                    )
+                                )
+                                if form_data
+                                else current_language | default(
+                                    request.session.get(
+                                        'language',
+                                        'en'
+                                    )
+                                )
+                            %}
+
+                            <select
+                                id="preferred_language"
+                                name="preferred_language"
+                            >
+                                <option
+                                    value="en"
+                                    {% if selected_language == 'en' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    English
+                                </option>
+
+                                <option
+                                    value="de"
+                                    {% if selected_language == 'de' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Deutsch
+                                </option>
+
+                                <option
+                                    value="fr"
+                                    {% if selected_language == 'fr' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Français
+                                </option>
+
+                                <option
+                                    value="es"
+                                    {% if selected_language == 'es' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Español
+                                </option>
+
+                                <option
+                                    value="it"
+                                    {% if selected_language == 'it' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Italiano
+                                </option>
+
+                                <option
+                                    value="pt"
+                                    {% if selected_language == 'pt' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Português
+                                </option>
+
+                                <option
+                                    value="ar"
+                                    {% if selected_language == 'ar' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    العربية
+                                </option>
+
+                                <option
+                                    value="tr"
+                                    {% if selected_language == 'tr' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Türkçe
+                                </option>
+
+                                <option
+                                    value="pl"
+                                    {% if selected_language == 'pl' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Polski
+                                </option>
+
+                                <option
+                                    value="uk"
+                                    {% if selected_language == 'uk' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Українська
+                                </option>
                             </select>
                         </div>
+
                     </div>
 
-                    <div class="form-group">
+
+                    <!-- Category -->
+                    <div class="contact-wrapper__form-group">
                         <label for="category">
-                            Help category <span aria-hidden="true">*</span>
+                            Help category
+                            <span aria-hidden="true">*</span>
                         </label>
-                        {% set selected_category = form_data.get('category', '') if form_data else '' %}
-                        <select id="category" name="category" required>
-                            <option value="">Select a category</option>
-                            <option value="apartment_search" {% if selected_category == 'apartment_search' %}selected{% endif %}>
+
+                        {% set selected_category =
+                            form_data.get('category', '')
+                            if form_data
+                            else ''
+                        %}
+
+                        <select
+                            id="category"
+                            name="category"
+                            required
+                        >
+                            <option value="">
+                                Select a category
+                            </option>
+
+                            <option
+                                value="apartment_search"
+                                {% if selected_category == 'apartment_search' %}
+                                selected
+                                {% endif %}
+                            >
                                 Apartment search
                             </option>
-                            <option value="rental_application" {% if selected_category == 'rental_application' %}selected{% endif %}>
+
+                            <option
+                                value="rental_application"
+                                {% if selected_category == 'rental_application' %}
+                                selected
+                                {% endif %}
+                            >
                                 Rental application
                             </option>
-                            <option value="tenant_support" {% if selected_category == 'tenant_support' %}selected{% endif %}>
+
+                            <option
+                                value="tenant_support"
+                                {% if selected_category == 'tenant_support' %}
+                                selected
+                                {% endif %}
+                            >
                                 Tenant support
                             </option>
-                            <option value="landlord_support" {% if selected_category == 'landlord_support' %}selected{% endif %}>
+
+                            <option
+                                value="landlord_support"
+                                {% if selected_category == 'landlord_support' %}
+                                selected
+                                {% endif %}
+                            >
                                 Landlord support
                             </option>
-                            <option value="maintenance" {% if selected_category == 'maintenance' %}selected{% endif %}>
+
+                            <option
+                                value="maintenance"
+                                {% if selected_category == 'maintenance' %}
+                                selected
+                                {% endif %}
+                            >
                                 Maintenance or repair
                             </option>
-                            <option value="payment" {% if selected_category == 'payment' %}selected{% endif %}>
+
+                            <option
+                                value="payment"
+                                {% if selected_category == 'payment' %}
+                                selected
+                                {% endif %}
+                            >
                                 Rent or payment
                             </option>
-                            <option value="accessibility" {% if selected_category == 'accessibility' %}selected{% endif %}>
+
+                            <option
+                                value="accessibility"
+                                {% if selected_category == 'accessibility' %}
+                                selected
+                                {% endif %}
+                            >
                                 Accessibility
                             </option>
-                            <option value="privacy" {% if selected_category == 'privacy' %}selected{% endif %}>
+
+                            <option
+                                value="privacy"
+                                {% if selected_category == 'privacy' %}
+                                selected
+                                {% endif %}
+                            >
                                 Privacy or data request
                             </option>
-                            <option value="technical_support" {% if selected_category == 'technical_support' %}selected{% endif %}>
+
+                            <option
+                                value="technical_support"
+                                {% if selected_category == 'technical_support' %}
+                                selected
+                                {% endif %}
+                            >
                                 Technical support
                             </option>
-                            <option value="other" {% if selected_category == 'other' %}selected{% endif %}>
+
+                            <option
+                                value="other"
+                                {% if selected_category == 'other' %}
+                                selected
+                                {% endif %}
+                            >
                                 Other
                             </option>
                         </select>
                     </div>
 
-                    <div class="form-group">
+
+                    <!-- Subject -->
+                    <div class="contact-wrapper__form-group">
                         <label for="subject">
-                            Subject <span aria-hidden="true">*</span>
+                            Subject
+                            <span aria-hidden="true">*</span>
                         </label>
-                        <input id="subject"
-                               name="subject"
-                               type="text"
-                               value="{{ form_data.get('subject', '') if form_data else '' }}"
-                               minlength="3"
-                               maxlength="200"
-                               autocomplete="off"
-                               required
-                               data-voice-input
-                               placeholder="Briefly describe what you need">
+
+                        <input
+                            id="subject"
+                            name="subject"
+                            type="text"
+                            value="{{ form_data.get('subject', '') if form_data else '' }}"
+                            minlength="3"
+                            maxlength="200"
+                            autocomplete="off"
+                            placeholder="Briefly describe what you need"
+                            required
+                            data-voice-input
+                        >
                     </div>
 
-                    <div class="form-group">
+
+                    <!-- Message -->
+                    <div class="contact-wrapper__form-group">
                         <label for="message">
-                            Message <span aria-hidden="true">*</span>
+                            Message
+                            <span aria-hidden="true">*</span>
                         </label>
-                        <textarea id="message"
-                                  name="message"
-                                  rows="8"
-                                  minlength="10"
-                                  maxlength="5000"
-                                  required
-                                  data-voice-input
-                                  aria-describedby="message-help"
-                                  placeholder="Explain your question or problem clearly.">{{ form_data.get('message', '') if form_data else '' }}</textarea>
-                        <small id="message-help" class="form-help">
-                            Do not include passwords, complete payment-card numbers,
-                            identification documents, or unnecessary medical information.
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="8"
+                            minlength="10"
+                            maxlength="5000"
+                            placeholder="Explain your question or problem clearly."
+                            aria-describedby="message-help"
+                            required
+                            data-voice-input
+                        >{{ form_data.get('message', '') if form_data else '' }}</textarea>
+
+                        <small
+                            id="message-help"
+                            class="contact-wrapper__form-help"
+                        >
+                            Do not include passwords, complete
+                            payment-card numbers, identification
+                            documents, or unnecessary medical
+                            information.
                         </small>
                     </div>
 
-                    <div class="form-check">
-                        <input id="privacy_consent"
-                               name="privacy_consent"
-                               type="checkbox"
-                               value="true"
-                               required>
+
+                    <!-- Privacy consent -->
+                    <div class="contact-wrapper__form-check">
+                        <input
+                            id="privacy_consent"
+                            name="privacy_consent"
+                            type="checkbox"
+                            value="true"
+                            {% if form_data and form_data.get('privacy_consent') %}
+                            checked
+                            {% endif %}
+                            required
+                        >
+
                         <label for="privacy_consent">
                             I have read the
-                            <a href="{{ url_for('privacy_page') }}" target="_blank" rel="noopener">
+
+                            <a
+                                href="{{ url_for('privacy_page') }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 privacy information
                             </a>
-                            and consent to the processing of this message for support purposes.
+
+                            and consent to the processing of this
+                            message for support purposes.
+
                             <span aria-hidden="true">*</span>
                         </label>
                     </div>
 
-                    <div class="form-actions">
-                        <button class="button button-primary" type="submit" data-submit-button>
+
+                    <!-- Form controls -->
+                    <div class="contact-wrapper__form-actions">
+                        <button
+                            class="contact-wrapper__button
+                                   contact-wrapper__button--primary"
+                            type="submit"
+                            data-submit-button
+                        >
                             Send message
                         </button>
-                        <button class="button button-secondary" type="reset">
+
+                        <button
+                            class="contact-wrapper__button
+                                   contact-wrapper__button--secondary"
+                            type="reset"
+                        >
                             Clear form
                         </button>
                     </div>
+
                 </form>
             </section>
 
-            <aside class="contact-sidebar" aria-label="Other contact options">
-                <section class="contact-info-card">
-                    <h2>Already have an account?</h2>
+
+            <!-- Contact information sidebar -->
+            <aside
+                class="contact-wrapper__sidebar"
+                aria-label="Other contact options"
+            >
+                <section class="contact-wrapper__info-card">
+                    <h2>
+                        Already have an account?
+                    </h2>
+
                     <p>
-                        Use the appropriate secure portal for requests connected to your
-                        tenancy or property.
+                        Use the appropriate secure portal for requests
+                        connected to your tenancy or property.
                     </p>
 
-                    <div class="contact-link-list">
+                    <div class="contact-wrapper__link-list">
                         <a href="{{ url_for('tenant_dashboard') }}">
                             Tenant portal
                         </a>
+
                         <a href="{{ url_for('landlord_dashboard') }}">
                             Landlord portal
                         </a>
                     </div>
                 </section>
 
-                <section class="contact-info-card">
-                    <h2>Apartment assistance</h2>
-                    <p>Search available homes or use the guided search.</p>
 
-                    <div class="contact-link-list">
-                        <a href="{{ url_for('listings_page') }}">Property listings</a>
-                        <a href="{{ url_for('guided_search') }}">Guided apartment search</a>
-                        <a href="{{ url_for('ai_assistant') }}">AI assistant</a>
+                <section class="contact-wrapper__info-card">
+                    <h2>
+                        Apartment assistance
+                    </h2>
+
+                    <p>
+                        Search available homes or use the guided
+                        apartment search.
+                    </p>
+
+                    <div class="contact-wrapper__link-list">
+                        <a href="{{ url_for('listings_page') }}">
+                            Property listings
+                        </a>
+
+                        <a href="{{ url_for('guided_search_page') }}">
+                            Guided apartment search
+                        </a>
+
+                        <button
+                            type="button"
+                            class="contact-wrapper__link-button"
+                            data-ai-overlay-open
+                            aria-haspopup="dialog"
+                        >
+                            AI assistant
+                        </button>
                     </div>
                 </section>
 
-                <section class="contact-info-card contact-emergency-card">
-                    <h2>Emergency assistance</h2>
+
+                <section
+                    class="contact-wrapper__info-card
+                           contact-wrapper__info-card--emergency"
+                >
+                    <h2>
+                        Emergency assistance
+                    </h2>
+
                     <p>
-                        This contact form is not an emergency channel. In Germany, call
-                        <strong>112</strong> for fire or medical emergencies and
+                        This contact form is not an emergency channel.
+                        In Germany, call <strong>112</strong> for fire
+                        or medical emergencies and
                         <strong>110</strong> for police.
                     </p>
                 </section>
 
-                <section class="contact-info-card">
-                    <h2>Response time</h2>
+
+                <section class="contact-wrapper__info-card">
+                    <h2>
+                        Response time
+                    </h2>
+
                     <p>
-                        Support messages are reviewed during normal service hours.
-                        Urgent property problems should also be reported through your
-                        tenant portal.
+                        Support messages are reviewed during normal
+                        service hours. Urgent property problems should
+                        also be reported through your tenant portal.
                     </p>
                 </section>
             </aside>
+
         </div>
     </div>
-</main>
+
+</div>
 {% endblock %}
 
+
 {% block extra_js %}
-<script src="{{ url_for('static', path='js/voice-forms.js') }}" defer></script>
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/voice-forms.js') }}"
+    defer
+></script>
+
+<script
+    src="{{ url_for('static', path='js/contact.js') }}"
+    defer
+></script>
 {% endblock %}

@@ -1,0 +1,262 @@
+{#
+    Smart Property AI chat overlay
+
+    Include this file only once in base.html.
+
+    Required files:
+    - static/css/chat-overlay.css
+    - static/js/chat-overlay.js
+
+    The page must use SessionMiddleware because the CSRF token
+    is retrieved from request.session.
+#}
+
+<div
+    id="ai-chat-overlay"
+    class="ai-overlay"
+    hidden
+>
+    <!-- Clicking the backdrop closes the overlay -->
+    <div
+        class="ai-overlay__backdrop"
+        data-ai-overlay-close
+        aria-hidden="true"
+    ></div>
+
+
+    <!-- AI chat dialog -->
+    <section
+        class="ai-overlay__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ai-overlay-title"
+        aria-describedby="ai-overlay-description"
+    >
+        <!-- Dialog header -->
+        <header class="ai-overlay__header">
+            <div class="ai-overlay__heading">
+                <span
+                    class="ai-overlay__icon"
+                    aria-hidden="true"
+                >
+                    ✨
+                </span>
+
+                <div>
+                    <h2 id="ai-overlay-title">
+                        Smart Property AI
+                    </h2>
+
+                    <p id="ai-overlay-description">
+                        Ask a property, apartment, tenancy, or
+                        maintenance question.
+                    </p>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="ai-overlay__close"
+                data-ai-overlay-close
+                aria-label="Close AI assistant"
+                title="Close AI assistant"
+            >
+                <span aria-hidden="true">
+                    ×
+                </span>
+            </button>
+        </header>
+
+
+        <!-- Assistant availability -->
+        <div class="ai-overlay__availability">
+            <span
+                class="ai-overlay__availability-indicator"
+                aria-hidden="true"
+            ></span>
+
+            <span>
+                AI assistant available
+            </span>
+        </div>
+
+
+        <!-- Conversation messages -->
+        <div
+            id="ai-overlay-messages"
+            class="ai-overlay__messages"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions"
+            aria-label="Conversation with Smart Property AI"
+            tabindex="0"
+        >
+            <div
+                class="ai-overlay__message
+                       ai-overlay__message--assistant"
+            >
+                <strong>
+                    Smart Property AI
+                </strong>
+
+                <p>
+                    Hello! I can help you search for apartments,
+                    understand applications, manage appointments,
+                    review lease information, or report maintenance
+                    problems. How can I help?
+                </p>
+            </div>
+        </div>
+
+
+        <!-- Accessible status messages -->
+        <p
+            id="ai-overlay-status"
+            class="ai-overlay__status"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+        ></p>
+
+
+        <!-- Chat form -->
+        <form
+            id="ai-overlay-form"
+            class="ai-overlay__form"
+            action="/api/ai/chat"
+            method="post"
+            autocomplete="off"
+        >
+            <!-- CSRF token -->
+           <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token | default(request.session.get('csrf_token', ''), true) }}"
+>
+
+
+            <!-- Language selection -->
+            <div class="ai-overlay__language-group">
+                <label for="ai-overlay-language">
+                    Chat language
+                </label>
+
+                <select
+                    id="ai-overlay-language"
+                    name="language"
+                    aria-label="Select the AI chat language"
+                >
+                    <option
+                        value="en"
+                        {% if current_language | default(
+                            request.session.get('language', 'en')
+                        ) == 'en' %}
+                        selected
+                        {% endif %}
+                    >
+                        English
+                    </option>
+
+                    <option
+                        value="de"
+                        {% if current_language | default(
+                            request.session.get('language', 'en')
+                        ) == 'de' %}
+                        selected
+                        {% endif %}
+                    >
+                        Deutsch
+                    </option>
+
+                    <option
+                        value="fr"
+                        {% if current_language | default(
+                            request.session.get('language', 'en')
+                        ) == 'fr' %}
+                        selected
+                        {% endif %}
+                    >
+                        Français
+                    </option>
+
+                    <option
+                        value="es"
+                        {% if current_language | default(
+                            request.session.get('language', 'en')
+                        ) == 'es' %}
+                        selected
+                        {% endif %}
+                    >
+                        Español
+                    </option>
+                </select>
+            </div>
+
+
+            <!-- Message input -->
+            <div class="ai-overlay__input-group">
+                <label for="ai-overlay-question">
+                    Your question
+                </label>
+
+                <textarea
+                    id="ai-overlay-question"
+                    name="message"
+                    rows="3"
+                    maxlength="4000"
+                    placeholder="Type your question here…"
+                    aria-describedby="ai-overlay-help ai-overlay-status"
+                    required
+                ></textarea>
+
+                <p
+                    id="ai-overlay-help"
+                    class="ai-overlay__help"
+                >
+                    Do not enter passwords, banking information,
+                    identification numbers, or other sensitive data.
+                </p>
+            </div>
+
+
+            <!-- Form controls -->
+            <div class="ai-overlay__actions">
+                <button
+                    type="button"
+                    class="ai-overlay__cancel"
+                    data-ai-overlay-close
+                >
+                    Close
+                </button>
+
+                <button
+                    type="submit"
+                    class="ai-overlay__send"
+                >
+                    <span
+                        class="ai-overlay__spinner"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>
+                        Send
+                    </span>
+                </button>
+            </div>
+        </form>
+
+
+        <!-- Responsible AI notice -->
+        <footer class="ai-overlay__footer">
+            <p>
+                AI-generated information may contain mistakes.
+                Review important tenancy, legal, and financial
+                information before acting on it.
+            </p>
+
+            <a href="{{ url_for('ai_disclosure_page') }}">
+                AI information
+            </a>
+        </footer>
+    </section>
+</div>

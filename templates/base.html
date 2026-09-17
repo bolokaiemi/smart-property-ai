@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ current_language | default('en') }}">
+
+<html
+    lang="{{ current_language | default(request.session.get('language', 'en')) }}"
+>
 <head>
     <meta charset="UTF-8">
 
@@ -10,7 +13,7 @@
 
     <meta
         name="description"
-        content="{% block description %}Smart Property AI provides multilingual property management, apartment search, voice assistance and automated landlord services.{% endblock %}"
+        content="{% block description %}Smart Property AI provides multilingual property management, apartment search, voice assistance, and automated landlord services.{% endblock %}"
     >
 
     <meta
@@ -19,26 +22,19 @@
     >
 
     <title>
-        {% block title %}Smart Property AI{% endblock %}
+        {% block title %}
+        Smart Property AI
+        {% endblock %}
     </title>
 
+    <!-- Favicon -->
     <link
         rel="icon"
         type="image/x-icon"
-        href="{{ url_for('static', path='images/favicon.ico') }}"
+        href="{{ url_for('static', path='/images/favicon.ico') }}"
     >
 
-<link
-    rel="stylesheet"
-    href="{{ url_for('static', path='css/auth.css') }}"
->
-
-
-
-    <link
-    rel="stylesheet"
-    href="{{ url_for('static', path='css/ai-assistant.css') }}"
->
+    <!-- Global styles -->
     <link
         rel="stylesheet"
         href="{{ url_for('static', path='css/style.css') }}"
@@ -49,29 +45,29 @@
         href="{{ url_for('static', path='css/accessibility.css') }}"
     >
 
-<link
-        rel="stylesheet"
-        href="{{ url_for('static', path='css/contact.css') }}"
-    >
-
-    {% block extra_css %}
-{% endblock %}
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', path='css/tenant.css') }}"
-    >
-
     <link
         rel="stylesheet"
         href="{{ url_for('static', path='css/responsive.css') }}"
     >
+
+    <!-- Global AI chat overlay styles -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/chat-overlay.css') }}"
+    >
+
+    <!-- Page-specific styles -->
+    {% block extra_css %}
+    {% endblock %}
 </head>
 
 <body>
 
-    <!-- Skip link for keyboard and screen-reader users -->
-    <a class="skip-link" href="#main-content">
+    <!-- Keyboard and screen-reader skip link -->
+    <a
+        class="skip-link"
+        href="#main-content"
+    >
         Skip to main content
     </a>
 
@@ -83,6 +79,7 @@
     >
         <div class="container accessibility-toolbar__inner">
 
+            <!-- Global language selector -->
             <div class="language-control">
                 <label for="language-select">
                     Language
@@ -92,82 +89,93 @@
                     id="language-select"
                     name="language"
                     aria-label="Select language"
+                    data-language-selector
                 >
-                    <option value="en"
-                        {% if current_language | default('en') == 'en' %}
-                            selected
+                    <option
+                        value="en"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'en' %}
+                        selected
                         {% endif %}
                     >
                         English
                     </option>
 
-                    <option value="de"
-                        {% if current_language | default('en') == 'de' %}
-                            selected
+                    <option
+                        value="de"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'de' %}
+                        selected
                         {% endif %}
                     >
                         Deutsch
                     </option>
 
-                    <option value="fr"
-                        {% if current_language | default('en') == 'fr' %}
-                            selected
+                    <option
+                        value="fr"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'fr' %}
+                        selected
                         {% endif %}
                     >
                         Français
                     </option>
 
-                    <option value="es"
-                        {% if current_language | default('en') == 'es' %}
-                            selected
+                    <option
+                        value="es"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'es' %}
+                        selected
                         {% endif %}
                     >
                         Español
                     </option>
 
-                    <option value="it"
-                        {% if current_language | default('en') == 'it' %}
-                            selected
+                    <option
+                        value="it"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'it' %}
+                        selected
                         {% endif %}
                     >
                         Italiano
                     </option>
 
-                    <option value="pt"
-                        {% if current_language | default('en') == 'pt' %}
-                            selected
+                    <option
+                        value="pt"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'pt' %}
+                        selected
                         {% endif %}
                     >
                         Português
                     </option>
 
-                    <option value="ar"
-                        {% if current_language | default('en') == 'ar' %}
-                            selected
+                    <option
+                        value="ar"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'ar' %}
+                        selected
                         {% endif %}
                     >
                         العربية
                     </option>
 
-                    <option value="tr"
-                        {% if current_language | default('en') == 'tr' %}
-                            selected
+                    <option
+                        value="tr"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'tr' %}
+                        selected
                         {% endif %}
                     >
                         Türkçe
                     </option>
 
-                    <option value="pl"
-                        {% if current_language | default('en') == 'pl' %}
-                            selected
+                    <option
+                        value="pl"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'pl' %}
+                        selected
                         {% endif %}
                     >
                         Polski
                     </option>
 
-                    <option value="uk"
-                        {% if current_language | default('en') == 'uk' %}
-                            selected
+                    <option
+                        value="uk"
+                        {% if current_language | default(request.session.get('language', 'en')) == 'uk' %}
+                        selected
                         {% endif %}
                     >
                         Українська
@@ -175,6 +183,8 @@
                 </select>
             </div>
 
+
+            <!-- Accessibility controls -->
             <div
                 class="accessibility-actions"
                 aria-label="Page display controls"
@@ -206,19 +216,34 @@
                     id="contrast-toggle"
                     class="accessibility-button"
                     aria-pressed="false"
+                    aria-label="Toggle high contrast"
                     title="Toggle high contrast"
                     data-contrast-toggle
                 >
                     High contrast
                 </button>
 
+                <!--
+                    One-button speech toggle.
+
+                    First click:
+                    Reads #main-content aloud.
+
+                    Second click:
+                    Stops reading.
+
+                    Do not add an inline onclick attribute.
+                -->
                 <button
                     type="button"
                     id="read-page-button"
                     class="accessibility-button"
                     aria-pressed="false"
-                    title="Read the page aloud"
+                    aria-label="Read aloud"
+                    title="Read aloud"
                     data-speech-target="#main-content"
+                    data-speech-read-label="Read aloud"
+                    data-speech-stop-label="Stop reading"
                 >
                     Read aloud
                 </button>
@@ -232,12 +257,16 @@
     <header class="site-header">
         <div class="container site-header__inner">
 
+            <!-- Logo -->
             <a
                 href="{{ url_for('home') }}"
                 class="site-logo"
                 aria-label="Smart Property AI home"
             >
-                <span class="site-logo__icon" aria-hidden="true">
+                <span
+                    class="site-logo__icon"
+                    aria-hidden="true"
+                >
                     🏠
                 </span>
 
@@ -247,6 +276,7 @@
             </a>
 
 
+            <!-- Mobile navigation button -->
             <button
                 type="button"
                 id="navigation-toggle"
@@ -262,6 +292,7 @@
             </button>
 
 
+            <!-- Primary navigation -->
             <nav
                 id="primary-navigation"
                 class="primary-navigation"
@@ -272,7 +303,7 @@
                         <a
                             href="{{ url_for('home') }}"
                             {% if request.url.path == '/' %}
-                                aria-current="page"
+                            aria-current="page"
                             {% endif %}
                         >
                             Home
@@ -282,8 +313,9 @@
                     <li>
                         <a
                             href="{{ url_for('listings_page') }}"
-                            {% if request.url.path.startswith('/listings') %}
-                                aria-current="page"
+                            {% if request.url.path.startswith('/listings')
+                                  or request.url.path.startswith('/apartments') %}
+                            aria-current="page"
                             {% endif %}
                         >
                             Find an apartment
@@ -291,46 +323,73 @@
                     </li>
 
                     <li>
-                        <a href="{{ url_for('guided_search_page') }}">
+                        <a
+                            href="{{ url_for('guided_search_page') }}"
+                            {% if request.url.path.startswith('/guided-search') %}
+                            aria-current="page"
+                            {% endif %}
+                        >
                             Guided search
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ url_for('ai_assistant') }}">
+                        <a
+                            href="{{ url_for('ai_assistant') }}"
+                            {% if request.url.path.startswith('/ai-assistant') %}
+                            aria-current="page"
+                            {% endif %}
+                        >
                             AI assistant
                         </a>
                     </li>
 
-                    {% if request.session.get('username') %}
+                    {% if request.session.get('user_id')
+                          or request.session.get('username') %}
 
-                        {% set user_role = request.session.get('role') %}
+                        {% set user_role =
+                            request.session.get('role', '') | lower
+                        %}
 
-                        {% if user_role in ['landlord', 'property_manager'] %}
+                        {% if user_role in [
+                            'landlord',
+                            'property_manager',
+                            'property manager'
+                        ] %}
                             <li>
                                 <a
                                     href="{{ url_for('landlord_dashboard') }}"
                                     {% if request.url.path.startswith('/landlord') %}
-                                        aria-current="page"
+                                    aria-current="page"
                                     {% endif %}
                                 >
                                     Landlord portal
                                 </a>
                             </li>
-                        {% elif user_role == 'tenant' %}
+
+                        {% elif user_role in ['tenant', 'user'] %}
                             <li>
                                 <a
                                     href="{{ url_for('tenant_dashboard') }}"
                                     {% if request.url.path.startswith('/tenant') %}
-                                        aria-current="page"
+                                    aria-current="page"
                                     {% endif %}
                                 >
                                     Tenant portal
                                 </a>
                             </li>
-                        {% elif user_role == 'administrator' %}
+
+                        {% elif user_role in [
+                            'administrator',
+                            'admin'
+                        ] %}
                             <li>
-                                <a href="{{ url_for('admin_dashboard') }}">
+                                <a
+                                    href="{{ url_for('admin_dashboard') }}"
+                                    {% if request.url.path.startswith('/admin') %}
+                                    aria-current="page"
+                                    {% endif %}
+                                >
                                     Admin
                                 </a>
                             </li>
@@ -341,22 +400,30 @@
             </nav>
 
 
-            <!-- Single Login/Logout control -->
+            <!-- Single login/logout control -->
             <div class="authentication-control">
 
-                {% if request.session.get('username') %}
+                {% if request.session.get('user_id')
+                      or request.session.get('username') %}
 
                     <span class="current-user">
                         Hello,
                         {{ request.session.get('name')
-                           or request.session.get('username') }}
+                           or request.session.get('username')
+                           or 'User' }}
                     </span>
 
                     <form
                         action="{{ url_for('logout') }}"
-                        method="POST"
+                        method="post"
                         class="logout-form"
                     >
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ request.session.get('csrf_token', '') }}"
+                        >
+
                         <button
                             type="submit"
                             id="auth-toggle"
@@ -384,7 +451,7 @@
     </header>
 
 
-    <!-- Flash or status messages -->
+    <!-- Global information message -->
     {% if message %}
         <div
             class="site-message site-message--information"
@@ -397,6 +464,8 @@
         </div>
     {% endif %}
 
+
+    <!-- Global success message -->
     {% if success %}
         <div
             class="site-message site-message--success"
@@ -409,6 +478,8 @@
         </div>
     {% endif %}
 
+
+    <!-- Global error message -->
     {% if error %}
         <div
             class="site-message site-message--error"
@@ -422,36 +493,54 @@
     {% endif %}
 
 
-    <!-- Dynamic page content -->
-    <main id="main-content" tabindex="-1">
+    <!--
+        This is the only main element in the application.
 
-
+        Child templates must not create another main element or
+        another element with id="main-content".
+    -->
+    <main
+        id="main-content"
+        tabindex="-1"
+    >
         {% block content %}
         {% endblock %}
-
-
-
     </main>
 
 
-    <!-- AI assistant launcher -->
-    <a
-        href="{{ url_for('ai_assistant') }}"
+    <!-- AI assistant overlay launcher -->
+    <button
+        type="button"
         class="assistant-launcher"
+        data-ai-overlay-open
         aria-label="Open the Smart Property AI assistant"
+        aria-haspopup="dialog"
         title="Ask Smart Property AI"
     >
-        <span aria-hidden="true">💬</span>
+        <span aria-hidden="true">
+            💬
+        </span>
+
         <span class="assistant-launcher__text">
             Ask AI
         </span>
-    </a>
+    </button>
 
 
-    <!-- Footer -->
+    <!--
+        AI chat overlay included once.
+
+        Do not include this file again in index.html,
+        assistant.html, or other child templates.
+    -->
+    {% include "ai/chat_overlay.html" %}
+
+
+    <!-- Website footer -->
     <footer class="site-footer">
         <div class="container site-footer__grid">
 
+            <!-- About -->
             <section class="footer-column">
                 <h2 class="footer-heading">
                     Smart Property AI
@@ -459,12 +548,13 @@
 
                 <p>
                     Accessible, multilingual property management and
-                    apartment-search assistance for landlords, tenants
+                    apartment-search assistance for landlords, tenants,
                     and prospective renters.
                 </p>
             </section>
 
 
+            <!-- Platform links -->
             <section class="footer-column">
                 <h2 class="footer-heading">
                     Platform
@@ -498,31 +588,52 @@
             </section>
 
 
+            <!-- Account links -->
             <section class="footer-column">
                 <h2 class="footer-heading">
                     Account
                 </h2>
 
                 <ul class="footer-links">
-                    {% if request.session.get('username') %}
 
-                        {% set user_role = request.session.get('role') %}
+                    {% if request.session.get('user_id')
+                          or request.session.get('username') %}
 
-                        {% if user_role in ['landlord', 'property_manager'] %}
+                        {% set user_role =
+                            request.session.get('role', '') | lower
+                        %}
+
+                        {% if user_role in [
+                            'landlord',
+                            'property_manager',
+                            'property manager'
+                        ] %}
                             <li>
                                 <a href="{{ url_for('landlord_dashboard') }}">
                                     Landlord dashboard
                                 </a>
                             </li>
-                        {% elif user_role == 'tenant' %}
+
+                        {% elif user_role in ['tenant', 'user'] %}
                             <li>
                                 <a href="{{ url_for('tenant_dashboard') }}">
                                     Tenant dashboard
                                 </a>
                             </li>
+
+                        {% elif user_role in [
+                            'administrator',
+                            'admin'
+                        ] %}
+                            <li>
+                                <a href="{{ url_for('admin_dashboard') }}">
+                                    Admin dashboard
+                                </a>
+                            </li>
                         {% endif %}
 
                     {% else %}
+
                         <li>
                             <a href="{{ url_for('login') }}">
                                 Login
@@ -534,11 +645,14 @@
                                 Create an account
                             </a>
                         </li>
+
                     {% endif %}
+
                 </ul>
             </section>
 
 
+            <!-- Legal links -->
             <section class="footer-column">
                 <h2 class="footer-heading">
                     Legal
@@ -584,41 +698,63 @@
 
         <div class="container site-footer__bottom">
             <p>
-                &copy; {{ current_year | default(2026) }}
+                &copy;
+                {{ current_year | default(2026) }}
                 Smart Property AI. All rights reserved.
             </p>
 
             <p>
-                AI-generated information should be reviewed before making
-                legal, financial or tenancy decisions.
+                Created by Ebi Emmerich-Adehor.
+            </p>
+
+            <p>
+                AI-generated information should be reviewed before
+                making legal, financial, or tenancy decisions.
             </p>
         </div>
     </footer>
 
 
+    <!-- JavaScript-disabled notice -->
     <noscript>
         <div class="noscript-warning">
-            JavaScript is disabled. Basic content remains available, but
-            voice assistance and interactive accessibility controls require
-            JavaScript.
+            JavaScript is disabled. Basic content remains available,
+            but voice assistance, the AI chat overlay, and interactive
+            accessibility controls require JavaScript.
         </div>
     </noscript>
 
 
-    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <!-- Global JavaScript -->
+    <script
+        src="{{ url_for('static', path='js/main.js') }}"
+        defer
+    ></script>
 
-    <script src="{{ url_for('static', path='js/language-selector.js') }}"></script>
+    <script
+        src="{{ url_for('static', path='js/language-selector.js') }}"
+        defer
+    ></script>
 
-    <script src="{{ url_for('static', path='js/speech-output.js') }}"></script>
+    <!--
+        Controls the single Read aloud / Stop reading button.
 
-<script src="{{ url_for('static', path='js/auth.js') }}"></script>
-    <script src="{{ url_for('static', path='js/ai-assistant.js') }}" defer></script>
-    <script src="{{ url_for('static', path='js/tenant.js') }}" defer></script>
+        Load this file only once.
+    -->
+    <script
+        src="{{ url_for('static', path='js/speech-output.js') }}"
+        defer
+    ></script>
 
-    {% block scripts %}
+    <!-- AI chat overlay controller -->
+    <script
+        src="{{ url_for('static', path='js/chat-overlay.js') }}"
+        defer
+    ></script>
+
+    <!-- Page-specific JavaScript -->
+    {% block extra_js %}
     {% endblock %}
-
-
 
 </body>
 </html>

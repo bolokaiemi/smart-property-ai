@@ -6,6 +6,7 @@ File:
 
 Routes:
     GET  /ai-assistant
+    GET  /assistant
     POST /api/ai/chat
     POST /api/ai/clear
     GET  /api/ai/status
@@ -20,9 +21,17 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
-from typing import Literal, Optional
-from fastapi import APIRouter, HTTPException, Request, status
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Request,
+    status,
+)
+from fastapi.responses import (
+    HTMLResponse,
+    JSONResponse,
+    RedirectResponse,
+)
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
@@ -33,14 +42,45 @@ router = APIRouter(
     tags=["AI Assistant"],
 )
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(
+    directory="templates",
+)
+
 
 MAX_CONVERSATION_MESSAGES = 20
-MAX_MESSAGE_LENGTH = 3000
+MAX_MESSAGE_LENGTH = 4000
 
+
+SUPPORTED_LANGUAGES = {
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "pl": "Polski",
+    "tr": "Türkçe",
+    "ar": "العربية",
+    "fa": "فارسی",
+    "ur": "اردو",
+    "he": "עברית",
+    "hi": "हिन्दी",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "uk": "Українська",
+    "sw": "Kiswahili",
+}
+
+
+# ============================================================
+# Request and response models
+# ============================================================
 
 class AIChatRequest(BaseModel):
-    """Validated request sent by the AI chat interface."""
+    """Validated request received from an AI chat interface."""
 
     message: str = Field(
         min_length=1,
@@ -67,7 +107,7 @@ class AIChatRequest(BaseModel):
 
 
 class AIChatResponse(BaseModel):
-    """Response returned by the AI chat API."""
+    """Validated response returned by the AI chat endpoint."""
 
     success: bool
     reply: str
@@ -78,95 +118,238 @@ class AIChatResponse(BaseModel):
     disclaimer: str | None = None
 
 
+# ============================================================
+# General helpers
+# ============================================================
+
 def utc_now_iso() -> str:
     """Return the current UTC time as an ISO-formatted string."""
 
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(
+        timezone.utc
+    ).isoformat()
 
 
-def get_session(request: Request) -> Any:
+def get_session(
+    request: Request,
+) -> Any:
     """
-    Return the request session.
+    Return the current request session.
 
-    SessionMiddleware must be installed in app.py.
+    SessionMiddleware must be configured in app.py.
     """
 
     try:
         return request.session
-    except (AssertionError, RuntimeError) as exc:
-        logger.exception("SessionMiddleware is unavailable.")
+
+    except (
+        AssertionError,
+        RuntimeError,
+    ) as exc:
+        logger.exception(
+            "SessionMiddleware is unavailable."
+        )
 
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
             detail=(
-                "SessionMiddleware must be configured before "
-                "using the AI assistant."
+                "SessionMiddleware must be configured "
+                "before using the AI assistant."
             ),
         ) from exc
 
 
-def get_current_user(request: Request) -> Any | None:
-    """Return the authenticated user when available."""
+def get_current_user(
+    request: Request,
+) -> Any | None:
+    """Return the current authenticated user when available."""
 
-    state_user = getattr(request.state, "user", None)
+    state_user = getattr(
+        request.state,
+        "user",
+        None,
+    )
 
     if state_user is not None:
         return state_user
 
     session = get_session(request)
-    session_user = session.get("user")
 
-    return session_user
+    return session.get("user")
 
 
-def get_current_user_id(request: Request) -> str | None:
-    """Return the authenticated user's UUID string."""
+def get_current_user_id(
+    request: Request,
+) -> str | None:
+    """Return an identifier for the signed-in user."""
 
     user = get_current_user(request)
 
     if isinstance(user, dict):
-        user_id = user.get("id")
+        user_id = (
+            user.get("id")
+            or user.get("user_id")
+            or user.get("username")
+        )
 
         if user_id:
             return str(user_id)
 
     if user is not None:
-        user_id = getattr(user, "id", None)
+        user_id = (
+            getattr(user, "id", None)
+            or getattr(user, "user_id", None)
+            or getattr(user, "username", None)
+        )
 
         if user_id:
             return str(user_id)
+
+        if isinstance(user, str) and user:
+            return user
 
     session = get_session(request)
 
     user_id = (
         session.get("user_id")
-        or session.get("authenticated_user_id")
+        or session.get(
+            "authenticated_user_id"
+        )
+        or session.get("username")
     )
 
-    return str(user_id) if user_id else None
+    return (
+        str(user_id)
+        if user_id
+        else None
+    )
 
 
-def is_authenticated(request: Request) -> bool:
-    """Return True when the user is signed in."""
+def is_authenticated(
+    request: Request,
+) -> bool:
+    """Return True when a user is signed in."""
 
-    return get_current_user_id(request) is not None
+    return (
+        get_current_user_id(request)
+        is not None
+    )
 
 
-def sanitize_message(message: str) -> str:
-    """Normalize and validate a user message."""
+def ensure_csrf_token(
+    request: Request,
+) -> str:
+    """Return the session CSRF token, creating it when necessary."""
 
-    cleaned = str(message or "").strip()
-    cleaned = re.sub(r"\s+", " ", cleaned)
+    session = get_session(request)
+
+    csrf_token = session.get(
+        "csrf_token"
+    )
+
+    if not csrf_token:
+        csrf_token = secrets.token_urlsafe(
+            32
+        )
+
+        session["csrf_token"] = (
+            csrf_token
+        )
+
+    return str(csrf_token)
+
+
+def verify_csrf_token(
+    request: Request,
+    submitted_token: str | None,
+) -> None:
+    """
+    Validate the CSRF token submitted in the X-CSRF-Token header.
+
+    Token values are never written to application logs.
+    """
+
+    session = get_session(request)
+
+    expected_token = session.get(
+        "csrf_token"
+    )
+
+    if not expected_token:
+        logger.warning(
+            "AI request rejected because the session "
+            "CSRF token is unavailable."
+        )
+
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail=(
+                "Your security session is unavailable. "
+                "Refresh the page and try again."
+            ),
+        )
+
+    if not submitted_token:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail=(
+                "Missing form security token."
+            ),
+        )
+
+    if not secrets.compare_digest(
+        str(expected_token),
+        str(submitted_token),
+    ):
+        raise HTTPException(
+            status_code=(
+                status.HTTP_403_FORBIDDEN
+            ),
+            detail=(
+                "Invalid form security token."
+            ),
+        )
+
+
+def sanitize_message(
+    message: str,
+) -> str:
+    """Normalize and validate an incoming chat message."""
+
+    cleaned = str(
+        message or ""
+    ).strip()
+
+    cleaned = re.sub(
+        r"\s+",
+        " ",
+        cleaned,
+    )
 
     if not cleaned:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Enter a message before sending.",
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
+            detail=(
+                "Enter a message before sending."
+            ),
         )
 
-    if len(cleaned) > MAX_MESSAGE_LENGTH:
+    if (
+        len(cleaned)
+        > MAX_MESSAGE_LENGTH
+    ):
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
             detail=(
                 f"Messages cannot exceed "
                 f"{MAX_MESSAGE_LENGTH} characters."
@@ -176,63 +359,70 @@ def sanitize_message(message: str) -> str:
     return cleaned
 
 
-def normalize_language(language: str | None) -> str:
-    """Normalize a requested language code."""
+def normalize_language(
+    language: str | None,
+) -> str:
+    """Normalize and validate a requested language code."""
 
-    supported_languages = {
-        "en",
-        "de",
-        "fr",
-        "es",
-        "it",
-        "pt",
-        "nl",
-        "pl",
-        "tr",
-        "ar",
-        "fa",
-        "ur",
-        "he",
-        "hi",
-        "zh",
-        "ja",
-        "ko",
-        "ru",
-        "uk",
-        "sw",
-    }
+    normalized = str(
+        language or "en"
+    ).strip().lower()
 
-    normalized = str(language or "en").strip().lower()
-    normalized = normalized.replace("_", "-").split("-")[0]
+    normalized = (
+        normalized
+        .replace("_", "-")
+        .split("-")[0]
+    )
 
-    if normalized in supported_languages:
+    if (
+        normalized
+        in SUPPORTED_LANGUAGES
+    ):
         return normalized
 
     return "en"
 
 
-def contains_sensitive_information(message: str) -> bool:
+# ============================================================
+# Safety checks
+# ============================================================
+
+def contains_sensitive_information(
+    message: str,
+) -> bool:
     """
     Detect obvious sensitive information.
 
-    This is a basic warning layer and not a complete data-loss
-    prevention system.
+    This is a warning layer and not a complete
+    data-loss-prevention system.
     """
 
     patterns = (
-        r"\b(?:password|passcode|pin)\s*(?:is|:)\s*\S+",
+        (
+            r"\b(?:password|passcode|pin)"
+            r"\s*(?:is|:)\s*\S+"
+        ),
         r"\b\d{13,19}\b",
         r"\b[A-Z]{2}\d{2}[A-Z0-9]{10,30}\b",
-        r"\b(?:cvv|cvc)\s*(?:is|:)?\s*\d{3,4}\b",
+        (
+            r"\b(?:cvv|cvc)"
+            r"\s*(?:is|:)?\s*\d{3,4}\b"
+        ),
     )
 
     return any(
-        re.search(pattern, message, re.IGNORECASE)
+        re.search(
+            pattern,
+            message,
+            re.IGNORECASE,
+        )
         for pattern in patterns
     )
 
 
-def detect_emergency(message: str) -> bool:
+def detect_emergency(
+    message: str,
+) -> bool:
     """Detect possible safety or property emergencies."""
 
     emergency_terms = {
@@ -256,20 +446,19 @@ def detect_emergency(message: str) -> bool:
 
     lowered = message.lower()
 
-    # token is valid, proceed
     return any(
         term in lowered
         for term in emergency_terms
     )
 
 
-def detect_housing_decision_request(message: str) -> bool:
+def detect_housing_decision_request(
+    message: str,
+) -> bool:
     """
-    Detect attempts to make the AI perform final tenant-selection
-    decisions.
+    Detect attempts to make the AI perform a final
+    tenant-selection decision.
     """
-
-    lowered = message.lower()
 
     decision_phrases = (
         "approve this tenant",
@@ -285,17 +474,28 @@ def detect_housing_decision_request(message: str) -> bool:
         "worst applicant",
     )
 
+    lowered = message.lower()
+
     return any(
         phrase in lowered
         for phrase in decision_phrases
     )
 
 
+# ============================================================
+# Local AI responses
+# ============================================================
+
 def translated_response(
     language: str,
     response_key: str,
 ) -> str:
-    """Return essential assistant responses in selected languages."""
+    """
+    Return an assistant response in the requested language.
+
+    Languages without a translated response currently fall back
+    to English.
+    """
 
     translations = {
         "en": {
@@ -330,6 +530,20 @@ def translated_response(
                 "safety risk. Do not include passwords or payment "
                 "card information."
             ),
+            "rent": (
+                "You can review rent amounts, payment due dates, and "
+                "payment status in the Payments section of your "
+                "tenant dashboard."
+            ),
+            "lease": (
+                "Open Lease Details in the tenant portal to review "
+                "lease dates, rent, deposit, and renewal information."
+            ),
+            "appointment": (
+                "You can request a viewing from a property listing. "
+                "An appointment reminder can be sent 30 minutes "
+                "before the scheduled time."
+            ),
             "privacy": (
                 "Please do not send passwords, card numbers, banking "
                 "login details, identity-document numbers, or other "
@@ -342,13 +556,13 @@ def translated_response(
                 "applications using lawful and documented criteria."
             ),
             "unknown": (
-                "I can help with apartment searches, property "
-                "information, viewing appointments, rental "
-                "applications, tenant services, maintenance requests, "
-                "landlord tools, accessibility, and privacy. Please "
-                "tell me which area you need."
+                "I can help with apartment searches, applications, "
+                "appointments, payments, leases, maintenance requests, "
+                "complaints, documents, accessibility, and privacy. "
+                "Please describe what you need."
             ),
         },
+
         "de": {
             "welcome": (
                 "Hallo! Ich kann Ihnen bei der Wohnungssuche, bei "
@@ -381,29 +595,43 @@ def translated_response(
                 "ob eine unmittelbare Gefahr besteht. Geben Sie keine "
                 "Passwörter oder Zahlungskartendaten ein."
             ),
+            "rent": (
+                "Mietbeträge, Fälligkeiten und Zahlungsstatus finden "
+                "Sie im Bereich Zahlungen Ihres Mieterportals."
+            ),
+            "lease": (
+                "Unter Mietvertragsdetails finden Sie Laufzeit, Miete, "
+                "Kaution und Verlängerungsinformationen."
+            ),
+            "appointment": (
+                "Über ein Wohnungsangebot können Sie einen "
+                "Besichtigungstermin anfragen. Eine Erinnerung kann "
+                "30 Minuten vorher gesendet werden."
+            ),
             "privacy": (
                 "Bitte senden Sie im KI-Chat keine Passwörter, "
                 "Kartennummern, Online-Banking-Daten oder unnötige "
                 "sensible persönliche Informationen."
             ),
             "decision": (
-                "Ich kann keine endgültige Wohnungsentscheidung treffen "
-                "oder Bewerber anhand geschützter persönlicher Merkmale "
-                "bewerten. Eine berechtigte Person muss die Bewerbung "
-                "nach rechtmäßigen Kriterien prüfen."
+                "Ich kann keine endgültige Wohnungsentscheidung "
+                "treffen oder Bewerber anhand geschützter persönlicher "
+                "Merkmale bewerten. Eine berechtigte Person muss die "
+                "Bewerbung nach rechtmäßigen Kriterien prüfen."
             ),
             "unknown": (
-                "Ich kann bei Wohnungssuche, Immobilieninformationen, "
-                "Besichtigungen, Bewerbungen, Mieterservices, Wartung, "
-                "Vermieterfunktionen, Barrierefreiheit und Datenschutz "
-                "helfen. Wobei benötigen Sie Unterstützung?"
+                "Ich kann bei Wohnungssuche, Bewerbungen, Terminen, "
+                "Zahlungen, Mietverträgen, Reparaturen, Beschwerden "
+                "und Dokumenten helfen."
             ),
         },
     }
 
-    selected_language = translations.get(
-        language,
-        translations["en"],
+    selected_language = (
+        translations.get(
+            language,
+            translations["en"],
+        )
     )
 
     return selected_language.get(
@@ -424,15 +652,25 @@ def generate_local_response(
 
     lowered = message.lower()
 
-    if detect_housing_decision_request(message):
+    if detect_housing_decision_request(
+        message
+    ):
         return (
-            translated_response(language, "decision"),
+            translated_response(
+                language,
+                "decision",
+            ),
             True,
         )
 
-    if contains_sensitive_information(message):
+    if contains_sensitive_information(
+        message
+    ):
         return (
-            translated_response(language, "privacy"),
+            translated_response(
+                language,
+                "privacy",
+            ),
             True,
         )
 
@@ -448,115 +686,155 @@ def generate_local_response(
     )
 
     if any(
-        lowered == term or lowered.startswith(f"{term} ")
+        lowered == term
+        or lowered.startswith(
+            f"{term} "
+        )
         for term in greeting_terms
     ):
         return (
-            translated_response(language, "welcome"),
+            translated_response(
+                language,
+                "welcome",
+            ),
             False,
         )
 
-    search_terms = (
-        "find apartment",
-        "find an apartment",
-        "find a home",
-        "apartment search",
-        "search apartment",
-        "wohnung suchen",
-        "rent apartment",
+    categories = (
+        (
+            "search",
+            (
+                "find apartment",
+                "find an apartment",
+                "find a home",
+                "apartment search",
+                "search apartment",
+                "wohnung suchen",
+                "rent apartment",
+                "listing",
+            ),
+        ),
+        (
+            "guided",
+            (
+                "guided search",
+                "guide me",
+                "help me search",
+                "geführte suche",
+                "voice search",
+            ),
+        ),
+        (
+            "tenant",
+            (
+                "tenant portal",
+                "my lease",
+                "my rent",
+                "tenant dashboard",
+                "mieterportal",
+            ),
+        ),
+        (
+            "landlord",
+            (
+                "landlord",
+                "property manager",
+                "manage property",
+                "vermieter",
+            ),
+        ),
+        (
+            "maintenance",
+            (
+                "maintenance",
+                "repair",
+                "broken",
+                "complaint",
+                "damage",
+                "wartung",
+                "reparatur",
+            ),
+        ),
+        (
+            "rent",
+            (
+                "rent",
+                "payment",
+                "invoice",
+                "miete",
+                "zahlung",
+            ),
+        ),
+        (
+            "lease",
+            (
+                "lease",
+                "renewal",
+                "contract",
+                "mietvertrag",
+                "verlängerung",
+            ),
+        ),
+        (
+            "appointment",
+            (
+                "appointment",
+                "viewing",
+                "inspection",
+                "termin",
+                "besichtigung",
+            ),
+        ),
+        (
+            "privacy",
+            (
+                "privacy",
+                "personal data",
+                "data protection",
+                "datenschutz",
+                "credit card",
+                "password",
+            ),
+        ),
     )
 
-    if any(term in lowered for term in search_terms):
-        return (
-            translated_response(language, "search"),
-            False,
-        )
-
-    guided_terms = (
-        "guided search",
-        "guide me",
-        "help me search",
-        "geführte suche",
-        "voice search",
-    )
-
-    if any(term in lowered for term in guided_terms):
-        return (
-            translated_response(language, "guided"),
-            False,
-        )
-
-    tenant_terms = (
-        "tenant portal",
-        "my lease",
-        "my rent",
-        "tenant dashboard",
-        "mieterportal",
-    )
-
-    if any(term in lowered for term in tenant_terms):
-        return (
-            translated_response(language, "tenant"),
-            False,
-        )
-
-    landlord_terms = (
-        "landlord",
-        "property manager",
-        "manage property",
-        "vermieter",
-    )
-
-    if any(term in lowered for term in landlord_terms):
-        return (
-            translated_response(language, "landlord"),
-            False,
-        )
-
-    maintenance_terms = (
-        "maintenance",
-        "repair",
-        "broken",
-        "complaint",
-        "damage",
-        "wartung",
-        "reparatur",
-    )
-
-    if any(term in lowered for term in maintenance_terms):
-        return (
-            translated_response(language, "maintenance"),
-            False,
-        )
-
-    privacy_terms = (
-        "privacy",
-        "personal data",
-        "data protection",
-        "datenschutz",
-        "credit card",
-        "password",
-    )
-
-    if any(term in lowered for term in privacy_terms):
-        return (
-            translated_response(language, "privacy"),
-            False,
-        )
+    for response_key, terms in categories:
+        if any(
+            term in lowered
+            for term in terms
+        ):
+            return (
+                translated_response(
+                    language,
+                    response_key,
+                ),
+                False,
+            )
 
     return (
-        translated_response(language, "unknown"),
+        translated_response(
+            language,
+            "unknown",
+        ),
         False,
     )
 
 
-def safe_conversation_content(message: str) -> str:
-    """
-    Avoid storing messages that appear to contain sensitive data.
-    """
+# ============================================================
+# Conversation storage
+# ============================================================
 
-    if contains_sensitive_information(message):
-        return "[Sensitive information removed]"
+def safe_conversation_content(
+    message: str,
+) -> str:
+    """Prevent sensitive messages from being stored in the session."""
+
+    if contains_sensitive_information(
+        message
+    ):
+        return (
+            "[Sensitive information removed]"
+        )
 
     return message
 
@@ -568,7 +846,7 @@ def save_conversation_message(
     content: str,
     language: str,
 ) -> None:
-    """Store a short conversation history in the signed session."""
+    """Store a limited conversation history in the signed session."""
 
     session = get_session(request)
 
@@ -577,79 +855,59 @@ def save_conversation_message(
         [],
     )
 
-    if not isinstance(conversation, list):
+    if not isinstance(
+        conversation,
+        list,
+    ):
         conversation = []
 
     conversation.append(
         {
             "role": role,
-            "content": safe_conversation_content(content),
+            "content": (
+                safe_conversation_content(
+                    content
+                )
+            ),
             "language": language,
             "timestamp": utc_now_iso(),
         }
     )
 
-    session["ai_conversation"] = conversation[
-        -MAX_CONVERSATION_MESSAGES:
-    ]
+    session["ai_conversation"] = (
+        conversation[
+            -MAX_CONVERSATION_MESSAGES:
+        ]
+    )
 
 
-def verify_csrf_token(
+# ============================================================
+# Page routes
+# ============================================================
+
+@router.get(
+    "/ai-assistant",
+    response_class=HTMLResponse,
+    name="ai_assistant",
+)
+def ai_assistant(
     request: Request,
-    submitted_token: str | None,
-) -> None:
-    """
-    Validate a CSRF token when one exists in the session.
-
-    JSON chat requests can send the token through the X-CSRF-Token
-    header. This protects cookie-authenticated requests.
-    """
-
-    logger.debug(f"CSRF verification: request headers: {dict(request.headers)}")
-    session = get_session(request)
-    expected_token = session.get("csrf_token")
-
-    if not expected_token:
-        logger.debug("CSRF token missing in session")
-        return
-
-    if not submitted_token:
-        logger.debug(f"CSRF token not submitted: expected {expected_token}")
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Missing form security token.",
-        )
-
-    if not secrets.compare_digest(
-        str(expected_token),
-        str(submitted_token),
-    ):
-        logger.debug(f"CSRF token mismatch: expected {expected_token}, got {submitted_token}")
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Invalid form security token.",
-        )
-
-    logger.debug("CSRF token verified successfully")
-    # token is valid, proceed
-
-
-@router.get("/ai-assistant", name="ai_assistant")
-@router.get("/ai-assistant", name="ai_assistant")
-def ai_assistant(request: Request):
-    """
-    Display the Smart Property AI assistant.
-
-    Authentication is required because the assistant may connect to
-    private tenant and landlord information in later development.
-    """
+):
+    """Display the authenticated AI assistant page."""
 
     if not is_authenticated(request):
-        login_url = request.url_for("login")
+        login_url = request.url_for(
+            "login"
+        )
 
         return RedirectResponse(
-            url=f"{login_url}?next=/ai-assistant",
-            status_code=status.HTTP_303_SEE_OTHER,
+            url=(
+                f"{login_url}"
+                "?next=/ai-assistant"
+            ),
+            status_code=(
+                status.HTTP_303_SEE_OTHER
+            ),
         )
 
     session = get_session(request)
@@ -659,41 +917,85 @@ def ai_assistant(request: Request):
     )
 
     if not conversation_id:
-        conversation_id = str(uuid4())
-        session["ai_conversation_id"] = conversation_id
+        conversation_id = str(
+            uuid4()
+        )
+
+        session[
+            "ai_conversation_id"
+        ] = conversation_id
+
+    csrf_token = ensure_csrf_token(
+        request
+    )
 
     conversation = session.get(
         "ai_conversation",
         [],
     )
 
-    csrf_token = session.get("csrf_token")
-
-    if not csrf_token:
-        csrf_token = secrets.token_urlsafe(32)
-        session["csrf_token"] = csrf_token
-
     return templates.TemplateResponse(
         request=request,
-        name="ai_assistant.html",
+        name="ai/assistant.html",
         context={
             "request": request,
-            "page_title": "AI Assistant",
+            "page_title": (
+                "AI Assistant"
+            ),
             "page_description": (
                 "Multilingual Smart Property AI assistant."
             ),
-            "current_user": get_current_user(request),
+            "current_user": (
+                get_current_user(
+                    request
+                )
+            ),
             "is_authenticated": True,
-            "conversation_id": conversation_id,
-            "conversation": conversation,
-            "csrf_token": csrf_token,
+            "conversation_id": (
+                conversation_id
+            ),
+            "conversation": (
+                conversation
+            ),
+            "csrf_token": (
+                csrf_token
+            ),
+            "language": (
+                session.get(
+                    "language",
+                    "en",
+                )
+            ),
+            "supported_languages": (
+                SUPPORTED_LANGUAGES
+            ),
             "ai_disclosure": (
-                "AI responses may contain errors. Housing decisions "
-                "must be reviewed by an authorized person."
+                "AI responses may contain errors. "
+                "Housing decisions must be reviewed "
+                "by an authorized person."
             ),
         },
     )
 
+
+@router.get(
+    "/assistant",
+    name="ai_assistant_alias",
+)
+def ai_assistant_alias():
+    """Redirect the old assistant URL to the canonical page."""
+
+    return RedirectResponse(
+        url="/ai-assistant",
+        status_code=(
+            status.HTTP_303_SEE_OTHER
+        ),
+    )
+
+
+# ============================================================
+# Chat API
+# ============================================================
 
 @router.post(
     "/api/ai/chat",
@@ -704,59 +1006,80 @@ def ai_chat(
     payload: AIChatRequest,
     request: Request,
 ) -> AIChatResponse:
-    """
-    Process one AI assistant message.
-
-    Replace generate_local_response() with your trained AI service
-    when the AI layer is ready.
-    """
+    """Process one authenticated AI assistant message."""
 
     if not is_authenticated(request):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Sign in to use the AI assistant.",
+            status_code=(
+                status.HTTP_401_UNAUTHORIZED
+            ),
+            detail=(
+                "Sign in to use the AI assistant."
+            ),
         )
-    logger.info(f"AI chat request received from user {get_current_user_id(request)}")
+
+    user_id = get_current_user_id(
+        request
+    )
+
+    logger.info(
+        "AI chat request received from user %s",
+        user_id,
+    )
 
     verify_csrf_token(
         request,
-        request.headers.get("X-CSRF-Token"),
+        request.headers.get(
+            "X-CSRF-Token"
+        ),
     )
 
-    logger.debug(f"AI chat payload: {payload}")
-    message = sanitize_message(payload.message)
-    language = normalize_language(payload.language)
+    message = sanitize_message(
+        payload.message
+    )
+
+    language = normalize_language(
+        payload.language
+    )
+
     session = get_session(request)
 
     conversation_id = (
         payload.conversation_id
-        or session.get("ai_conversation_id")
+        or session.get(
+            "ai_conversation_id"
+        )
         or str(uuid4())
     )
 
-    session["ai_conversation_id"] = conversation_id
+    session[
+        "ai_conversation_id"
+    ] = conversation_id
 
-    emergency = detect_emergency(message)
+    emergency = detect_emergency(
+        message
+    )
 
     if emergency:
         response_text = (
-            "This may be an emergency. Leave the dangerous area if "
-            "you can do so safely and contact the appropriate local "
-            "emergency service immediately. In Germany, call 112 for "
-            "fire or medical emergencies and 110 for police. Do not "
-            "wait for an AI or maintenance response."
+            "This may be an emergency. Leave the dangerous area "
+            "if you can do so safely and contact the appropriate "
+            "local emergency service immediately. In Germany, call "
+            "112 for fire or medical emergencies and 110 for police. "
+            "Do not wait for an AI or maintenance response."
         )
 
         human_review_required = True
+
     else:
-        response_text, human_review_required = (
-            generate_local_response(
-                message,
-                language,
-            )
+        (
+            response_text,
+            human_review_required,
+        ) = generate_local_response(
+            message,
+            language,
         )
 
-    # Save the sanitized conversation in the current session.
     save_conversation_message(
         request,
         role="user",
@@ -772,8 +1095,9 @@ def ai_chat(
     )
 
     logger.info(
-        "AI assistant request handled: user=%s conversation=%s",
-        get_current_user_id(request),
+        "AI assistant request handled: "
+        "user=%s conversation=%s",
+        user_id,
         conversation_id,
     )
 
@@ -782,7 +1106,9 @@ def ai_chat(
         reply=response_text,
         conversation_id=conversation_id,
         language=language,
-        human_review_required=human_review_required,
+        human_review_required=(
+            human_review_required
+        ),
         emergency=emergency,
         disclaimer=(
             "AI-generated information may be incomplete or incorrect. "
@@ -790,6 +1116,10 @@ def ai_chat(
         ),
     )
 
+
+# ============================================================
+# Clear conversation API
+# ============================================================
 
 @router.post(
     "/api/ai/clear",
@@ -802,208 +1132,73 @@ def clear_ai_conversation(
 
     if not is_authenticated(request):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Sign in to manage an AI conversation.",
+            status_code=(
+                status.HTTP_401_UNAUTHORIZED
+            ),
+            detail=(
+                "Sign in to manage an AI conversation."
+            ),
         )
 
     verify_csrf_token(
         request,
-        request.headers.get("X-CSRF-Token"),
+        request.headers.get(
+            "X-CSRF-Token"
+        ),
     )
 
     session = get_session(request)
 
-    session.pop("ai_conversation", None)
-    session["ai_conversation_id"] = str(uuid4())
+    session.pop(
+        "ai_conversation",
+        None,
+    )
+
+    conversation_id = str(
+        uuid4()
+    )
+
+    session[
+        "ai_conversation_id"
+    ] = conversation_id
 
     return JSONResponse(
         content={
             "success": True,
-            "message": "Conversation cleared.",
-            "conversation_id": session[
-                "ai_conversation_id"
-            ],
+            "message": (
+                "Conversation cleared."
+            ),
+            "conversation_id": (
+                conversation_id
+            ),
         }
     )
 
+
+# ============================================================
+# Status API
+# ============================================================
 
 @router.get(
     "/api/ai/status",
     name="ai_status",
 )
 def ai_status() -> dict[str, Any]:
-    """Return the current AI assistant status."""
+    """Return the current assistant status."""
 
     return {
-        "available": True,
-        "mode": "local_navigation_assistant",
+        "success": True,
+        "status": "available",
+        "mode": (
+            "local_navigation_assistant"
+        ),
         "trained_model_connected": False,
+        "supported_languages": list(
+            SUPPORTED_LANGUAGES.keys()
+        ),
         "multilingual": True,
         "voice_input": True,
         "speech_output": True,
         "human_review_required_for_housing_decisions": True,
         "timestamp": utc_now_iso(),
-    }
-
-
-
-
-
-templates = Jinja2Templates(directory="templates")
-
-
-SUPPORTED_LANGUAGES = {
-    "en": "English",
-    "de": "Deutsch",
-    "fr": "Français",
-    "es": "Español",
-    "it": "Italiano",
-    "pt": "Português",
-    "ar": "العربية",
-    "tr": "Türkçe",
-    "pl": "Polski",
-    "uk": "Українська",
-}
-
-
-class AIChatRequest(BaseModel):
-    message: str = Field(min_length=1, max_length=4000)
-    language: str = Field(default="en", min_length=2, max_length=10)
-    conversation_id: Optional[str] = Field(default=None, max_length=100)
-
-
-class AIChatResponse(BaseModel):
-    reply: str
-    language: str
-    conversation_id: Optional[str] = None
-    source: Literal["local-rules"] = "local-rules"
-    disclaimer: str
-
-
-def _authenticated_user_id(request: Request) -> Optional[str]:
-    return (
-        request.session.get("user_id")
-        or request.session.get("username")
-        or request.session.get("user")
-    )
-
-
-def _normalize_language(language: str) -> str:
-    language_code = language.strip().lower().split("-")[0]
-    return language_code if language_code in SUPPORTED_LANGUAGES else "en"
-
-
-def _assistant_reply(message: str, language: str) -> str:
-    text = message.casefold()
-
-    replies = {
-        "en": {
-            "greeting": "Hello! I can help with apartment searches, applications, appointments, rent, leases, maintenance, and tenant services.",
-            "search": "Open Find an Apartment to search by city, rent, bedrooms, accessibility, and pet requirements.",
-            "maintenance": "Open the tenant portal and select Maintenance Requests. If anyone is in immediate danger in Germany, call 112 for fire or medical emergencies or 110 for police.",
-            "rent": "You can review rent amounts, due dates, and payment status from the Payments section of your tenant dashboard.",
-            "lease": "Open Lease Details in the tenant portal to review dates, rent, deposit, and renewal information.",
-            "appointment": "You can request a viewing from a property listing. Appointment reminders can be sent 30 minutes before the scheduled time.",
-            "privacy": "Smart Property AI should collect only necessary information. You can review how information is handled on the Privacy and AI Disclosure pages.",
-            "fallback": "I can help with apartment searches, applications, appointments, payments, leases, maintenance requests, complaints, and documents. Please describe what you need.",
-        },
-        "de": {
-            "greeting": "Hallo! Ich kann bei Wohnungssuche, Bewerbungen, Terminen, Miete, Mietverträgen und Reparaturanfragen helfen.",
-            "search": "Öffnen Sie „Wohnung finden“, um nach Stadt, Miete, Zimmern, Barrierefreiheit und Haustieren zu suchen.",
-            "maintenance": "Öffnen Sie im Mieterportal den Bereich „Reparaturanfragen“. Bei akuter Gefahr wählen Sie in Deutschland 112 oder für die Polizei 110.",
-            "rent": "Mietbeträge, Fälligkeiten und Zahlungsstatus finden Sie im Bereich „Zahlungen“ Ihres Mieterportals.",
-            "lease": "Unter „Mietvertragsdetails“ finden Sie Laufzeit, Miete, Kaution und Verlängerungsinformationen.",
-            "appointment": "Über ein Wohnungsangebot können Sie einen Besichtigungstermin anfragen. Eine Erinnerung kann 30 Minuten vorher gesendet werden.",
-            "privacy": "Smart Property AI sollte nur notwendige Daten verarbeiten. Einzelheiten finden Sie unter Datenschutz und KI-Hinweise.",
-            "fallback": "Ich kann bei Wohnungssuche, Bewerbungen, Terminen, Zahlungen, Mietverträgen, Reparaturen, Beschwerden und Dokumenten helfen.",
-        },
-    }
-
-    selected = replies.get(language, replies["en"])
-
-    if any(word in text for word in ("hello", "hi", "hey", "hallo", "guten tag")):
-        return selected["greeting"]
-    if any(word in text for word in ("apartment", "listing", "search", "wohnung", "suchen")):
-        return selected["search"]
-    if any(word in text for word in ("repair", "maintenance", "broken", "leak", "reparatur", "defekt")):
-        return selected["maintenance"]
-    if any(word in text for word in ("rent", "payment", "invoice", "miete", "zahlung")):
-        return selected["rent"]
-    if any(word in text for word in ("lease", "renewal", "contract", "mietvertrag", "verlängerung")):
-        return selected["lease"]
-    if any(word in text for word in ("appointment", "viewing", "inspection", "termin", "besichtigung")):
-        return selected["appointment"]
-    if any(word in text for word in ("privacy", "data", "ai", "datenschutz", "daten", "ki")):
-        return selected["privacy"]
-
-    return selected["fallback"]
-
-
-
-def ai_assistant_page(request: Request):
-    if not _authenticated_user_id(request):
-        return RedirectResponse(
-            url="/login?next=/ai-assistant",
-            status_code=status.HTTP_303_SEE_OTHER,
-        )
-
-    return templates.TemplateResponse(
-        request=request,
-        name="ai/assistant.html",
-        context={
-            "request": request,
-            "current_user": request.session.get("user"),
-            "supported_languages": SUPPORTED_LANGUAGES,
-            "selected_language": request.session.get("language", "en"),
-        },
-    )
-
-
-@router.get("/assistant", name="ai_assistant_alias")
-def ai_assistant_alias():
-    return RedirectResponse(
-        url="/ai-assistant",
-        status_code=status.HTTP_303_SEE_OTHER,
-    )
-
-
-@router.post(
-    "/api/ai/chat",
-    name="ai_chat",
-    response_model=AIChatResponse,
-)
-def ai_chat(payload: AIChatRequest, request: Request):
-    if not _authenticated_user_id(request):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please log in to use the AI assistant.",
-        )
-
-    language = _normalize_language(payload.language)
-    message = payload.message.strip()
-
-    if not message:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="A message is required.",
-        )
-
-    return AIChatResponse(
-        reply=_assistant_reply(message, language),
-        language=language,
-        conversation_id=payload.conversation_id,
-        disclaimer=(
-            "AI-generated information may contain mistakes. Verify important "
-            "legal, financial, safety, and tenancy information."
-        ),
-    )
-
-
-@router.get("/api/ai/status", name="ai_status")
-def ai_status():
-    return {
-        "status": "available",
-        "engine": "local-rules",
-        "trained_model_connected": False,
-        "supported_languages": list(SUPPORTED_LANGUAGES.keys()),
     }

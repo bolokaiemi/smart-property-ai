@@ -43,6 +43,8 @@ from routes.tenant_routes import router as tenant_router
 
 load_dotenv()
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
@@ -85,7 +87,50 @@ if not SECRET_KEY:
 
     SECRET_KEY = secrets.token_hex(32)
 
+from fastapi import FastAPI, Request
+from starlette.middleware.sessions import SessionMiddleware
 
+from config import settings
+
+
+app = FastAPI(
+    title="Smart Property AI",
+    version="1.0.0",
+)
+
+
+@app.middleware("http")
+async def ensure_csrf_token(
+    request: Request,
+    call_next,
+):
+    """
+    Ensure every browser session has a CSRF token.
+
+    SessionMiddleware must wrap this middleware, so it is added
+    immediately after this function.
+    """
+
+    if not request.session.get("csrf_token"):
+        request.session["csrf_token"] = (
+            secrets.token_urlsafe(32)
+        )
+
+    response = await call_next(request)
+
+    return response
+
+
+# Add SessionMiddleware after defining ensure_csrf_token.
+# This ordering allows the CSRF middleware to access request.session.
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SECRET_KEY,
+    session_cookie="smart_property_session",
+    same_site="lax",
+    https_only=not settings.DEBUG,
+    max_age=60 * 60 * 24 * 7,
+)
 # ==========================================================================
 # 2. Required directories
 # ==========================================================================

@@ -1,33 +1,271 @@
-<!DOCTYPE html>
-<html lang="{{ current_language | default('en') }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant | Smart Property AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/ai-assistant.css') }}">
-</head>
-<body>
-    <main id="main-content" class="ai-assistant-page">
-        <section class="assistant-container">
-            <h1>AI Assistant</h1>
-            <div id="ai-chat-messages" class="ai-messages" data-ai-messages></div>
-            <form id="ai-chat-form" class="ai-chat-form" data-ai-chat-form method="post">
-                <input type="text" id="ai-message" name="message" placeholder="Ask a question..." required />
-                <select id="ai-language" name="language" data-ai-language>
-                    <option value="en" selected>English</option>
-                    <option value="de">Deutsch</option>
-                    <option value="fr">Français</option>
-                    <option value="es">Español</option>
-                    <!-- Add other language options as needed -->
-                </select>
-                <button type="submit" data-ai-submit>Send</button>
-                <button type="button" id="ai-read-reply" data-ai-read-reply>Read reply</button>
-                <button type="button" id="ai-stop-speech" data-ai-stop-speech>Stop</button>
-                <button type="button" id="ai-voice-input" data-ai-voice-input aria-pressed="false">Voice</button>
+{% extends "base.html" %}
+
+{% block title %}
+AI Assistant | Smart Property AI
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/ai-assistant.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<!--
+    Unique wrapper for the complete AI assistant.
+    All styles in ai-assistant.css begin with:
+    .spai-assistant-shell
+-->
+<div
+    class="spai-assistant-shell"
+    data-ai-assistant
+    data-csrf-token="{{ request.session.get('csrf_token', '') }}"
+    {% if conversation_id %}
+    data-conversation-id="{{ conversation_id }}"
+    {% endif %}
+>
+    <main
+        class="spai-assistant-shell__main"
+        id="main-content"
+    >
+        <section
+            class="spai-assistant-shell__panel"
+            aria-labelledby="spai-assistant-title"
+        >
+            <!-- Assistant header -->
+            <header class="spai-assistant-shell__header">
+                <div class="spai-assistant-shell__heading">
+                    <p class="spai-assistant-shell__eyebrow">
+                        Multilingual property support
+                    </p>
+
+                    <h1 id="spai-assistant-title">
+                        Smart Property AI Assistant
+                    </h1>
+
+                    <p class="spai-assistant-shell__introduction">
+                        Ask about apartment searches, rental
+                        applications, appointments, leases, payments,
+                        maintenance requests, or property management.
+                    </p>
+                </div>
+
+                <!-- Language selector -->
+                <div class="spai-assistant-shell__language">
+                    <label for="ai-language">
+                        Language
+                    </label>
+
+                    <select
+                        id="ai-language"
+                        name="language"
+                        data-ai-language
+                    >
+                        <option
+                            value="en"
+                            {% if language|default('en') == 'en' %}
+                            selected
+                            {% endif %}
+                        >
+                            English
+                        </option>
+
+                        <option
+                            value="de"
+                            {% if language|default('en') == 'de' %}
+                            selected
+                            {% endif %}
+                        >
+                            Deutsch
+                        </option>
+
+                        <option
+                            value="fr"
+                            {% if language|default('en') == 'fr' %}
+                            selected
+                            {% endif %}
+                        >
+                            Français
+                        </option>
+
+                        <option
+                            value="es"
+                            {% if language|default('en') == 'es' %}
+                            selected
+                            {% endif %}
+                        >
+                            Español
+                        </option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- Chat messages -->
+            <div
+                class="spai-assistant-shell__messages"
+                id="ai-chat-messages"
+                data-ai-messages
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-label="Conversation with Smart Property AI"
+            >
+                <article
+                    class="spai-assistant-shell__message
+                           spai-assistant-shell__message--assistant
+                           ai-message
+                           ai-message--assistant"
+                >
+                    <strong
+                        class="spai-assistant-shell__message-label
+                               ai-message__label"
+                    >
+                        Smart Property AI
+                    </strong>
+
+                    <p
+                        class="spai-assistant-shell__message-text
+                               ai-message__text"
+                    >
+                        Hello! How can I help you with your property
+                        needs today?
+                    </p>
+                </article>
+            </div>
+
+            <!-- Accessible status notifications -->
+            <p
+                class="spai-assistant-shell__status"
+                id="ai-status"
+                data-ai-status
+                role="status"
+                aria-live="polite"
+            ></p>
+
+            <!-- Chat form -->
+            <form
+                class="spai-assistant-shell__form"
+                id="ai-chat-form"
+                data-ai-chat-form
+                data-endpoint="/api/ai/chat"
+                action="/api/ai/chat"
+                method="post"
+                autocomplete="off"
+            >
+                <!-- CSRF protection -->
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ request.session.get('csrf_token', '') }}"
+                >
+
+                <div class="spai-assistant-shell__input-group">
+                    <label
+                        class="spai-assistant-shell__visually-hidden"
+                        for="ai-message"
+                    >
+                        Your message
+                    </label>
+
+                    <textarea
+                        class="spai-assistant-shell__textarea"
+                        id="ai-message"
+                        name="message"
+                        data-ai-message
+                        rows="3"
+                        maxlength="4000"
+                        placeholder="Ask Smart Property AI…"
+                        aria-describedby="ai-message-help ai-status"
+                        required
+                    ></textarea>
+
+                    <p
+                        class="spai-assistant-shell__input-help"
+                        id="ai-message-help"
+                    >
+                        Press Enter to send or Shift + Enter for a new
+                        line.
+                    </p>
+                </div>
+
+                <!-- Assistant controls -->
+                <div class="spai-assistant-shell__actions">
+                    <button
+                        class="spai-assistant-shell__button
+                               spai-assistant-shell__button--secondary"
+                        type="button"
+                        data-ai-voice-input
+                        aria-pressed="false"
+                        title="Dictate a message"
+                    >
+                        <span aria-hidden="true">🎙</span>
+                        <span>Voice</span>
+                    </button>
+
+                    <button
+                        class="spai-assistant-shell__button
+                               spai-assistant-shell__button--secondary"
+                        type="button"
+                        data-ai-read-reply
+                        title="Read the latest response"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span>Read reply</span>
+                    </button>
+
+                    <button
+                        class="spai-assistant-shell__button
+                               spai-assistant-shell__button--secondary"
+                        type="button"
+                        data-ai-stop-speech
+                        title="Stop reading"
+                    >
+                        <span aria-hidden="true">⏹</span>
+                        <span>Stop</span>
+                    </button>
+
+                    <button
+                        class="spai-assistant-shell__button
+                               spai-assistant-shell__button--primary"
+                        type="submit"
+                        data-ai-submit
+                    >
+                        <span
+                            class="spai-assistant-shell__spinner"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>Send</span>
+                    </button>
+                </div>
             </form>
-            <div id="ai-status" class="ai-status" data-ai-status aria-live="polite"></div>
+
+            <!-- Privacy notice -->
+            <footer class="spai-assistant-shell__footer">
+                <p>
+                    Smart Property AI can make mistakes. Do not share
+                    passwords, bank information, payment-card details,
+                    identification numbers, or other sensitive personal
+                    information.
+                </p>
+
+                <a href="{{ url_for('ai_disclosure') }}">
+                    Read the AI disclosure
+                </a>
+            </footer>
         </section>
     </main>
-    <script src="{{ url_for('static', path='js/ai-assistant.js') }}"></script>
-</body>
-</html>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ super() }}
+<script
+    src="{{ url_for('static', path='js/ai-assistant.js') }}"
+    defer
+></script>
+{% endblock %}
