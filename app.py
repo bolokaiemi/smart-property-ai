@@ -325,7 +325,8 @@ app.include_router(auth_router)
 app.include_router(listing_router)
 app.include_router(application_router)
 app.include_router(ai_router)
-app.include_router(tenant_router)
+
+app.include_router(tenant_router, prefix="/tenant")
 
 
 # ==========================================================================
@@ -461,7 +462,7 @@ async def temporary_admin_dashboard(request: Request):
 )
 async def favicon():
     return RedirectResponse(
-        url="/static/images/favicon.ico",
+        url="/static/images/icons/favicon.ico",
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
     )
 

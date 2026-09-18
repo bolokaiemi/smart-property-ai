@@ -763,7 +763,7 @@ def tenant_complaints_page(
     if tenant is None:
         return login_redirect(request)
 
-    complaints = list_complaints(
+    complaint = list_complaints(
         db,
         tenant.id,
         include_closed=True,
@@ -776,7 +776,7 @@ def tenant_complaints_page(
             request,
             tenant,
             page_title="My complaints",
-            complaints=complaints,
+            complaint=complaint,
         ),
     )
 

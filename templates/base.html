@@ -31,7 +31,7 @@
     <link
         rel="icon"
         type="image/x-icon"
-        href="{{ url_for('static', path='/images/favicon.ico') }}"
+        href="{{ url_for('static', path='/images/icons/favicon.ico') }}"
     >
 
     <!-- Global styles -->
@@ -49,6 +49,7 @@
         rel="stylesheet"
         href="{{ url_for('static', path='css/responsive.css') }}"
     >
+<link rel="stylesheet" href="{{ url_for('static', path='css/tenant.css') }}">
 
     <!-- Global AI chat overlay styles -->
     <link
@@ -708,8 +709,7 @@
             </p>
 
             <p>
-                AI-generated information should be reviewed before
-                making legal, financial, or tenancy decisions.
+              Review AI advice before making important decisions.
             </p>
         </div>
     </footer>
