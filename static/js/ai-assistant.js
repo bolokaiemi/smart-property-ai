@@ -1,601 +1,1511 @@
-(() => {
-    "use strict";
+"use strict";
 
-    function initializeAssistant() {
-        const root = document.querySelector("[data-ai-assistant]");
+/**
+ * Smart Property AI Assistant
+ * Chat, model selection, voice controls, maximize mode
+ * and inactivity logout.
+ */
+(function initialiseSmartPropertyAssistant() {
+    const page = document.querySelector(
+        "[data-ai-assistant-page]"
+    );
 
-        if (!root || root.dataset.initialized === "true") {
+    if (
+        !page ||
+        page.dataset.aiAssistantReady === "true"
+    ) {
+        return;
+    }
+
+    page.dataset.aiAssistantReady = "true";
+
+    const form = page.querySelector(
+        "[data-ai-chat-form]"
+    );
+
+    const conversation = page.querySelector(
+        "[data-ai-conversation]"
+    );
+
+    const messageInput = page.querySelector(
+        "[data-ai-message]"
+    );
+
+    const sendButton = page.querySelector(
+        "[data-send-button]"
+    );
+
+    const chatStatus = page.querySelector(
+        "[data-ai-chat-status]"
+    );
+
+    const voiceStatus = page.querySelector(
+        "[data-voice-status]"
+    );
+
+    const typingIndicator = page.querySelector(
+        "[data-typing-indicator]"
+    );
+
+    const messageCounter = page.querySelector(
+        "[data-message-counter]"
+    );
+
+    const conversationIdInput =
+        page.querySelector(
+            "[data-conversation-id]"
+        );
+
+    const csrfInput = page.querySelector(
+        "[data-csrf-token]"
+    );
+
+    const modelSelect = page.querySelector(
+        "[data-ai-model-select]"
+    );
+
+    const voiceButton = page.querySelector(
+        "[data-voice-input]"
+    );
+
+    const stopSpeechButton =
+        page.querySelector(
+            "[data-stop-speech]"
+        );
+
+    const maximizeButton = page.querySelector(
+        "[data-ai-maximize]"
+    );
+
+    const maximizeLabel = page.querySelector(
+        "[data-maximize-label]"
+    );
+
+    const maximizeIcon = page.querySelector(
+        "[data-maximize-icon]"
+    );
+
+    const clearButton = page.querySelector(
+        "[data-clear-conversation]"
+    );
+
+    const chatPanel = page.querySelector(
+        ".ai-chat-panel"
+    );
+
+    const inactivityWarning =
+        page.querySelector(
+            "[data-inactivity-warning-message]"
+        );
+
+    const inactivityCountdown =
+        page.querySelector(
+            "[data-inactivity-countdown]"
+        );
+
+    const continueSessionButton =
+        page.querySelector(
+            "[data-continue-session]"
+        );
+
+    if (
+        !form ||
+        !conversation ||
+        !messageInput
+    ) {
+        return;
+    }
+
+    const chatUrl =
+        form.dataset.chatUrl ||
+        "/api/ai/chat";
+
+    const clearUrl =
+        form.dataset.clearUrl ||
+        "/api/ai/conversation/clear";
+
+    const logoutUrl =
+        page.dataset.logoutUrl ||
+        "/logout";
+
+    const loginUrl =
+        page.dataset.loginUrl ||
+        "/login?reason=inactive";
+
+    const maximumMessageLength =
+        Number(messageInput.maxLength) || 3000;
+
+    const inactivityLimit =
+        positiveNumber(
+            page.dataset.inactivityTimeout,
+            180000
+        );
+
+    const warningDuration = Math.min(
+        positiveNumber(
+            page.dataset.inactivityWarning,
+            30000
+        ),
+        inactivityLimit
+    );
+
+    let recognition = null;
+    let isListening = false;
+    let isSending = false;
+    let isMaximized = false;
+    let inactivityTimer = null;
+    let countdownTimer = null;
+    let remainingWarningSeconds =
+        Math.ceil(warningDuration / 1000);
+
+    function positiveNumber(
+        value,
+        fallback
+    ) {
+        const number = Number(value);
+
+        return (
+            Number.isFinite(number) &&
+            number > 0
+        )
+            ? number
+            : fallback;
+    }
+
+    function csrfToken() {
+        return String(
+            csrfInput?.value || ""
+        ).trim();
+    }
+
+    function selectedModel() {
+        return String(
+            modelSelect?.value || "default"
+        ).trim();
+    }
+
+    function setStatus(
+        message,
+        isError = false
+    ) {
+        if (!chatStatus) {
             return;
         }
 
-        const form = root.querySelector("[data-ai-chat-form]");
-        const input = root.querySelector("[data-ai-message]");
-        const messages = root.querySelector("[data-ai-messages]");
-        const sendButton = root.querySelector("[data-ai-submit]");
-        const languageSelect = root.querySelector("[data-ai-language]");
-        const statusElement = root.querySelector("[data-ai-status]");
-        const csrfInput = form?.querySelector("input[name='csrf_token']");
+        chatStatus.textContent =
+            message || "";
 
-        /*
-         * Stop safely when essential HTML elements are missing.
-         * This prevents:
-         * Cannot read properties of null (reading 'value')
-         */
-        if (!form || !input || !messages || !sendButton) {
-            console.error(
-                "AI assistant could not start because required HTML elements are missing."
-            );
+        chatStatus.classList.toggle(
+            "is-error",
+            Boolean(isError)
+        );
+    }
+
+    function setVoiceStatus(
+        message,
+        isError = false
+    ) {
+        if (!voiceStatus) {
             return;
         }
 
-        root.dataset.initialized = "true";
+        voiceStatus.textContent =
+            message || "";
 
-        let isBusy = false;
-        let lastReply = "";
-        let conversationId = root.dataset.conversationId || null;
-        let speechRecognition = null;
+        voiceStatus.classList.toggle(
+            "is-error",
+            Boolean(isError)
+        );
+    }
 
-        /*
-         * Safely read an element's value.
-         */
-        function getElementValue(element, fallback = "") {
-            if (element && typeof element.value === "string") {
-                return element.value;
-            }
-
-            return fallback;
+    function updateCounter() {
+        if (!messageCounter) {
+            return;
         }
 
-        function getCurrentLanguage() {
-            const fallbackLanguage =
-                document.documentElement.lang || "en";
+        messageCounter.textContent =
+            `${messageInput.value.length} / ` +
+            `${maximumMessageLength}`;
+    }
 
-            const selectedLanguage = getElementValue(
-                languageSelect,
-                fallbackLanguage
-            );
+    function scrollConversationToBottom() {
+        window.requestAnimationFrame(() => {
+            conversation.scrollTop =
+                conversation.scrollHeight;
+        });
+    }
 
-            return (
-                selectedLanguage
-                    .trim()
-                    .toLowerCase()
-                    .split("-")[0] || "en"
-            );
+    function setTyping(isVisible) {
+        if (!typingIndicator) {
+            return;
         }
 
-        function getCsrfToken() {
-            /*
-             * First try the hidden form input.
-             * If it does not exist, use the token stored on the root element.
-             */
-            return getElementValue(
-                csrfInput,
-                root.dataset.csrfToken || ""
-            ).trim();
+        typingIndicator.hidden =
+            !isVisible;
+
+        if (isVisible) {
+            scrollConversationToBottom();
         }
+    }
 
-        function updateStatus(message = "", isError = false) {
-            if (!statusElement) {
-                return;
-            }
+    function setSending(isBusy) {
+        isSending = isBusy;
+        messageInput.disabled = isBusy;
 
-            statusElement.textContent = message;
-            statusElement.classList.toggle("is-error", isError);
-            statusElement.setAttribute(
-                "role",
-                isError ? "alert" : "status"
-            );
-        }
+        if (sendButton) {
+            sendButton.disabled = isBusy;
 
-        function addMessage(role, message) {
-            const messageElement = document.createElement("article");
-
-            messageElement.className =
-                `ai-message ai-message--${role}`;
-
-            const labelElement = document.createElement("strong");
-
-            labelElement.className = "ai-message__label";
-            labelElement.textContent =
-                role === "user"
-                    ? "You"
-                    : "Smart Property AI";
-
-            const textElement = document.createElement("p");
-
-            textElement.className = "ai-message__text";
-
-            /*
-             * Use textContent rather than innerHTML.
-             * This prevents returned messages from injecting HTML.
-             */
-            textElement.textContent = message;
-
-            messageElement.append(
-                labelElement,
-                textElement
-            );
-
-            messages.appendChild(messageElement);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function setBusy(state) {
-            isBusy = state;
-
-            sendButton.disabled = state;
-            input.disabled = state;
-
-            form.setAttribute(
-                "aria-busy",
-                String(state)
-            );
-
-            if (!state) {
-                input.focus();
-            }
-        }
-
-        function getServerError(data, fallbackMessage) {
-            if (
-                data &&
-                typeof data.detail === "string" &&
-                data.detail.trim()
-            ) {
-                return data.detail;
-            }
-
-            if (
-                data &&
-                typeof data.error === "string" &&
-                data.error.trim()
-            ) {
-                return data.error;
-            }
-
-            if (
-                data &&
-                typeof data.message === "string" &&
-                data.message.trim()
-            ) {
-                return data.message;
-            }
-
-            return fallbackMessage;
-        }
-
-        async function submitMessage(event) {
-            event.preventDefault();
-
-            if (isBusy) {
-                return;
-            }
-
-            const question =
-                getElementValue(input).trim();
-
-            if (!question) {
-                updateStatus(
-                    "Please enter a message.",
-                    true
+            const text =
+                sendButton.querySelector(
+                    "span:last-child"
                 );
 
-                input.focus();
-                return;
+            if (text) {
+                text.textContent =
+                    isBusy
+                        ? "Sending…"
+                        : "Send";
             }
+        }
 
-            if (question.length > 4000) {
-                updateStatus(
-                    "Please keep your message under 4,000 characters.",
-                    true
-                );
+        setTyping(isBusy);
+    }
 
-                return;
-            }
+    function createElement(
+        tag,
+        className,
+        text
+    ) {
+        const element =
+            document.createElement(tag);
 
-            const csrfToken = getCsrfToken();
+        if (className) {
+            element.className =
+                className;
+        }
 
-            if (!csrfToken) {
-                updateStatus(
-                    "The security token is missing. Refresh the page and try again.",
-                    true
-                );
+        if (text !== undefined) {
+            element.textContent = text;
+        }
 
-                return;
-            }
+        return element;
+    }
 
-            addMessage("user", question);
+    function createMessage(
+        role,
+        content
+    ) {
+        const isUser =
+            role === "user";
 
-            input.value = "";
+        const article = createElement(
+            "article",
+            `chat-message ${
+                isUser
+                    ? "user-message"
+                    : "assistant-message"
+            }`
+        );
 
-            setBusy(true);
+        const avatar = createElement(
+            "div",
+            "chat-avatar",
+            isUser ? "You" : "AI"
+        );
 
-            updateStatus(
-                "Smart Property AI is responding…"
+        avatar.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        const messageContent =
+            createElement(
+                "div",
+                "chat-message-content"
             );
 
-            const requestController =
-                new AbortController();
+        const author = createElement(
+            "p",
+            "chat-message-author",
+            isUser
+                ? "You"
+                : "Smart Property AI"
+        );
 
-            const requestTimeout = window.setTimeout(
-                () => requestController.abort(),
-                30000
+        const bubble = createElement(
+            "div",
+            "chat-message-bubble"
+        );
+
+        bubble.appendChild(
+            createElement(
+                "p",
+                "",
+                content
+            )
+        );
+
+        messageContent.append(
+            author,
+            bubble
+        );
+
+        if (!isUser) {
+            const readButton =
+                createElement(
+                    "button",
+                    "chat-speech-button",
+                    "🔊 Read aloud"
+                );
+
+            readButton.type = "button";
+
+            readButton.dataset.readMessage =
+                "true";
+
+            readButton.setAttribute(
+                "aria-label",
+                "Read this message aloud"
             );
 
-            try {
-                const endpoint =
-                    form.dataset.endpoint ||
-                    form.action ||
-                    "/api/ai/chat";
+            readButton.setAttribute(
+                "aria-pressed",
+                "false"
+            );
 
-                const response = await fetch(endpoint, {
+            messageContent.appendChild(
+                readButton
+            );
+        }
+
+        article.append(
+            avatar,
+            messageContent
+        );
+
+        if (
+            typingIndicator &&
+            typingIndicator.parentNode ===
+                conversation
+        ) {
+            conversation.insertBefore(
+                article,
+                typingIndicator
+            );
+        } else {
+            conversation.appendChild(
+                article
+            );
+        }
+
+        scrollConversationToBottom();
+
+        return article;
+    }
+
+    function responseMessage(data) {
+        if (
+            !data ||
+            typeof data !== "object"
+        ) {
+            return "";
+        }
+
+        const candidate =
+            data.reply ??
+            data.response ??
+            data.answer ??
+            data.message ??
+            data.content;
+
+        return typeof candidate === "string"
+            ? candidate.trim()
+            : "";
+    }
+
+    function responseError(
+        data,
+        fallback
+    ) {
+        if (
+            data &&
+            typeof data === "object"
+        ) {
+            const detail =
+                data.detail ??
+                data.error ??
+                data.message;
+
+            if (
+                typeof detail === "string" &&
+                detail.trim()
+            ) {
+                return detail.trim();
+            }
+        }
+
+        return fallback;
+    }
+
+    async function parseJson(response) {
+        const type =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+        if (
+            !type.includes(
+                "application/json"
+            )
+        ) {
+            return {};
+        }
+
+        try {
+            return await response.json();
+        } catch {
+            return {};
+        }
+    }
+
+    async function submitMessage(
+        message
+    ) {
+        const cleanMessage =
+            String(message || "").trim();
+
+        if (
+            !cleanMessage ||
+            isSending
+        ) {
+            return;
+        }
+
+        if (
+            cleanMessage.length >
+            maximumMessageLength
+        ) {
+            setStatus(
+                `Messages must contain no more than ` +
+                `${maximumMessageLength} characters.`,
+                true
+            );
+
+            messageInput.focus();
+            return;
+        }
+
+        const token = csrfToken();
+
+        if (!token) {
+            setStatus(
+                "The security token is missing. " +
+                "Refresh the page and try again.",
+                true
+            );
+
+            return;
+        }
+
+        createMessage(
+            "user",
+            cleanMessage
+        );
+
+        messageInput.value = "";
+
+        updateCounter();
+        setStatus("");
+        setSending(true);
+        resetInactivityTimer();
+
+        try {
+            const response = await fetch(
+                chatUrl,
+                {
                     method: "POST",
-
-                    /*
-                     * This sends the login session cookie.
-                     */
                     credentials: "same-origin",
-
                     headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
+                        "Accept":
+                            "application/json",
 
-                        /*
-                         * The FastAPI CSRF validator must read:
-                         * request.headers.get("X-CSRF-Token")
-                         */
-                        "X-CSRF-Token": csrfToken
+                        "Content-Type":
+                            "application/json",
+
+                        "X-CSRF-Token":
+                            token,
+
+                        "X-CSRFToken":
+                            token
                     },
 
                     body: JSON.stringify({
-                        message: question,
-                        language: getCurrentLanguage(),
-                        conversation_id: conversationId
-                    }),
+                        message:
+                            cleanMessage,
 
-                    signal: requestController.signal
-                });
+                        model:
+                            selectedModel(),
 
-                const contentType =
-                    response.headers.get("content-type") || "";
+                        conversation_id:
+                            conversationIdInput
+                                ?.value || "",
 
-                let responseData = {};
-
-                if (
-                    contentType.includes(
-                        "application/json"
-                    )
-                ) {
-                    responseData = await response.json();
+                        csrf_token:
+                            token
+                    })
                 }
+            );
 
-                /*
-                 * A 401 response means the login session is missing.
-                 */
-                if (response.status === 401) {
-                    const nextPage =
+            const data =
+                await parseJson(response);
+
+            if (
+                response.status === 401
+            ) {
+                window.location.assign(
+                    `/login?next=${
                         encodeURIComponent(
                             window.location.pathname
-                        );
-
-                    window.location.assign(
-                        `/login?next=${nextPage}`
-                    );
-
-                    return;
-                }
-
-                /*
-                 * A 403 may be caused by CSRF or permissions.
-                 * Do not incorrectly report every 403 as login expiry.
-                 */
-                if (response.status === 403) {
-                    throw new Error(
-                        getServerError(
-                            responseData,
-                            "Access denied. Refresh the page and try again."
                         )
-                    );
-                }
-
-                if (!response.ok) {
-                    throw new Error(
-                        getServerError(
-                            responseData,
-                            "The assistant could not complete your request."
-                        )
-                    );
-                }
-
-                /*
-                 * Support either "reply" or "response" from FastAPI.
-                 */
-                let assistantReply = "";
-
-                if (
-                    typeof responseData.reply ===
-                    "string"
-                ) {
-                    assistantReply =
-                        responseData.reply.trim();
-                } else if (
-                    typeof responseData.response ===
-                    "string"
-                ) {
-                    assistantReply =
-                        responseData.response.trim();
-                }
-
-                if (!assistantReply) {
-                    throw new Error(
-                        "The assistant returned an empty response."
-                    );
-                }
-
-                conversationId =
-                    responseData.conversation_id ||
-                    conversationId;
-
-                if (conversationId) {
-                    root.dataset.conversationId =
-                        conversationId;
-                }
-
-                lastReply = assistantReply;
-
-                addMessage(
-                    "assistant",
-                    assistantReply
+                    }`
                 );
 
-                if (
-                    typeof responseData.disclaimer ===
-                    "string"
-                ) {
-                    updateStatus(
-                        responseData.disclaimer
-                    );
-                } else {
-                    updateStatus("Reply received.");
-                }
-            } catch (error) {
-                let errorMessage;
-
-                if (error.name === "AbortError") {
-                    errorMessage =
-                        "The assistant timed out. Please try again.";
-                } else {
-                    errorMessage =
-                        error.message ||
-                        "Unable to contact the assistant.";
-                }
-
-                addMessage(
-                    "assistant",
-                    errorMessage
-                );
-
-                updateStatus(
-                    errorMessage,
-                    true
-                );
-
-                /*
-                 * Restore the user's message so it is not lost.
-                 */
-                input.value = question;
-            } finally {
-                window.clearTimeout(
-                    requestTimeout
-                );
-
-                setBusy(false);
+                return;
             }
+
+            if (
+                !response.ok ||
+                data.success === false
+            ) {
+                throw new Error(
+                    responseError(
+                        data,
+                        "The assistant could not " +
+                        "process your request."
+                    )
+                );
+            }
+
+            const reply =
+                responseMessage(data);
+
+            if (!reply) {
+                throw new Error(
+                    "The assistant returned " +
+                    "an empty response."
+                );
+            }
+
+            if (
+                conversationIdInput &&
+                data.conversation_id
+            ) {
+                conversationIdInput.value =
+                    String(
+                        data.conversation_id
+                    );
+            }
+
+            createMessage(
+                "assistant",
+                reply
+            );
+
+            setStatus(
+                "Response received."
+            );
+        } catch (error) {
+            const messageText =
+                error instanceof Error
+                    ? error.message
+                    : "The assistant is " +
+                      "temporarily unavailable.";
+
+            createMessage(
+                "assistant",
+                messageText
+            );
+
+            setStatus(
+                messageText,
+                true
+            );
+        } finally {
+            setSending(false);
+            messageInput.focus();
+            resetInactivityTimer();
+        }
+    }
+
+    async function clearConversation() {
+        const confirmed =
+            window.confirm(
+                "Clear this AI conversation?"
+            );
+
+        if (!confirmed) {
+            return;
         }
 
-        form.addEventListener(
-            "submit",
-            submitMessage
-        );
+        const token = csrfToken();
 
-        /*
-         * Enter sends the message.
-         * Shift + Enter creates a new line.
-         */
-        input.addEventListener(
-            "keydown",
-            (event) => {
-                if (
-                    event.key === "Enter" &&
-                    !event.shiftKey &&
-                    !event.isComposing
-                ) {
-                    event.preventDefault();
-                    form.requestSubmit();
-                }
-            }
-        );
-
-        /*
-         * Read the latest AI response aloud.
-         */
-        const readReplyButton =
-            root.querySelector(
-                "[data-ai-read-reply]"
+        if (!token) {
+            setStatus(
+                "The security token is missing. " +
+                "Refresh the page and try again.",
+                true
             );
 
-        readReplyButton?.addEventListener(
-            "click",
-            () => {
-                if (!lastReply) {
-                    updateStatus(
-                        "There is no reply to read yet.",
-                        true
-                    );
+            return;
+        }
 
-                    return;
+        if (clearButton) {
+            clearButton.disabled = true;
+        }
+
+        setStatus(
+            "Clearing conversation…"
+        );
+
+        try {
+            const response = await fetch(
+                clearUrl,
+                {
+                    method: "POST",
+                    credentials: "same-origin",
+
+                    headers: {
+                        "Accept":
+                            "application/json",
+
+                        "Content-Type":
+                            "application/json",
+
+                        "X-CSRF-Token":
+                            token,
+
+                        "X-CSRFToken":
+                            token
+                    },
+
+                    body: JSON.stringify({
+                        conversation_id:
+                            conversationIdInput
+                                ?.value || "",
+
+                        csrf_token:
+                            token
+                    })
                 }
+            );
 
-                if (
-                    !(
-                        "speechSynthesis" in
-                        window
+            const data =
+                await parseJson(response);
+
+            if (
+                !response.ok ||
+                data.success === false
+            ) {
+                throw new Error(
+                    responseError(
+                        data,
+                        "The conversation " +
+                        "could not be cleared."
                     )
-                ) {
-                    updateStatus(
-                        "Speech output is unavailable in this browser.",
-                        true
-                    );
-
-                    return;
-                }
-
-                window.speechSynthesis.cancel();
-
-                const speech =
-                    new SpeechSynthesisUtterance(
-                        lastReply
-                    );
-
-                speech.lang =
-                    getCurrentLanguage();
-
-                window.speechSynthesis.speak(
-                    speech
                 );
             }
-        );
 
-        /*
-         * Stop speech output.
-         */
-        const stopSpeechButton =
-            root.querySelector(
-                "[data-ai-stop-speech]"
-            );
+            conversation
+                .querySelectorAll(
+                    ".chat-message:not(" +
+                    "[data-typing-indicator])"
+                )
+                .forEach((message) => {
+                    message.remove();
+                });
 
-        stopSpeechButton?.addEventListener(
-            "click",
-            () => {
-                if (
-                    "speechSynthesis" in window
-                ) {
-                    window.speechSynthesis.cancel();
-                }
+            if (conversationIdInput) {
+                conversationIdInput.value =
+                    String(
+                        data.conversation_id ||
+                        ""
+                    );
             }
-        );
 
-        /*
-         * Voice input.
-         */
-        const voiceButton =
-            root.querySelector(
-                "[data-ai-voice-input]"
+            createMessage(
+                "assistant",
+                "The conversation has been " +
+                "cleared. How can I help?"
             );
 
-        voiceButton?.addEventListener(
-            "click",
-            () => {
-                const Recognition =
-                    window.SpeechRecognition ||
-                    window.webkitSpeechRecognition;
+            setStatus(
+                "Conversation cleared."
+            );
+        } catch (error) {
+            setStatus(
+                error instanceof Error
+                    ? error.message
+                    : "The conversation " +
+                      "could not be cleared.",
+                true
+            );
+        } finally {
+            if (clearButton) {
+                clearButton.disabled = false;
+            }
 
-                if (!Recognition) {
-                    updateStatus(
-                        "Voice input is unavailable in this browser.",
-                        true
-                    );
+            resetInactivityTimer();
+        }
+    }
 
-                    return;
-                }
+    function speechLanguage() {
+        const language =
+            document.documentElement.lang ||
+            navigator.language ||
+            "en-US";
 
-                /*
-                 * Clicking again stops active recognition.
-                 */
-                if (speechRecognition) {
-                    speechRecognition.stop();
-                    return;
-                }
+        const languageMap = {
+            en: "en-US",
+            de: "de-DE",
+            fr: "fr-FR",
+            es: "es-ES"
+        };
 
-                speechRecognition =
-                    new Recognition();
+        return (
+            languageMap[
+                language.toLowerCase()
+            ] ||
+            language
+        );
+    }
 
-                speechRecognition.lang =
-                    getCurrentLanguage();
+    function stopSpeech() {
+        if (
+            "speechSynthesis" in window
+        ) {
+            window.speechSynthesis.cancel();
+        }
 
-                speechRecognition.interimResults =
-                    false;
+        if (stopSpeechButton) {
+            stopSpeechButton.disabled = true;
+        }
 
-                speechRecognition.continuous =
-                    false;
+        page.querySelectorAll(
+            "[data-read-message]"
+        ).forEach((button) => {
+            button.setAttribute(
+                "aria-pressed",
+                "false"
+            );
+        });
 
-                speechRecognition.onresult = (
-                    event
-                ) => {
-                    const spokenText =
-                        event.results?.[0]?.[0]
-                            ?.transcript?.trim() ||
-                        "";
+        setVoiceStatus(
+            "Voice output stopped."
+        );
+    }
 
-                    if (spokenText) {
-                        const existingText =
-                            getElementValue(
-                                input
-                            ).trim();
+    function readText(
+        text,
+        trigger
+    ) {
+        const content =
+            String(text || "").trim();
 
-                        input.value = [
-                            existingText,
-                            spokenText
-                        ]
-                            .filter(Boolean)
-                            .join(" ");
-                    }
+        if (!content) {
+            return;
+        }
 
-                    input.focus();
-                };
+        if (
+            !(
+                "speechSynthesis" in
+                window
+            ) ||
+            !(
+                "SpeechSynthesisUtterance" in
+                window
+            )
+        ) {
+            setVoiceStatus(
+                "Voice output is not " +
+                "supported by this browser.",
+                true
+            );
 
-                speechRecognition.onerror = () => {
-                    updateStatus(
-                        "Voice input failed. Please type your message instead.",
-                        true
-                    );
-                };
+            return;
+        }
 
-                speechRecognition.onend = () => {
-                    speechRecognition = null;
+        window.speechSynthesis.cancel();
 
-                    voiceButton.setAttribute(
-                        "aria-pressed",
-                        "false"
-                    );
+        const utterance =
+            new SpeechSynthesisUtterance(
+                content
+            );
 
-                    input.focus();
-                };
+        utterance.lang =
+            speechLanguage();
 
-                voiceButton.setAttribute(
+        utterance.rate = 1;
+
+        utterance.onstart = () => {
+            if (trigger) {
+                trigger.setAttribute(
                     "aria-pressed",
                     "true"
                 );
+            }
 
-                updateStatus("Listening…");
+            if (stopSpeechButton) {
+                stopSpeechButton.disabled =
+                    false;
+            }
 
-                speechRecognition.start();
+            setVoiceStatus(
+                "Reading response aloud."
+            );
+
+            resetInactivityTimer();
+        };
+
+        const finish = () => {
+            if (trigger) {
+                trigger.setAttribute(
+                    "aria-pressed",
+                    "false"
+                );
+            }
+
+            if (stopSpeechButton) {
+                stopSpeechButton.disabled =
+                    true;
+            }
+        };
+
+        utterance.onend = () => {
+            finish();
+
+            setVoiceStatus(
+                "Finished reading."
+            );
+        };
+
+        utterance.onerror = (event) => {
+            finish();
+
+            if (
+                event.error !== "canceled" &&
+                event.error !== "interrupted"
+            ) {
+                setVoiceStatus(
+                    "The response could not " +
+                    "be read aloud.",
+                    true
+                );
+            }
+        };
+
+        window.speechSynthesis.speak(
+            utterance
+        );
+    }
+
+    function initialiseRecognition() {
+        const Recognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        if (
+            !Recognition ||
+            !voiceButton
+        ) {
+            if (voiceButton) {
+                voiceButton.disabled = true;
+
+                voiceButton.title =
+                    "Voice input is not " +
+                    "supported by this browser";
+            }
+
+            return;
+        }
+
+        recognition =
+            new Recognition();
+
+        recognition.lang =
+            speechLanguage();
+
+        recognition.interimResults = true;
+        recognition.continuous = false;
+
+        let originalText = "";
+
+        recognition.onstart = () => {
+            isListening = true;
+
+            originalText =
+                messageInput.value.trim();
+
+            voiceButton.setAttribute(
+                "aria-pressed",
+                "true"
+            );
+
+            voiceButton.classList.add(
+                "is-listening"
+            );
+
+            setVoiceStatus(
+                "Listening… Speak now."
+            );
+
+            resetInactivityTimer();
+        };
+
+        recognition.onresult = (
+            event
+        ) => {
+            let transcript = "";
+
+            for (
+                let index =
+                    event.resultIndex;
+                index <
+                    event.results.length;
+                index += 1
+            ) {
+                transcript +=
+                    event.results[
+                        index
+                    ][0].transcript;
+            }
+
+            const separator =
+                originalText ? " " : "";
+
+            messageInput.value =
+                `${originalText}` +
+                `${separator}` +
+                `${transcript}`;
+
+            messageInput.value =
+                messageInput.value.slice(
+                    0,
+                    maximumMessageLength
+                );
+
+            updateCounter();
+        };
+
+        recognition.onerror = (
+            event
+        ) => {
+            const messages = {
+                "not-allowed":
+                    "Microphone permission " +
+                    "was denied.",
+
+                "audio-capture":
+                    "No microphone was found.",
+
+                "no-speech":
+                    "No speech was detected. " +
+                    "Please try again."
+            };
+
+            setVoiceStatus(
+                messages[event.error] ||
+                "Voice input could not " +
+                "be completed.",
+                true
+            );
+        };
+
+        recognition.onend = () => {
+            isListening = false;
+
+            voiceButton.setAttribute(
+                "aria-pressed",
+                "false"
+            );
+
+            voiceButton.classList.remove(
+                "is-listening"
+            );
+
+            if (
+                !voiceStatus?.classList
+                    .contains("is-error")
+            ) {
+                setVoiceStatus(
+                    "Voice input finished."
+                );
+            }
+
+            messageInput.focus();
+            resetInactivityTimer();
+        };
+    }
+
+    function toggleVoiceInput() {
+        if (!recognition) {
+            setVoiceStatus(
+                "Voice input is not " +
+                "supported by this browser.",
+                true
+            );
+
+            return;
+        }
+
+        if (isListening) {
+            recognition.stop();
+        } else {
+            setVoiceStatus("");
+            recognition.lang =
+                speechLanguage();
+            recognition.start();
+        }
+    }
+
+    function setMaximized(
+        maximized
+    ) {
+        isMaximized =
+            Boolean(maximized);
+
+        chatPanel?.classList.toggle(
+            "is-maximized",
+            isMaximized
+        );
+
+        page.classList.toggle(
+            "is-maximized",
+            isMaximized
+        );
+
+        document.body.classList.toggle(
+            "ai-assistant-maximized",
+            isMaximized
+        );
+
+        if (maximizeButton) {
+            maximizeButton.setAttribute(
+                "aria-pressed",
+                String(isMaximized)
+            );
+
+            maximizeButton.setAttribute(
+                "aria-label",
+                isMaximized
+                    ? "Restore the AI assistant"
+                    : "Maximize the AI assistant"
+            );
+
+            maximizeButton.title =
+                isMaximized
+                    ? "Restore assistant"
+                    : "Maximize assistant";
+        }
+
+        if (maximizeLabel) {
+            maximizeLabel.textContent =
+                isMaximized
+                    ? "Restore"
+                    : "Maximize";
+        }
+
+        if (maximizeIcon) {
+            maximizeIcon.textContent =
+                isMaximized
+                    ? "🗗"
+                    : "⛶";
+        }
+
+        resetInactivityTimer();
+    }
+
+    function hideInactivityWarning() {
+        if (inactivityWarning) {
+            inactivityWarning.hidden =
+                true;
+        }
+
+        if (countdownTimer) {
+            window.clearInterval(
+                countdownTimer
+            );
+
+            countdownTimer = null;
+        }
+    }
+
+    async function logoutForInactivity() {
+        hideInactivityWarning();
+        stopSpeech();
+
+        if (
+            recognition &&
+            isListening
+        ) {
+            recognition.stop();
+        }
+
+        const token = csrfToken();
+
+        try {
+            await fetch(
+                logoutUrl,
+                {
+                    method: "POST",
+                    credentials: "same-origin",
+
+                    headers: {
+                        "Content-Type":
+                            "application/" +
+                            "x-www-form-urlencoded;" +
+                            "charset=UTF-8",
+
+                        "X-CSRF-Token":
+                            token,
+
+                        "X-CSRFToken":
+                            token
+                    },
+
+                    body:
+                        new URLSearchParams({
+                            csrf_token: token
+                        }).toString(),
+
+                    keepalive: true
+                }
+            );
+        } finally {
+            window.location.replace(
+                loginUrl
+            );
+        }
+    }
+
+    function showInactivityWarning() {
+        remainingWarningSeconds =
+            Math.max(
+                1,
+                Math.ceil(
+                    warningDuration / 1000
+                )
+            );
+
+        if (inactivityCountdown) {
+            inactivityCountdown.textContent =
+                String(
+                    remainingWarningSeconds
+                );
+        }
+
+        if (inactivityWarning) {
+            inactivityWarning.hidden =
+                false;
+        }
+
+        countdownTimer =
+            window.setInterval(() => {
+                remainingWarningSeconds -= 1;
+
+                if (
+                    inactivityCountdown
+                ) {
+                    inactivityCountdown
+                        .textContent =
+                        String(
+                            Math.max(
+                                0,
+                                remainingWarningSeconds
+                            )
+                        );
+                }
+
+                if (
+                    remainingWarningSeconds <=
+                    0
+                ) {
+                    window.clearInterval(
+                        countdownTimer
+                    );
+
+                    countdownTimer = null;
+
+                    logoutForInactivity();
+                }
+            }, 1000);
+    }
+
+    function resetInactivityTimer() {
+        if (inactivityTimer) {
+            window.clearTimeout(
+                inactivityTimer
+            );
+        }
+
+        hideInactivityWarning();
+
+        const delay = Math.max(
+            0,
+            inactivityLimit -
+            warningDuration
+        );
+
+        inactivityTimer =
+            window.setTimeout(
+                showInactivityWarning,
+                delay
+            );
+    }
+
+    function registerActivityListeners() {
+        let lastReset = 0;
+
+        const activity = () => {
+            const now = Date.now();
+
+            if (
+                now - lastReset <
+                1000
+            ) {
+                return;
+            }
+
+            lastReset = now;
+            resetInactivityTimer();
+        };
+
+        [
+            "pointerdown",
+            "keydown",
+            "touchstart",
+            "scroll"
+        ].forEach((eventName) => {
+            document.addEventListener(
+                eventName,
+                activity,
+                {
+                    passive: true
+                }
+            );
+        });
+    }
+
+    form.addEventListener(
+        "submit",
+        (event) => {
+            event.preventDefault();
+
+            submitMessage(
+                messageInput.value
+            );
+        }
+    );
+
+    messageInput.addEventListener(
+        "input",
+        () => {
+            updateCounter();
+            resetInactivityTimer();
+        }
+    );
+
+    messageInput.addEventListener(
+        "keydown",
+        (event) => {
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.isComposing
+            ) {
+                event.preventDefault();
+                form.requestSubmit();
+            }
+        }
+    );
+
+    page.addEventListener(
+        "click",
+        (event) => {
+            const readButton =
+                event.target.closest(
+                    "[data-read-message]"
+                );
+
+            if (readButton) {
+                const bubble =
+                    readButton
+                        .closest(
+                            ".chat-message-content"
+                        )
+                        ?.querySelector(
+                            ".chat-message-bubble"
+                        );
+
+                readText(
+                    bubble?.textContent || "",
+                    readButton
+                );
+
+                return;
+            }
+
+            const promptButton =
+                event.target.closest(
+                    "[data-ai-prompt]"
+                );
+
+            if (promptButton) {
+                messageInput.value =
+                    String(
+                        promptButton
+                            .dataset
+                            .aiPrompt || ""
+                    ).slice(
+                        0,
+                        maximumMessageLength
+                    );
+
+                updateCounter();
+                messageInput.focus();
+                resetInactivityTimer();
+            }
+        }
+    );
+
+    voiceButton?.addEventListener(
+        "click",
+        toggleVoiceInput
+    );
+
+    stopSpeechButton?.addEventListener(
+        "click",
+        stopSpeech
+    );
+
+    maximizeButton?.addEventListener(
+        "click",
+        () => {
+            setMaximized(
+                !isMaximized
+            );
+        }
+    );
+
+    clearButton?.addEventListener(
+        "click",
+        clearConversation
+    );
+
+    continueSessionButton
+        ?.addEventListener(
+            "click",
+            () => {
+                resetInactivityTimer();
+                messageInput.focus();
+
+                setStatus(
+                    "Session continued."
+                );
             }
         );
+
+    modelSelect?.addEventListener(
+        "change",
+        () => {
+            try {
+                window.sessionStorage
+                    .setItem(
+                        "smartPropertyAiModel",
+                        selectedModel()
+                    );
+            } catch {
+                /*
+                 * Browser storage may be
+                 * unavailable in privacy mode.
+                 */
+            }
+
+            setStatus(
+                "AI model updated."
+            );
+
+            resetInactivityTimer();
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+            if (
+                event.key === "Escape" &&
+                isMaximized
+            ) {
+                setMaximized(false);
+            }
+        }
+    );
+
+    window.addEventListener(
+        "beforeunload",
+        () => {
+            if (
+                "speechSynthesis" in
+                window
+            ) {
+                window
+                    .speechSynthesis
+                    .cancel();
+            }
+
+            if (
+                recognition &&
+                isListening
+            ) {
+                recognition.abort();
+            }
+        }
+    );
+
+    try {
+        const savedModel =
+            window.sessionStorage
+                .getItem(
+                    "smartPropertyAiModel"
+                );
+
+        if (
+            savedModel &&
+            modelSelect
+        ) {
+            const optionExists =
+                Array.from(
+                    modelSelect.options
+                ).some(
+                    (option) =>
+                        option.value ===
+                        savedModel
+                );
+
+            if (optionExists) {
+                modelSelect.value =
+                    savedModel;
+            }
+        }
+    } catch {
+        /*
+         * Ignore unavailable
+         * browser storage.
+         */
     }
 
-    /*
-     * Start only when the page DOM is ready.
-     */
-    if (
-        document.readyState === "loading"
-    ) {
-        document.addEventListener(
-            "DOMContentLoaded",
-            initializeAssistant,
-            { once: true }
-        );
-    } else {
-        initializeAssistant();
-    }
+    initialiseRecognition();
+    registerActivityListeners();
+    updateCounter();
+    scrollConversationToBottom();
+    resetInactivityTimer();
 })();

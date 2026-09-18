@@ -47989,3 +47989,73 @@ NameError: name 'complaints' is not defined. Did you mean: 'complaint'?
 2026-09-19 00:18:19,563 | INFO | smart_property_ai | GET /tenant/tenant/leases -> 200 26.58ms
 2026-09-19 00:18:19,587 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 5.34ms
 2026-09-19 00:19:03,628 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-19 00:23:12,990 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-19 00:23:13,026 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-19 00:23:13,034 | INFO | smart_property_ai | Database tables are ready.
+2026-09-19 00:23:13,099 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-19 00:23:20,304 | INFO | smart_property_ai | GET /tenant/tenant/leases -> 200 428.42ms
+2026-09-19 00:23:20,482 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 159.78ms
+2026-09-19 00:23:36,700 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:23:36,703 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:23:36,713 | INFO | smart_property_ai | POST /api/ai/chat -> 200 33.28ms
+2026-09-19 00:24:18,202 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:24:18,205 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:24:18,211 | INFO | smart_property_ai | POST /api/ai/chat -> 200 17.84ms
+2026-09-19 00:25:48,944 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:25:48,946 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:25:48,949 | INFO | smart_property_ai | POST /api/ai/chat -> 200 17.04ms
+2026-09-19 00:27:06,729 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:27:06,731 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:27:06,734 | INFO | smart_property_ai | POST /api/ai/chat -> 200 15.75ms
+2026-09-19 00:31:09,153 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:31:09,154 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:31:09,159 | INFO | smart_property_ai | POST /api/ai/chat -> 200 11.87ms
+2026-09-19 00:32:22,534 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:32:22,535 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:32:22,539 | INFO | smart_property_ai | POST /api/ai/chat -> 200 47.25ms
+2026-09-19 00:32:39,584 | INFO | smart_property_ai | GET /tenant/tenant/complaints -> 200 112.35ms
+2026-09-19 00:32:39,615 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 12.90ms
+2026-09-19 00:32:40,615 | INFO | smart_property_ai | GET /tenant/tenant/complaints -> 200 20.87ms
+2026-09-19 00:34:24,008 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:34:24,009 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:34:24,014 | INFO | smart_property_ai | POST /api/ai/chat -> 200 12.99ms
+2026-09-19 00:36:50,006 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 00:36:50,007 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 00:36:50,012 | INFO | smart_property_ai | POST /api/ai/chat -> 200 14.02ms
+2026-09-19 00:52:53,564 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\ai\\assistant.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\ai'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\ai\\assistant.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\ai\\assistant.html~')}
+2026-09-19 00:52:53,947 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\ai')}
+2026-09-19 00:59:07,433 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css~')}
+2026-09-19 00:59:07,846 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-19 01:02:23,767 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 01:02:23,777 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 01:02:23,800 | INFO | smart_property_ai | POST /api/ai/chat -> 200 116.61ms
+2026-09-19 01:02:47,794 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 01:02:47,797 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 01:02:47,808 | INFO | smart_property_ai | POST /api/ai/chat -> 200 32.00ms
+2026-09-19 01:03:21,505 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 01:03:21,506 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537
+2026-09-19 01:03:21,518 | INFO | smart_property_ai | POST /api/ai/chat -> 200 23.68ms
+2026-09-19 01:07:58,763 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\js\\ai-assistant.js'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\js'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\js\\ai-assistant.js~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\js\\ai-assistant.js~')}
+2026-09-19 01:12:54,759 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\ai_routes.py'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\ai_routes.py~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\ai_routes.py~')}
+2026-09-19 01:12:55,359 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-19 01:12:57,218 | DEBUG | watchfiles.main | 2 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-19 01:12:59,554 | DEBUG | watchfiles.main | 5 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\__pycache__'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\__pycache__\\ai_routes.cpython-314.pyc.2778568976272'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\__pycache__\\ai_routes.cpython-314.pyc.2778568976272'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\__pycache__\\ai_routes.cpython-314.pyc'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\routes\\__pycache__\\ai_routes.cpython-314.pyc')}
+2026-09-19 01:13:03,040 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-19 01:13:03,122 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-19 01:13:03,488 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-19 01:13:03,556 | INFO | smart_property_ai | Database tables are ready.
+2026-09-19 01:13:03,562 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-19 01:15:09,800 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-19 01:15:09,805 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=5aa246ea-cb62-4a32-9b3f-b2cf6b1f8537 model=smart-property-standard
+2026-09-19 01:15:09,821 | INFO | smart_property_ai | POST /api/ai/chat -> 200 268.06ms
+2026-09-19 01:15:36,765 | INFO | smart_property_ai | POST /logout -> 303 134.28ms
+2026-09-19 01:15:36,859 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db')}
+2026-09-19 01:15:36,947 | INFO | smart_property_ai | GET / -> 200 167.67ms
+2026-09-19 01:15:37,254 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 304 276.74ms
+2026-09-19 01:15:37,256 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 273.99ms
+2026-09-19 01:15:37,262 | INFO | smart_property_ai | GET /static/css/responsive.css -> 304 283.20ms
+2026-09-19 01:15:37,286 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 304 25.77ms
+2026-09-19 01:15:37,291 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 304 31.01ms
+2026-09-19 01:15:37,293 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 304 33.54ms
+2026-09-19 01:16:05,249 | INFO | smart_property_ai | GET /ai-information -> 200 34.92ms
+2026-09-19 01:22:07,156 | INFO | smart_property_ai | Shutting down Smart Property AI.

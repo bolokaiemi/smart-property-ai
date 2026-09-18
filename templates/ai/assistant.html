@@ -24,6 +24,11 @@
     id="main-content"
     class="ai-assistant-page"
     tabindex="-1"
+    data-ai-assistant-page
+    data-inactivity-timeout="180000"
+    data-inactivity-warning="30000"
+    data-logout-url="/logout"
+    data-login-url="/login?reason=inactive"
 >
     <div class="container">
         <nav
@@ -126,14 +131,75 @@
                             </div>
                         </div>
 
-                        <button
-                            type="button"
-                            class="btn btn-secondary btn-small"
-                            data-clear-conversation
-                        >
-                            <span aria-hidden="true">🗑</span>
-                            Clear conversation
-                        </button>
+                        <div class="ai-chat-header-controls">
+                            <div class="ai-model-control">
+                                <label for="ai-model-select">
+                                    AI model
+                                </label>
+
+                                <select
+                                    id="ai-model-select"
+                                    name="model"
+                                    form="ai-chat-form"
+                                    data-ai-model-select
+                                    aria-label="Choose the AI model"
+                                >
+                                    {% if available_models %}
+                                        {% for model in available_models %}
+                                            <option
+                                                value="{{ model.value }}"
+                                                {% if model.value == selected_model %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ model.label }}
+                                            </option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="default" selected>
+                                            Smart Property AI
+                                        </option>
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-small"
+                                data-stop-speech
+                                aria-label="Stop voice output"
+                                title="Stop voice output"
+                                disabled
+                            >
+                                <span aria-hidden="true">⏹</span>
+                                <span>Stop voice</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-small"
+                                data-ai-maximize
+                                aria-label="Maximize the AI assistant"
+                                aria-pressed="false"
+                                title="Maximize assistant"
+                            >
+                                <span aria-hidden="true" data-maximize-icon>
+                                    ⛶
+                                </span>
+                                <span data-maximize-label>
+                                    Maximize
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-small"
+                                data-clear-conversation
+                            >
+                                <span aria-hidden="true">🗑</span>
+                                <span>Clear</span>
+                            </button>
+                        </div>
                     </header>
 
                     <div
@@ -303,6 +369,8 @@
                                 class="voice-button ai-voice-button"
                                 data-voice-input="ai-message"
                                 aria-label="Enter your AI message using voice"
+                                aria-pressed="false"
+                                title="Speak your message"
                             >
                                 <span aria-hidden="true">🎤</span>
                                 <span class="sr-only" data-voice-label>
@@ -347,6 +415,29 @@
                             aria-live="polite"
                             aria-atomic="true"
                         ></p>
+
+                        <div
+                            class="ai-inactivity-warning"
+                            data-inactivity-warning-message
+                            role="alert"
+                            aria-live="assertive"
+                            aria-atomic="true"
+                            hidden
+                        >
+                            <p>
+                                Your session will end in
+                                <strong data-inactivity-countdown>30</strong>
+                                seconds because of inactivity.
+                            </p>
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-small"
+                                data-continue-session
+                            >
+                                Continue session
+                            </button>
+                        </div>
                     </form>
                 </section>
 

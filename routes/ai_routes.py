@@ -51,6 +51,27 @@ MAX_CONVERSATION_MESSAGES = 20
 MAX_MESSAGE_LENGTH = 4000
 
 
+DEFAULT_AI_MODEL = "smart-property-standard"
+
+AVAILABLE_AI_MODELS: dict[str, dict[str, str]] = {
+    "smart-property-standard": {
+        "value": "smart-property-standard",
+        "label": "Smart Property AI — Standard",
+        "description": "Balanced local property guidance.",
+    },
+    "smart-property-fast": {
+        "value": "smart-property-fast",
+        "label": "Smart Property AI — Fast",
+        "description": "Shorter responses for quick questions.",
+    },
+    "smart-property-detailed": {
+        "value": "smart-property-detailed",
+        "label": "Smart Property AI — Detailed",
+        "description": "More detailed step-by-step guidance.",
+    },
+}
+
+
 SUPPORTED_LANGUAGES = {
     "en": "English",
     "de": "Deutsch",
@@ -98,6 +119,12 @@ class AIChatRequest(BaseModel):
         max_length=100,
     )
 
+    model: str = Field(
+        default=DEFAULT_AI_MODEL,
+        min_length=1,
+        max_length=80,
+    )
+
     page_context: str | None = Field(
         default=None,
         max_length=500,
@@ -113,6 +140,7 @@ class AIChatResponse(BaseModel):
     reply: str
     conversation_id: str
     language: str
+    model: str
     human_review_required: bool = False
     emergency: bool = False
     disclaimer: str | None = None
@@ -381,6 +409,28 @@ def normalize_language(
         return normalized
 
     return "en"
+
+
+def normalize_model(
+    model: str | None,
+) -> str:
+    """Validate an assistant model identifier against the allowlist."""
+
+    normalized = str(
+        model or DEFAULT_AI_MODEL
+    ).strip().lower()
+
+    if normalized not in AVAILABLE_AI_MODELS:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
+            detail=(
+                "The selected AI model is not available."
+            ),
+        )
+
+    return normalized
 
 
 # ============================================================
@@ -934,6 +984,15 @@ def ai_assistant(
         [],
     )
 
+    selected_model = session.get(
+        "ai_selected_model",
+        DEFAULT_AI_MODEL,
+    )
+
+    if selected_model not in AVAILABLE_AI_MODELS:
+        selected_model = DEFAULT_AI_MODEL
+        session["ai_selected_model"] = selected_model
+
     return templates.TemplateResponse(
         request=request,
         name="ai/assistant.html",
@@ -969,6 +1028,10 @@ def ai_assistant(
             "supported_languages": (
                 SUPPORTED_LANGUAGES
             ),
+            "available_models": list(
+                AVAILABLE_AI_MODELS.values()
+            ),
+            "selected_model": selected_model,
             "ai_disclosure": (
                 "AI responses may contain errors. "
                 "Housing decisions must be reviewed "
@@ -1042,7 +1105,15 @@ def ai_chat(
         payload.language
     )
 
+    selected_model = normalize_model(
+        payload.model
+    )
+
     session = get_session(request)
+
+    session[
+        "ai_selected_model"
+    ] = selected_model
 
     conversation_id = (
         payload.conversation_id
@@ -1096,9 +1167,10 @@ def ai_chat(
 
     logger.info(
         "AI assistant request handled: "
-        "user=%s conversation=%s",
+        "user=%s conversation=%s model=%s",
         user_id,
         conversation_id,
+        selected_model,
     )
 
     return AIChatResponse(
@@ -1106,6 +1178,7 @@ def ai_chat(
         reply=response_text,
         conversation_id=conversation_id,
         language=language,
+        model=selected_model,
         human_review_required=(
             human_review_required
         ),
@@ -1193,6 +1266,10 @@ def ai_status() -> dict[str, Any]:
             "local_navigation_assistant"
         ),
         "trained_model_connected": False,
+        "default_model": DEFAULT_AI_MODEL,
+        "available_models": list(
+            AVAILABLE_AI_MODELS.values()
+        ),
         "supported_languages": list(
             SUPPORTED_LANGUAGES.keys()
         ),
