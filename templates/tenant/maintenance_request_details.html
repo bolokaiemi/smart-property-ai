@@ -1,0 +1,874 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Maintenance Request Details | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Review the status, priority, property information, and updates for your maintenance request.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/tenant.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="tenant-page tenant-maintenance-details">
+
+    <div class="tenant-page__container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="tenant-breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('tenant_dashboard') }}">
+                        Tenant dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('tenant_maintenance_requests') }}">
+                        Maintenance requests
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Request details
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="tenant-page__header">
+            <div>
+                <p class="tenant-page__eyebrow">
+                    Maintenance request
+                </p>
+
+                <h1>
+                    {{ maintenance_request.title
+                       | default(
+                           maintenance_request.subject
+                           | default(
+                               'Maintenance request details',
+                               true
+                           ),
+                           true
+                       )
+                       if maintenance_request
+                       else 'Maintenance request details' }}
+                </h1>
+
+                <p>
+                    Review your maintenance request, its priority,
+                    current status, assigned representative, and
+                    progress updates.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('tenant_maintenance_requests') }}"
+                class="tenant-button tenant-button--secondary"
+            >
+                Back to requests
+            </a>
+        </header>
+
+
+        <!-- Success message -->
+        {% if success %}
+            <div
+                class="tenant-alert tenant-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+
+        <!-- Error message -->
+        {% if error %}
+            <div
+                class="tenant-alert tenant-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        {% if maintenance_request %}
+
+            <!-- Normalize status -->
+            {% set request_status =
+                maintenance_request.status.value
+                if maintenance_request.status is not string
+                   and maintenance_request.status.value is defined
+                else maintenance_request.status
+                     | default('submitted', true)
+            %}
+
+            <!-- Normalize priority -->
+            {% set request_priority =
+                maintenance_request.priority.value
+                if maintenance_request.priority is not string
+                   and maintenance_request.priority.value is defined
+                else maintenance_request.priority
+                     | default('normal', true)
+            %}
+
+            <!-- Normalize category -->
+            {% set request_category =
+                maintenance_request.category.value
+                if maintenance_request.category is not string
+                   and maintenance_request.category.value is defined
+                else maintenance_request.category
+                     | default('general maintenance', true)
+            %}
+
+
+            <!-- Request highlight -->
+            <section
+                class="tenant-card tenant-maintenance-hero"
+                aria-labelledby="maintenance-summary-heading"
+            >
+                <div
+                    class="tenant-maintenance-hero__icon"
+                    aria-hidden="true"
+                >
+                    🔧
+                </div>
+
+                <div class="tenant-maintenance-hero__content">
+                    <p class="tenant-card__eyebrow">
+                        {{ request_category
+                           | replace('_', ' ')
+                           | title }}
+                    </p>
+
+                    <h2 id="maintenance-summary-heading">
+                        {{ maintenance_request.title
+                           | default(
+                               maintenance_request.subject
+                               | default(
+                                   'Maintenance request',
+                                   true
+                               ),
+                               true
+                           ) }}
+                    </h2>
+
+                    <p>
+                        Reference:
+                        <strong>
+                            {{ maintenance_request.reference_number
+                               | default(
+                                   maintenance_request.id
+                                   | default(
+                                       'Not available',
+                                       true
+                                   ),
+                                   true
+                               ) }}
+                        </strong>
+                    </p>
+                </div>
+
+                <div class="tenant-maintenance-hero__badges">
+                    <span
+                        class="tenant-status
+                               tenant-status--{{ request_status
+                               | lower
+                               | replace(' ', '-')
+                               | replace('_', '-') }}"
+                    >
+                        {{ request_status
+                           | replace('_', ' ')
+                           | title }}
+                    </span>
+
+                    <span
+                        class="tenant-priority
+                               tenant-priority--{{ request_priority
+                               | lower
+                               | replace(' ', '-')
+                               | replace('_', '-') }}"
+                    >
+                        {{ request_priority
+                           | replace('_', ' ')
+                           | title }}
+                        priority
+                    </span>
+                </div>
+            </section>
+
+
+            <div class="tenant-details-layout">
+
+                <!-- Main request information -->
+                <section
+                    class="tenant-card tenant-details-card"
+                    aria-labelledby="maintenance-description-heading"
+                >
+                    <div class="tenant-card__header">
+                        <div>
+                            <p class="tenant-card__eyebrow">
+                                Reported problem
+                            </p>
+
+                            <h2 id="maintenance-description-heading">
+                                Description
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <div class="tenant-details-card__content">
+                        <p class="tenant-details-card__description">
+                            {{ maintenance_request.description
+                               | default(
+                                   'No description is available for this request.',
+                                   true
+                               ) }}
+                        </p>
+                    </div>
+
+
+                    <!-- Access permission -->
+                    {% if maintenance_request.entry_permission is defined %}
+                        <section
+                            class="tenant-notes-box"
+                            aria-labelledby="entry-permission-heading"
+                        >
+                            <h3 id="entry-permission-heading">
+                                Property access
+                            </h3>
+
+                            <p>
+                                {% if maintenance_request.entry_permission %}
+                                    Permission has been provided for an
+                                    authorized representative to enter
+                                    the property as arranged.
+                                {% else %}
+                                    Contact the tenant before entering
+                                    the property.
+                                {% endif %}
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    <!-- Tenant availability -->
+                    {% if maintenance_request.preferred_access_time is defined
+                          and maintenance_request.preferred_access_time %}
+                        <section
+                            class="tenant-notes-box"
+                            aria-labelledby="access-time-heading"
+                        >
+                            <h3 id="access-time-heading">
+                                Preferred access time
+                            </h3>
+
+                            <p>
+                                {{ maintenance_request.preferred_access_time }}
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    <!-- Additional notes -->
+                    {% if maintenance_request.notes is defined
+                          and maintenance_request.notes %}
+                        <section
+                            class="tenant-notes-box"
+                            aria-labelledby="maintenance-notes-heading"
+                        >
+                            <h3 id="maintenance-notes-heading">
+                                Additional notes
+                            </h3>
+
+                            <p>
+                                {{ maintenance_request.notes }}
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    <!-- Resolution -->
+                    {% if maintenance_request.resolution_notes is defined
+                          and maintenance_request.resolution_notes %}
+                        <section
+                            class="tenant-resolution-box"
+                            aria-labelledby="resolution-heading"
+                        >
+                            <h3 id="resolution-heading">
+                                Resolution
+                            </h3>
+
+                            <p>
+                                {{ maintenance_request.resolution_notes }}
+                            </p>
+
+                            {% if maintenance_request.resolved_at is defined
+                                  and maintenance_request.resolved_at %}
+                                <p>
+                                    Resolved on
+
+                                    <time
+                                        datetime="{{ maintenance_request.resolved_at.isoformat() }}"
+                                    >
+                                        {{ maintenance_request.resolved_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </p>
+                            {% endif %}
+                        </section>
+                    {% endif %}
+                </section>
+
+
+                <!-- Request summary -->
+                <aside
+                    class="tenant-card tenant-summary-card"
+                    aria-labelledby="maintenance-summary-details-heading"
+                >
+                    <div class="tenant-card__header">
+                        <h2 id="maintenance-summary-details-heading">
+                            Request summary
+                        </h2>
+                    </div>
+
+
+                    <dl class="tenant-summary-list">
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Status
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-status
+                                           tenant-status--{{ request_status
+                                           | lower
+                                           | replace(' ', '-')
+                                           | replace('_', '-') }}"
+                                >
+                                    {{ request_status
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Priority
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-priority
+                                           tenant-priority--{{ request_priority
+                                           | lower
+                                           | replace(' ', '-')
+                                           | replace('_', '-') }}"
+                                >
+                                    {{ request_priority
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Category
+                            </dt>
+
+                            <dd>
+                                {{ request_category
+                                   | replace('_', ' ')
+                                   | title }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Reference
+                            </dt>
+
+                            <dd>
+                                {{ maintenance_request.reference_number
+                                   | default(
+                                       maintenance_request.id
+                                       | default(
+                                           'Not available',
+                                           true
+                                       ),
+                                       true
+                                   ) }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Submitted
+                            </dt>
+
+                            <dd>
+                                {% if maintenance_request.created_at %}
+                                    <time
+                                        datetime="{{ maintenance_request.created_at.isoformat() }}"
+                                    >
+                                        {{ maintenance_request.created_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if maintenance_request.updated_at %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Last updated
+                                </dt>
+
+                                <dd>
+                                    <time
+                                        datetime="{{ maintenance_request.updated_at.isoformat() }}"
+                                    >
+                                        {{ maintenance_request.updated_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </dd>
+                            </div>
+                        {% endif %}
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Property
+                            </dt>
+
+                            <dd>
+                                {% if maintenance_request.property is defined
+                                      and maintenance_request.property %}
+                                    {{ maintenance_request.property.title
+                                       | default(
+                                           maintenance_request.property.name
+                                           | default(
+                                               maintenance_request.property.address
+                                               | default(
+                                                   'Property',
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+
+                                {% elif maintenance_request.property_name is defined
+                                      and maintenance_request.property_name %}
+                                    {{ maintenance_request.property_name }}
+
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if maintenance_request.unit is defined
+                              and maintenance_request.unit %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Unit
+                                </dt>
+
+                                <dd>
+                                    {{ maintenance_request.unit.unit_number
+                                       | default(
+                                           maintenance_request.unit.name
+                                           | default(
+                                               'Not available',
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                </dd>
+                            </div>
+
+                        {% elif maintenance_request.unit_number is defined
+                              and maintenance_request.unit_number %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Unit
+                                </dt>
+
+                                <dd>
+                                    {{ maintenance_request.unit_number }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+
+                        {% if maintenance_request.assigned_to is defined
+                              and maintenance_request.assigned_to %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Assigned to
+                                </dt>
+
+                                <dd>
+                                    {{ maintenance_request.assigned_to.full_name
+                                       | default(
+                                           maintenance_request.assigned_to.name
+                                           | default(
+                                               maintenance_request.assigned_to.username
+                                               | default(
+                                                   'Property management',
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                    </dl>
+                </aside>
+
+            </div>
+
+
+            <!-- Uploaded images -->
+            {% if maintenance_request.images is defined
+                  and maintenance_request.images %}
+
+                <section
+                    class="tenant-card tenant-images-card"
+                    aria-labelledby="maintenance-images-heading"
+                >
+                    <div class="tenant-card__header">
+                        <div>
+                            <p class="tenant-card__eyebrow">
+                                Attachments
+                            </p>
+
+                            <h2 id="maintenance-images-heading">
+                                Submitted images
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <div class="tenant-image-grid">
+
+                        {% for image in maintenance_request.images %}
+                            <figure class="tenant-image-card">
+                                <a
+                                    href="{{ image.url
+                                       | default(
+                                           image.file_url
+                                           | default(
+                                               image.path
+                                               | default('#', true),
+                                               true
+                                           ),
+                                           true
+                                       ) }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <img
+                                        src="{{ image.url
+                                           | default(
+                                               image.file_url
+                                               | default(
+                                                   image.path,
+                                                   true
+                                               ),
+                                               true
+                                           ) }}"
+                                        alt="{{ image.alt_text
+                                           | default(
+                                               'Maintenance request image',
+                                               true
+                                           ) }}"
+                                        loading="lazy"
+                                    >
+                                </a>
+
+                                {% if image.caption is defined
+                                      and image.caption %}
+                                    <figcaption>
+                                        {{ image.caption }}
+                                    </figcaption>
+                                {% endif %}
+                            </figure>
+                        {% endfor %}
+
+                    </div>
+                </section>
+
+            {% elif maintenance_request.image_url is defined
+                  and maintenance_request.image_url %}
+
+                <section
+                    class="tenant-card tenant-images-card"
+                    aria-labelledby="maintenance-image-heading"
+                >
+                    <div class="tenant-card__header">
+                        <h2 id="maintenance-image-heading">
+                            Submitted image
+                        </h2>
+                    </div>
+
+                    <figure class="tenant-image-card">
+                        <a
+                            href="{{ maintenance_request.image_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                src="{{ maintenance_request.image_url }}"
+                                alt="Maintenance request attachment"
+                                loading="lazy"
+                            >
+                        </a>
+                    </figure>
+                </section>
+
+            {% endif %}
+
+
+            <!-- Progress timeline -->
+            <section
+                class="tenant-card tenant-timeline-card"
+                aria-labelledby="maintenance-progress-heading"
+            >
+                <div class="tenant-card__header">
+                    <div>
+                        <p class="tenant-card__eyebrow">
+                            Activity
+                        </p>
+
+                        <h2 id="maintenance-progress-heading">
+                            Request progress
+                        </h2>
+                    </div>
+                </div>
+
+
+                {% if maintenance_request.updates is defined
+                      and maintenance_request.updates %}
+
+                    <ol class="tenant-timeline">
+
+                        {% for update in maintenance_request.updates %}
+                            <li class="tenant-timeline__item">
+                                <div
+                                    class="tenant-timeline__marker"
+                                    aria-hidden="true"
+                                ></div>
+
+                                <div class="tenant-timeline__content">
+                                    <h3>
+                                        {{ update.title
+                                           | default(
+                                               update.status
+                                               | default(
+                                                   'Request updated',
+                                                   true
+                                               ),
+                                               true
+                                           ) }}
+                                    </h3>
+
+
+                                    {% if update.message is defined
+                                          and update.message %}
+                                        <p>
+                                            {{ update.message }}
+                                        </p>
+
+                                    {% elif update.notes is defined
+                                          and update.notes %}
+                                        <p>
+                                            {{ update.notes }}
+                                        </p>
+                                    {% endif %}
+
+
+                                    {% if update.created_at is defined
+                                          and update.created_at %}
+                                        <time
+                                            datetime="{{ update.created_at.isoformat() }}"
+                                        >
+                                            {{ update.created_at.strftime(
+                                                '%d %B %Y at %H:%M'
+                                            ) }}
+                                        </time>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ol>
+
+                {% else %}
+
+                    <div class="tenant-empty-state">
+                        <h3>
+                            No progress updates yet
+                        </h3>
+
+                        <p>
+                            Property management has not added an update
+                            to this request yet.
+                        </p>
+                    </div>
+
+                {% endif %}
+            </section>
+
+
+            <!-- Emergency warning -->
+            <section
+                class="tenant-card tenant-emergency-card"
+                aria-labelledby="maintenance-emergency-heading"
+            >
+                <div
+                    class="tenant-emergency-card__icon"
+                    aria-hidden="true"
+                >
+                    ⚠️
+                </div>
+
+                <div>
+                    <h2 id="maintenance-emergency-heading">
+                        Is this an emergency?
+                    </h2>
+
+                    <p>
+                        Do not wait for a platform response if there is
+                        a fire, gas leak, serious flooding, medical
+                        emergency, or immediate danger. In Germany,
+                        call <strong>112</strong> for fire or medical
+                        emergencies and <strong>110</strong> for police.
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- Help actions -->
+            <section
+                class="tenant-card tenant-help-card"
+                aria-labelledby="maintenance-help-heading"
+            >
+                <div>
+                    <h2 id="maintenance-help-heading">
+                        Need to provide more information?
+                    </h2>
+
+                    <p>
+                        Use secure messages to contact property
+                        management. Do not send passwords, payment-card
+                        details, or unnecessary sensitive information.
+                    </p>
+                </div>
+
+                <div class="tenant-help-card__actions">
+                    <a
+                        href="{{ url_for('tenant_messages') }}"
+                        class="tenant-button tenant-button--primary"
+                    >
+                        Open messages
+                    </a>
+
+                    <a
+                        href="{{ url_for('tenant_maintenance_requests') }}"
+                        class="tenant-button tenant-button--secondary"
+                    >
+                        All maintenance requests
+                    </a>
+                </div>
+            </section>
+
+
+        {% else %}
+
+            <!-- Request unavailable -->
+            <section
+                class="tenant-card tenant-empty-state"
+                aria-labelledby="maintenance-not-found-heading"
+            >
+                <div
+                    class="tenant-empty-state__icon"
+                    aria-hidden="true"
+                >
+                    🔧
+                </div>
+
+                <h1 id="maintenance-not-found-heading">
+                    Maintenance request not found
+                </h1>
+
+                <p>
+                    This maintenance request does not exist, has been
+                    removed, or you do not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('tenant_maintenance_requests') }}"
+                    class="tenant-button tenant-button--primary"
+                >
+                    Return to maintenance requests
+                </a>
+            </section>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/tenant.js') }}"
+    defer
+></script>
+{% endblock %}

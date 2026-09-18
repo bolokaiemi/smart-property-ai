@@ -1,0 +1,780 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Maintenance Request | Smart Property AI
+{% endblock %}
+
+{% block description %}
+Create and assign a property maintenance request.
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/landlord.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+<div class="landlord-page landlord-maintenance-form-page">
+    <div class="landlord-page__container">
+
+        <nav
+            class="landlord-breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_maintenance_requests') }}">
+                        Maintenance requests
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Add request
+                </li>
+            </ol>
+        </nav>
+
+        <header class="landlord-page__header">
+            <div>
+                <p class="landlord-page__eyebrow">
+                    Property maintenance
+                </p>
+
+                <h1>Create a maintenance request</h1>
+
+                <p>
+                    Record a maintenance problem, select the affected
+                    property or unit, and set its priority.
+                </p>
+            </div>
+
+            <a
+                class="landlord-button landlord-button--secondary"
+                href="{{ url_for('landlord_maintenance_requests') }}"
+            >
+                Back to requests
+            </a>
+        </header>
+
+        {% if success_message %}
+            <div
+                class="landlord-alert landlord-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success_message }}
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div
+                class="landlord-alert landlord-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div
+                class="landlord-alert landlord-alert--error"
+                role="alert"
+            >
+                <strong>
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% if errors is mapping %}
+                        {% for field, message in errors.items() %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% else %}
+                        {% for message in errors %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="landlord-form-layout">
+            <main class="landlord-card landlord-form-card">
+                <form
+                    method="post"
+                    action="{{ request.url.path }}"
+                    class="landlord-form"
+                    id="maintenance-request-form"
+                    novalidate
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <section
+                        class="landlord-form-section"
+                        aria-labelledby="location-heading"
+                    >
+                        <div class="landlord-form-section__header">
+                            <p class="landlord-card__eyebrow">
+                                Location
+                            </p>
+
+                            <h2 id="location-heading">
+                                Property and unit
+                            </h2>
+                        </div>
+
+                        <div class="landlord-form-grid">
+                            <div class="landlord-form-group">
+                                <label for="property_id">
+                                    Property
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <select
+                                    id="property_id"
+                                    name="property_id"
+                                    required
+                                    aria-describedby="property-help"
+                                >
+                                    <option value="">
+                                        Select a property
+                                    </option>
+
+                                    {% for property in properties | default([]) %}
+                                        <option
+                                            value="{{ property.id }}"
+                                            {% if form_data
+                                                  and form_data.get('property_id')
+                                                     | string
+                                                     == property.id | string %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ property.name
+                                               or property.title
+                                               or property.address
+                                               or 'Property' }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                <small
+                                    id="property-help"
+                                    class="landlord-form-help"
+                                >
+                                    Choose the property where the problem
+                                    occurred.
+                                </small>
+                            </div>
+
+                            <div class="landlord-form-group">
+                                <label for="unit_id">
+                                    Unit
+                                </label>
+
+                                <select
+                                    id="unit_id"
+                                    name="unit_id"
+                                    data-selected-unit="{{
+                                        form_data.get('unit_id', '')
+                                        if form_data else ''
+                                    }}"
+                                >
+                                    <option value="">
+                                        Whole property or common area
+                                    </option>
+
+                                    {% for unit in units | default([]) %}
+                                        <option
+                                            value="{{ unit.id }}"
+                                            data-property-id="{{ unit.property_id }}"
+                                            {% if form_data
+                                                  and form_data.get('unit_id')
+                                                     | string
+                                                     == unit.id | string %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ unit.name
+                                               or unit.unit_number
+                                               or unit.reference
+                                               or 'Unit' }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                <small class="landlord-form-help">
+                                    Leave this blank if the issue affects
+                                    the whole property.
+                                </small>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="landlord-form-section"
+                        aria-labelledby="request-heading"
+                    >
+                        <div class="landlord-form-section__header">
+                            <p class="landlord-card__eyebrow">
+                                Request information
+                            </p>
+
+                            <h2 id="request-heading">
+                                Describe the issue
+                            </h2>
+                        </div>
+
+                        <div class="landlord-form-group">
+                            <label for="title">
+                                Request title
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                value="{{
+                                    form_data.get('title', '')
+                                    if form_data else ''
+                                }}"
+                                minlength="3"
+                                maxlength="160"
+                                required
+                                autocomplete="off"
+                                placeholder="For example: Heating is not working"
+                            >
+                        </div>
+
+                        <div class="landlord-form-grid">
+                            <div class="landlord-form-group">
+                                <label for="category">
+                                    Category
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                {% set selected_category =
+                                    form_data.get('category', '')
+                                    if form_data else ''
+                                %}
+
+                                <select
+                                    id="category"
+                                    name="category"
+                                    required
+                                >
+                                    <option value="">
+                                        Select a category
+                                    </option>
+
+                                    <option
+                                        value="plumbing"
+                                        {% if selected_category == 'plumbing' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Plumbing
+                                    </option>
+
+                                    <option
+                                        value="electrical"
+                                        {% if selected_category == 'electrical' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Electrical
+                                    </option>
+
+                                    <option
+                                        value="heating"
+                                        {% if selected_category == 'heating' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Heating
+                                    </option>
+
+                                    <option
+                                        value="appliance"
+                                        {% if selected_category == 'appliance' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Appliance
+                                    </option>
+
+                                    <option
+                                        value="security"
+                                        {% if selected_category == 'security' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Security
+                                    </option>
+
+                                    <option
+                                        value="structural"
+                                        {% if selected_category == 'structural' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Structural
+                                    </option>
+
+                                    <option
+                                        value="pest_control"
+                                        {% if selected_category == 'pest_control' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Pest control
+                                    </option>
+
+                                    <option
+                                        value="common_area"
+                                        {% if selected_category == 'common_area' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Common area
+                                    </option>
+
+                                    <option
+                                        value="other"
+                                        {% if selected_category == 'other' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Other
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="landlord-form-group">
+                                <label for="priority">
+                                    Priority
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                {% set selected_priority =
+                                    form_data.get('priority', 'normal')
+                                    if form_data else 'normal'
+                                %}
+
+                                <select
+                                    id="priority"
+                                    name="priority"
+                                    required
+                                >
+                                    <option
+                                        value="low"
+                                        {% if selected_priority == 'low' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Low
+                                    </option>
+
+                                    <option
+                                        value="normal"
+                                        {% if selected_priority == 'normal' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Normal
+                                    </option>
+
+                                    <option
+                                        value="high"
+                                        {% if selected_priority == 'high' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        High
+                                    </option>
+
+                                    <option
+                                        value="urgent"
+                                        {% if selected_priority == 'urgent' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Urgent
+                                    </option>
+
+                                    <option
+                                        value="emergency"
+                                        {% if selected_priority == 'emergency' %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Emergency
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="landlord-form-group">
+                            <label for="description">
+                                Detailed description
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="7"
+                                minlength="10"
+                                maxlength="5000"
+                                required
+                                placeholder="Describe the problem, when it started, and any action already taken."
+                            >{{ form_data.get('description', '') if form_data else '' }}</textarea>
+
+                            <div class="landlord-form-meta">
+                                <small class="landlord-form-help">
+                                    Do not include passwords, payment
+                                    details, or unnecessary personal data.
+                                </small>
+
+                                <small
+                                    id="description-count"
+                                    aria-live="polite"
+                                >
+                                    0 / 5000
+                                </small>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="landlord-form-section"
+                        aria-labelledby="assignment-heading"
+                    >
+                        <div class="landlord-form-section__header">
+                            <p class="landlord-card__eyebrow">
+                                Assignment
+                            </p>
+
+                            <h2 id="assignment-heading">
+                                Schedule and responsibility
+                            </h2>
+                        </div>
+
+                        <div class="landlord-form-grid">
+                            <div class="landlord-form-group">
+                                <label for="assigned_to_id">
+                                    Assign to
+                                </label>
+
+                                <select
+                                    id="assigned_to_id"
+                                    name="assigned_to_id"
+                                >
+                                    <option value="">
+                                        Not assigned
+                                    </option>
+
+                                    {% for worker in maintenance_workers
+                                                         | default([]) %}
+                                        <option
+                                            value="{{ worker.id }}"
+                                            {% if form_data
+                                                  and form_data.get(
+                                                      'assigned_to_id'
+                                                  ) | string
+                                                     == worker.id | string %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ worker.full_name
+                                               or worker.name
+                                               or worker.email }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="landlord-form-group">
+                                <label for="scheduled_at">
+                                    Scheduled date and time
+                                </label>
+
+                                <input
+                                    type="datetime-local"
+                                    id="scheduled_at"
+                                    name="scheduled_at"
+                                    value="{{
+                                        form_data.get('scheduled_at', '')
+                                        if form_data else ''
+                                    }}"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="landlord-form-group">
+                            <label for="access_instructions">
+                                Access instructions
+                            </label>
+
+                            <textarea
+                                id="access_instructions"
+                                name="access_instructions"
+                                rows="4"
+                                maxlength="1000"
+                                placeholder="Add safe access instructions for the maintenance worker."
+                            >{{ form_data.get('access_instructions', '') if form_data else '' }}</textarea>
+                        </div>
+
+                        <div class="landlord-checkbox-group">
+                            <input
+                                type="checkbox"
+                                id="notify_tenant"
+                                name="notify_tenant"
+                                value="true"
+                                {% if not form_data
+                                      or form_data.get('notify_tenant') %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <label for="notify_tenant">
+                                Notify the tenant about this request
+                            </label>
+                        </div>
+                    </section>
+
+                    <div class="landlord-form-actions">
+                        <button
+                            type="submit"
+                            class="landlord-button landlord-button--primary"
+                            data-submit-button
+                        >
+                            Create maintenance request
+                        </button>
+
+                        <a
+                            class="landlord-button landlord-button--secondary"
+                            href="{{ url_for(
+                                'landlord_maintenance_requests'
+                            ) }}"
+                        >
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </main>
+
+            <aside
+                class="landlord-form-sidebar"
+                aria-label="Maintenance guidance"
+            >
+                <section class="landlord-card">
+                    <p class="landlord-card__eyebrow">
+                        Priority guide
+                    </p>
+
+                    <h2>Choose the correct priority</h2>
+
+                    <dl class="landlord-priority-guide">
+                        <div>
+                            <dt>Low</dt>
+                            <dd>
+                                Cosmetic or non-urgent improvement.
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Normal</dt>
+                            <dd>
+                                Standard repair without immediate risk.
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>High</dt>
+                            <dd>
+                                Significant disruption requiring fast
+                                attention.
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Urgent</dt>
+                            <dd>
+                                Serious problem that may cause damage.
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Emergency</dt>
+                            <dd>
+                                Immediate danger to people or property.
+                            </dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="landlord-card landlord-emergency-card">
+                    <h2>Emergency warning</h2>
+
+                    <p>
+                        For fire, gas leaks, medical emergencies, or
+                        immediate danger in Germany, contact the
+                        emergency services first.
+                    </p>
+
+                    <p>
+                        <strong>Fire or medical:</strong> 112<br>
+                        <strong>Police:</strong> 110
+                    </p>
+                </section>
+
+                <section class="landlord-card">
+                    <h2>Privacy reminder</h2>
+
+                    <p>
+                        Only collect information needed to resolve the
+                        maintenance issue. Avoid storing sensitive
+                        personal or financial information.
+                    </p>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ super() }}
+<script
+    src="{{ url_for('static', path='js/landlord.js') }}"
+    defer
+></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
+
+    const form = document.getElementById(
+        "maintenance-request-form"
+    );
+
+    if (!form) {
+        return;
+    }
+
+    const propertySelect =
+        document.getElementById("property_id");
+
+    const unitSelect =
+        document.getElementById("unit_id");
+
+    const description =
+        document.getElementById("description");
+
+    const descriptionCount =
+        document.getElementById(
+            "description-count"
+        );
+
+    const submitButton =
+        form.querySelector(
+            "[data-submit-button]"
+        );
+
+    function updateUnits() {
+        if (!propertySelect || !unitSelect) {
+            return;
+        }
+
+        const propertyId =
+            propertySelect.value;
+
+        Array.from(unitSelect.options)
+            .forEach(function (option) {
+                if (!option.value) {
+                    option.hidden = false;
+                    return;
+                }
+
+                const optionPropertyId =
+                    option.dataset.propertyId;
+
+                option.hidden = Boolean(
+                    propertyId &&
+                    optionPropertyId !== propertyId
+                );
+            });
+
+        const selectedOption =
+            unitSelect.options[
+                unitSelect.selectedIndex
+            ];
+
+        if (
+            selectedOption &&
+            selectedOption.hidden
+        ) {
+            unitSelect.value = "";
+        }
+    }
+
+    function updateDescriptionCount() {
+        if (
+            !description ||
+            !descriptionCount
+        ) {
+            return;
+        }
+
+        descriptionCount.textContent =
+            `${description.value.length} / 5000`;
+    }
+
+    propertySelect?.addEventListener(
+        "change",
+        updateUnits
+    );
+
+    description?.addEventListener(
+        "input",
+        updateDescriptionCount
+    );
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                form.reportValidity();
+                return;
+            }
+
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent =
+                    "Creating request…";
+            }
+        }
+    );
+
+    updateUnits();
+    updateDescriptionCount();
+});
+</script>
+{% endblock %}

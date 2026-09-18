@@ -1,659 +1,489 @@
-/*
- * Smart Property AI
- * Tenant portal interactions
- */
-
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const tenantStatus =
-        document.querySelector("[data-tenant-status]");
+/**
+ * Smart Property AI — Tenant Portal
+ *
+ * This file is scoped to pages containing .tenant-page.
+ */
+(function tenantPortal() {
+    const READY_EVENT = "smart-property:tenant-ready";
 
-    const tenantForms =
-        document.querySelectorAll(".tenant-form");
+    function getTenantPage() {
+        return document.querySelector(".tenant-page");
+    }
 
-    const filterInputs =
-        document.querySelectorAll("[data-tenant-filter]");
-
-    const statusFilters =
-        document.querySelectorAll("[data-status-filter]");
-
-    const searchRows =
-        document.querySelectorAll("[data-tenant-search-item]");
-
-    const propertySelectors =
-        document.querySelectorAll("[data-property-select]");
-
-    const unitSelectors =
-        document.querySelectorAll("[data-unit-select]");
-
-    function announce(message, type = "info") {
-        if (window.SmartProperty?.announce) {
-            window.SmartProperty.announce(
-                message,
-                type
-            );
-        }
-
-        if (!tenantStatus) {
-            return;
-        }
-
-        tenantStatus.textContent = message;
-        tenantStatus.dataset.statusType = type;
-        tenantStatus.setAttribute(
-            "role",
-            type === "error" ? "alert" : "status"
-        );
-        tenantStatus.setAttribute(
-            "aria-live",
-            type === "error"
-                ? "assertive"
-                : "polite"
+    function prefersReducedMotion() {
+        return (
+            window.matchMedia &&
+            window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches
         );
     }
 
-    function normalizeText(value) {
+    function normaliseStatusText(value) {
         return String(value || "")
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ")
             .trim()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+            .replace(/\b\w/g, (letter) =>
+                letter.toUpperCase()
+            );
     }
 
-    function debounce(callback, delay = 250) {
-        let timeoutId;
-
-        return (...argumentsList) => {
-            window.clearTimeout(timeoutId);
-
-            timeoutId = window.setTimeout(() => {
-                callback(...argumentsList);
-            }, delay);
-        };
-    }
-
-    /* =====================================================
-       Tenant navigation
-       ===================================================== */
-
-    const tenantNavigation =
-        document.querySelector(
-            ".tenant-dashboard-navigation"
-        );
-
-    if (tenantNavigation) {
-        const currentLink =
-            tenantNavigation.querySelector(
-                "a[aria-current='page'], a.active"
+    function prepareStatusBadges(page) {
+        page.querySelectorAll(
+            ".tenant-status"
+        ).forEach((badge) => {
+            const text = normaliseStatusText(
+                badge.textContent
             );
 
-        currentLink?.scrollIntoView({
-            behavior: "auto",
-            block: "nearest",
-            inline: "center"
+            if (text) {
+                badge.textContent = text;
+                badge.setAttribute(
+                    "aria-label",
+                    `Status: ${text}`
+                );
+            }
         });
     }
 
-    /* =====================================================
-       Search and status filtering
-       ===================================================== */
-
-    function filterItems() {
-        const searchValues = Array.from(
-            filterInputs
-        )
-            .map((input) => normalizeText(input.value))
-            .filter(Boolean);
-
-        const selectedStatuses = Array.from(
-            statusFilters
-        )
-            .map((select) =>
-                normalizeText(select.value)
-            )
-            .filter(Boolean);
-
-        let visibleCount = 0;
-
-        searchRows.forEach((item) => {
-            const searchableText = normalizeText(
-                item.dataset.searchText ||
-                item.textContent
+    function prepareExternalLinks(page) {
+        page.querySelectorAll(
+            'a[target="_blank"]'
+        ).forEach((link) => {
+            const rel = new Set(
+                String(
+                    link.getAttribute("rel") || ""
+                )
+                    .split(/\s+/)
+                    .filter(Boolean)
             );
 
-            const itemStatus = normalizeText(
-                item.dataset.status
+            rel.add("noopener");
+            rel.add("noreferrer");
+
+            link.setAttribute(
+                "rel",
+                Array.from(rel).join(" ")
             );
-
-            const matchesSearch =
-                searchValues.length === 0 ||
-                searchValues.every((value) =>
-                    searchableText.includes(value)
-                );
-
-            const matchesStatus =
-                selectedStatuses.length === 0 ||
-                selectedStatuses.includes(itemStatus);
-
-            const visible =
-                matchesSearch && matchesStatus;
-
-            item.hidden = !visible;
-
-            if (visible) {
-                visibleCount += 1;
-            }
         });
-
-        const resultCounter =
-            document.querySelector(
-                "[data-filter-result-count]"
-            );
-
-        if (resultCounter) {
-            resultCounter.textContent =
-                visibleCount === 1
-                    ? "1 result"
-                    : `${visibleCount} results`;
-        }
-
-        const emptyResult =
-            document.querySelector(
-                "[data-filter-empty]"
-            );
-
-        if (emptyResult) {
-            emptyResult.hidden =
-                visibleCount !== 0;
-        }
     }
 
-    const debouncedFilter =
-        debounce(filterItems);
-
-    filterInputs.forEach((input) => {
-        input.addEventListener(
-            "input",
-            debouncedFilter
-        );
-    });
-
-    statusFilters.forEach((select) => {
-        select.addEventListener(
-            "change",
-            filterItems
-        );
-    });
-
-    /* =====================================================
-       Property and unit selectors
-       ===================================================== */
-
-    function updateAvailableUnits(
-        propertySelector,
-        unitSelector
-    ) {
-        const propertyId =
-            propertySelector.value;
-
-        let availableOptions = 0;
-
-        Array.from(unitSelector.options).forEach(
-            (option) => {
-                if (!option.value) {
-                    option.hidden = false;
-                    option.disabled = false;
-                    return;
-                }
-
-                const optionProperty =
-                    option.dataset.propertyId;
-
-                const visible =
-                    !propertyId ||
-                    !optionProperty ||
-                    optionProperty === propertyId;
-
-                option.hidden = !visible;
-                option.disabled = !visible;
-
-                if (visible) {
-                    availableOptions += 1;
-                }
-
-                if (
-                    option.selected &&
-                    !visible
-                ) {
-                    unitSelector.value = "";
-                }
-            }
-        );
-
-        unitSelector.disabled =
-            Boolean(propertyId) &&
-            availableOptions === 0;
-
-        if (
-            propertyId &&
-            availableOptions === 0
-        ) {
-            announce(
-                "No selectable unit was found for this property.",
-                "error"
-            );
-        }
-    }
-
-    propertySelectors.forEach(
-        (propertySelector) => {
-            const form =
-                propertySelector.closest("form");
-
-            const unitSelector =
-                form?.querySelector(
-                    "[data-unit-select]"
-                ) ||
-                (
-                    unitSelectors.length === 1
-                        ? unitSelectors[0]
-                        : null
-                );
-
-            if (!unitSelector) {
-                return;
-            }
-
-            propertySelector.addEventListener(
-                "change",
-                () => {
-                    updateAvailableUnits(
-                        propertySelector,
-                        unitSelector
-                    );
-                }
-            );
-
-            updateAvailableUnits(
-                propertySelector,
-                unitSelector
-            );
-        }
-    );
-
-    /* =====================================================
-       Form validation
-       ===================================================== */
-
-    tenantForms.forEach((form) => {
-        form.addEventListener("submit", (event) => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-
-                const invalidField =
-                    form.querySelector(":invalid");
-
-                invalidField?.focus();
-                invalidField?.reportValidity();
-
-                announce(
-                    "Complete the required fields before submitting.",
-                    "error"
-                );
-
-                return;
-            }
+    function prepareDates(page) {
+        page.querySelectorAll(
+            "time[datetime]"
+        ).forEach((timeElement) => {
+            const rawValue =
+                timeElement.getAttribute("datetime");
 
             if (
-                form.dataset.submitting === "true"
-            ) {
-                event.preventDefault();
-                return;
-            }
-
-            form.dataset.submitting = "true";
-            form.setAttribute(
-                "aria-busy",
-                "true"
-            );
-
-            form.querySelectorAll(
-                "button[type='submit'], input[type='submit']"
-            ).forEach((button) => {
-                button.disabled = true;
-
-                if (
-                    button instanceof
-                    HTMLButtonElement
-                ) {
-                    button.dataset.originalText =
-                        button.textContent;
-
-                    button.textContent =
-                        button.dataset.loadingText ||
-                        "Submitting…";
-                }
-            });
-
-            announce(
-                "Your request is being submitted."
-            );
-        });
-    });
-
-    /* =====================================================
-       Confirmation forms
-       ===================================================== */
-
-    document.querySelectorAll(
-        "form[data-tenant-confirm]"
-    ).forEach((form) => {
-        form.addEventListener("submit", (event) => {
-            const message =
-                form.dataset.tenantConfirm ||
-                "Are you sure you want to continue?";
-
-            if (!window.confirm(message)) {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-            }
-        });
-    });
-
-    /* =====================================================
-       Priority warnings
-       ===================================================== */
-
-    document.querySelectorAll(
-        "select[name='priority']"
-    ).forEach((prioritySelector) => {
-        const warning =
-            prioritySelector
-                .closest("form")
-                ?.querySelector(
-                    "[data-priority-warning]"
-                );
-
-        function updatePriorityWarning() {
-            const priority =
-                prioritySelector.value;
-
-            const urgent =
-                priority === "urgent" ||
-                priority === "emergency";
-
-            if (warning) {
-                warning.hidden = !urgent;
-            }
-
-            if (priority === "emergency") {
-                announce(
-                    "For an immediate emergency, leave the dangerous area and contact emergency services. Do not wait for a maintenance response.",
-                    "error"
-                );
-            }
-        }
-
-        prioritySelector.addEventListener(
-            "change",
-            updatePriorityWarning
-        );
-
-        updatePriorityWarning();
-    });
-
-    /* =====================================================
-       Character counters
-       ===================================================== */
-
-    document.querySelectorAll(
-        "[data-tenant-character-count]"
-    ).forEach((counter) => {
-        const fieldId =
-            counter.dataset.tenantCharacterCount;
-
-        const field =
-            document.getElementById(fieldId);
-
-        if (
-            !(field instanceof HTMLInputElement) &&
-            !(field instanceof HTMLTextAreaElement)
-        ) {
-            return;
-        }
-
-        function updateCounter() {
-            const length = field.value.length;
-            const maximum =
-                field.maxLength > 0
-                    ? field.maxLength
-                    : null;
-
-            counter.textContent = maximum
-                ? `${length} of ${maximum} characters used.`
-                : `${length} characters used.`;
-        }
-
-        field.addEventListener(
-            "input",
-            updateCounter
-        );
-
-        updateCounter();
-    });
-
-    /* =====================================================
-       Status controls and details
-       ===================================================== */
-
-    document.querySelectorAll(
-        "[data-details-toggle]"
-    ).forEach((button) => {
-        const targetId =
-            button.dataset.detailsToggle;
-
-        const target =
-            document.getElementById(targetId);
-
-        if (!target) {
-            return;
-        }
-
-        button.type = "button";
-        button.setAttribute(
-            "aria-controls",
-            targetId
-        );
-
-        if (
-            !button.hasAttribute("aria-expanded")
-        ) {
-            button.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-        }
-
-        button.addEventListener("click", () => {
-            const expanded =
-                button.getAttribute(
-                    "aria-expanded"
-                ) === "true";
-
-            button.setAttribute(
-                "aria-expanded",
-                String(!expanded)
-            );
-
-            target.hidden = expanded;
-        });
-    });
-
-    /* =====================================================
-       Mark notifications read
-       ===================================================== */
-
-    document.querySelectorAll(
-        "[data-notification-item]"
-    ).forEach((notification) => {
-        const link = notification.querySelector(
-            "a[data-notification-link]"
-        );
-
-        const form = notification.querySelector(
-            "form[data-mark-read-form]"
-        );
-
-        if (!link || !form) {
-            return;
-        }
-
-        link.addEventListener("click", () => {
-            if (
-                notification.dataset.read ===
-                "true"
+                !rawValue ||
+                timeElement.dataset.tenantDateReady ===
+                    "true"
             ) {
                 return;
             }
 
-            /*
-             * The server form remains the authoritative update.
-             * JavaScript only improves the visual response.
-             */
-            notification.classList.remove(
-                "unread"
-            );
+            const date = new Date(rawValue);
 
-            notification.dataset.read = "true";
-        });
-    });
+            if (Number.isNaN(date.getTime())) {
+                return;
+            }
 
-    /* =====================================================
-       Print controls
-       ===================================================== */
+            timeElement.dataset.tenantDateReady =
+                "true";
 
-    document.querySelectorAll(
-        "[data-tenant-print]"
-    ).forEach((button) => {
-        button.type = "button";
-
-        button.addEventListener("click", () => {
-            window.print();
-        });
-    });
-
-    /* =====================================================
-       Copy reference numbers
-       ===================================================== */
-
-    async function copyText(value) {
-        if (
-            navigator.clipboard &&
-            window.isSecureContext
-        ) {
-            await navigator.clipboard.writeText(
-                value
-            );
-
-            return;
-        }
-
-        const textarea =
-            document.createElement("textarea");
-
-        textarea.value = value;
-        textarea.setAttribute(
-            "readonly",
-            ""
-        );
-
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-
-        document.body.appendChild(textarea);
-        textarea.select();
-
-        const successful =
-            document.execCommand("copy");
-
-        textarea.remove();
-
-        if (!successful) {
-            throw new Error(
-                "Clipboard copy failed."
-            );
-        }
-    }
-
-    document.querySelectorAll(
-        "[data-copy-reference]"
-    ).forEach((button) => {
-        button.type = "button";
-
-        button.addEventListener(
-            "click",
-            async () => {
-                const reference =
-                    button.dataset.copyReference;
-
-                if (!reference) {
-                    return;
-                }
-
+            if (!timeElement.getAttribute("title")) {
                 try {
-                    await copyText(reference);
+                    const formatter =
+                        new Intl.DateTimeFormat(
+                            document.documentElement
+                                .lang || "en",
+                            {
+                                dateStyle: "full",
+                                timeStyle: "short"
+                            }
+                        );
 
-                    announce(
-                        "Reference number copied."
+                    timeElement.setAttribute(
+                        "title",
+                        formatter.format(date)
                     );
                 } catch (error) {
-                    console.error(
-                        "Reference could not be copied.",
+                    console.warn(
+                        "Unable to format tenant date.",
                         error
-                    );
-
-                    announce(
-                        "The reference number could not be copied.",
-                        "error"
                     );
                 }
             }
-        );
-    });
-
-    /* =====================================================
-       Accessible page announcements
-       ===================================================== */
-
-    const pageHeading =
-        document.querySelector(
-            "#main-content h1"
-        );
-
-    if (pageHeading) {
-        document.title =
-            document.title.trim() ||
-            `${pageHeading.textContent.trim()} | Smart Property AI`;
+        });
     }
 
-    /* =====================================================
-       Public tenant API
-       ===================================================== */
-
-    window.SmartPropertyTenant = {
-        announce,
-
-        filter() {
-            filterItems();
-        },
-
-        copyReference(reference) {
-            return copyText(reference);
-        },
-
-        print() {
-            window.print();
+    function makeAlertDismissible(alert) {
+        if (
+            alert.querySelector(
+                "[data-tenant-alert-close]"
+            )
+        ) {
+            return;
         }
-    };
-});
+
+        const closeButton =
+            document.createElement("button");
+
+        closeButton.type = "button";
+        closeButton.className =
+            "tenant-alert__close";
+        closeButton.dataset.tenantAlertClose =
+            "true";
+        closeButton.setAttribute(
+            "aria-label",
+            "Dismiss message"
+        );
+        closeButton.textContent = "×";
+
+        closeButton.addEventListener(
+            "click",
+            () => {
+                if (prefersReducedMotion()) {
+                    alert.remove();
+                    return;
+                }
+
+                alert.style.transition =
+                    "opacity 160ms ease, " +
+                    "transform 160ms ease";
+
+                alert.style.opacity = "0";
+                alert.style.transform =
+                    "translateY(-0.35rem)";
+
+                window.setTimeout(
+                    () => alert.remove(),
+                    180
+                );
+            }
+        );
+
+        alert.appendChild(closeButton);
+    }
+
+    function prepareAlerts(page) {
+        page.querySelectorAll(
+            ".tenant-alert"
+        ).forEach((alert) => {
+            makeAlertDismissible(alert);
+        });
+    }
+
+    function isVisible(element) {
+        if (!element || element.hidden) {
+            return false;
+        }
+
+        const style =
+            window.getComputedStyle(element);
+
+        return (
+            style.display !== "none" &&
+            style.visibility !== "hidden"
+        );
+    }
+
+    function findAiOverlay() {
+        const selectors = [
+            "[data-ai-overlay]",
+            "#ai-chat-overlay",
+            "#chat-overlay",
+            ".ai-chat-overlay",
+            ".chat-overlay"
+        ];
+
+        for (const selector of selectors) {
+            const element =
+                document.querySelector(selector);
+
+            if (element) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
+    function findAiCloseButton(overlay) {
+        return overlay.querySelector(
+            [
+                "[data-ai-overlay-close]",
+                "[data-chat-overlay-close]",
+                ".ai-chat-overlay__close",
+                ".chat-overlay__close",
+                "#close-ai-chat",
+                "#close-chat-overlay"
+            ].join(", ")
+        );
+    }
+
+    function openAiOverlay(trigger) {
+        const overlay = findAiOverlay();
+
+        if (!overlay) {
+            document.dispatchEvent(
+                new CustomEvent(
+                    "smart-property:open-ai",
+                    {
+                        detail: {
+                            trigger
+                        }
+                    }
+                )
+            );
+
+            return;
+        }
+
+        overlay.hidden = false;
+        overlay.removeAttribute("aria-hidden");
+        overlay.setAttribute(
+            "aria-modal",
+            "true"
+        );
+
+        overlay.classList.add(
+            "is-open",
+            "open",
+            "active"
+        );
+
+        document.body.classList.add(
+            "ai-overlay-open"
+        );
+
+        const firstControl =
+            overlay.querySelector(
+                [
+                    "textarea",
+                    "input:not([type='hidden'])",
+                    "button",
+                    "select",
+                    "a[href]"
+                ].join(", ")
+            );
+
+        window.requestAnimationFrame(() => {
+            if (firstControl) {
+                firstControl.focus();
+            }
+        });
+    }
+
+    function closeAiOverlay(
+        overlay,
+        trigger
+    ) {
+        if (!overlay) {
+            return;
+        }
+
+        overlay.classList.remove(
+            "is-open",
+            "open",
+            "active"
+        );
+
+        overlay.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        overlay.hidden = true;
+
+        document.body.classList.remove(
+            "ai-overlay-open"
+        );
+
+        if (trigger) {
+            trigger.focus();
+        }
+    }
+
+    function prepareAiOverlay(page) {
+        const triggers =
+            page.querySelectorAll(
+                "[data-ai-overlay-open]"
+            );
+
+        triggers.forEach((trigger) => {
+            if (
+                trigger.dataset.tenantAiReady ===
+                "true"
+            ) {
+                return;
+            }
+
+            trigger.dataset.tenantAiReady =
+                "true";
+
+            trigger.addEventListener(
+                "click",
+                (event) => {
+                    const overlay =
+                        findAiOverlay();
+
+                    /*
+                     * If chat-overlay.js has already
+                     * opened the assistant, do nothing.
+                     */
+                    if (
+                        overlay &&
+                        isVisible(overlay)
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    openAiOverlay(trigger);
+                }
+            );
+        });
+
+        const overlay = findAiOverlay();
+
+        if (
+            !overlay ||
+            overlay.dataset
+                .tenantOverlayReady === "true"
+        ) {
+            return;
+        }
+
+        overlay.dataset.tenantOverlayReady =
+            "true";
+
+        const closeButton =
+            findAiCloseButton(overlay);
+
+        if (closeButton) {
+            closeButton.addEventListener(
+                "click",
+                () => {
+                    const trigger =
+                        page.querySelector(
+                            "[data-ai-overlay-open]"
+                        );
+
+                    closeAiOverlay(
+                        overlay,
+                        trigger
+                    );
+                }
+            );
+        }
+
+        overlay.addEventListener(
+            "click",
+            (event) => {
+                if (event.target !== overlay) {
+                    return;
+                }
+
+                const trigger =
+                    page.querySelector(
+                        "[data-ai-overlay-open]"
+                    );
+
+                closeAiOverlay(
+                    overlay,
+                    trigger
+                );
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+                if (
+                    event.key !== "Escape" ||
+                    !isVisible(overlay)
+                ) {
+                    return;
+                }
+
+                const trigger =
+                    page.querySelector(
+                        "[data-ai-overlay-open]"
+                    );
+
+                closeAiOverlay(
+                    overlay,
+                    trigger
+                );
+            }
+        );
+    }
+
+    function prepareServiceCards(page) {
+        page.querySelectorAll(
+            ".tenant-service-card[href]"
+        ).forEach((card) => {
+            card.addEventListener(
+                "keydown",
+                (event) => {
+                    if (
+                        event.key === " " &&
+                        event.currentTarget ===
+                            document.activeElement
+                    ) {
+                        event.preventDefault();
+                        event.currentTarget.click();
+                    }
+                }
+            );
+        });
+    }
+
+    function initialiseTenantPortal() {
+        const page = getTenantPage();
+
+        if (
+            !page ||
+            page.dataset.tenantReady ===
+                "true"
+        ) {
+            return;
+        }
+
+        page.dataset.tenantReady = "true";
+
+        prepareStatusBadges(page);
+        prepareExternalLinks(page);
+        prepareDates(page);
+        prepareAlerts(page);
+        prepareAiOverlay(page);
+        prepareServiceCards(page);
+
+        document.dispatchEvent(
+            new CustomEvent(READY_EVENT, {
+                detail: {
+                    page
+                }
+            })
+        );
+    }
+
+    if (
+        document.readyState === "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialiseTenantPortal,
+            {
+                once: true
+            }
+        );
+    } else {
+        initialiseTenantPortal();
+    }
+})();

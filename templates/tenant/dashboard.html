@@ -1,0 +1,827 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Tenant Dashboard | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Manage your lease, payments, maintenance requests, complaints, documents, messages, and appointments.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/tenant.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="tenant-page tenant-dashboard">
+
+    <div class="tenant-page__container">
+
+        {% set tenant_name =
+            current_user.full_name
+            if current_user is defined
+               and current_user
+               and current_user.full_name is defined
+               and current_user.full_name
+            else request.session.get('name')
+                 or request.session.get('username')
+                 or 'Tenant'
+        %}
+
+
+        <!-- Dashboard header -->
+        <header class="tenant-page__header">
+            <div>
+                <p class="tenant-page__eyebrow">
+                    Tenant portal
+                </p>
+
+                <h1>
+                    Welcome, {{ tenant_name }}
+                </h1>
+
+                <p>
+                    Review your tenancy, payments, service requests,
+                    documents, messages, and upcoming appointments.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="tenant-button tenant-button--primary"
+                data-ai-overlay-open
+                aria-haspopup="dialog"
+            >
+                Ask Smart Property AI
+            </button>
+        </header>
+
+
+        <!-- Success message -->
+        {% if success %}
+            <div
+                class="tenant-alert tenant-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+
+        <!-- Error message -->
+        {% if error %}
+            <div
+                class="tenant-alert tenant-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        <!-- Dashboard statistics -->
+        <section
+            class="tenant-dashboard__statistics"
+            aria-label="Tenant account summary"
+        >
+            <article class="tenant-card tenant-stat-card">
+                <div
+                    class="tenant-stat-card__icon"
+                    aria-hidden="true"
+                >
+                    📄
+                </div>
+
+                <div>
+                    <span class="tenant-stat-card__label">
+                        Active leases
+                    </span>
+
+                    <strong class="tenant-stat-card__value">
+                        {{ active_lease_count
+                           | default(
+                               leases | length
+                               if leases is defined and leases
+                               else 0,
+                               true
+                           ) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="tenant-card tenant-stat-card">
+                <div
+                    class="tenant-stat-card__icon"
+                    aria-hidden="true"
+                >
+                    💳
+                </div>
+
+                <div>
+                    <span class="tenant-stat-card__label">
+                        Pending payments
+                    </span>
+
+                    <strong class="tenant-stat-card__value">
+                        {{ pending_payment_count
+                           | default(
+                               pending_payments | length
+                               if pending_payments is defined
+                                  and pending_payments
+                               else 0,
+                               true
+                           ) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="tenant-card tenant-stat-card">
+                <div
+                    class="tenant-stat-card__icon"
+                    aria-hidden="true"
+                >
+                    🔧
+                </div>
+
+                <div>
+                    <span class="tenant-stat-card__label">
+                        Open maintenance
+                    </span>
+
+                    <strong class="tenant-stat-card__value">
+                        {{ open_maintenance_count
+                           | default(
+                               maintenance_requests | length
+                               if maintenance_requests is defined
+                                  and maintenance_requests
+                               else 0,
+                               true
+                           ) }}
+                    </strong>
+                </div>
+            </article>
+
+
+            <article class="tenant-card tenant-stat-card">
+                <div
+                    class="tenant-stat-card__icon"
+                    aria-hidden="true"
+                >
+                    🔔
+                </div>
+
+                <div>
+                    <span class="tenant-stat-card__label">
+                        Unread notifications
+                    </span>
+
+                    <strong class="tenant-stat-card__value">
+                        {{ unread_notification_count
+                           | default(
+                               notifications | length
+                               if notifications is defined
+                                  and notifications
+                               else 0,
+                               true
+                           ) }}
+                    </strong>
+                </div>
+            </article>
+        </section>
+
+
+        <!-- Tenant navigation -->
+        <section
+            class="tenant-card"
+            aria-labelledby="tenant-services-heading"
+        >
+            <div class="tenant-card__header">
+                <div>
+                    <p class="tenant-card__eyebrow">
+                        Account services
+                    </p>
+
+                    <h2 id="tenant-services-heading">
+                        Tenant services
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="tenant-dashboard__service-grid">
+
+                <a
+                    href="{{ url_for('tenant_leases') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        📄
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Leases
+                        </strong>
+
+                        <span>
+                            Review lease dates, rent, deposit, and
+                            renewal information.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_payments') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        💳
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Payments
+                        </strong>
+
+                        <span>
+                            Review rent amounts, due dates, and payment
+                            status.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_maintenance_requests') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        🔧
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Maintenance
+                        </strong>
+
+                        <span>
+                            Submit and follow maintenance or repair
+                            requests.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_complaints') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        📣
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Complaints
+                        </strong>
+
+                        <span>
+                            Submit a complaint and review its progress.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_documents') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        📁
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Documents
+                        </strong>
+
+                        <span>
+                            Access authorized lease and property
+                            documents.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_messages') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        ✉️
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Messages
+                        </strong>
+
+                        <span>
+                            Communicate securely with property
+                            management.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_appointments') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        📅
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Appointments
+                        </strong>
+
+                        <span>
+                            Review viewing and property appointments.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_notifications') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        🔔
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Notifications
+                        </strong>
+
+                        <span>
+                            Review account alerts and reminders.
+                        </span>
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{ url_for('tenant_profile') }}"
+                    class="tenant-service-card"
+                >
+                    <span
+                        class="tenant-service-card__icon"
+                        aria-hidden="true"
+                    >
+                        👤
+                    </span>
+
+                    <span class="tenant-service-card__content">
+                        <strong>
+                            Profile
+                        </strong>
+
+                        <span>
+                            Review your language and contact settings.
+                        </span>
+                    </span>
+                </a>
+
+            </div>
+        </section>
+
+
+        <div class="tenant-dashboard__columns">
+
+            <!-- Current lease -->
+            <section
+                class="tenant-card"
+                aria-labelledby="current-lease-heading"
+            >
+                <div class="tenant-card__header">
+                    <div>
+                        <p class="tenant-card__eyebrow">
+                            Tenancy
+                        </p>
+
+                        <h2 id="current-lease-heading">
+                            Current lease
+                        </h2>
+                    </div>
+
+                    <a
+                        href="{{ url_for('tenant_leases') }}"
+                        class="tenant-button tenant-button--secondary"
+                    >
+                        View leases
+                    </a>
+                </div>
+
+
+                {% if active_lease is defined and active_lease %}
+
+                    {% set lease_status =
+                        active_lease.status.value
+                        if active_lease.status is not string
+                           and active_lease.status.value is defined
+                        else active_lease.status
+                             | default('active', true)
+                    %}
+
+                    <dl class="tenant-summary-list">
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Property
+                            </dt>
+
+                            <dd>
+                                {% if active_lease.property is defined
+                                      and active_lease.property %}
+                                    {{ active_lease.property.title
+                                       | default(
+                                           active_lease.property.name
+                                           | default(
+                                               active_lease.property.address
+                                               | default(
+                                                   'Property',
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Status
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-status
+                                           tenant-status--{{ lease_status
+                                           | lower
+                                           | replace('_', '-')
+                                           | replace(' ', '-') }}"
+                                >
+                                    {{ lease_status
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Monthly rent
+                            </dt>
+
+                            <dd>
+                                {% if active_lease.monthly_rent is defined
+                                      and active_lease.monthly_rent is not none %}
+                                    {{ '%.2f' | format(
+                                        active_lease.monthly_rent
+                                    ) }}
+                                    {{ active_lease.currency
+                                       | default('EUR', true) }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Lease period
+                            </dt>
+
+                            <dd>
+                                {% if active_lease.start_date %}
+                                    {{ active_lease.start_date.strftime(
+                                        '%d %B %Y'
+                                    ) }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+
+                                –
+
+                                {% if active_lease.end_date %}
+                                    {{ active_lease.end_date.strftime(
+                                        '%d %B %Y'
+                                    ) }}
+                                {% else %}
+                                    Ongoing
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                    </dl>
+
+                {% else %}
+
+                    <div class="tenant-empty-state">
+                        <div
+                            class="tenant-empty-state__icon"
+                            aria-hidden="true"
+                        >
+                            📄
+                        </div>
+
+                        <h3>
+                            No active lease
+                        </h3>
+
+                        <p>
+                            There is currently no active lease connected
+                            to your tenant account.
+                        </p>
+                    </div>
+
+                {% endif %}
+            </section>
+
+
+            <!-- Upcoming appointment -->
+            <section
+                class="tenant-card"
+                aria-labelledby="upcoming-appointment-heading"
+            >
+                <div class="tenant-card__header">
+                    <div>
+                        <p class="tenant-card__eyebrow">
+                            Schedule
+                        </p>
+
+                        <h2 id="upcoming-appointment-heading">
+                            Upcoming appointment
+                        </h2>
+                    </div>
+
+                    <a
+                        href="{{ url_for('tenant_appointments') }}"
+                        class="tenant-button tenant-button--secondary"
+                    >
+                        View appointments
+                    </a>
+                </div>
+
+
+                {% if upcoming_appointment is defined
+                      and upcoming_appointment %}
+
+                    {% set appointment_status =
+                        upcoming_appointment.status.value
+                        if upcoming_appointment.status is not string
+                           and upcoming_appointment.status.value is defined
+                        else upcoming_appointment.status
+                             | default('scheduled', true)
+                    %}
+
+                    <div class="tenant-dashboard__appointment">
+                        <div
+                            class="tenant-dashboard__appointment-icon"
+                            aria-hidden="true"
+                        >
+                            📅
+                        </div>
+
+                        <div>
+                            <h3>
+                                {{ upcoming_appointment.appointment_type
+                                   | default(
+                                       'Property appointment',
+                                       true
+                                   )
+                                   | replace('_', ' ')
+                                   | title }}
+                            </h3>
+
+                            {% if upcoming_appointment.scheduled_at %}
+                                <p>
+                                    <time
+                                        datetime="{{ upcoming_appointment.scheduled_at.isoformat() }}"
+                                    >
+                                        {{ upcoming_appointment.scheduled_at.strftime(
+                                            '%A, %d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </p>
+                            {% endif %}
+
+                            <span
+                                class="tenant-status
+                                       tenant-status--{{ appointment_status
+                                       | lower
+                                       | replace('_', '-')
+                                       | replace(' ', '-') }}"
+                            >
+                                {{ appointment_status
+                                   | replace('_', ' ')
+                                   | title }}
+                            </span>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="tenant-empty-state">
+                        <div
+                            class="tenant-empty-state__icon"
+                            aria-hidden="true"
+                        >
+                            📅
+                        </div>
+
+                        <h3>
+                            No upcoming appointment
+                        </h3>
+
+                        <p>
+                            You currently have no scheduled property
+                            appointments.
+                        </p>
+                    </div>
+
+                {% endif %}
+            </section>
+
+        </div>
+
+
+        <!-- Recent activity -->
+        <section
+            class="tenant-card"
+            aria-labelledby="recent-activity-heading"
+        >
+            <div class="tenant-card__header">
+                <div>
+                    <p class="tenant-card__eyebrow">
+                        Account updates
+                    </p>
+
+                    <h2 id="recent-activity-heading">
+                        Recent activity
+                    </h2>
+                </div>
+            </div>
+
+
+            {% if recent_activity is defined and recent_activity %}
+
+                <ol class="tenant-timeline">
+
+                    {% for activity in recent_activity %}
+                        <li class="tenant-timeline__item">
+                            <div
+                                class="tenant-timeline__marker"
+                                aria-hidden="true"
+                            ></div>
+
+                            <div class="tenant-timeline__content">
+                                <h3>
+                                    {{ activity.title
+                                       | default(
+                                           'Account update',
+                                           true
+                                       ) }}
+                                </h3>
+
+                                {% if activity.message is defined
+                                      and activity.message %}
+                                    <p>
+                                        {{ activity.message }}
+                                    </p>
+                                {% endif %}
+
+                                {% if activity.created_at is defined
+                                      and activity.created_at %}
+                                    <time
+                                        datetime="{{ activity.created_at.isoformat() }}"
+                                    >
+                                        {{ activity.created_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+
+                </ol>
+
+            {% else %}
+
+                <div class="tenant-empty-state">
+                    <h3>
+                        No recent activity
+                    </h3>
+
+                    <p>
+                        New payments, messages, maintenance updates, and
+                        appointments will appear here.
+                    </p>
+                </div>
+
+            {% endif %}
+        </section>
+
+
+        <!-- Emergency information -->
+        <section
+            class="tenant-card tenant-emergency-card"
+            aria-labelledby="tenant-emergency-heading"
+        >
+            <div
+                class="tenant-emergency-card__icon"
+                aria-hidden="true"
+            >
+                ⚠️
+            </div>
+
+            <div>
+                <h2 id="tenant-emergency-heading">
+                    Emergency assistance
+                </h2>
+
+                <p>
+                    Do not wait for a platform response if there is a
+                    fire, gas leak, medical emergency, serious flooding,
+                    or immediate danger. In Germany, call
+                    <strong>112</strong> for fire or medical emergencies
+                    and <strong>110</strong> for police.
+                </p>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/tenant.js') }}"
+    defer
+></script>
+{% endblock %}

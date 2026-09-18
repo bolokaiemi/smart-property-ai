@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Complaint Details | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Review the details and current status of your tenant complaint.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/tenant.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="tenant-page tenant-complaint-details">
+
+    <div class="tenant-page__container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="tenant-breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('tenant_dashboard') }}">
+                        Tenant dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('tenant_complaints') }}">
+                        Complaints
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Complaint details
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="tenant-page__header">
+            <div>
+                <p class="tenant-page__eyebrow">
+                    Tenant complaint
+                </p>
+
+                <h1>
+                    {{ complaint.subject | default('Complaint details', true) }}
+                </h1>
+
+                <p>
+                    Review your complaint, its priority, and the current
+                    response status.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('tenant_complaints') }}"
+                class="tenant-button tenant-button--secondary"
+            >
+                Back to complaints
+            </a>
+        </header>
+
+
+        {% if success %}
+            <div
+                class="tenant-alert tenant-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+
+        {% if error %}
+            <div
+                class="tenant-alert tenant-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        {% if complaint %}
+
+            {% set complaint_status =
+                complaint.status.value
+                if complaint.status is not string
+                   and complaint.status.value is defined
+                else complaint.status | default('submitted', true)
+            %}
+
+            {% set complaint_priority =
+                complaint.priority.value
+                if complaint.priority is not string
+                   and complaint.priority.value is defined
+                else complaint.priority | default('normal', true)
+            %}
+
+
+            <div class="tenant-details-layout">
+
+                <!-- Main complaint content -->
+                <section
+                    class="tenant-card tenant-details-card"
+                    aria-labelledby="complaint-description-heading"
+                >
+                    <div class="tenant-card__header">
+                        <div>
+                            <p class="tenant-card__eyebrow">
+                                Complaint information
+                            </p>
+
+                            <h2 id="complaint-description-heading">
+                                Description
+                            </h2>
+                        </div>
+
+                        <span
+                            class="tenant-status
+                                   tenant-status--{{ complaint_status | lower | replace(' ', '-') | replace('_', '-') }}"
+                        >
+                            {{ complaint_status | replace('_', ' ') | title }}
+                        </span>
+                    </div>
+
+
+                    <div class="tenant-details-card__content">
+                        <p class="tenant-details-card__description">
+                            {{ complaint.description | default(
+                                'No complaint description is available.',
+                                true
+                            ) }}
+                        </p>
+                    </div>
+
+
+                    {% if complaint.response is defined
+                          and complaint.response %}
+                        <section
+                            class="tenant-response-box"
+                            aria-labelledby="complaint-response-heading"
+                        >
+                            <h3 id="complaint-response-heading">
+                                Property-management response
+                            </h3>
+
+                            <p>
+                                {{ complaint.response }}
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    {% if complaint.resolution_notes is defined
+                          and complaint.resolution_notes %}
+                        <section
+                            class="tenant-resolution-box"
+                            aria-labelledby="resolution-notes-heading"
+                        >
+                            <h3 id="resolution-notes-heading">
+                                Resolution notes
+                            </h3>
+
+                            <p>
+                                {{ complaint.resolution_notes }}
+                            </p>
+                        </section>
+                    {% endif %}
+                </section>
+
+
+                <!-- Complaint summary -->
+                <aside
+                    class="tenant-card tenant-summary-card"
+                    aria-labelledby="complaint-summary-heading"
+                >
+                    <div class="tenant-card__header">
+                        <h2 id="complaint-summary-heading">
+                            Complaint summary
+                        </h2>
+                    </div>
+
+                    <dl class="tenant-summary-list">
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Reference
+                            </dt>
+
+                            <dd>
+                                {{ complaint.reference_number
+                                   | default(
+                                       complaint.id | default('Not available', true),
+                                       true
+                                   ) }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Status
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-status
+                                           tenant-status--{{ complaint_status | lower | replace(' ', '-') | replace('_', '-') }}"
+                                >
+                                    {{ complaint_status
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Priority
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-priority
+                                           tenant-priority--{{ complaint_priority | lower | replace(' ', '-') | replace('_', '-') }}"
+                                >
+                                    {{ complaint_priority
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Property
+                            </dt>
+
+                            <dd>
+                                {% if complaint.property is defined
+                                      and complaint.property %}
+                                    {{ complaint.property.title
+                                       | default(
+                                           complaint.property.name
+                                           | default(
+                                               complaint.property.address
+                                               | default('Property', true),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                {% elif complaint.property_name is defined
+                                      and complaint.property_name %}
+                                    {{ complaint.property_name }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if complaint.unit is defined
+                              and complaint.unit %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Unit
+                                </dt>
+
+                                <dd>
+                                    {{ complaint.unit.unit_number
+                                       | default(
+                                           complaint.unit.name
+                                           | default('Not available', true),
+                                           true
+                                       ) }}
+                                </dd>
+                            </div>
+                        {% elif complaint.unit_number is defined
+                              and complaint.unit_number %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Unit
+                                </dt>
+
+                                <dd>
+                                    {{ complaint.unit_number }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Submitted
+                            </dt>
+
+                            <dd>
+                                {% if complaint.created_at %}
+                                    {{ complaint.created_at.strftime(
+                                        '%d %B %Y at %H:%M'
+                                    ) }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Last updated
+                            </dt>
+
+                            <dd>
+                                {% if complaint.updated_at %}
+                                    {{ complaint.updated_at.strftime(
+                                        '%d %B %Y at %H:%M'
+                                    ) }}
+                                {% else %}
+                                    Not updated
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if complaint.assigned_to is defined
+                              and complaint.assigned_to %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Assigned to
+                                </dt>
+
+                                <dd>
+                                    {{ complaint.assigned_to.full_name
+                                       | default(
+                                           complaint.assigned_to.name
+                                           | default(
+                                               complaint.assigned_to.username
+                                               | default(
+                                                   'Property management',
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                    </dl>
+                </aside>
+
+            </div>
+
+
+            <!-- Status timeline -->
+            <section
+                class="tenant-card tenant-timeline-card"
+                aria-labelledby="complaint-timeline-heading"
+            >
+                <div class="tenant-card__header">
+                    <div>
+                        <p class="tenant-card__eyebrow">
+                            Activity
+                        </p>
+
+                        <h2 id="complaint-timeline-heading">
+                            Complaint progress
+                        </h2>
+                    </div>
+                </div>
+
+
+                {% if complaint.updates is defined
+                      and complaint.updates %}
+                    <ol class="tenant-timeline">
+
+                        {% for update in complaint.updates %}
+                            <li class="tenant-timeline__item">
+                                <div
+                                    class="tenant-timeline__marker"
+                                    aria-hidden="true"
+                                ></div>
+
+                                <div class="tenant-timeline__content">
+                                    <h3>
+                                        {{ update.title
+                                           | default(
+                                               update.status
+                                               | default(
+                                                   'Complaint updated',
+                                                   true
+                                               ),
+                                               true
+                                           ) }}
+                                    </h3>
+
+                                    {% if update.message is defined
+                                          and update.message %}
+                                        <p>
+                                            {{ update.message }}
+                                        </p>
+                                    {% elif update.notes is defined
+                                          and update.notes %}
+                                        <p>
+                                            {{ update.notes }}
+                                        </p>
+                                    {% endif %}
+
+                                    {% if update.created_at is defined
+                                          and update.created_at %}
+                                        <time
+                                            datetime="{{ update.created_at.isoformat() }}"
+                                        >
+                                            {{ update.created_at.strftime(
+                                                '%d %B %Y at %H:%M'
+                                            ) }}
+                                        </time>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ol>
+
+                {% else %}
+
+                    <div class="tenant-empty-state">
+                        <h3>
+                            No updates yet
+                        </h3>
+
+                        <p>
+                            Property management has not added an update
+                            to this complaint yet.
+                        </p>
+                    </div>
+
+                {% endif %}
+            </section>
+
+
+            <!-- Support information -->
+            <section
+                class="tenant-card tenant-help-card"
+                aria-labelledby="complaint-help-heading"
+            >
+                <div>
+                    <h2 id="complaint-help-heading">
+                        Need additional help?
+                    </h2>
+
+                    <p>
+                        If you need to provide more information, contact
+                        property management through the secure messaging
+                        section. Do not submit passwords, payment-card
+                        details, or unnecessary sensitive information.
+                    </p>
+                </div>
+
+                <div class="tenant-help-card__actions">
+                    <a
+                        href="{{ url_for('tenant_messages') }}"
+                        class="tenant-button tenant-button--primary"
+                    >
+                        Open messages
+                    </a>
+
+                    <a
+                        href="{{ url_for('contact_page') }}"
+                        class="tenant-button tenant-button--secondary"
+                    >
+                        Contact support
+                    </a>
+                </div>
+            </section>
+
+        {% else %}
+
+            <section
+                class="tenant-card tenant-empty-state"
+                aria-labelledby="complaint-not-found-heading"
+            >
+                <h1 id="complaint-not-found-heading">
+                    Complaint not found
+                </h1>
+
+                <p>
+                    This complaint does not exist, has been removed,
+                    or you do not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('tenant_complaints') }}"
+                    class="tenant-button tenant-button--primary"
+                >
+                    Return to complaints
+                </a>
+            </section>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/tenant.js') }}"
+    defer
+></script>
+{% endblock %}

@@ -1,0 +1,680 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Appointment Details | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Review your property appointment date, time, location, reminder, notes, and current status.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/tenant.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="tenant-page tenant-appointment-details">
+
+    <div class="tenant-page__container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="tenant-breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('tenant_dashboard') }}">
+                        Tenant dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('tenant_appointments') }}">
+                        Appointments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Appointment details
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="tenant-page__header">
+            <div>
+                <p class="tenant-page__eyebrow">
+                    Property appointment
+                </p>
+
+                <h1>
+                    Appointment details
+                </h1>
+
+                <p>
+                    Review the appointment schedule, property
+                    information, reminder, and current status.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('tenant_appointments') }}"
+                class="tenant-button tenant-button--secondary"
+            >
+                Back to appointments
+            </a>
+        </header>
+
+
+        <!-- Success notification -->
+        {% if success %}
+            <div
+                class="tenant-alert tenant-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+
+        <!-- Error notification -->
+        {% if error %}
+            <div
+                class="tenant-alert tenant-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        {% if appointment %}
+
+            <!-- Normalize enum or string values -->
+            {% set appointment_status =
+                appointment.status.value
+                if appointment.status is not string
+                   and appointment.status.value is defined
+                else appointment.status | default('requested', true)
+            %}
+
+            {% set appointment_type =
+                appointment.appointment_type.value
+                if appointment.appointment_type is not string
+                   and appointment.appointment_type.value is defined
+                else appointment.appointment_type
+                     | default('property viewing', true)
+            %}
+
+
+            <!-- Appointment highlight -->
+            <section
+                class="tenant-card tenant-appointment-hero"
+                aria-labelledby="appointment-title"
+            >
+                <div
+                    class="tenant-appointment-hero__icon"
+                    aria-hidden="true"
+                >
+                    📅
+                </div>
+
+                <div class="tenant-appointment-hero__content">
+                    <p class="tenant-card__eyebrow">
+                        {{ appointment_type
+                           | replace('_', ' ')
+                           | title }}
+                    </p>
+
+                    <h2 id="appointment-title">
+                        {% if appointment.property is defined
+                              and appointment.property %}
+                            {{ appointment.property.title
+                               | default(
+                                   appointment.property.name
+                                   | default(
+                                       'Property appointment',
+                                       true
+                                   ),
+                                   true
+                               ) }}
+
+                        {% elif appointment.listing is defined
+                              and appointment.listing %}
+                            {{ appointment.listing.title
+                               | default(
+                                   'Property appointment',
+                                   true
+                               ) }}
+
+                        {% else %}
+                            Property appointment
+                        {% endif %}
+                    </h2>
+
+                    <p class="tenant-appointment-hero__date">
+                        {% if appointment.scheduled_at %}
+                            <time
+                                datetime="{{ appointment.scheduled_at.isoformat() }}"
+                            >
+                                {{ appointment.scheduled_at.strftime(
+                                    '%A, %d %B %Y at %H:%M'
+                                ) }}
+                            </time>
+                        {% else %}
+                            The appointment time has not been confirmed.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <span
+                    class="tenant-status
+                           tenant-status--{{ appointment_status
+                           | lower
+                           | replace(' ', '-')
+                           | replace('_', '-') }}"
+                >
+                    {{ appointment_status
+                       | replace('_', ' ')
+                       | title }}
+                </span>
+            </section>
+
+
+            <div class="tenant-details-layout">
+
+                <!-- Appointment information -->
+                <section
+                    class="tenant-card tenant-details-card"
+                    aria-labelledby="appointment-information-heading"
+                >
+                    <div class="tenant-card__header">
+                        <div>
+                            <p class="tenant-card__eyebrow">
+                                Schedule
+                            </p>
+
+                            <h2 id="appointment-information-heading">
+                                Appointment information
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <dl class="tenant-details-list">
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Appointment type
+                            </dt>
+
+                            <dd>
+                                {{ appointment_type
+                                   | replace('_', ' ')
+                                   | title }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Date and time
+                            </dt>
+
+                            <dd>
+                                {% if appointment.scheduled_at %}
+                                    <time
+                                        datetime="{{ appointment.scheduled_at.isoformat() }}"
+                                    >
+                                        {{ appointment.scheduled_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% else %}
+                                    Awaiting confirmation
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Status
+                            </dt>
+
+                            <dd>
+                                <span
+                                    class="tenant-status
+                                           tenant-status--{{ appointment_status
+                                           | lower
+                                           | replace(' ', '-')
+                                           | replace('_', '-') }}"
+                                >
+                                    {{ appointment_status
+                                       | replace('_', ' ')
+                                       | title }}
+                                </span>
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Reference
+                            </dt>
+
+                            <dd>
+                                {{ appointment.reference_number
+                                   | default(
+                                       appointment.id
+                                       | default(
+                                           'Not available',
+                                           true
+                                       ),
+                                       true
+                                   ) }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Reminder
+                            </dt>
+
+                            <dd>
+                                {% if appointment.reminder_minutes %}
+                                    {{ appointment.reminder_minutes }}
+                                    minutes before the appointment
+                                {% else %}
+                                    No reminder configured
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if appointment.reminder_sent_at %}
+                            <div class="tenant-details-list__item">
+                                <dt>
+                                    Reminder sent
+                                </dt>
+
+                                <dd>
+                                    <time
+                                        datetime="{{ appointment.reminder_sent_at.isoformat() }}"
+                                    >
+                                        {{ appointment.reminder_sent_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </dd>
+                            </div>
+                        {% endif %}
+
+
+                        <div class="tenant-details-list__item">
+                            <dt>
+                                Requested
+                            </dt>
+
+                            <dd>
+                                {% if appointment.created_at %}
+                                    <time
+                                        datetime="{{ appointment.created_at.isoformat() }}"
+                                    >
+                                        {{ appointment.created_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if appointment.updated_at %}
+                            <div class="tenant-details-list__item">
+                                <dt>
+                                    Last updated
+                                </dt>
+
+                                <dd>
+                                    <time
+                                        datetime="{{ appointment.updated_at.isoformat() }}"
+                                    >
+                                        {{ appointment.updated_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                    </dl>
+
+
+                    <!-- Appointment notes -->
+                    {% if appointment.notes %}
+                        <section
+                            class="tenant-notes-box"
+                            aria-labelledby="appointment-notes-heading"
+                        >
+                            <h3 id="appointment-notes-heading">
+                                Appointment notes
+                            </h3>
+
+                            <p>
+                                {{ appointment.notes }}
+                            </p>
+                        </section>
+                    {% endif %}
+                </section>
+
+
+                <!-- Property summary -->
+                <aside
+                    class="tenant-card tenant-summary-card"
+                    aria-labelledby="property-summary-heading"
+                >
+                    <div class="tenant-card__header">
+                        <h2 id="property-summary-heading">
+                            Property information
+                        </h2>
+                    </div>
+
+
+                    {% if appointment.property is defined
+                          and appointment.property %}
+
+                        <div class="tenant-property-summary">
+
+                            {% if appointment.property.image_url is defined
+                                  and appointment.property.image_url %}
+                                <img
+                                    src="{{ appointment.property.image_url }}"
+                                    alt="{{ appointment.property.title | default('Property', true) }}"
+                                    class="tenant-property-summary__image"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        path='images/listing-placeholder.svg'
+                                    ) }}"
+                                    alt=""
+                                    class="tenant-property-summary__image"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+
+
+                            <h3>
+                                {{ appointment.property.title
+                                   | default(
+                                       appointment.property.name
+                                       | default('Property', true),
+                                       true
+                                   ) }}
+                            </h3>
+
+
+                            {% if appointment.property.address is defined
+                                  and appointment.property.address %}
+                                <address>
+                                    {{ appointment.property.address }}
+                                </address>
+                            {% else %}
+                                <address>
+                                    {% if appointment.property.street is defined
+                                          and appointment.property.street %}
+                                        {{ appointment.property.street }}
+                                    {% endif %}
+
+                                    {% if appointment.property.postal_code is defined
+                                          or appointment.property.city is defined %}
+                                        <br>
+
+                                        {{ appointment.property.postal_code
+                                           | default('', true) }}
+
+                                        {{ appointment.property.city
+                                           | default('', true) }}
+                                    {% endif %}
+                                </address>
+                            {% endif %}
+
+                        </div>
+
+
+                    {% elif appointment.listing is defined
+                          and appointment.listing %}
+
+                        <div class="tenant-property-summary">
+
+                            {% if appointment.listing.image_url is defined
+                                  and appointment.listing.image_url %}
+                                <img
+                                    src="{{ appointment.listing.image_url }}"
+                                    alt="{{ appointment.listing.title | default('Property listing', true) }}"
+                                    class="tenant-property-summary__image"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        path='images/listing-placeholder.svg'
+                                    ) }}"
+                                    alt=""
+                                    class="tenant-property-summary__image"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+
+
+                            <h3>
+                                {{ appointment.listing.title
+                                   | default(
+                                       'Property listing',
+                                       true
+                                   ) }}
+                            </h3>
+
+
+                            {% if appointment.listing.address is defined
+                                  and appointment.listing.address %}
+                                <address>
+                                    {{ appointment.listing.address }}
+                                </address>
+                            {% endif %}
+
+                        </div>
+
+
+                    {% else %}
+
+                        <div class="tenant-empty-state">
+                            <p>
+                                Property information is unavailable for
+                                this appointment.
+                            </p>
+                        </div>
+
+                    {% endif %}
+                </aside>
+
+            </div>
+
+
+            <!-- Assigned representative -->
+            {% if appointment.assigned_to is defined
+                  and appointment.assigned_to %}
+
+                <section
+                    class="tenant-card tenant-contact-card"
+                    aria-labelledby="appointment-contact-heading"
+                >
+                    <div>
+                        <p class="tenant-card__eyebrow">
+                            Appointment contact
+                        </p>
+
+                        <h2 id="appointment-contact-heading">
+                            {{ appointment.assigned_to.full_name
+                               | default(
+                                   appointment.assigned_to.name
+                                   | default(
+                                       'Property representative',
+                                       true
+                                   ),
+                                   true
+                               ) }}
+                        </h2>
+
+
+                        {% if appointment.assigned_to.email is defined
+                              and appointment.assigned_to.email %}
+                            <p>
+                                Email:
+
+                                <a
+                                    href="mailto:{{ appointment.assigned_to.email }}"
+                                >
+                                    {{ appointment.assigned_to.email }}
+                                </a>
+                            </p>
+                        {% endif %}
+
+
+                        {% if appointment.assigned_to.phone is defined
+                              and appointment.assigned_to.phone %}
+                            <p>
+                                Telephone:
+
+                                <a
+                                    href="tel:{{ appointment.assigned_to.phone }}"
+                                >
+                                    {{ appointment.assigned_to.phone }}
+                                </a>
+                            </p>
+                        {% endif %}
+                    </div>
+                </section>
+
+            {% endif %}
+
+
+            <!-- Appointment guidance -->
+            <section
+                class="tenant-card tenant-help-card"
+                aria-labelledby="appointment-guidance-heading"
+            >
+                <div>
+                    <h2 id="appointment-guidance-heading">
+                        Before your appointment
+                    </h2>
+
+                    <ul class="tenant-check-list">
+                        <li>
+                            Arrive at the agreed location on time.
+                        </li>
+
+                        <li>
+                            Bring only documents specifically requested
+                            by the property representative.
+                        </li>
+
+                        <li>
+                            Do not send passwords, payment-card numbers,
+                            or banking login information.
+                        </li>
+
+                        <li>
+                            Use secure platform messages if you need to
+                            request a schedule change.
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div class="tenant-help-card__actions">
+                    <a
+                        href="{{ url_for('tenant_messages') }}"
+                        class="tenant-button tenant-button--primary"
+                    >
+                        Open messages
+                    </a>
+
+                    <a
+                        href="{{ url_for('tenant_appointments') }}"
+                        class="tenant-button tenant-button--secondary"
+                    >
+                        All appointments
+                    </a>
+                </div>
+            </section>
+
+
+        {% else %}
+
+            <!-- Appointment unavailable -->
+            <section
+                class="tenant-card tenant-empty-state"
+                aria-labelledby="appointment-not-found-heading"
+            >
+                <div
+                    class="tenant-empty-state__icon"
+                    aria-hidden="true"
+                >
+                    📅
+                </div>
+
+                <h1 id="appointment-not-found-heading">
+                    Appointment not found
+                </h1>
+
+                <p>
+                    This appointment does not exist, has been removed,
+                    or you do not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('tenant_appointments') }}"
+                    class="tenant-button tenant-button--primary"
+                >
+                    Return to appointments
+                </a>
+            </section>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/tenant.js') }}"
+    defer
+></script>
+{% endblock %}

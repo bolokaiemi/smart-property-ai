@@ -1,0 +1,715 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Message Details | Smart Property AI
+{% endblock %}
+
+
+{% block description %}
+Read the details of a secure tenant communication.
+{% endblock %}
+
+
+{% block extra_css %}
+{{ super() }}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/tenant.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="tenant-page tenant-message-details">
+
+    <div class="tenant-page__container">
+
+        <!-- Breadcrumb -->
+        <nav
+            class="tenant-breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('tenant_dashboard') }}">
+                        Tenant dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('tenant_messages') }}">
+                        Messages
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Message details
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="tenant-page__header">
+            <div>
+                <p class="tenant-page__eyebrow">
+                    Secure communication
+                </p>
+
+                <h1>
+                    {% if message %}
+                        {{ message.subject
+                           | default(
+                               'Message details',
+                               true
+                           ) }}
+                    {% else %}
+                        Message details
+                    {% endif %}
+                </h1>
+
+                <p>
+                    Review this secure message and its communication
+                    details.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('tenant_messages') }}"
+                class="tenant-button tenant-button--secondary"
+            >
+                Back to messages
+            </a>
+        </header>
+
+
+        <!-- Success notification -->
+        {% if success %}
+            <div
+                class="tenant-alert tenant-alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+
+        <!-- Error notification -->
+        {% if error %}
+            <div
+                class="tenant-alert tenant-alert--error"
+                role="alert"
+                aria-live="assertive"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        {% if message %}
+
+            {% set message_channel =
+                message.channel.value
+                if message.channel is not string
+                   and message.channel.value is defined
+                else message.channel
+                     | default('platform', true)
+            %}
+
+            {% set current_user_id =
+                request.session.get('user_id')
+                or request.session.get('authenticated_user_id')
+            %}
+
+            {% set is_received_message =
+                message.recipient_id is defined
+                and current_user_id
+                and message.recipient_id | string
+                    == current_user_id | string
+            %}
+
+
+            <div class="tenant-message-layout">
+
+                <!-- Message content -->
+                <article
+                    class="tenant-card tenant-message-card"
+                    aria-labelledby="message-subject-heading"
+                >
+                    <header class="tenant-message-card__header">
+                        <div class="tenant-message-card__avatar" aria-hidden="true">
+                            {% if is_received_message %}
+                                📩
+                            {% else %}
+                                📤
+                            {% endif %}
+                        </div>
+
+                        <div class="tenant-message-card__heading">
+                            <p class="tenant-card__eyebrow">
+                                {% if is_received_message %}
+                                    Received message
+                                {% else %}
+                                    Sent message
+                                {% endif %}
+                            </p>
+
+                            <h2 id="message-subject-heading">
+                                {{ message.subject
+                                   | default(
+                                       'No subject',
+                                       true
+                                   ) }}
+                            </h2>
+
+
+                            <p class="tenant-message-card__date">
+                                {% if message.created_at %}
+                                    <time
+                                        datetime="{{ message.created_at.isoformat() }}"
+                                    >
+                                        {{ message.created_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% else %}
+                                    Date unavailable
+                                {% endif %}
+                            </p>
+                        </div>
+
+
+                        {% if is_received_message %}
+                            {% if message.read_at %}
+                                <span
+                                    class="tenant-status tenant-status--read"
+                                >
+                                    Read
+                                </span>
+                            {% else %}
+                                <span
+                                    class="tenant-status tenant-status--unread"
+                                >
+                                    Unread
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <span
+                                class="tenant-status tenant-status--sent"
+                            >
+                                Sent
+                            </span>
+                        {% endif %}
+                    </header>
+
+
+                    <!-- Sender and recipient -->
+                    <dl class="tenant-message-participants">
+
+                        <div class="tenant-message-participants__item">
+                            <dt>
+                                From
+                            </dt>
+
+                            <dd>
+                                {% if message.sender is defined
+                                      and message.sender %}
+                                    {{ message.sender.full_name
+                                       | default(
+                                           message.sender.name
+                                           | default(
+                                               message.sender.username
+                                               | default(
+                                                   message.sender.email
+                                                   | default(
+                                                       'Smart Property AI user',
+                                                       true
+                                                   ),
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+
+                                {% elif message.sender_name is defined
+                                      and message.sender_name %}
+                                    {{ message.sender_name }}
+
+                                {% else %}
+                                    Property management
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-message-participants__item">
+                            <dt>
+                                To
+                            </dt>
+
+                            <dd>
+                                {% if message.recipient is defined
+                                      and message.recipient %}
+                                    {{ message.recipient.full_name
+                                       | default(
+                                           message.recipient.name
+                                           | default(
+                                               message.recipient.username
+                                               | default(
+                                                   message.recipient.email
+                                                   | default(
+                                                       'Smart Property AI user',
+                                                       true
+                                                   ),
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+
+                                {% elif message.recipient_name is defined
+                                      and message.recipient_name %}
+                                    {{ message.recipient_name }}
+
+                                {% else %}
+                                    Tenant
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                    </dl>
+
+
+                    <!-- Message body -->
+                    <section
+                        class="tenant-message-card__body"
+                        aria-labelledby="message-content-heading"
+                    >
+                        <h3
+                            id="message-content-heading"
+                            class="tenant-visually-hidden"
+                        >
+                            Message content
+                        </h3>
+
+                        <p>
+                            {{ message.content
+                               | default(
+                                   message.body
+                                   | default(
+                                       'No message content is available.',
+                                       true
+                                   ),
+                                   true
+                               ) }}
+                        </p>
+                    </section>
+
+
+                    <!-- Attachments -->
+                    {% if message.attachments is defined
+                          and message.attachments %}
+
+                        <section
+                            class="tenant-message-attachments"
+                            aria-labelledby="message-attachments-heading"
+                        >
+                            <h3 id="message-attachments-heading">
+                                Attachments
+                            </h3>
+
+                            <ul>
+                                {% for attachment in message.attachments %}
+                                    <li>
+                                        <a
+                                            href="{{ attachment.url
+                                               | default(
+                                                   attachment.file_url
+                                                   | default(
+                                                       attachment.path
+                                                       | default('#', true),
+                                                       true
+                                                   ),
+                                                   true
+                                               ) }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {{ attachment.original_name
+                                               | default(
+                                                   attachment.filename
+                                                   | default(
+                                                       attachment.name
+                                                       | default(
+                                                           'Download attachment',
+                                                           true
+                                                       ),
+                                                       true
+                                                   ),
+                                                   true
+                                               ) }}
+                                        </a>
+
+                                        {% if attachment.file_size is defined
+                                              and attachment.file_size %}
+                                            <span>
+                                                {{ attachment.file_size }}
+                                            </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+
+                    {% endif %}
+                </article>
+
+
+                <!-- Message information -->
+                <aside
+                    class="tenant-card tenant-summary-card"
+                    aria-labelledby="message-information-heading"
+                >
+                    <div class="tenant-card__header">
+                        <h2 id="message-information-heading">
+                            Message information
+                        </h2>
+                    </div>
+
+                    <dl class="tenant-summary-list">
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Reference
+                            </dt>
+
+                            <dd>
+                                {{ message.reference_number
+                                   | default(
+                                       message.id
+                                       | default(
+                                           'Not available',
+                                           true
+                                       ),
+                                       true
+                                   ) }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Channel
+                            </dt>
+
+                            <dd>
+                                {{ message_channel
+                                   | replace('_', ' ')
+                                   | title }}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Language
+                            </dt>
+
+                            <dd>
+                                {% set message_language =
+                                    message.language
+                                    | default('en', true)
+                                %}
+
+                                {% if message_language == 'de' %}
+                                    Deutsch
+                                {% elif message_language == 'fr' %}
+                                    Français
+                                {% elif message_language == 'es' %}
+                                    Español
+                                {% elif message_language == 'it' %}
+                                    Italiano
+                                {% elif message_language == 'pt' %}
+                                    Português
+                                {% elif message_language == 'ar' %}
+                                    العربية
+                                {% elif message_language == 'tr' %}
+                                    Türkçe
+                                {% elif message_language == 'pl' %}
+                                    Polski
+                                {% elif message_language == 'uk' %}
+                                    Українська
+                                {% else %}
+                                    English
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        <div class="tenant-summary-list__item">
+                            <dt>
+                                Sent
+                            </dt>
+
+                            <dd>
+                                {% if message.created_at %}
+                                    <time
+                                        datetime="{{ message.created_at.isoformat() }}"
+                                    >
+                                        {{ message.created_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+
+                        {% if message.read_at %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Read
+                                </dt>
+
+                                <dd>
+                                    <time
+                                        datetime="{{ message.read_at.isoformat() }}"
+                                    >
+                                        {{ message.read_at.strftime(
+                                            '%d %B %Y at %H:%M'
+                                        ) }}
+                                    </time>
+                                </dd>
+                            </div>
+                        {% endif %}
+
+
+                        {% if message.property is defined
+                              and message.property %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Property
+                                </dt>
+
+                                <dd>
+                                    {{ message.property.title
+                                       | default(
+                                           message.property.name
+                                           | default(
+                                               message.property.address
+                                               | default(
+                                                   'Property',
+                                                   true
+                                               ),
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                </dd>
+                            </div>
+
+                        {% elif message.property_name is defined
+                              and message.property_name %}
+                            <div class="tenant-summary-list__item">
+                                <dt>
+                                    Property
+                                </dt>
+
+                                <dd>
+                                    {{ message.property_name }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                    </dl>
+                </aside>
+
+            </div>
+
+
+            <!-- Related conversation -->
+            {% if conversation is defined
+                  and conversation %}
+
+                <section
+                    class="tenant-card tenant-conversation-card"
+                    aria-labelledby="conversation-heading"
+                >
+                    <div class="tenant-card__header">
+                        <div>
+                            <p class="tenant-card__eyebrow">
+                                Conversation
+                            </p>
+
+                            <h2 id="conversation-heading">
+                                Related messages
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <ol class="tenant-conversation-list">
+
+                        {% for conversation_message in conversation %}
+                            {% set conversation_is_received =
+                                conversation_message.recipient_id is defined
+                                and current_user_id
+                                and conversation_message.recipient_id | string
+                                    == current_user_id | string
+                            %}
+
+                            <li
+                                class="tenant-conversation-list__item
+                                       {% if conversation_is_received %}
+                                       tenant-conversation-list__item--received
+                                       {% else %}
+                                       tenant-conversation-list__item--sent
+                                       {% endif %}"
+                            >
+                                <div class="tenant-conversation-list__header">
+                                    <strong>
+                                        {% if conversation_message.sender is defined
+                                              and conversation_message.sender %}
+                                            {{ conversation_message.sender.full_name
+                                               | default(
+                                                   conversation_message.sender.name
+                                                   | default(
+                                                       conversation_message.sender.username
+                                                       | default(
+                                                           'User',
+                                                           true
+                                                       ),
+                                                       true
+                                                   ),
+                                                   true
+                                               ) }}
+                                        {% elif conversation_is_received %}
+                                            Property management
+                                        {% else %}
+                                            You
+                                        {% endif %}
+                                    </strong>
+
+                                    {% if conversation_message.created_at %}
+                                        <time
+                                            datetime="{{ conversation_message.created_at.isoformat() }}"
+                                        >
+                                            {{ conversation_message.created_at.strftime(
+                                                '%d %B %Y at %H:%M'
+                                            ) }}
+                                        </time>
+                                    {% endif %}
+                                </div>
+
+                                <p>
+                                    {{ conversation_message.content
+                                       | default(
+                                           conversation_message.body
+                                           | default(
+                                               '',
+                                               true
+                                           ),
+                                           true
+                                       ) }}
+                                </p>
+                            </li>
+                        {% endfor %}
+
+                    </ol>
+                </section>
+
+            {% endif %}
+
+
+            <!-- Communication safety -->
+            <section
+                class="tenant-card tenant-help-card"
+                aria-labelledby="message-safety-heading"
+            >
+                <div>
+                    <h2 id="message-safety-heading">
+                        Communicate securely
+                    </h2>
+
+                    <p>
+                        Do not send passwords, complete payment-card
+                        numbers, banking login details, identity-document
+                        numbers, or unnecessary sensitive information.
+                    </p>
+                </div>
+
+                <div class="tenant-help-card__actions">
+                    <a
+                        href="{{ url_for('tenant_messages') }}"
+                        class="tenant-button tenant-button--primary"
+                    >
+                        Open all messages
+                    </a>
+
+                    <button
+                        type="button"
+                        class="tenant-button tenant-button--secondary"
+                        data-ai-overlay-open
+                        aria-haspopup="dialog"
+                    >
+                        Ask AI for help
+                    </button>
+                </div>
+            </section>
+
+
+        {% else %}
+
+            <!-- Message unavailable -->
+            <section
+                class="tenant-card tenant-empty-state"
+                aria-labelledby="message-not-found-heading"
+            >
+                <div
+                    class="tenant-empty-state__icon"
+                    aria-hidden="true"
+                >
+                    ✉️
+                </div>
+
+                <h1 id="message-not-found-heading">
+                    Message not found
+                </h1>
+
+                <p>
+                    This message does not exist, has been removed,
+                    or you do not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('tenant_messages') }}"
+                    class="tenant-button tenant-button--primary"
+                >
+                    Return to messages
+                </a>
+            </section>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ super() }}
+
+<script
+    src="{{ url_for('static', path='js/tenant.js') }}"
+    defer
+></script>
+{% endblock %}
