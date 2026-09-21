@@ -28,6 +28,10 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
+
+from routes.landlord_routes import router as landlord_router
+
+
 from database.database import create_database_tables
 from routes.ai_routes import router as ai_router
 from routes.application_routes import router as application_router
@@ -327,6 +331,7 @@ app.include_router(application_router)
 app.include_router(ai_router)
 
 app.include_router(tenant_router, prefix="/tenant")
+app.include_router(landlord_router, prefix="/landlord")
 
 
 # ==========================================================================
@@ -462,7 +467,7 @@ async def temporary_admin_dashboard(request: Request):
 )
 async def favicon():
     return RedirectResponse(
-        url="/static/images/icons/favicon.ico",
+        url="static/images/icons/favicon.ico",
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
     )
 
