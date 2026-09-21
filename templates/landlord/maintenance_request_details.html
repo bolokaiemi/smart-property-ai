@@ -1,0 +1,711 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Maintenance Request Details") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review maintenance request details in the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-maintenance-details-page"
+    data-landlord-maintenance-details
+>
+    <div class="landlord-maintenance-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-maintenance-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'landlord_maintenance_page'
+                        ) }}"
+                    >
+                        Maintenance
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Request details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if maintenance_request %}
+            {% set request_status =
+                maintenance_request.status.value
+                if maintenance_request.status
+                and maintenance_request.status.value is defined
+                else maintenance_request.status
+                | default("open", true)
+            %}
+
+            {% set request_priority =
+                maintenance_request.priority.value
+                if maintenance_request.priority
+                and maintenance_request.priority.value is defined
+                else maintenance_request.priority
+                | default("normal", true)
+            %}
+
+            <!-- Header -->
+            <header class="landlord-maintenance-details-page__header">
+                <div>
+                    <p class="landlord-maintenance-details-page__eyebrow">
+                        Maintenance request
+                    </p>
+
+                    <div class="landlord-maintenance-details-page__title-row">
+                        <h1>
+                            {{ maintenance_request.title
+                               | default(
+                                   "Maintenance request",
+                                   true
+                               )
+                            }}
+                        </h1>
+
+                        <div class="landlord-maintenance-details-page__badges">
+                            <span
+                                class="landlord-maintenance-details-page__priority
+                                       landlord-maintenance-details-page__priority--{{ request_priority
+                                           | string
+                                           | lower
+                                           | replace('_', '-')
+                                       }}"
+                            >
+                                {{ request_priority
+                                   | string
+                                   | replace("_", " ")
+                                   | title
+                                }}
+                                priority
+                            </span>
+
+                            <span
+                                class="landlord-maintenance-details-page__status
+                                       landlord-maintenance-details-page__status--{{ request_status
+                                           | string
+                                           | lower
+                                           | replace('_', '-')
+                                       }}"
+                            >
+                                {{ request_status
+                                   | string
+                                   | replace("_", " ")
+                                   | title
+                                }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <p>
+                        Review the issue, location, assignment and
+                        resolution information.
+                    </p>
+                </div>
+
+                <div class="landlord-maintenance-details-page__header-actions">
+                    <a
+                        href="{{ url_for('add_expense_page') }}"
+                        class="landlord-maintenance-details-page__primary-button"
+                    >
+                        <span aria-hidden="true">＋</span>
+                        <span>Add expense</span>
+                    </a>
+
+                    <a
+                        href="{{ url_for(
+                            'landlord_maintenance_page'
+                        ) }}"
+                        class="landlord-maintenance-details-page__secondary-button"
+                    >
+                        <span aria-hidden="true">←</span>
+                        <span>Back to maintenance</span>
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-maintenance-details-page__alert
+                           landlord-maintenance-details-page__alert--success"
+                    role="status"
+                >
+                    {{ success }}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-maintenance-details-page__alert
+                           landlord-maintenance-details-page__alert--error"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            <!-- Summary -->
+            <section
+                class="landlord-maintenance-details-page__summary"
+                aria-label="Maintenance request summary"
+            >
+                <article class="landlord-maintenance-details-page__summary-card">
+                    <span aria-hidden="true">🏷️</span>
+
+                    <div>
+                        <span>Category</span>
+
+                        <strong>
+                            {{ maintenance_request.category
+                               | default(
+                                   "General maintenance",
+                                   true
+                               )
+                               | replace("_", " ")
+                               | title
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-maintenance-details-page__summary-card">
+                    <span aria-hidden="true">⚠️</span>
+
+                    <div>
+                        <span>Priority</span>
+
+                        <strong>
+                            {{ request_priority
+                               | string
+                               | replace("_", " ")
+                               | title
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-maintenance-details-page__summary-card">
+                    <span aria-hidden="true">📌</span>
+
+                    <div>
+                        <span>Status</span>
+
+                        <strong>
+                            {{ request_status
+                               | string
+                               | replace("_", " ")
+                               | title
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-maintenance-details-page__summary-card">
+                    <span aria-hidden="true">📅</span>
+
+                    <div>
+                        <span>Submitted</span>
+
+                        <strong>
+                            {{ maintenance_request.created_at
+                               | default(
+                                   "Not available",
+                                   true
+                               )
+                            }}
+                        </strong>
+                    </div>
+                </article>
+            </section>
+
+
+            <div class="landlord-maintenance-details-page__layout">
+
+                <!-- Main column -->
+                <div class="landlord-maintenance-details-page__main-column">
+
+                    <!-- Issue description -->
+                    <section
+                        class="landlord-maintenance-details-page__card"
+                        aria-labelledby="maintenance-description-title"
+                    >
+                        <div class="landlord-maintenance-details-page__card-header">
+                            <div>
+                                <p class="landlord-maintenance-details-page__section-label">
+                                    Reported issue
+                                </p>
+
+                                <h2 id="maintenance-description-title">
+                                    Description
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="landlord-maintenance-details-page__description">
+                            {{ maintenance_request.description
+                               | default(
+                                   "No description was provided.",
+                                   true
+                               )
+                            }}
+                        </div>
+                    </section>
+
+
+                    <!-- AI summary -->
+                    {% if maintenance_request.ai_summary %}
+                        <section
+                            class="landlord-maintenance-details-page__card
+                                   landlord-maintenance-details-page__card--ai"
+                            aria-labelledby="maintenance-ai-title"
+                        >
+                            <div class="landlord-maintenance-details-page__card-header">
+                                <div>
+                                    <p class="landlord-maintenance-details-page__section-label">
+                                        AI-assisted information
+                                    </p>
+
+                                    <h2 id="maintenance-ai-title">
+                                        Request summary
+                                    </h2>
+                                </div>
+
+                                <span
+                                    class="landlord-maintenance-details-page__ai-badge"
+                                >
+                                    AI generated
+                                </span>
+                            </div>
+
+                            <div class="landlord-maintenance-details-page__ai-summary">
+                                {{ maintenance_request.ai_summary }}
+                            </div>
+
+                            <p class="landlord-maintenance-details-page__ai-notice">
+                                Review this summary against the tenant's
+                                original description before making a
+                                maintenance decision.
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    <!-- Location -->
+                    <section
+                        class="landlord-maintenance-details-page__card"
+                        aria-labelledby="maintenance-location-title"
+                    >
+                        <div class="landlord-maintenance-details-page__card-header">
+                            <div>
+                                <p class="landlord-maintenance-details-page__section-label">
+                                    Location
+                                </p>
+
+                                <h2 id="maintenance-location-title">
+                                    Property and unit
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="landlord-maintenance-details-page__connection-grid">
+                            <article class="landlord-maintenance-details-page__connection">
+                                <span aria-hidden="true">🏢</span>
+
+                                <div>
+                                    <span>Property ID</span>
+
+                                    <strong>
+                                        {{ maintenance_request.property_id
+                                           | default(
+                                               "Not available",
+                                               true
+                                           )
+                                        }}
+                                    </strong>
+
+                                    {% if maintenance_request.property_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'property_details_page',
+                                                property_id=maintenance_request.property_id
+                                            ) }}"
+                                        >
+                                            View property
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+
+                            <article class="landlord-maintenance-details-page__connection">
+                                <span aria-hidden="true">🚪</span>
+
+                                <div>
+                                    <span>Unit ID</span>
+
+                                    <strong>
+                                        {{ maintenance_request.unit_id
+                                           | default(
+                                               "Entire property",
+                                               true
+                                           )
+                                        }}
+                                    </strong>
+
+                                    {% if maintenance_request.unit_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'unit_details_page',
+                                                unit_id=maintenance_request.unit_id
+                                            ) }}"
+                                        >
+                                            View unit
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+
+                    <!-- Assignment -->
+                    <section
+                        class="landlord-maintenance-details-page__card"
+                        aria-labelledby="maintenance-assignment-title"
+                    >
+                        <div class="landlord-maintenance-details-page__card-header">
+                            <div>
+                                <p class="landlord-maintenance-details-page__section-label">
+                                    Workflow
+                                </p>
+
+                                <h2 id="maintenance-assignment-title">
+                                    Assignment and progress
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-maintenance-details-page__details">
+                            <div>
+                                <dt>Submitted by</dt>
+
+                                <dd>
+                                    {{ maintenance_request.submitted_by_id
+                                       | default(
+                                           "Not available",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Assigned to</dt>
+
+                                <dd>
+                                    {{ maintenance_request.assigned_to_id
+                                       | default(
+                                           "Not assigned",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Current status</dt>
+
+                                <dd>
+                                    <span
+                                        class="landlord-maintenance-details-page__status
+                                               landlord-maintenance-details-page__status--{{ request_status
+                                                   | string
+                                                   | lower
+                                                   | replace('_', '-')
+                                               }}"
+                                    >
+                                        {{ request_status
+                                           | string
+                                           | replace("_", " ")
+                                           | title
+                                        }}
+                                    </span>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Resolved at</dt>
+
+                                <dd>
+                                    {{ maintenance_request.resolved_at
+                                       | default(
+                                           "Not resolved",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Last updated</dt>
+
+                                <dd>
+                                    {{ maintenance_request.updated_at
+                                       | default(
+                                           "Not available",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Record information -->
+                    <section
+                        class="landlord-maintenance-details-page__card"
+                        aria-labelledby="maintenance-record-title"
+                    >
+                        <div class="landlord-maintenance-details-page__card-header">
+                            <div>
+                                <p class="landlord-maintenance-details-page__section-label">
+                                    System record
+                                </p>
+
+                                <h2 id="maintenance-record-title">
+                                    Request information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-maintenance-details-page__details">
+                            <div>
+                                <dt>Request ID</dt>
+
+                                <dd>
+                                    <code>
+                                        {{ maintenance_request.id }}
+                                    </code>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Created</dt>
+
+                                <dd>
+                                    {{ maintenance_request.created_at
+                                       | default(
+                                           "Not available",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Last updated</dt>
+
+                                <dd>
+                                    {{ maintenance_request.updated_at
+                                       | default(
+                                           "Not available",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+                </div>
+
+
+                <!-- Sidebar -->
+                <aside
+                    class="landlord-maintenance-details-page__sidebar"
+                    aria-label="Maintenance actions and information"
+                >
+                    <section class="landlord-maintenance-details-page__sidebar-card">
+                        <span
+                            class="landlord-maintenance-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⚡
+                        </span>
+
+                        <h2>
+                            Quick actions
+                        </h2>
+
+                        <div class="landlord-maintenance-details-page__action-list">
+                            <a href="{{ url_for('add_expense_page') }}">
+                                <span aria-hidden="true">💶</span>
+                                Add expense
+                            </a>
+
+                            <a href="{{ url_for('landlord_expenses_page') }}">
+                                <span aria-hidden="true">🧾</span>
+                                View expenses
+                            </a>
+
+                            <a href="{{ url_for('landlord_messages_page') }}">
+                                <span aria-hidden="true">✉️</span>
+                                Open messages
+                            </a>
+
+                            <a href="{{ url_for('landlord_documents_page') }}">
+                                <span aria-hidden="true">📁</span>
+                                View documents
+                            </a>
+                        </div>
+                    </section>
+
+
+                    {% if request_priority in ["urgent", "emergency"] %}
+                        <section
+                            class="landlord-maintenance-details-page__sidebar-card
+                                   landlord-maintenance-details-page__sidebar-card--urgent"
+                            role="alert"
+                        >
+                            <span
+                                class="landlord-maintenance-details-page__sidebar-icon"
+                                aria-hidden="true"
+                            >
+                                🚨
+                            </span>
+
+                            <h2>
+                                Urgent attention required
+                            </h2>
+
+                            <p>
+                                This request has been marked as
+                                {{ request_priority }}. Assess safety
+                                and property risks promptly.
+                            </p>
+                        </section>
+                    {% endif %}
+
+
+                    <section
+                        class="landlord-maintenance-details-page__sidebar-card
+                               landlord-maintenance-details-page__sidebar-card--privacy"
+                    >
+                        <span
+                            class="landlord-maintenance-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+                        <h2>
+                            Tenant privacy
+                        </h2>
+
+                        <p>
+                            Descriptions, images and documents may
+                            contain private tenant information. Share
+                            them only with authorized service staff.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information
+                        </a>
+                    </section>
+
+
+                    <section
+                        class="landlord-maintenance-details-page__sidebar-card
+                               landlord-maintenance-details-page__sidebar-card--warning"
+                    >
+                        <span
+                            class="landlord-maintenance-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ℹ️
+                        </span>
+
+                        <h2>
+                            AI information
+                        </h2>
+
+                        <p>
+                            AI-generated summaries may contain mistakes.
+                            Review the tenant's original request before
+                            arranging repairs.
+                        </p>
+
+                        <a href="{{ url_for('ai_disclosure_page') }}">
+                            AI disclosure
+                        </a>
+                    </section>
+                </aside>
+            </div>
+
+        {% else %}
+            <!-- Missing record -->
+            <section class="landlord-maintenance-details-page__not-found">
+                <span aria-hidden="true">⚠️</span>
+
+                <h1>
+                    Maintenance request unavailable
+                </h1>
+
+                <p>
+                    The requested maintenance record could not be
+                    found or you do not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_maintenance_page') }}"
+                    class="landlord-maintenance-details-page__primary-button"
+                >
+                    Return to maintenance
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

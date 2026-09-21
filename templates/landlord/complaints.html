@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% from "landlord/_macros.html" import status_badge, format_date %}
+
+{% block title %}
+    Complaints | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review tenant complaints securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div class="landlord-complaints-page">
+    <div class="landlord-complaints-page__container">
+
+        <nav
+            class="landlord-complaints-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">Complaints</li>
+            </ol>
+        </nav>
+
+        <header class="landlord-complaints-page__header">
+            <div>
+                <p class="landlord-complaints-page__eyebrow">
+                    Tenant support
+                </p>
+
+                <h1>Complaints</h1>
+
+                <p>
+                    Review tenant concerns and follow up through the
+                    appropriate property-management channel.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_messages_page') }}"
+                class="landlord-complaints-page__button
+                       landlord-complaints-page__button--secondary"
+            >
+                View messages
+            </a>
+        </header>
+
+        {% set totals = namespace(
+            open=0,
+            urgent=0,
+            resolved=0
+        ) %}
+
+        {% for complaint in complaints | default([], true) %}
+            {% set complaint_status =
+                complaint.status.value
+                if complaint.status
+                and complaint.status.value is defined
+                else complaint.status | default("open", true)
+            %}
+
+            {% set complaint_priority =
+                complaint.priority.value
+                if complaint.priority
+                and complaint.priority.value is defined
+                else complaint.priority | default("normal", true)
+            %}
+
+            {% if complaint_status | lower in [
+                "open", "pending", "in_progress"
+            ] %}
+                {% set totals.open = totals.open + 1 %}
+            {% endif %}
+
+            {% if complaint_status | lower in [
+                "resolved", "closed", "completed"
+            ] %}
+                {% set totals.resolved = totals.resolved + 1 %}
+            {% endif %}
+
+            {% if complaint_priority | lower in [
+                "high", "urgent", "emergency"
+            ] %}
+                {% set totals.urgent = totals.urgent + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <section
+            class="landlord-complaints-page__summary"
+            aria-label="Complaint summary"
+        >
+            <article
+                class="landlord-complaints-page__summary-card"
+            >
+                <span>Total</span>
+                <strong>
+                    {{ complaints | default([], true) | length }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-complaints-page__summary-card"
+            >
+                <span>Open</span>
+                <strong>{{ totals.open }}</strong>
+            </article>
+
+            <article
+                class="landlord-complaints-page__summary-card
+                       landlord-complaints-page__summary-card--warning"
+            >
+                <span>High priority</span>
+                <strong>{{ totals.urgent }}</strong>
+            </article>
+
+            <article
+                class="landlord-complaints-page__summary-card
+                       landlord-complaints-page__summary-card--success"
+            >
+                <span>Resolved</span>
+                <strong>{{ totals.resolved }}</strong>
+            </article>
+        </section>
+
+        <section
+            class="landlord-complaints-page__toolbar"
+            aria-label="Complaint filtering"
+        >
+            <div class="landlord-complaints-page__search">
+                <label
+                    for="complaint-search"
+                    class="visually-hidden"
+                >
+                    Search complaints
+                </label>
+
+                <input
+                    id="complaint-search"
+                    type="search"
+                    placeholder="Search complaints"
+                    data-filter-input="#landlord-complaint-list"
+                >
+            </div>
+        </section>
+
+        <section
+            id="landlord-complaint-list"
+            class="landlord-complaints-page__panel"
+        >
+            {% if complaints %}
+                <div
+                    class="landlord-complaints-page__list"
+                    role="list"
+                >
+                    {% for complaint in complaints %}
+                        {% set priority =
+                            complaint.priority.value
+                            if complaint.priority
+                            and complaint.priority.value is defined
+                            else complaint.priority
+                                | default("normal", true)
+                        %}
+
+                        <article
+                            class="landlord-complaints-page__item"
+                            data-filter-item
+                            data-filter-text="{{
+                                (
+                                    complaint.subject ~ " " ~
+                                    complaint.description ~ " " ~
+                                    priority
+                                ) | lower
+                            }}"
+                            role="listitem"
+                        >
+                            <div
+                                class="landlord-complaints-page__item-header"
+                            >
+                                <div>
+                                    <span
+                                        class="landlord-complaints-page__badge
+                                               landlord-complaints-page__badge--{{
+                                                   priority
+                                                   | lower
+                                                   | replace('_', '-')
+                                               }}"
+                                    >
+                                        {{ priority
+                                           | replace("_", " ")
+                                           | title
+                                        }}
+                                    </span>
+
+                                    {{ status_badge(
+                                        complaint.status,
+                                        "landlord-complaints-page"
+                                    ) }}
+                                </div>
+
+                                {{ format_date(
+                                    complaint.created_at,
+                                    true
+                                ) }}
+                            </div>
+
+                            <h2>
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_complaint_details_page',
+                                        complaint_id=complaint.id
+                                    ) }}"
+                                >
+                                    {{ complaint.subject
+                                       | default(
+                                           "Tenant complaint",
+                                           true
+                                       )
+                                    }}
+                                </a>
+                            </h2>
+
+                            <p>
+                                {{ complaint.description
+                                   | default(
+                                       "No description provided.",
+                                       true
+                                   )
+                                   | striptags
+                                   | truncate(180, true, "…")
+                                }}
+                            </p>
+
+                            <footer
+                                class="landlord-complaints-page__item-footer"
+                            >
+                                <a
+                                    href="{{ url_for(
+                                        'property_details_page',
+                                        property_id=complaint.property_id
+                                    ) }}"
+                                >
+                                    View property
+                                </a>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_complaint_details_page',
+                                        complaint_id=complaint.id
+                                    ) }}"
+                                    class="landlord-complaints-page__details-link"
+                                >
+                                    View complaint
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </footer>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div
+                    class="landlord-complaints-page__filter-empty"
+                    data-filter-empty
+                    hidden
+                >
+                    <h2>No matching complaints</h2>
+                    <p>Try a different search term.</p>
+                </div>
+            {% else %}
+                <div class="landlord-complaints-page__empty-state">
+                    <div
+                        class="landlord-complaints-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        ✓
+                    </div>
+
+                    <h2>No complaints</h2>
+
+                    <p>
+                        Tenant complaints will appear here after they
+                        are submitted.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+
+        <aside class="landlord-complaints-page__notice">
+            <span aria-hidden="true">🔒</span>
+
+            <div>
+                <h2>Protect tenant information</h2>
+
+                <p>
+                    Only use complaint information to investigate and
+                    resolve the reported concern.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Privacy information
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

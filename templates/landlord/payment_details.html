@@ -1,0 +1,705 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Payment Details | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review a tenant payment record securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-payment-details-page"
+    data-landlord-payment-details-page
+>
+    <div class="landlord-payment-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-payment-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_payments_page') }}">
+                        Payments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Payment details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if payment %}
+            {% set payment_status =
+                payment.status.value
+                if payment.status
+                and payment.status.value is defined
+                else payment.status | default("pending", true)
+            %}
+
+            {% set normalized_status =
+                payment_status
+                | string
+                | lower
+                | replace("_", "-")
+                | replace(" ", "-")
+            %}
+
+            {% set payment_reference =
+                payment.payment_reference
+                | default("PAY-" ~ payment.id, true)
+            %}
+
+
+            <!-- Page header -->
+            <header class="landlord-payment-details-page__header">
+                <div>
+                    <p class="landlord-payment-details-page__eyebrow">
+                        Payment record
+                    </p>
+
+                    <h1>Payment details</h1>
+
+                    <p class="landlord-payment-details-page__reference">
+                        Reference:
+                        <strong>{{ payment_reference }}</strong>
+                    </p>
+                </div>
+
+                <div class="landlord-payment-details-page__header-actions">
+                    <span
+                        class="landlord-payment-details-page__status
+                               landlord-payment-details-page__status--{{
+                                   normalized_status
+                               }}"
+                    >
+                        {{
+                            payment_status
+                            | string
+                            | replace("_", " ")
+                            | title
+                        }}
+                    </span>
+
+                    <a
+                        href="{{ url_for('landlord_payments_page') }}"
+                        class="landlord-payment-details-page__button
+                               landlord-payment-details-page__button--secondary"
+                    >
+                        Back to payments
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-payment-details-page__alert
+                           landlord-payment-details-page__alert--success"
+                    role="status"
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ success }}</span>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-payment-details-page__alert
+                           landlord-payment-details-page__alert--error"
+                    role="alert"
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+
+            <!-- Payment summary -->
+            <section
+                class="landlord-payment-details-page__summary"
+                aria-label="Payment summary"
+            >
+                <article
+                    class="landlord-payment-details-page__amount-card"
+                >
+                    <span>
+                        Payment amount
+                    </span>
+
+                    <strong>
+                        {{ payment.currency | default("EUR", true) }}
+                        {{
+                            "%.2f" | format(
+                                payment.amount
+                                | default(0, true)
+                                | float
+                            )
+                        }}
+                    </strong>
+
+                    <small>
+                        {{
+                            payment_status
+                            | string
+                            | replace("_", " ")
+                            | title
+                        }}
+                    </small>
+                </article>
+
+                <article
+                    class="landlord-payment-details-page__summary-card"
+                >
+                    <span>Due date</span>
+
+                    <strong>
+                        {% if payment.due_date %}
+                            <time
+                                datetime="{{
+                                    payment.due_date.isoformat()
+                                }}"
+                            >
+                                {{
+                                    payment.due_date.strftime(
+                                        "%d %B %Y"
+                                    )
+                                }}
+                            </time>
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </strong>
+                </article>
+
+                <article
+                    class="landlord-payment-details-page__summary-card"
+                >
+                    <span>Payment date</span>
+
+                    <strong>
+                        {% if payment.paid_at %}
+                            <time
+                                datetime="{{
+                                    payment.paid_at.isoformat()
+                                }}"
+                            >
+                                {{
+                                    payment.paid_at.strftime(
+                                        "%d %B %Y"
+                                    )
+                                }}
+                            </time>
+                        {% else %}
+                            Not yet paid
+                        {% endif %}
+                    </strong>
+                </article>
+            </section>
+
+
+            <!-- Main layout -->
+            <div class="landlord-payment-details-page__layout">
+
+                <!-- Payment information -->
+                <main class="landlord-payment-details-page__main">
+                    <section
+                        class="landlord-payment-details-page__card"
+                        aria-labelledby="payment-information-title"
+                    >
+                        <div
+                            class="landlord-payment-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-payment-details-page__section-label"
+                                >
+                                    Transaction
+                                </p>
+
+                                <h2 id="payment-information-title">
+                                    Payment information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl
+                            class="landlord-payment-details-page__details-list"
+                        >
+                            <div>
+                                <dt>Payment reference</dt>
+                                <dd>{{ payment_reference }}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Amount</dt>
+                                <dd>
+                                    <strong>
+                                        {{
+                                            payment.currency
+                                            | default("EUR", true)
+                                        }}
+                                        {{
+                                            "%.2f" | format(
+                                                payment.amount
+                                                | default(0, true)
+                                                | float
+                                            )
+                                        }}
+                                    </strong>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Status</dt>
+                                <dd>
+                                    <span
+                                        class="landlord-payment-details-page__status
+                                               landlord-payment-details-page__status--{{
+                                                   normalized_status
+                                               }}"
+                                    >
+                                        {{
+                                            payment_status
+                                            | string
+                                            | replace("_", " ")
+                                            | title
+                                        }}
+                                    </span>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Currency</dt>
+                                <dd>
+                                    {{
+                                        payment.currency
+                                        | default("EUR", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Due date</dt>
+                                <dd>
+                                    {% if payment.due_date %}
+                                        <time
+                                            datetime="{{
+                                                payment.due_date.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                payment.due_date.strftime(
+                                                    "%d %B %Y"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Paid date</dt>
+                                <dd>
+                                    {% if payment.paid_at %}
+                                        <time
+                                            datetime="{{
+                                                payment.paid_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                payment.paid_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Not yet paid
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Record created</dt>
+                                <dd>
+                                    {% if payment.created_at %}
+                                        <time
+                                            datetime="{{
+                                                payment.created_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                payment.created_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Payment ID</dt>
+                                <dd>
+                                    <code>{{ payment.id }}</code>
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Lease information -->
+                    <section
+                        class="landlord-payment-details-page__card"
+                        aria-labelledby="payment-lease-title"
+                    >
+                        <div
+                            class="landlord-payment-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-payment-details-page__section-label"
+                                >
+                                    Tenancy
+                                </p>
+
+                                <h2 id="payment-lease-title">
+                                    Lease information
+                                </h2>
+                            </div>
+
+                            {% if payment.lease_id %}
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_lease_details_page',
+                                        lease_id=payment.lease_id
+                                    ) }}"
+                                    class="landlord-payment-details-page__text-link"
+                                >
+                                    View lease
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <dl
+                            class="landlord-payment-details-page__details-list"
+                        >
+                            <div>
+                                <dt>Lease ID</dt>
+                                <dd>
+                                    {% if payment.lease_id %}
+                                        <code>
+                                            {{ payment.lease_id }}
+                                        </code>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Tenant</dt>
+                                <dd>
+                                    {% if payment.tenant %}
+                                        {{
+                                            payment.tenant.full_name
+                                            | default(
+                                                payment.tenant.name,
+                                                true
+                                            )
+                                            | default(
+                                                payment.tenant.email,
+                                                true
+                                            )
+                                            | default("Tenant", true)
+                                        }}
+                                    {% elif payment.tenant_id %}
+                                        <code>
+                                            {{ payment.tenant_id }}
+                                        </code>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            {% if payment.lease %}
+                                {% if payment.lease.start_date %}
+                                    <div>
+                                        <dt>Lease start date</dt>
+                                        <dd>
+                                            <time
+                                                datetime="{{
+                                                    payment.lease.start_date.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    payment.lease.start_date.strftime(
+                                                        "%d %B %Y"
+                                                    )
+                                                }}
+                                            </time>
+                                        </dd>
+                                    </div>
+                                {% endif %}
+
+                                {% if payment.lease.end_date %}
+                                    <div>
+                                        <dt>Lease end date</dt>
+                                        <dd>
+                                            <time
+                                                datetime="{{
+                                                    payment.lease.end_date.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    payment.lease.end_date.strftime(
+                                                        "%d %B %Y"
+                                                    )
+                                                }}
+                                            </time>
+                                        </dd>
+                                    </div>
+                                {% endif %}
+
+                                {% if payment.lease.monthly_rent %}
+                                    <div>
+                                        <dt>Monthly rent</dt>
+                                        <dd>
+                                            {{
+                                                payment.currency
+                                                | default("EUR", true)
+                                            }}
+                                            {{
+                                                "%.2f" | format(
+                                                    payment.lease.monthly_rent
+                                                    | float
+                                                )
+                                            }}
+                                        </dd>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </dl>
+                    </section>
+                </main>
+
+
+                <!-- Sidebar -->
+                <aside class="landlord-payment-details-page__sidebar">
+                    <section
+                        class="landlord-payment-details-page__card"
+                        aria-labelledby="payment-status-title"
+                    >
+                        <h2 id="payment-status-title">
+                            Payment status
+                        </h2>
+
+                        {% if normalized_status == "paid" %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--success"
+                            >
+                                <span aria-hidden="true">✓</span>
+
+                                <p>
+                                    This payment has been marked as paid.
+                                </p>
+                            </div>
+
+                        {% elif normalized_status == "partially-paid" %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--warning"
+                            >
+                                <span aria-hidden="true">◐</span>
+
+                                <p>
+                                    This payment has only been partially
+                                    completed.
+                                </p>
+                            </div>
+
+                        {% elif normalized_status == "overdue" %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--danger"
+                            >
+                                <span aria-hidden="true">!</span>
+
+                                <p>
+                                    This payment is overdue and may
+                                    require follow-up.
+                                </p>
+                            </div>
+
+                        {% elif normalized_status == "failed" %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--danger"
+                            >
+                                <span aria-hidden="true">×</span>
+
+                                <p>
+                                    The payment attempt was unsuccessful.
+                                </p>
+                            </div>
+
+                        {% elif normalized_status == "refunded" %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--neutral"
+                            >
+                                <span aria-hidden="true">↩</span>
+
+                                <p>
+                                    This payment has been refunded.
+                                </p>
+                            </div>
+
+                        {% else %}
+                            <div
+                                class="landlord-payment-details-page__status-message
+                                       landlord-payment-details-page__status-message--warning"
+                            >
+                                <span aria-hidden="true">⌛</span>
+
+                                <p>
+                                    This payment is waiting to be
+                                    completed.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+
+                    <section
+                        class="landlord-payment-details-page__card"
+                        aria-labelledby="payment-actions-title"
+                    >
+                        <h2 id="payment-actions-title">
+                            Related pages
+                        </h2>
+
+                        <div
+                            class="landlord-payment-details-page__action-list"
+                        >
+                            {% if payment.lease_id %}
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_lease_details_page',
+                                        lease_id=payment.lease_id
+                                    ) }}"
+                                >
+                                    View related lease
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            {% endif %}
+
+                            <a href="{{ url_for('landlord_payments_page') }}">
+                                View all payments
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a href="{{ url_for('landlord_reports_page') }}">
+                                View financial reports
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a href="{{ url_for('landlord_messages_page') }}">
+                                Open messages
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </section>
+
+
+                    <section
+                        class="landlord-payment-details-page__card
+                               landlord-payment-details-page__card--privacy"
+                        aria-labelledby="payment-privacy-title"
+                    >
+                        <h2 id="payment-privacy-title">
+                            Financial data
+                        </h2>
+
+                        <p>
+                            Payment records are confidential. Do not
+                            share tenant or transaction information
+                            with unauthorized people.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information
+                        </a>
+                    </section>
+                </aside>
+            </div>
+
+        {% else %}
+            <!-- Missing payment -->
+            <section
+                class="landlord-payment-details-page__not-found"
+                role="alert"
+            >
+                <div aria-hidden="true">!</div>
+
+                <h1>Payment not found</h1>
+
+                <p>
+                    This payment record is unavailable or you do not
+                    have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_payments_page') }}"
+                    class="landlord-payment-details-page__button
+                           landlord-payment-details-page__button--primary"
+                >
+                    Return to payments
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

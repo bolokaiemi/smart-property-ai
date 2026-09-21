@@ -1,0 +1,683 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Messages") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review property and tenant communications securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-messages-page"
+    data-landlord-messages-page
+>
+    <div class="landlord-messages-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-messages-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Messages
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-messages-page__header">
+            <div>
+                <p class="landlord-messages-page__eyebrow">
+                    Communication centre
+                </p>
+
+                <h1>Messages</h1>
+
+                <p>
+                    Review communications with tenants, applicants,
+                    property managers and service providers.
+                </p>
+            </div>
+
+            <div class="landlord-messages-page__header-actions">
+                <a
+                    href="{{ url_for('landlord_maintenance_page') }}"
+                    class="landlord-messages-page__button
+                           landlord-messages-page__button--secondary"
+                >
+                    Maintenance requests
+                </a>
+
+                <a
+                    href="{{ url_for('landlord_complaints_page') }}"
+                    class="landlord-messages-page__button
+                           landlord-messages-page__button--primary"
+                >
+                    Tenant complaints
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-messages-page__alert
+                       landlord-messages-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-messages-page__alert
+                       landlord-messages-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Message counts -->
+        {% set message_summary = namespace(
+            received=0,
+            sent=0,
+            unread=0,
+            property_messages=0
+        ) %}
+
+        {% for message in messages | default([], true) %}
+            {% if current_user
+                  and message.recipient_id == current_user.id
+            %}
+                {% set message_summary.received =
+                    message_summary.received + 1
+                %}
+
+                {% if not message.read_at %}
+                    {% set message_summary.unread =
+                        message_summary.unread + 1
+                    %}
+                {% endif %}
+            {% endif %}
+
+            {% if current_user
+                  and message.sender_id == current_user.id
+            %}
+                {% set message_summary.sent =
+                    message_summary.sent + 1
+                %}
+            {% endif %}
+
+            {% if message.property_id %}
+                {% set message_summary.property_messages =
+                    message_summary.property_messages + 1
+                %}
+            {% endif %}
+        {% endfor %}
+
+
+        <!-- Summary -->
+        <section
+            class="landlord-messages-page__summary"
+            aria-label="Message summary"
+        >
+            <article class="landlord-messages-page__summary-card">
+                <span>All messages</span>
+
+                <strong>
+                    {{ messages | default([], true) | length }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-messages-page__summary-card
+                       landlord-messages-page__summary-card--unread"
+            >
+                <span>Unread</span>
+                <strong>{{ message_summary.unread }}</strong>
+            </article>
+
+            <article class="landlord-messages-page__summary-card">
+                <span>Received</span>
+                <strong>{{ message_summary.received }}</strong>
+            </article>
+
+            <article class="landlord-messages-page__summary-card">
+                <span>Sent</span>
+                <strong>{{ message_summary.sent }}</strong>
+            </article>
+        </section>
+
+
+        <!-- Search and filters -->
+        <section
+            class="landlord-messages-page__toolbar"
+            aria-label="Message search and filtering"
+        >
+            <div class="landlord-messages-page__search">
+                <label
+                    for="landlord-message-search"
+                    class="visually-hidden"
+                >
+                    Search messages
+                </label>
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    id="landlord-message-search"
+                    type="search"
+                    placeholder="Search subject or message"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="landlord-messages-page__filter">
+                <label for="landlord-message-folder-filter">
+                    Folder
+                </label>
+
+                <select id="landlord-message-folder-filter">
+                    <option value="all">All messages</option>
+                    <option value="inbox">Received</option>
+                    <option value="sent">Sent</option>
+                    <option value="unread">Unread</option>
+                </select>
+            </div>
+
+            <div class="landlord-messages-page__filter">
+                <label for="landlord-message-channel-filter">
+                    Channel
+                </label>
+
+                <select id="landlord-message-channel-filter">
+                    <option value="all">All channels</option>
+                    <option value="platform">Platform</option>
+                    <option value="email">Email</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="phone">Phone</option>
+                    <option value="sms">SMS</option>
+                </select>
+            </div>
+        </section>
+
+
+        <!-- Message list -->
+        <section
+            class="landlord-messages-page__panel"
+            aria-labelledby="landlord-message-list-heading"
+        >
+            <div class="landlord-messages-page__panel-header">
+                <div>
+                    <h2 id="landlord-message-list-heading">
+                        Conversations
+                    </h2>
+
+                    <p>
+                        Select a message to review its full content.
+                    </p>
+                </div>
+
+                <p class="landlord-messages-page__result-count">
+                    <strong id="landlord-message-visible-count">
+                        {{ messages | default([], true) | length }}
+                    </strong>
+
+                    <span>messages</span>
+                </p>
+            </div>
+
+
+            {% if messages %}
+                <div
+                    class="landlord-messages-page__list"
+                    role="list"
+                >
+                    {% for message in messages %}
+                        {% set message_channel =
+                            message.channel.value
+                            if message.channel
+                            and message.channel.value is defined
+                            else message.channel
+                                | default("platform", true)
+                        %}
+
+                        {% set normalized_channel =
+                            message_channel
+                            | string
+                            | lower
+                            | replace("_", "-")
+                            | replace(" ", "-")
+                        %}
+
+                        {% set is_received =
+                            current_user
+                            and message.recipient_id == current_user.id
+                        %}
+
+                        {% set is_sent =
+                            current_user
+                            and message.sender_id == current_user.id
+                        %}
+
+                        {% set is_unread =
+                            is_received and not message.read_at
+                        %}
+
+                        {% set message_folder =
+                            "unread"
+                            if is_unread
+                            else (
+                                "inbox"
+                                if is_received
+                                else "sent"
+                            )
+                        %}
+
+                        {% set message_subject =
+                            message.subject
+                            | default(
+                                "Message without a subject",
+                                true
+                            )
+                        %}
+
+                        <article
+                            class="landlord-messages-page__message
+                                   {% if is_unread %}
+                                       landlord-messages-page__message--unread
+                                   {% endif %}"
+                            data-message-item
+                            data-message-folder="{{ message_folder }}"
+                            data-message-received="{{
+                                'true' if is_received else 'false'
+                            }}"
+                            data-message-sent="{{
+                                'true' if is_sent else 'false'
+                            }}"
+                            data-message-unread="{{
+                                'true' if is_unread else 'false'
+                            }}"
+                            data-message-channel="{{
+                                normalized_channel
+                            }}"
+                            data-message-search="{{
+                                (
+                                    message_subject ~ ' ' ~
+                                    (
+                                        message.content
+                                        | default("", true)
+                                    )
+                                ) | lower
+                            }}"
+                            role="listitem"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_message_details_page',
+                                    message_id=message.id
+                                ) }}"
+                                class="landlord-messages-page__message-link"
+                                aria-label="Open message: {{
+                                    message_subject
+                                }}{% if is_unread %}, unread{% endif %}"
+                            >
+                                <!-- Direction/icon -->
+                                <div
+                                    class="landlord-messages-page__message-icon"
+                                    aria-hidden="true"
+                                >
+                                    {% if is_received %}
+                                        ↓
+                                    {% else %}
+                                        ↑
+                                    {% endif %}
+                                </div>
+
+
+                                <!-- Main content -->
+                                <div
+                                    class="landlord-messages-page__message-content"
+                                >
+                                    <div
+                                        class="landlord-messages-page__message-heading"
+                                    >
+                                        <div>
+                                            {% if is_received %}
+                                                <span
+                                                    class="landlord-messages-page__direction
+                                                           landlord-messages-page__direction--received"
+                                                >
+                                                    Received
+                                                </span>
+                                            {% else %}
+                                                <span
+                                                    class="landlord-messages-page__direction
+                                                           landlord-messages-page__direction--sent"
+                                                >
+                                                    Sent
+                                                </span>
+                                            {% endif %}
+
+                                            {% if is_unread %}
+                                                <span
+                                                    class="landlord-messages-page__unread-label"
+                                                >
+                                                    Unread
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if message.created_at %}
+                                            <time
+                                                datetime="{{
+                                                    message.created_at.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    message.created_at.strftime(
+                                                        "%d %b %Y, %H:%M"
+                                                    )
+                                                }}
+                                            </time>
+                                        {% endif %}
+                                    </div>
+
+                                    <h3>{{ message_subject }}</h3>
+
+                                    <p>
+                                        {{
+                                            message.content
+                                            | default(
+                                                "No message content",
+                                                true
+                                            )
+                                            | striptags
+                                            | truncate(
+                                                150,
+                                                true,
+                                                "…"
+                                            )
+                                        }}
+                                    </p>
+
+                                    <div
+                                        class="landlord-messages-page__message-meta"
+                                    >
+                                        <span
+                                            class="landlord-messages-page__channel
+                                                   landlord-messages-page__channel--{{
+                                                       normalized_channel
+                                                   }}"
+                                        >
+                                            {{
+                                                message_channel
+                                                | string
+                                                | replace("_", " ")
+                                                | title
+                                            }}
+                                        </span>
+
+                                        <span>
+                                            Language:
+                                            {{
+                                                message.language
+                                                | default("en", true)
+                                                | upper
+                                            }}
+                                        </span>
+
+                                        {% if message.property_id %}
+                                            <span>
+                                                Property message
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+
+                                <!-- Arrow -->
+                                <span
+                                    class="landlord-messages-page__message-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+                            </a>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div
+                    id="landlord-messages-filter-empty"
+                    class="landlord-messages-page__filter-empty"
+                    role="status"
+                    hidden
+                >
+                    <h2>No matching messages</h2>
+
+                    <p>
+                        Try changing the search text or selected
+                        filters.
+                    </p>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-messages-page__empty-state">
+                    <div
+                        class="landlord-messages-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        ✉
+                    </div>
+
+                    <h2>No messages</h2>
+
+                    <p>
+                        Communications with tenants, applicants and
+                        service providers will appear here.
+                    </p>
+
+                    <a
+                        href="{{ url_for('landlord_dashboard') }}"
+                        class="landlord-messages-page__button
+                               landlord-messages-page__button--secondary"
+                    >
+                        Return to dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Privacy notice -->
+        <aside
+            class="landlord-messages-page__notice"
+            aria-labelledby="message-privacy-title"
+        >
+            <span aria-hidden="true">🔒</span>
+
+            <div>
+                <h2 id="message-privacy-title">
+                    Protect private communications
+                </h2>
+
+                <p>
+                    Messages may contain personal tenancy or property
+                    information. Only authorized users should access or
+                    share these communications.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Review the privacy policy
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById(
+                "landlord-message-search"
+            );
+
+            const folderFilter = document.getElementById(
+                "landlord-message-folder-filter"
+            );
+
+            const channelFilter = document.getElementById(
+                "landlord-message-channel-filter"
+            );
+
+            const messageItems = Array.from(
+                document.querySelectorAll("[data-message-item]")
+            );
+
+            const emptyMessage = document.getElementById(
+                "landlord-messages-filter-empty"
+            );
+
+            const visibleCount = document.getElementById(
+                "landlord-message-visible-count"
+            );
+
+            if (messageItems.length === 0) {
+                return;
+            }
+
+            function filterMessages() {
+                const searchValue = searchInput
+                    ? searchInput.value.trim().toLowerCase()
+                    : "";
+
+                const selectedFolder = folderFilter
+                    ? folderFilter.value
+                    : "all";
+
+                const selectedChannel = channelFilter
+                    ? channelFilter.value
+                    : "all";
+
+                let resultCount = 0;
+
+                messageItems.forEach(function (item) {
+                    const searchableText =
+                        item.dataset.messageSearch || "";
+
+                    const channel =
+                        item.dataset.messageChannel || "platform";
+
+                    const received =
+                        item.dataset.messageReceived === "true";
+
+                    const sent =
+                        item.dataset.messageSent === "true";
+
+                    const unread =
+                        item.dataset.messageUnread === "true";
+
+                    const matchesSearch =
+                        !searchValue ||
+                        searchableText.includes(searchValue);
+
+                    let matchesFolder =
+                        selectedFolder === "all";
+
+                    if (selectedFolder === "inbox") {
+                        matchesFolder = received;
+                    } else if (selectedFolder === "sent") {
+                        matchesFolder = sent;
+                    } else if (selectedFolder === "unread") {
+                        matchesFolder = unread;
+                    }
+
+                    const matchesChannel =
+                        selectedChannel === "all" ||
+                        channel === selectedChannel;
+
+                    const shouldDisplay =
+                        matchesSearch &&
+                        matchesFolder &&
+                        matchesChannel;
+
+                    item.hidden = !shouldDisplay;
+
+                    if (shouldDisplay) {
+                        resultCount += 1;
+                    }
+                });
+
+                if (visibleCount) {
+                    visibleCount.textContent = String(resultCount);
+                }
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = resultCount !== 0;
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener(
+                    "input",
+                    filterMessages
+                );
+            }
+
+            if (folderFilter) {
+                folderFilter.addEventListener(
+                    "change",
+                    filterMessages
+                );
+            }
+
+            if (channelFilter) {
+                channelFilter.addEventListener(
+                    "change",
+                    filterMessages
+                );
+            }
+        });
+    </script>
+{% endblock %}

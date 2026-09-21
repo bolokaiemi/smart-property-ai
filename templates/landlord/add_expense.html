@@ -1,0 +1,992 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Add Expense | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Record a property or maintenance expense securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-add-expense-page"
+    data-landlord-add-expense-page
+>
+    <div class="landlord-add-expense-page__container">
+
+        <nav
+            class="landlord-add-expense-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">Home</a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_expenses_page') }}">
+                        Expenses
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Add expense
+                </li>
+            </ol>
+        </nav>
+
+
+        <header class="landlord-add-expense-page__header">
+            <div>
+                <p class="landlord-add-expense-page__eyebrow">
+                    Property cost tracking
+                </p>
+
+                <h1>Add an expense</h1>
+
+                <p>
+                    Record a maintenance, repair, utility or other
+                    property-related expense.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_expenses_page') }}"
+                class="landlord-add-expense-page__button
+                       landlord-add-expense-page__button--secondary"
+            >
+                Back to expenses
+            </a>
+        </header>
+
+
+        {% if success %}
+            <div
+                class="landlord-add-expense-page__alert
+                       landlord-add-expense-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-add-expense-page__alert
+                       landlord-add-expense-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div
+                class="landlord-add-expense-page__alert
+                       landlord-add-expense-page__alert--error"
+                role="alert"
+                aria-labelledby="expense-errors-heading"
+            >
+                <strong id="expense-errors-heading">
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% for field, message in errors.items() %}
+                        <li>
+                            <a href="#{{ field }}">
+                                {{ message }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-add-expense-page__layout">
+
+            <main class="landlord-add-expense-page__main">
+                <section
+                    class="landlord-add-expense-page__card"
+                    aria-labelledby="expense-form-heading"
+                >
+                    <div
+                        class="landlord-add-expense-page__card-header"
+                    >
+                        <div>
+                            <p
+                                class="landlord-add-expense-page__section-label"
+                            >
+                                Expense record
+                            </p>
+
+                            <h2 id="expense-form-heading">
+                                Expense information
+                            </h2>
+                        </div>
+
+                        <span
+                            class="landlord-add-expense-page__secure-label"
+                        >
+                            <span aria-hidden="true">🔒</span>
+                            Secure form
+                        </span>
+                    </div>
+
+                    <form
+                        id="landlord-add-expense-form"
+                        class="landlord-add-expense-page__form"
+                        action="{{ url_for('create_expense_action') }}"
+                        method="post"
+                        novalidate
+                    >
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token | default(
+                                request.session.get(
+                                    'csrf_token',
+                                    ''
+                                ),
+                                true
+                            ) }}"
+                        >
+
+
+                        <!-- Property -->
+                        <div
+                            class="landlord-add-expense-page__form-group"
+                        >
+                            <label for="property_id">
+                                Property
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            {% if properties %}
+                                <select
+                                    id="property_id"
+                                    name="property_id"
+                                    aria-describedby="property-id-help"
+                                    required
+                                >
+                                    <option value="">
+                                        Select a property
+                                    </option>
+
+                                    {% set selected_property_id =
+                                        form_data.get(
+                                            "property_id",
+                                            ""
+                                        )
+                                        if form_data
+                                        else ""
+                                    %}
+
+                                    {% for property in properties %}
+                                        <option
+                                            value="{{ property.id }}"
+                                            {% if selected_property_id
+                                                | string
+                                                ==
+                                                property.id | string
+                                            %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ property.name
+                                               | default(
+                                                   property.title,
+                                                   true
+                                               )
+                                               | default(
+                                                   "Unnamed property",
+                                                   true
+                                               )
+                                            }}
+
+                                            {% if property.city %}
+                                                — {{ property.city }}
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input
+                                    id="property_id"
+                                    name="property_id"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'property_id',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    placeholder="Enter the property ID"
+                                    maxlength="36"
+                                    aria-describedby="property-id-help"
+                                    required
+                                >
+                            {% endif %}
+
+                            <small id="property-id-help">
+                                Select or enter the property connected
+                                to this expense.
+                            </small>
+
+                            {% if errors and errors.get("property_id") %}
+                                <p
+                                    class="landlord-add-expense-page__field-error"
+                                >
+                                    {{ errors.get("property_id") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <div
+                            class="landlord-add-expense-page__form-grid
+                                   landlord-add-expense-page__form-grid--two"
+                        >
+                            <!-- Category -->
+                            <div
+                                class="landlord-add-expense-page__form-group"
+                            >
+                                <label for="category">
+                                    Category
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                {% set selected_category =
+                                    form_data.get("category", "")
+                                    if form_data
+                                    else ""
+                                %}
+
+                                <select
+                                    id="category"
+                                    name="category"
+                                    required
+                                >
+                                    <option value="">
+                                        Select a category
+                                    </option>
+
+                                    <option
+                                        value="maintenance"
+                                        {% if selected_category ==
+                                            "maintenance"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Maintenance
+                                    </option>
+
+                                    <option
+                                        value="repair"
+                                        {% if selected_category ==
+                                            "repair"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Repair
+                                    </option>
+
+                                    <option
+                                        value="utilities"
+                                        {% if selected_category ==
+                                            "utilities"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Utilities
+                                    </option>
+
+                                    <option
+                                        value="cleaning"
+                                        {% if selected_category ==
+                                            "cleaning"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Cleaning
+                                    </option>
+
+                                    <option
+                                        value="insurance"
+                                        {% if selected_category ==
+                                            "insurance"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Insurance
+                                    </option>
+
+                                    <option
+                                        value="property_tax"
+                                        {% if selected_category ==
+                                            "property_tax"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Property tax
+                                    </option>
+
+                                    <option
+                                        value="management"
+                                        {% if selected_category ==
+                                            "management"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Property management
+                                    </option>
+
+                                    <option
+                                        value="legal"
+                                        {% if selected_category ==
+                                            "legal"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Legal
+                                    </option>
+
+                                    <option
+                                        value="renovation"
+                                        {% if selected_category ==
+                                            "renovation"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Renovation
+                                    </option>
+
+                                    <option
+                                        value="other"
+                                        {% if selected_category ==
+                                            "other"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Other
+                                    </option>
+                                </select>
+
+                                {% if errors
+                                      and errors.get("category")
+                                %}
+                                    <p
+                                        class="landlord-add-expense-page__field-error"
+                                    >
+                                        {{ errors.get("category") }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+
+                            <!-- Date -->
+                            <div
+                                class="landlord-add-expense-page__form-group"
+                            >
+                                <label for="expense_date">
+                                    Expense date
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="expense_date"
+                                    name="expense_date"
+                                    type="date"
+                                    value="{{ form_data.get(
+                                        'expense_date',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    required
+                                >
+
+                                {% if errors
+                                      and errors.get("expense_date")
+                                %}
+                                    <p
+                                        class="landlord-add-expense-page__field-error"
+                                    >
+                                        {{ errors.get("expense_date") }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        <div
+                            class="landlord-add-expense-page__form-grid
+                                   landlord-add-expense-page__form-grid--amount"
+                        >
+                            <!-- Amount -->
+                            <div
+                                class="landlord-add-expense-page__form-group"
+                            >
+                                <label for="amount">
+                                    Amount
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="amount"
+                                    name="amount"
+                                    type="number"
+                                    value="{{ form_data.get(
+                                        'amount',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    min="0.01"
+                                    max="9999999999.99"
+                                    step="0.01"
+                                    inputmode="decimal"
+                                    placeholder="0.00"
+                                    required
+                                >
+
+                                {% if errors and errors.get("amount") %}
+                                    <p
+                                        class="landlord-add-expense-page__field-error"
+                                    >
+                                        {{ errors.get("amount") }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+
+                            <!-- Currency -->
+                            <div
+                                class="landlord-add-expense-page__form-group"
+                            >
+                                <label for="currency">
+                                    Currency
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                {% set selected_currency =
+                                    form_data.get("currency", "EUR")
+                                    if form_data
+                                    else "EUR"
+                                %}
+
+                                <select
+                                    id="currency"
+                                    name="currency"
+                                    required
+                                >
+                                    <option
+                                        value="EUR"
+                                        {% if selected_currency ==
+                                            "EUR"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        EUR (€)
+                                    </option>
+
+                                    <option
+                                        value="NGN"
+                                        {% if selected_currency ==
+                                            "NGN"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        NGN (₦)
+                                    </option>
+
+                                    <option
+                                        value="USD"
+                                        {% if selected_currency ==
+                                            "USD"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        USD ($)
+                                    </option>
+
+                                    <option
+                                        value="GBP"
+                                        {% if selected_currency ==
+                                            "GBP"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GBP (£)
+                                    </option>
+
+                                    <option
+                                        value="GHS"
+                                        {% if selected_currency ==
+                                            "GHS"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GHS (GH₵)
+                                    </option>
+
+                                    <option
+                                        value="CAD"
+                                        {% if selected_currency ==
+                                            "CAD"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        CAD (C$)
+                                    </option>
+
+                                    <option
+                                        value="AUD"
+                                        {% if selected_currency ==
+                                            "AUD"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        AUD (A$)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <!-- Maintenance request -->
+                        <div
+                            class="landlord-add-expense-page__form-group"
+                        >
+                            <label for="maintenance_request_id">
+                                Related maintenance request
+                                <span
+                                    class="landlord-add-expense-page__optional"
+                                >
+                                    Optional
+                                </span>
+                            </label>
+
+                            {% if maintenance_requests %}
+                                <select
+                                    id="maintenance_request_id"
+                                    name="maintenance_request_id"
+                                    aria-describedby="maintenance-id-help"
+                                >
+                                    <option value="">
+                                        No maintenance request
+                                    </option>
+
+                                    {% set selected_request_id =
+                                        form_data.get(
+                                            "maintenance_request_id",
+                                            ""
+                                        )
+                                        if form_data
+                                        else ""
+                                    %}
+
+                                    {% for maintenance
+                                       in maintenance_requests
+                                    %}
+                                        <option
+                                            value="{{ maintenance.id }}"
+                                            {% if selected_request_id
+                                                | string
+                                                ==
+                                                maintenance.id | string
+                                            %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ maintenance.title
+                                               | default(
+                                                   maintenance.subject,
+                                                   true
+                                               )
+                                               | default(
+                                                   "Maintenance request",
+                                                   true
+                                               )
+                                            }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input
+                                    id="maintenance_request_id"
+                                    name="maintenance_request_id"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'maintenance_request_id',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    placeholder="Enter maintenance request ID"
+                                    maxlength="36"
+                                    aria-describedby="maintenance-id-help"
+                                >
+                            {% endif %}
+
+                            <small id="maintenance-id-help">
+                                Leave blank when the expense is not
+                                related to a maintenance request.
+                            </small>
+
+                            {% if errors
+                                  and errors.get(
+                                      "maintenance_request_id"
+                                  )
+                            %}
+                                <p
+                                    class="landlord-add-expense-page__field-error"
+                                >
+                                    {{
+                                        errors.get(
+                                            "maintenance_request_id"
+                                        )
+                                    }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Description -->
+                        <div
+                            class="landlord-add-expense-page__form-group"
+                        >
+                            <label for="description">
+                                Description
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="6"
+                                minlength="3"
+                                maxlength="2000"
+                                placeholder="Describe the expense, work completed or service purchased."
+                                aria-describedby="expense-description-help expense-description-count"
+                                required
+                            >{{ form_data.get(
+                                "description",
+                                ""
+                            ) if form_data else "" }}</textarea>
+
+                            <div
+                                class="landlord-add-expense-page__field-footer"
+                            >
+                                <small id="expense-description-help">
+                                    Do not include payment-card numbers,
+                                    passwords or unnecessary tenant data.
+                                </small>
+
+                                <small
+                                    id="expense-description-count"
+                                    aria-live="polite"
+                                >
+                                    0 / 2000
+                                </small>
+                            </div>
+
+                            {% if errors
+                                  and errors.get("description")
+                            %}
+                                <p
+                                    class="landlord-add-expense-page__field-error"
+                                >
+                                    {{ errors.get("description") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Confirmation -->
+                        <div
+                            class="landlord-add-expense-page__confirmation"
+                        >
+                            <label for="expense_confirmation">
+                                <input
+                                    id="expense_confirmation"
+                                    name="expense_confirmation"
+                                    type="checkbox"
+                                    value="confirmed"
+                                    required
+                                >
+
+                                <span>
+                                    I confirm that this expense record
+                                    is accurate and does not contain
+                                    unnecessary sensitive information.
+                                    <span aria-hidden="true">*</span>
+                                </span>
+                            </label>
+
+                            <p
+                                id="expense-confirmation-error"
+                                class="landlord-add-expense-page__field-error"
+                                hidden
+                            ></p>
+                        </div>
+
+
+                        <!-- Actions -->
+                        <div
+                            class="landlord-add-expense-page__form-actions"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_expenses_page'
+                                ) }}"
+                                class="landlord-add-expense-page__button
+                                       landlord-add-expense-page__button--secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                id="landlord-expense-submit-button"
+                                type="submit"
+                                class="landlord-add-expense-page__button
+                                       landlord-add-expense-page__button--primary"
+                            >
+                                <span
+                                    class="landlord-add-expense-page__spinner"
+                                    aria-hidden="true"
+                                ></span>
+
+                                <span data-submit-label>
+                                    Save expense
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+
+
+            <aside class="landlord-add-expense-page__sidebar">
+                <section
+                    class="landlord-add-expense-page__card"
+                    aria-labelledby="expense-record-title"
+                >
+                    <h2 id="expense-record-title">
+                        Good expense records
+                    </h2>
+
+                    <ul
+                        class="landlord-add-expense-page__guidance-list"
+                    >
+                        <li>
+                            Select the correct property.
+                        </li>
+
+                        <li>
+                            Enter the exact amount and currency.
+                        </li>
+
+                        <li>
+                            Use the date shown on the invoice or receipt.
+                        </li>
+
+                        <li>
+                            Link maintenance costs to their request.
+                        </li>
+
+                        <li>
+                            Keep the original receipt or invoice.
+                        </li>
+                    </ul>
+                </section>
+
+                <section
+                    class="landlord-add-expense-page__card"
+                    aria-labelledby="expense-privacy-title"
+                >
+                    <h2 id="expense-privacy-title">
+                        Financial privacy
+                    </h2>
+
+                    <p>
+                        Expense records may contain private financial
+                        information. Only authorized users should access
+                        or update these records.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Review the privacy policy
+                    </a>
+                </section>
+
+                <section
+                    class="landlord-add-expense-page__card"
+                    aria-labelledby="expense-disclaimer-title"
+                >
+                    <h2 id="expense-disclaimer-title">
+                        Accounting reminder
+                    </h2>
+
+                    <p>
+                        Review expense information with a qualified
+                        accountant or tax professional before using it
+                        for tax or legal decisions.
+                    </p>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById(
+                "landlord-add-expense-form"
+            );
+
+            const expenseDate = document.getElementById(
+                "expense_date"
+            );
+
+            const description = document.getElementById(
+                "description"
+            );
+
+            const descriptionCount = document.getElementById(
+                "expense-description-count"
+            );
+
+            const confirmation = document.getElementById(
+                "expense_confirmation"
+            );
+
+            const confirmationError = document.getElementById(
+                "expense-confirmation-error"
+            );
+
+            const submitButton = document.getElementById(
+                "landlord-expense-submit-button"
+            );
+
+            function getLocalDate() {
+                const now = new Date();
+                const timezoneOffset =
+                    now.getTimezoneOffset() * 60000;
+
+                return new Date(
+                    now.getTime() - timezoneOffset
+                ).toISOString().split("T")[0];
+            }
+
+            if (expenseDate) {
+                const today = getLocalDate();
+                expenseDate.max = today;
+
+                if (!expenseDate.value) {
+                    expenseDate.value = today;
+                }
+            }
+
+            function updateDescriptionCount() {
+                if (!description || !descriptionCount) {
+                    return;
+                }
+
+                descriptionCount.textContent =
+                    String(description.value.length) +
+                    " / 2000";
+            }
+
+            if (description) {
+                description.addEventListener(
+                    "input",
+                    updateDescriptionCount
+                );
+
+                updateDescriptionCount();
+            }
+
+            if (form) {
+                form.addEventListener("submit", function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        form.reportValidity();
+                        return;
+                    }
+
+                    if (!confirmation || !confirmation.checked) {
+                        event.preventDefault();
+
+                        if (confirmationError) {
+                            confirmationError.textContent =
+                                "Confirm that the expense information is accurate.";
+                            confirmationError.hidden = false;
+                        }
+
+                        confirmation?.focus();
+                        return;
+                    }
+
+                    if (confirmationError) {
+                        confirmationError.textContent = "";
+                        confirmationError.hidden = true;
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.setAttribute(
+                            "aria-busy",
+                            "true"
+                        );
+
+                        const label = submitButton.querySelector(
+                            "[data-submit-label]"
+                        );
+
+                        if (label) {
+                            label.textContent = "Saving…";
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

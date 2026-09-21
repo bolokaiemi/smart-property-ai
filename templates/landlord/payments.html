@@ -1,0 +1,614 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Payments") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review rent payments, due dates and payment statuses securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-payments-page"
+    data-landlord-payments-page
+>
+    <div class="landlord-payments-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-payments-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Payments
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="landlord-payments-page__header">
+            <div class="landlord-payments-page__heading">
+                <p class="landlord-payments-page__eyebrow">
+                    Financial management
+                </p>
+
+                <h1>Tenant payments</h1>
+
+                <p>
+                    Review rent payments, due dates, payment statuses
+                    and transaction references from one secure location.
+                </p>
+            </div>
+
+            <div class="landlord-payments-page__header-actions">
+                <a
+                    href="{{ url_for('landlord_leases_page') }}"
+                    class="landlord-payments-page__button
+                           landlord-payments-page__button--secondary"
+                >
+                    View leases
+                </a>
+
+                <a
+                    href="{{ url_for('landlord_reports_page') }}"
+                    class="landlord-payments-page__button
+                           landlord-payments-page__button--primary"
+                >
+                    View reports
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-payments-page__alert
+                       landlord-payments-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-payments-page__alert
+                       landlord-payments-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Calculate payment totals -->
+        {% set payment_summary = namespace(
+            total=0,
+            paid=0,
+            pending=0,
+            overdue=0
+        ) %}
+
+        {% for payment in payments | default([], true) %}
+            {% set payment_status =
+                payment.status.value
+                if payment.status
+                and payment.status.value is defined
+                else payment.status | default("pending", true)
+            %}
+
+            {% set payment_amount =
+                payment.amount | default(0, true) | float
+            %}
+
+            {% set payment_summary.total =
+                payment_summary.total + payment_amount
+            %}
+
+            {% if payment_status | lower == "paid" %}
+                {% set payment_summary.paid =
+                    payment_summary.paid + payment_amount
+                %}
+            {% elif payment_status | lower in [
+                "overdue",
+                "failed"
+            ] %}
+                {% set payment_summary.overdue =
+                    payment_summary.overdue + payment_amount
+                %}
+            {% else %}
+                {% set payment_summary.pending =
+                    payment_summary.pending + payment_amount
+                %}
+            {% endif %}
+        {% endfor %}
+
+
+        <!-- Summary cards -->
+        <section
+            class="landlord-payments-page__summary"
+            aria-label="Payment summary"
+        >
+            <article class="landlord-payments-page__summary-card">
+                <span class="landlord-payments-page__summary-label">
+                    Payment records
+                </span>
+
+                <strong class="landlord-payments-page__summary-value">
+                    {{ payments | default([], true) | length }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-payments-page__summary-card
+                       landlord-payments-page__summary-card--success"
+            >
+                <span class="landlord-payments-page__summary-label">
+                    Paid
+                </span>
+
+                <strong class="landlord-payments-page__summary-value">
+                    €{{ "%.2f" | format(payment_summary.paid) }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-payments-page__summary-card
+                       landlord-payments-page__summary-card--pending"
+            >
+                <span class="landlord-payments-page__summary-label">
+                    Pending
+                </span>
+
+                <strong class="landlord-payments-page__summary-value">
+                    €{{ "%.2f" | format(payment_summary.pending) }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-payments-page__summary-card
+                       landlord-payments-page__summary-card--danger"
+            >
+                <span class="landlord-payments-page__summary-label">
+                    Overdue or failed
+                </span>
+
+                <strong class="landlord-payments-page__summary-value">
+                    €{{ "%.2f" | format(payment_summary.overdue) }}
+                </strong>
+            </article>
+        </section>
+
+
+        <!-- Payment panel -->
+        <section
+            class="landlord-payments-page__panel"
+            aria-labelledby="landlord-payment-list-title"
+        >
+            <div class="landlord-payments-page__panel-header">
+                <div>
+                    <h2 id="landlord-payment-list-title">
+                        Payment history
+                    </h2>
+
+                    <p>
+                        Open a payment record to review its full
+                        transaction information.
+                    </p>
+                </div>
+
+                <div class="landlord-payments-page__filter">
+                    <label for="landlord-payment-status-filter">
+                        Filter by status
+                    </label>
+
+                    <select id="landlord-payment-status-filter">
+                        <option value="all">All payments</option>
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="partially-paid">
+                            Partially paid
+                        </option>
+                        <option value="overdue">Overdue</option>
+                        <option value="failed">Failed</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                </div>
+            </div>
+
+
+            {% if payments %}
+                <div class="landlord-payments-page__table-wrapper">
+                    <table class="landlord-payments-page__table">
+                        <caption class="visually-hidden">
+                            Tenant rent payment records
+                        </caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Reference</th>
+                                <th scope="col">Lease</th>
+                                <th scope="col">Tenant</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Due date</th>
+                                <th scope="col">Paid date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">
+                                    <span class="visually-hidden">
+                                        Action
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for payment in payments %}
+                                {% set payment_status =
+                                    payment.status.value
+                                    if payment.status
+                                    and payment.status.value is defined
+                                    else payment.status
+                                        | default("pending", true)
+                                %}
+
+                                {% set normalized_status =
+                                    payment_status
+                                    | string
+                                    | lower
+                                    | replace("_", "-")
+                                    | replace(" ", "-")
+                                %}
+
+                                <tr
+                                    data-payment-row
+                                    data-payment-status="{{
+                                        normalized_status
+                                    }}"
+                                >
+                                    <!-- Reference -->
+                                    <td data-label="Reference">
+                                        <strong>
+                                            {{ payment.payment_reference
+                                               | default(
+                                                   "PAY-" ~ payment.id,
+                                                   true
+                                               )
+                                            }}
+                                        </strong>
+                                    </td>
+
+
+                                    <!-- Lease -->
+                                    <td data-label="Lease">
+                                        {% if payment.lease_id %}
+                                            <span
+                                                class="landlord-payments-page__identifier"
+                                                title="{{ payment.lease_id }}"
+                                            >
+                                                {{
+                                                    payment.lease_id
+                                                    | string
+                                                    | truncate(
+                                                        12,
+                                                        true,
+                                                        "…"
+                                                    )
+                                                }}
+                                            </span>
+                                        {% else %}
+                                            <span
+                                                class="landlord-payments-page__unavailable"
+                                            >
+                                                Not available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Tenant -->
+                                    <td data-label="Tenant">
+                                        {% if payment.tenant %}
+                                            <span>
+                                                {{ payment.tenant.full_name
+                                                   | default(
+                                                       payment.tenant.name,
+                                                       true
+                                                   )
+                                                   | default(
+                                                       payment.tenant.email,
+                                                       true
+                                                   )
+                                                   | default(
+                                                       "Tenant",
+                                                       true
+                                                   )
+                                                }}
+                                            </span>
+                                        {% elif payment.tenant_id %}
+                                            <span
+                                                class="landlord-payments-page__identifier"
+                                                title="{{ payment.tenant_id }}"
+                                            >
+                                                {{
+                                                    payment.tenant_id
+                                                    | string
+                                                    | truncate(
+                                                        12,
+                                                        true,
+                                                        "…"
+                                                    )
+                                                }}
+                                            </span>
+                                        {% else %}
+                                            <span
+                                                class="landlord-payments-page__unavailable"
+                                            >
+                                                Not available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Amount -->
+                                    <td data-label="Amount">
+                                        <strong
+                                            class="landlord-payments-page__amount"
+                                        >
+                                            {{ payment.currency
+                                               | default("EUR", true)
+                                            }}
+                                            {{
+                                                "%.2f" | format(
+                                                    payment.amount
+                                                    | default(0, true)
+                                                    | float
+                                                )
+                                            }}
+                                        </strong>
+                                    </td>
+
+
+                                    <!-- Due date -->
+                                    <td data-label="Due date">
+                                        {% if payment.due_date %}
+                                            <time
+                                                datetime="{{
+                                                    payment.due_date.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    payment.due_date.strftime(
+                                                        "%d %b %Y"
+                                                    )
+                                                }}
+                                            </time>
+                                        {% else %}
+                                            <span
+                                                class="landlord-payments-page__unavailable"
+                                            >
+                                                —
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Paid date -->
+                                    <td data-label="Paid date">
+                                        {% if payment.paid_at %}
+                                            <time
+                                                datetime="{{
+                                                    payment.paid_at.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    payment.paid_at.strftime(
+                                                        "%d %b %Y"
+                                                    )
+                                                }}
+                                            </time>
+                                        {% else %}
+                                            <span
+                                                class="landlord-payments-page__unavailable"
+                                            >
+                                                Not paid
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Status -->
+                                    <td data-label="Status">
+                                        <span
+                                            class="landlord-payments-page__status
+                                                   landlord-payments-page__status--{{
+                                                       normalized_status
+                                                   }}"
+                                        >
+                                            {{
+                                                payment_status
+                                                | string
+                                                | replace("_", " ")
+                                                | title
+                                            }}
+                                        </span>
+                                    </td>
+
+
+                                    <!-- Action -->
+                                    <td
+                                        data-label="Action"
+                                        class="landlord-payments-page__action"
+                                    >
+                                        <a
+                                            href="{{ url_for(
+                                                'landlord_payment_details_page',
+                                                payment_id=payment.id
+                                            ) }}"
+                                            class="landlord-payments-page__details-link"
+                                            aria-label="View payment {{
+                                                payment.payment_reference
+                                                | default(
+                                                    payment.id,
+                                                    true
+                                                )
+                                            }}"
+                                        >
+                                            View details
+                                            <span aria-hidden="true">
+                                                →
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <p
+                    id="landlord-payments-filter-empty"
+                    class="landlord-payments-page__filter-empty"
+                    role="status"
+                    hidden
+                >
+                    No payments match the selected status.
+                </p>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-payments-page__empty-state">
+                    <div
+                        class="landlord-payments-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        €
+                    </div>
+
+                    <h2>No payment records</h2>
+
+                    <p>
+                        Payment records will appear here when payments
+                        are created for your tenant leases.
+                    </p>
+
+                    <a
+                        href="{{ url_for('landlord_leases_page') }}"
+                        class="landlord-payments-page__button
+                               landlord-payments-page__button--secondary"
+                    >
+                        View leases
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Security notice -->
+        <aside
+            class="landlord-payments-page__notice"
+            aria-label="Financial data notice"
+        >
+            <span aria-hidden="true">🔒</span>
+
+            <div>
+                <h2>Protect financial information</h2>
+
+                <p>
+                    Payment records are confidential. Verify payment
+                    information with your payment provider before making
+                    financial, legal or tenancy decisions.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Review the privacy policy
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const filter = document.getElementById(
+                "landlord-payment-status-filter"
+            );
+
+            const rows = Array.from(
+                document.querySelectorAll("[data-payment-row]")
+            );
+
+            const emptyMessage = document.getElementById(
+                "landlord-payments-filter-empty"
+            );
+
+            if (!filter || rows.length === 0) {
+                return;
+            }
+
+            function filterPayments() {
+                const selectedStatus = filter.value;
+                let visiblePayments = 0;
+
+                rows.forEach(function (row) {
+                    const paymentStatus =
+                        row.dataset.paymentStatus || "";
+
+                    const shouldDisplay =
+                        selectedStatus === "all" ||
+                        paymentStatus === selectedStatus;
+
+                    row.hidden = !shouldDisplay;
+
+                    if (shouldDisplay) {
+                        visiblePayments += 1;
+                    }
+                });
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = visiblePayments !== 0;
+                }
+            }
+
+            filter.addEventListener(
+                "change",
+                filterPayments
+            );
+        });
+    </script>
+{% endblock %}

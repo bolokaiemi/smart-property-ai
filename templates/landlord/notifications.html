@@ -1,0 +1,696 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Notifications") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review rent, lease, appointment, maintenance and property notifications through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-notifications-page"
+    data-landlord-notifications-page
+>
+    <div class="landlord-notifications-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-notifications-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Notifications
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-notifications-page__header">
+            <div>
+                <p class="landlord-notifications-page__eyebrow">
+                    Activity and reminders
+                </p>
+
+                <h1>Notifications</h1>
+
+                <p>
+                    Review property activity, payment reminders,
+                    appointments, lease updates and maintenance alerts.
+                </p>
+            </div>
+
+            <div
+                class="landlord-notifications-page__header-actions"
+            >
+                <a
+                    href="{{ url_for('landlord_dashboard') }}"
+                    class="landlord-notifications-page__button
+                           landlord-notifications-page__button--secondary"
+                >
+                    Return to dashboard
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-notifications-page__alert
+                       landlord-notifications-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-notifications-page__alert
+                       landlord-notifications-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Summary calculation -->
+        {% set notification_summary = namespace(
+            unread=0,
+            read=0,
+            actionable=0
+        ) %}
+
+        {% for notification
+           in notifications | default([], true)
+        %}
+            {% if notification.is_read %}
+                {% set notification_summary.read =
+                    notification_summary.read + 1
+                %}
+            {% else %}
+                {% set notification_summary.unread =
+                    notification_summary.unread + 1
+                %}
+            {% endif %}
+
+            {% if notification.action_url %}
+                {% set notification_summary.actionable =
+                    notification_summary.actionable + 1
+                %}
+            {% endif %}
+        {% endfor %}
+
+
+        <!-- Summary -->
+        <section
+            class="landlord-notifications-page__summary"
+            aria-label="Notification summary"
+        >
+            <article
+                class="landlord-notifications-page__summary-card"
+            >
+                <span>All notifications</span>
+
+                <strong>
+                    {{
+                        notifications
+                        | default([], true)
+                        | length
+                    }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-notifications-page__summary-card
+                       landlord-notifications-page__summary-card--unread"
+            >
+                <span>Unread</span>
+                <strong>{{ notification_summary.unread }}</strong>
+            </article>
+
+            <article
+                class="landlord-notifications-page__summary-card"
+            >
+                <span>Read</span>
+                <strong>{{ notification_summary.read }}</strong>
+            </article>
+
+            <article
+                class="landlord-notifications-page__summary-card"
+            >
+                <span>With actions</span>
+                <strong>{{ notification_summary.actionable }}</strong>
+            </article>
+        </section>
+
+
+        <!-- Filters -->
+        <section
+            class="landlord-notifications-page__toolbar"
+            aria-label="Notification search and filtering"
+        >
+            <div class="landlord-notifications-page__search">
+                <label
+                    for="landlord-notification-search"
+                    class="visually-hidden"
+                >
+                    Search notifications
+                </label>
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    id="landlord-notification-search"
+                    type="search"
+                    placeholder="Search notifications"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="landlord-notifications-page__filter">
+                <label for="landlord-notification-status-filter">
+                    Status
+                </label>
+
+                <select id="landlord-notification-status-filter">
+                    <option value="all">
+                        All notifications
+                    </option>
+
+                    <option value="unread">
+                        Unread
+                    </option>
+
+                    <option value="read">
+                        Read
+                    </option>
+                </select>
+            </div>
+
+            <div class="landlord-notifications-page__filter">
+                <label for="landlord-notification-type-filter">
+                    Type
+                </label>
+
+                <select id="landlord-notification-type-filter">
+                    <option value="all">All types</option>
+
+                    {% set notification_types = [] %}
+
+                    {% for notification
+                       in notifications | default([], true)
+                    %}
+                        {% set notification_type =
+                            notification.notification_type
+                            | default("general", true)
+                            | string
+                        %}
+
+                        {% set normalized_type =
+                            notification_type
+                            | lower
+                            | replace("_", "-")
+                            | replace(" ", "-")
+                        %}
+
+                        {% if normalized_type
+                              not in notification_types
+                        %}
+                            {% set unused =
+                                notification_types.append(
+                                    normalized_type
+                                )
+                            %}
+
+                            <option value="{{ normalized_type }}">
+                                {{
+                                    notification_type
+                                    | replace("_", " ")
+                                    | title
+                                }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </section>
+
+
+        <!-- Notification list -->
+        <section
+            class="landlord-notifications-page__panel"
+            aria-labelledby="landlord-notification-list-title"
+        >
+            <div
+                class="landlord-notifications-page__panel-header"
+            >
+                <div>
+                    <h2 id="landlord-notification-list-title">
+                        Recent notifications
+                    </h2>
+
+                    <p>
+                        Notifications are ordered with the most recent
+                        activity first.
+                    </p>
+                </div>
+
+                <p
+                    class="landlord-notifications-page__result-count"
+                >
+                    <strong
+                        id="landlord-notification-visible-count"
+                    >
+                        {{
+                            notifications
+                            | default([], true)
+                            | length
+                        }}
+                    </strong>
+
+                    <span>notifications</span>
+                </p>
+            </div>
+
+
+            {% if notifications %}
+                <div
+                    class="landlord-notifications-page__list"
+                    role="list"
+                >
+                    {% for notification in notifications %}
+                        {% set notification_type =
+                            notification.notification_type
+                            | default("general", true)
+                            | string
+                        %}
+
+                        {% set normalized_type =
+                            notification_type
+                            | lower
+                            | replace("_", "-")
+                            | replace(" ", "-")
+                        %}
+
+                        {% set notification_status =
+                            "read"
+                            if notification.is_read
+                            else "unread"
+                        %}
+
+                        {% set notification_title =
+                            notification.title
+                            | default("Notification", true)
+                        %}
+
+                        <article
+                            class="landlord-notifications-page__item
+                                   {% if not notification.is_read %}
+                                       landlord-notifications-page__item--unread
+                                   {% endif %}"
+                            data-notification-item
+                            data-notification-status="{{
+                                notification_status
+                            }}"
+                            data-notification-type="{{
+                                normalized_type
+                            }}"
+                            data-notification-search="{{
+                                (
+                                    notification_title ~ " " ~
+                                    (
+                                        notification.content
+                                        | default("", true)
+                                    )
+                                ) | lower
+                            }}"
+                            role="listitem"
+                        >
+                            <!-- Icon -->
+                            <div
+                                class="landlord-notifications-page__icon
+                                       landlord-notifications-page__icon--{{
+                                           normalized_type
+                                       }}"
+                                aria-hidden="true"
+                            >
+                                {% if "payment" in normalized_type
+                                      or "rent" in normalized_type
+                                %}
+                                    €
+                                {% elif "maintenance"
+                                        in normalized_type
+                                %}
+                                    🔧
+                                {% elif "appointment"
+                                        in normalized_type
+                                %}
+                                    📅
+                                {% elif "lease" in normalized_type %}
+                                    📄
+                                {% elif "message" in normalized_type %}
+                                    ✉
+                                {% elif "complaint"
+                                        in normalized_type
+                                %}
+                                    !
+                                {% elif "property"
+                                        in normalized_type
+                                %}
+                                    🏠
+                                {% elif "security"
+                                        in normalized_type
+                                %}
+                                    🔒
+                                {% else %}
+                                    🔔
+                                {% endif %}
+                            </div>
+
+
+                            <!-- Content -->
+                            <div
+                                class="landlord-notifications-page__content"
+                            >
+                                <div
+                                    class="landlord-notifications-page__item-header"
+                                >
+                                    <div
+                                        class="landlord-notifications-page__badges"
+                                    >
+                                        <span
+                                            class="landlord-notifications-page__type
+                                                   landlord-notifications-page__type--{{
+                                                       normalized_type
+                                                   }}"
+                                        >
+                                            {{
+                                                notification_type
+                                                | replace("_", " ")
+                                                | title
+                                            }}
+                                        </span>
+
+                                        {% if not notification.is_read %}
+                                            <span
+                                                class="landlord-notifications-page__unread-label"
+                                            >
+                                                Unread
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if notification.created_at %}
+                                        <time
+                                            datetime="{{
+                                                notification.created_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                notification.created_at.strftime(
+                                                    "%d %b %Y, %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% endif %}
+                                </div>
+
+                                <h3>{{ notification_title }}</h3>
+
+                                <p>
+                                    {{
+                                        notification.content
+                                        | default(
+                                            "No additional information.",
+                                            true
+                                        )
+                                    }}
+                                </p>
+
+                                <div
+                                    class="landlord-notifications-page__item-footer"
+                                >
+                                    <span>
+                                        {% if notification.is_read %}
+                                            Read
+                                        {% else %}
+                                            New notification
+                                        {% endif %}
+                                    </span>
+
+                                    {#
+                                        Only internal relative URLs are
+                                        displayed. This avoids rendering
+                                        unsafe external or JavaScript URLs.
+                                    #}
+                                    {% if notification.action_url
+                                          and
+                                          notification.action_url.startswith(
+                                              "/"
+                                          )
+                                          and not
+                                          notification.action_url.startswith(
+                                              "//"
+                                          )
+                                    %}
+                                        <a
+                                            href="{{
+                                                notification.action_url
+                                            }}"
+                                            class="landlord-notifications-page__action-link"
+                                        >
+                                            View related item
+                                            <span aria-hidden="true">
+                                                →
+                                            </span>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div
+                    id="landlord-notifications-filter-empty"
+                    class="landlord-notifications-page__filter-empty"
+                    role="status"
+                    hidden
+                >
+                    <h2>No matching notifications</h2>
+
+                    <p>
+                        Try changing the search text or selected
+                        filters.
+                    </p>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div
+                    class="landlord-notifications-page__empty-state"
+                >
+                    <div
+                        class="landlord-notifications-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        🔔
+                    </div>
+
+                    <h2>No notifications</h2>
+
+                    <p>
+                        Property updates, payment reminders,
+                        appointment alerts and maintenance activity
+                        will appear here.
+                    </p>
+
+                    <a
+                        href="{{ url_for('landlord_dashboard') }}"
+                        class="landlord-notifications-page__button
+                               landlord-notifications-page__button--secondary"
+                    >
+                        Return to dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Information -->
+        <aside
+            class="landlord-notifications-page__notice"
+            aria-labelledby="notification-notice-title"
+        >
+            <span aria-hidden="true">ⓘ</span>
+
+            <div>
+                <h2 id="notification-notice-title">
+                    Notification reminder
+                </h2>
+
+                <p>
+                    Notifications provide activity summaries and
+                    reminders. Confirm important payment, legal,
+                    financial and tenancy information before acting.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Review the privacy policy
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById(
+                "landlord-notification-search"
+            );
+
+            const statusFilter = document.getElementById(
+                "landlord-notification-status-filter"
+            );
+
+            const typeFilter = document.getElementById(
+                "landlord-notification-type-filter"
+            );
+
+            const items = Array.from(
+                document.querySelectorAll(
+                    "[data-notification-item]"
+                )
+            );
+
+            const emptyMessage = document.getElementById(
+                "landlord-notifications-filter-empty"
+            );
+
+            const visibleCount = document.getElementById(
+                "landlord-notification-visible-count"
+            );
+
+            if (items.length === 0) {
+                return;
+            }
+
+            function filterNotifications() {
+                const searchValue = searchInput
+                    ? searchInput.value.trim().toLowerCase()
+                    : "";
+
+                const selectedStatus = statusFilter
+                    ? statusFilter.value
+                    : "all";
+
+                const selectedType = typeFilter
+                    ? typeFilter.value
+                    : "all";
+
+                let resultCount = 0;
+
+                items.forEach(function (item) {
+                    const searchableText =
+                        item.dataset.notificationSearch || "";
+
+                    const status =
+                        item.dataset.notificationStatus || "unread";
+
+                    const type =
+                        item.dataset.notificationType || "general";
+
+                    const matchesSearch =
+                        !searchValue ||
+                        searchableText.includes(searchValue);
+
+                    const matchesStatus =
+                        selectedStatus === "all" ||
+                        status === selectedStatus;
+
+                    const matchesType =
+                        selectedType === "all" ||
+                        type === selectedType;
+
+                    const shouldDisplay =
+                        matchesSearch &&
+                        matchesStatus &&
+                        matchesType;
+
+                    item.hidden = !shouldDisplay;
+
+                    if (shouldDisplay) {
+                        resultCount += 1;
+                    }
+                });
+
+                if (visibleCount) {
+                    visibleCount.textContent = String(resultCount);
+                }
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = resultCount !== 0;
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener(
+                    "input",
+                    filterNotifications
+                );
+            }
+
+            if (statusFilter) {
+                statusFilter.addEventListener(
+                    "change",
+                    filterNotifications
+                );
+            }
+
+            if (typeFilter) {
+                typeFilter.addEventListener(
+                    "change",
+                    filterNotifications
+                );
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% from "landlord/_macros.html" import csrf_input, field_error %}
+
+{% block title %}Add Unit | Smart Property AI{% endblock %}
+
+{% block meta_description %}
+Add a rental unit to a property through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div class="landlord-add-unit-page">
+    <div class="landlord-add-unit-page__container">
+
+        <nav
+            class="landlord-add-unit-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for(
+                        'units_page',
+                        property_id=property_id
+                    ) }}">
+                        Units
+                    </a>
+                </li>
+
+                <li aria-current="page">Add unit</li>
+            </ol>
+        </nav>
+
+        <header class="landlord-add-unit-page__header">
+            <div>
+                <p class="landlord-add-unit-page__eyebrow">
+                    Property management
+                </p>
+
+                <h1>Add rental unit</h1>
+
+                <p>
+                    Enter the unit information, monthly rent and
+                    accessibility details.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'units_page',
+                    property_id=property_id
+                ) }}"
+                class="landlord-add-unit-page__button
+                       landlord-add-unit-page__button--secondary"
+            >
+                Back to units
+            </a>
+        </header>
+
+        {% if error %}
+            <div
+                class="landlord-add-unit-page__alert
+                       landlord-add-unit-page__alert--error"
+                role="alert"
+            >
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <section
+            class="landlord-add-unit-page__card"
+            aria-labelledby="add-unit-heading"
+        >
+            <h2 id="add-unit-heading">Unit information</h2>
+
+            <form
+                class="landlord-add-unit-page__form"
+                action="{{ url_for(
+                    'create_unit_action',
+                    property_id=property_id
+                ) }}"
+                method="post"
+                novalidate
+            >
+                {{ csrf_input(request, csrf_token) }}
+
+                <div
+                    class="landlord-add-unit-page__form-grid
+                           landlord-add-unit-page__form-grid--two"
+                >
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="unit_number">
+                            Unit number
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            id="unit_number"
+                            name="unit_number"
+                            type="text"
+                            value="{{ form_data.get(
+                                'unit_number', ''
+                            ) if form_data else '' }}"
+                            maxlength="50"
+                            placeholder="Example: 2A"
+                            required
+                        >
+
+                        {{ field_error(errors, "unit_number") }}
+                    </div>
+
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="floor">Floor</label>
+
+                        <input
+                            id="floor"
+                            name="floor"
+                            type="text"
+                            value="{{ form_data.get(
+                                'floor', ''
+                            ) if form_data else '' }}"
+                            maxlength="30"
+                            placeholder="Example: Second floor"
+                        >
+
+                        {{ field_error(errors, "floor") }}
+                    </div>
+                </div>
+
+                <div
+                    class="landlord-add-unit-page__form-grid
+                           landlord-add-unit-page__form-grid--two"
+                >
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="rooms">
+                            Rooms
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            id="rooms"
+                            name="rooms"
+                            type="number"
+                            value="{{ form_data.get(
+                                'rooms', ''
+                            ) if form_data else '' }}"
+                            min="0.5"
+                            step="0.5"
+                            required
+                        >
+
+                        {{ field_error(errors, "rooms") }}
+                    </div>
+
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="area_square_metres">
+                            Area in m²
+                        </label>
+
+                        <input
+                            id="area_square_metres"
+                            name="area_square_metres"
+                            type="number"
+                            value="{{ form_data.get(
+                                'area_square_metres', ''
+                            ) if form_data else '' }}"
+                            min="1"
+                            step="0.01"
+                        >
+
+                        {{ field_error(
+                            errors,
+                            "area_square_metres"
+                        ) }}
+                    </div>
+                </div>
+
+                <div
+                    class="landlord-add-unit-page__form-grid
+                           landlord-add-unit-page__form-grid--two"
+                >
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="bedrooms">
+                            Bedrooms
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            id="bedrooms"
+                            name="bedrooms"
+                            type="number"
+                            value="{{ form_data.get(
+                                'bedrooms', 0
+                            ) if form_data else 0 }}"
+                            min="0"
+                            step="1"
+                            required
+                        >
+
+                        {{ field_error(errors, "bedrooms") }}
+                    </div>
+
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="bathrooms">
+                            Bathrooms
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            id="bathrooms"
+                            name="bathrooms"
+                            type="number"
+                            value="{{ form_data.get(
+                                'bathrooms', 1
+                            ) if form_data else 1 }}"
+                            min="1"
+                            step="1"
+                            required
+                        >
+
+                        {{ field_error(errors, "bathrooms") }}
+                    </div>
+                </div>
+
+                <div
+                    class="landlord-add-unit-page__form-grid
+                           landlord-add-unit-page__form-grid--amount"
+                >
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="monthly_rent">
+                            Monthly rent
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input
+                            id="monthly_rent"
+                            name="monthly_rent"
+                            type="number"
+                            value="{{ form_data.get(
+                                'monthly_rent', ''
+                            ) if form_data else '' }}"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+
+                        {{ field_error(errors, "monthly_rent") }}
+                    </div>
+
+                    <div class="landlord-add-unit-page__form-group">
+                        <label for="currency">Currency</label>
+
+                        {% set currency =
+                            form_data.get("currency", "EUR")
+                            if form_data else "EUR"
+                        %}
+
+                        <select id="currency" name="currency">
+                            {% for code in [
+                                "EUR", "NGN", "USD",
+                                "GBP", "GHS", "CAD", "AUD"
+                            ] %}
+                                <option
+                                    value="{{ code }}"
+                                    {% if currency == code %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ code }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="landlord-add-unit-page__form-group">
+                    <label for="deposit_amount">
+                        Deposit amount
+                    </label>
+
+                    <input
+                        id="deposit_amount"
+                        name="deposit_amount"
+                        type="number"
+                        value="{{ form_data.get(
+                            'deposit_amount', ''
+                        ) if form_data else '' }}"
+                        min="0"
+                        step="0.01"
+                    >
+
+                    {{ field_error(errors, "deposit_amount") }}
+                </div>
+
+                <fieldset class="landlord-add-unit-page__fieldset">
+                    <legend>Unit features</legend>
+
+                    <label class="landlord-add-unit-page__checkbox">
+                        <input
+                            type="checkbox"
+                            name="wheelchair_accessible"
+                            value="true"
+                            {% if form_data and
+                                  form_data.get(
+                                      "wheelchair_accessible"
+                                  ) == "true"
+                            %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <span>
+                            Wheelchair accessible
+                        </span>
+                    </label>
+
+                    <label class="landlord-add-unit-page__checkbox">
+                        <input
+                            type="checkbox"
+                            name="pets_allowed"
+                            value="true"
+                            {% if form_data and
+                                  form_data.get(
+                                      "pets_allowed"
+                                  ) == "true"
+                            %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <span>Pets allowed</span>
+                    </label>
+                </fieldset>
+
+                <div class="landlord-add-unit-page__form-actions">
+                    <a
+                        href="{{ url_for(
+                            'units_page',
+                            property_id=property_id
+                        ) }}"
+                        class="landlord-add-unit-page__button
+                               landlord-add-unit-page__button--secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="landlord-add-unit-page__button
+                               landlord-add-unit-page__button--primary"
+                        data-loading-text="Adding unit…"
+                    >
+                        <span data-submit-label>Add unit</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

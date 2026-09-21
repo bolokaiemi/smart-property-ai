@@ -1,368 +1,326 @@
-## Project status
+# Smart Property AI
 
-The Smart Property AI foundation and authentication system are now working.
+Smart Property AI is a multilingual property-management platform built with FastAPI, Jinja2, SQLAlchemy, JavaScript, and CSS.
 
-### Completed
+The platform supports public apartment searches, landlord and tenant portals, property management, applications, viewing appointments, maintenance requests, document management, accessible voice controls, and a conversational AI assistant.
 
-- FastAPI application
-- Jinja2 template system
-- Responsive homepage
-- Main navigation
-- Single Login/Logout control
-- Multilingual selector
-- Voice and accessibility controls
-- SQLAlchemy database connection
-- SQLite development database
-- Core database models
-- SessionMiddleware configuration
-- Secure registration
-- Username or email login
-- Remember Me support
-- Logout and session clearing
-- Password hashing with PBKDF2-SHA256
-- Forgot-password flow
-- Signed password-reset links
-- Email-verification flow
-- User consent records
-- Authentication audit logs
-- Role-based permission helpers
-- Property-access permission helpers
-- German and English legal pages
-- Responsive authentication pages
-- Password-strength feedback
-- Password-confirmation feedback
-- Security headers
-- Application logging
-- Health-check endpoint
+## Current project status
 
-### Authentication files
+The application starts successfully with Uvicorn.
 
-```text
-routes/
-└── auth_routes.py
+The following areas are currently available:
 
-services/
-├── __init__.py
-└── auth_service.py
+- Public homepage
+- Contact page
+- User registration and login
+- Logout and password reset
+- Email verification templates
+- Public property listings
+- Guided apartment search
+- Rental applications
+- Viewing appointments
+- Tenant portal
+- Landlord portal
+- Property and unit management
+- Lease management
+- Maintenance requests
+- Complaints
+- Payments
+- Documents
+- Expenses and reports
+- Messages and notifications
+- Smart-home device pages
+- Multilingual controls
+- Voice-enabled forms
+- Speech output
+- CSRF protection
+- Session authentication
+- Privacy and legal pages
+- SQLite database integration
 
-security/
-├── __init__.py
-├── passwords.py
-└── permissions.py
+The landlord dashboard is now displaying successfully.
 
-templates/
-└── auth/
-    ├── login.html
-    ├── register.html
-    ├── forgot_password.html
-    ├── reset_password.html
-    ├── reset_password_sent.html
-    └── verify_email.html
+The next development stage is completing the internal `ai/` package and connecting it to `routes/ai_routes.py`.
 
-static/
-├── css/
-│   └── auth.css
-└── js/
-    └── auth.js
-```
+## Main features
 
----
+### Multilingual conversational AI
 
-## Authentication routes
+- Multilingual assistant interface
+- Language selection
+- Speech-to-text input
+- Read-aloud responses
+- Voice-activated forms
+- Accessible keyboard navigation
+- Responsible AI disclosure
+- Conversation safety checks
 
-| Method | URL | Route name | Purpose |
-|---|---|---|---|
-| GET | `/login` | `login` | Display login page |
-| POST | `/login` | `login_submit` | Authenticate user |
-| GET | `/register` | `register` | Display registration page |
-| POST | `/register` | `register_submit` | Create user account |
-| POST | `/logout` | `logout` | Clear authenticated session |
-| GET | `/forgot-password` | `forgot_password_page` | Display account-recovery form |
-| POST | `/forgot-password` | `forgot_password_submit` | Generate reset instructions |
-| GET | `/reset-password/{token}` | `reset_password_page` | Display password-reset form |
-| POST | `/reset-password/{token}` | `reset_password_submit` | Save the new password |
-| GET | `/verify-email/{token}` | `verify_email` | Verify an email address |
+### Apartment search
 
----
+- Public property listings
+- Property search filters
+- Property detail pages
+- Guided apartment search
+- Rental application forms
+- Viewing appointment booking
+- Appointment reminders
 
-## Authentication behavior
+### Landlord portal
 
-### Registration
+- Secure landlord dashboard
+- Portfolio statistics
+- Recent landlord activity
+- Upcoming appointments
+- Property management
+- Unit management
+- Tenant management
+- Lease management
+- Rental applications
+- Viewing appointments
+- Maintenance requests
+- Complaints
+- Payments
+- Documents
+- Expenses
+- Reports
+- Messages
+- Notifications
+- Smart-home devices
+- Landlord settings
 
-Public registration currently supports:
+### Tenant portal
 
-```text
-applicant
-tenant
-landlord
-```
+- Secure tenant dashboard
+- Lease details
+- Payment records
+- Maintenance requests
+- Complaints
+- Documents
+- Messages
+- Appointments
+- Notifications
+- Tenant profile
 
-The following roles cannot be selected through public registration:
+### Automation
 
-```text
-administrator
-property_manager
-maintenance_staff
-```
+The project foundation includes support for:
 
-Those roles must be assigned by an authorized administrator.
+- Rent reminders
+- Lease-renewal reminders
+- Appointment reminders
+- Email communication
+- WhatsApp communication
+- Phone communication
+- Routine reports
+- Maintenance notifications
 
-### Login
+### Privacy and security
 
-Users can log in using either:
+- Session-based authentication
+- Role-based permissions
+- CSRF protection
+- Password hashing
+- File validation
+- Privacy controls
+- Audit logging
+- Responsible AI notices
+- Secure landlord and tenant routes
 
-- Username
-- Email address
+## Technology stack
 
-The login process:
+- Python 3.11 or newer
+- FastAPI
+- Uvicorn
+- Jinja2
+- SQLAlchemy
+- SQLite for local development
+- Starlette SessionMiddleware
+- HTML5
+- Modern CSS
+- Vanilla JavaScript
+- Web Speech API
 
-1. Normalizes the username or email.
-2. Finds the account in the database.
-3. Verifies the password hash.
-4. Checks that the account is active.
-5. Creates the authenticated session.
-6. Records the login in the audit log.
-7. Redirects the user according to their role.
-
-### Role destinations
-
-| Role | Default destination |
-|---|---|
-| Applicant | `/listings` |
-| Tenant | `/tenant/dashboard` |
-| Landlord | `/landlord/dashboard` |
-| Property manager | `/landlord/dashboard` |
-| Maintenance staff | `/maintenance/dashboard` |
-| Administrator | `/admin/dashboard` |
-
-### Password policy
-
-Passwords must contain:
-
-- At least 10 characters
-- At least one uppercase letter
-- At least one lowercase letter
-- At least one number
-- At least one special character
-
-Passwords are stored using PBKDF2-SHA256 hashes. Readable passwords must never be saved in the database or logs.
-
-### Password reset
-
-Password-reset links:
-
-- Are cryptographically signed
-- Expire after one hour
-- Are connected to a specific account
-- Become invalid after the password changes
-- Are displayed only during local development
-
-Production reset links must be sent privately through the configured email service.
-
-### Email verification
-
-Email-verification links:
-
-- Are cryptographically signed
-- Expire after 24 hours
-- Are connected to the registered user
-- Are displayed only during local development
-
-Production verification links must be delivered by email.
-
-### Remember Me
-
-Remember Me stores only the username or email identifier in browser storage. It must never store the password.
-
-### Consent records
-
-Registration records the user’s choices for:
-
-- Privacy Policy
-- Terms of Use
-- Optional AI model-training consent
-
-User conversations are not automatically added to the AI training dataset.
-
----
-
-## Authentication security
-
-The authentication layer includes:
-
-- Signed session cookies
-- Secure password hashing
-- Generic failed-login messages
-- Dummy password checks
-- Safe internal redirects
-- Active-account validation
-- Role-based access
-- Property-level access checks
-- Consent records
-- Hashed IP information in audit records
-- Password-reset expiration
-- Email-verification expiration
-- No readable passwords in storage
-- No passwords or tokens in application logs
-
-In production:
-
-- Set `ENVIRONMENT=production`
-- Use HTTPS
-- Use a permanent secure `SECRET_KEY`
-- Configure CSRF protection
-- Configure login rate limiting
-- Send verification links through email
-- Send password-reset links through email
-- Do not display signed tokens on pages
-
----
-
-## Registering the authentication router
-
-`app.py` imports the authentication router:
-
-```python
-from routes.auth_routes import router as auth_router
-```
-
-It is registered with:
-
-```python
-app.include_router(main_router)
-app.include_router(auth_router)
-```
-
-The old temporary login, registration and logout routes have been removed from `app.py`.
-
----
-
-## Current temporary routes
-
-The following sections still use temporary routes:
+## Project structure
 
 ```text
-/listings
-/listings/search
-/listings/guided-search
-/ai/assistant
-/landlord/dashboard
-/tenant/dashboard
-/admin/dashboard
-```
-
-Remove each temporary route only after its permanent route module has been created and registered.
-
-Do not keep temporary and permanent routes with identical route names.
-
----
-
-## Test the authentication system
-
-Start the application:
-
-```bash
-uvicorn app:app --reload
-```
-
-Open:
-
-```text
-http://127.0.0.1:8000/register
-```
-
-Test the following workflow:
-
-1. Register a new account.
-2. Open the development email-verification link.
-3. Verify the email address.
-4. Log in using the username.
-5. Log out.
-6. Log in using the email address.
-7. Test Remember Me.
-8. Request a password-reset link.
-9. Set a new password.
-10. Confirm the old password no longer works.
-11. Confirm the new password works.
-12. Confirm invalid or expired reset links are rejected.
-
-Run automated tests with:
-
-```bash
-pytest
-```
-
----
-
-## Completed development stages
-
-```text
-1. FastAPI application foundation       Complete
-2. Jinja2 base and homepage              Complete
-3. CSS and frontend controls             Complete
-4. Database connection and models        Complete
-5. Legal and accessibility pages         Complete
-6. Authentication and authorization      Complete
-7. Property and unit management          Next
-8. Public property listings              Pending
-9. Guided apartment search               Pending
-10. Landlord dashboard                   Pending
-11. Tenant dashboard                     Pending
-12. Lease and payment management         Pending
-13. Maintenance and complaints           Pending
-14. Documents and expenses               Pending
-15. Appointments and reminders           Pending
-16. Listing analytics                    Pending
-17. Communication automation             Pending
-18. AI assistant interface               Pending
-19. Voice-activated forms                Pending
-20. Image processing                     Pending
-21. AI dataset and model training        Pending
-22. Smart-home integration               Pending
-23. Complete testing and deployment      Pending
-```
-
----
-
-## Next development stage
-
-The next stage is property and apartment-unit management.
-
-Create:
-
-```text
-services/
-├── property_service.py
-└── unit_service.py
-
-routes/
-├── property_routes.py
-└── unit_routes.py
-
-templates/
-└── landlord/
-    ├── properties.html
-    ├── add_property.html
-    ├── edit_property.html
-    ├── property_details.html
-    └── units.html
-
-static/
-├── css/
-│   └── property.css
-└── js/
-    └── property.js
-```
-
-The property-management stage will allow authenticated landlords and property managers to:
-
-- Add properties
-- View their properties
-- Edit property information
-- Activate or deactivate properties
-- Add apartment units
-- Edit apartment units
-- Record rent and deposit amounts
-- Record room and accessibility information
-- Mark units as vacant, occupied or unavailable
-- Prevent unauthorized users from managing properties                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+smart property ai/
+│
+├── app.py
+├── config.py
+├── requirements.txt
+├── README.md
+├── .env
+├── .env.example
+├── .gitignore
+├── render.yaml
+├── render-build.sh
+├── Dockerfile
+│
+├── database/
+│   ├── __init__.py
+│   ├── database.py
+│   ├── models.py
+│   └── migrations/
+│       ├── env.py
+│       ├── script.py.mako
+│       └── versions/
+│
+├── routes/
+│   ├── __init__.py
+│   ├── main_routes.py
+│   ├── auth_routes.py
+│   ├── listing_routes.py
+│   ├── application_routes.py
+│   ├── ai_routes.py
+│   ├── tenant_routes.py
+│   ├── landlord_routes.py
+│   ├── document_routes.py
+│   ├── payment_routes.py
+│   ├── maintenance_routes.py
+│   ├── message_routes.py
+│   ├── notification_routes.py
+│   ├── automation_routes.py
+│   └── admin_routes.py
+│
+├── services/
+│   ├── __init__.py
+│   ├── auth_service.py
+│   ├── property_service.py
+│   ├── unit_service.py
+│   ├── listing_service.py
+│   ├── application_service.py
+│   ├── appointment_service.py
+│   ├── tenant_service.py
+│   ├── landlord_service.py
+│   ├── lease_service.py
+│   ├── payment_service.py
+│   ├── maintenance_service.py
+│   ├── complaint_service.py
+│   ├── document_service.py
+│   ├── message_service.py
+│   ├── notification_service.py
+│   ├── contact_service.py
+│   ├── email_service.py
+│   ├── whatsapp_service.py
+│   ├── phone_service.py
+│   ├── image_service.py
+│   ├── expense_service.py
+│   ├── report_service.py
+│   ├── smart_home_service.py
+│   └── audit_service.py
+│
+├── security/
+│   ├── __init__.py
+│   ├── passwords.py
+│   ├── permissions.py
+│   ├── csrf.py
+│   ├── rate_limit.py
+│   ├── file_validation.py
+│   ├── privacy.py
+│   └── audit.py
+│
+├── ai/
+│   ├── __init__.py
+│   ├── assistant.py
+│   ├── inference.py
+│   ├── prompts.py
+│   ├── safety.py
+│   ├── language.py
+│   ├── preprocessing.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── model_registry.py
+│   ├── datasets/
+│   │   ├── raw/
+│   │   ├── processed/
+│   │   └── README.md
+│   ├── checkpoints/
+│   │   └── .gitkeep
+│   └── tests/
+│       ├── test_assistant.py
+│       ├── test_safety.py
+│       ├── test_languages.py
+│       └── test_inference.py
+│
+├── automation/
+│   ├── __init__.py
+│   ├── scheduler.py
+│   ├── rent_reminders.py
+│   ├── lease_renewals.py
+│   ├── appointment_reminders.py
+│   ├── routine_reports.py
+│   └── notification_jobs.py
+│
+├── integrations/
+│   ├── __init__.py
+│   ├── email_provider.py
+│   ├── whatsapp_provider.py
+│   ├── phone_provider.py
+│   ├── payment_provider.py
+│   ├── storage_provider.py
+│   └── smart_home_provider.py
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── contact.html
+│   ├── auth/
+│   ├── legal/
+│   ├── listings/
+│   ├── ai/
+│   ├── landlord/
+│   ├── tenant/
+│   ├── admin/
+│   └── errors/
+│
+├── static/
+│   ├── css/
+│   │   ├── style.css
+│   │   ├── auth.css
+│   │   ├── property.css
+│   │   ├── listings.css
+│   │   ├── tenant.css
+│   │   ├── landlord.css
+│   │   ├── ai-assistant.css
+│   │   ├── chat-overlay.css
+│   │   ├── contact.css
+│   │   ├── accessibility.css
+│   │   └── responsive.css
+│   ├── js/
+│   │   ├── main.js
+│   │   ├── auth.js
+│   │   ├── property.js
+│   │   ├── listings.js
+│   │   ├── tenant.js
+│   │   ├── landlord.js
+│   │   ├── ai-assistant.js
+│   │   ├── chat-overlay.js
+│   │   ├── contact.js
+│   │   ├── language-selector.js
+│   │   ├── voice-forms.js
+│   │   ├── speech-output.js
+│   │   └── guided-search.js
+│   └── images/
+│       ├── favicon.ico
+│       ├── logo.svg
+│       └── listing-placeholder.svg
+│
+├── uploads/
+│   └── .gitkeep
+│
+├── logs/
+│   └── .gitkeep
+│
+└── tests/
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_auth.py
+    ├── test_listings.py
+    ├── test_applications.py
+    ├── test_appointments.py
+    ├── test_ai_routes.py
+    ├── test_tenant_routes.py
+    ├── test_landlord_routes.py
+    ├── test_contact.py
+    ├── test_permissions.py
+    └── test_models.py

@@ -1,0 +1,823 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Upload Document | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Securely upload property, lease, invoice, inspection and maintenance documents to the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-upload-document-page"
+    data-landlord-upload-document-page
+>
+    <div class="landlord-upload-document-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-upload-document-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_documents_page') }}">
+                        Documents
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Upload document
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="landlord-upload-document-page__header">
+            <div>
+                <p class="landlord-upload-document-page__eyebrow">
+                    Digital document management
+                </p>
+
+                <h1>Upload a document</h1>
+
+                <p>
+                    Add a property, lease, invoice, inspection,
+                    identification or maintenance document securely.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_documents_page') }}"
+                class="landlord-upload-document-page__button
+                       landlord-upload-document-page__button--secondary"
+            >
+                Back to documents
+            </a>
+        </header>
+
+
+        <!-- Success message -->
+        {% if success %}
+            <div
+                class="landlord-upload-document-page__alert
+                       landlord-upload-document-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- General error -->
+        {% if error %}
+            <div
+                class="landlord-upload-document-page__alert
+                       landlord-upload-document-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Validation errors -->
+        {% if errors %}
+            <div
+                class="landlord-upload-document-page__alert
+                       landlord-upload-document-page__alert--error"
+                role="alert"
+                aria-labelledby="upload-document-errors-title"
+            >
+                <strong id="upload-document-errors-title">
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% for field, message in errors.items() %}
+                        <li>
+                            <a href="#{{ field }}">
+                                {{ message }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-upload-document-page__layout">
+
+            <!-- Upload form -->
+            <main class="landlord-upload-document-page__main">
+                <section
+                    class="landlord-upload-document-page__card"
+                    aria-labelledby="upload-document-form-title"
+                >
+                    <div
+                        class="landlord-upload-document-page__card-header"
+                    >
+                        <div>
+                            <p
+                                class="landlord-upload-document-page__section-label"
+                            >
+                                New file
+                            </p>
+
+                            <h2 id="upload-document-form-title">
+                                Document information
+                            </h2>
+                        </div>
+
+                        <span
+                            class="landlord-upload-document-page__secure-label"
+                        >
+                            <span aria-hidden="true">🔒</span>
+                            Secure upload
+                        </span>
+                    </div>
+
+                    <form
+                        id="landlord-upload-document-form"
+                        class="landlord-upload-document-page__form"
+                        action="{{ url_for(
+                            'upload_landlord_document_action'
+                        ) }}"
+                        method="post"
+                        enctype="multipart/form-data"
+                        novalidate
+                    >
+                        <!-- CSRF token -->
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token | default(
+                                request.session.get(
+                                    'csrf_token',
+                                    ''
+                                ),
+                                true
+                            ) }}"
+                        >
+
+
+                        <!-- File -->
+                        <div
+                            class="landlord-upload-document-page__form-group"
+                        >
+                            <label for="file">
+                                Select document
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <div
+                                id="landlord-document-drop-zone"
+                                class="landlord-upload-document-page__drop-zone"
+                                data-document-drop-zone
+                            >
+                                <div
+                                    class="landlord-upload-document-page__upload-icon"
+                                    aria-hidden="true"
+                                >
+                                    ↑
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Choose a document to upload
+                                    </strong>
+
+                                    <p>
+                                        PDF, PNG, JPG, JPEG, DOC or
+                                        DOCX. Maximum size: 10 MB.
+                                    </p>
+                                </div>
+
+                                <input
+                                    id="file"
+                                    name="file"
+                                    type="file"
+                                    accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+                                    aria-describedby="file-help file-error"
+                                    required
+                                >
+                            </div>
+
+                            <p
+                                id="landlord-selected-document"
+                                class="landlord-upload-document-page__selected-file"
+                                role="status"
+                                aria-live="polite"
+                            >
+                                No file selected.
+                            </p>
+
+                            <small id="file-help">
+                                Do not upload executable files,
+                                passwords or unnecessary sensitive
+                                information.
+                            </small>
+
+                            {% if errors and errors.get("file") %}
+                                <p
+                                    id="file-error"
+                                    class="landlord-upload-document-page__field-error"
+                                >
+                                    {{ errors.get("file") }}
+                                </p>
+                            {% else %}
+                                <p
+                                    id="file-error"
+                                    class="landlord-upload-document-page__field-error"
+                                    hidden
+                                ></p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Document type -->
+                        <div
+                            class="landlord-upload-document-page__form-group"
+                        >
+                            <label for="document_type">
+                                Document type
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            <select
+                                id="document_type"
+                                name="document_type"
+                                aria-describedby="document-type-help"
+                                required
+                            >
+                                {% set selected_type =
+                                    form_data.get(
+                                        "document_type",
+                                        "other"
+                                    )
+                                    if form_data
+                                    else "other"
+                                %}
+
+                                <option
+                                    value="lease"
+                                    {% if selected_type == "lease" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Lease
+                                </option>
+
+                                <option
+                                    value="application"
+                                    {% if selected_type == "application" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Rental application
+                                </option>
+
+                                <option
+                                    value="invoice"
+                                    {% if selected_type == "invoice" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Invoice
+                                </option>
+
+                                <option
+                                    value="inspection"
+                                    {% if selected_type == "inspection" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Inspection
+                                </option>
+
+                                <option
+                                    value="identification"
+                                    {% if selected_type ==
+                                        "identification"
+                                    %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Identification
+                                </option>
+
+                                <option
+                                    value="maintenance"
+                                    {% if selected_type ==
+                                        "maintenance"
+                                    %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Maintenance
+                                </option>
+
+                                <option
+                                    value="other"
+                                    {% if selected_type == "other" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Other
+                                </option>
+                            </select>
+
+                            <small id="document-type-help">
+                                Select the category that best describes
+                                this document.
+                            </small>
+
+                            {% if errors
+                                  and errors.get("document_type")
+                            %}
+                                <p
+                                    class="landlord-upload-document-page__field-error"
+                                >
+                                    {{ errors.get("document_type") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Related property -->
+                        <div
+                            class="landlord-upload-document-page__form-group"
+                        >
+                            <label for="property_id">
+                                Related property
+                                <span
+                                    class="landlord-upload-document-page__optional"
+                                >
+                                    Optional
+                                </span>
+                            </label>
+
+                            {% if properties %}
+                                <select
+                                    id="property_id"
+                                    name="property_id"
+                                    aria-describedby="property-id-help"
+                                >
+                                    <option value="">
+                                        General document — no property
+                                    </option>
+
+                                    {% set selected_property_id =
+                                        form_data.get(
+                                            "property_id",
+                                            ""
+                                        )
+                                        if form_data
+                                        else ""
+                                    %}
+
+                                    {% for property in properties %}
+                                        <option
+                                            value="{{ property.id }}"
+                                            {% if selected_property_id
+                                                | string
+                                                ==
+                                                property.id | string
+                                            %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ property.name
+                                               | default(
+                                                   property.title,
+                                                   true
+                                               )
+                                               | default(
+                                                   "Unnamed property",
+                                                   true
+                                               )
+                                            }}
+
+                                            {% if property.city %}
+                                                — {{ property.city }}
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input
+                                    id="property_id"
+                                    name="property_id"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'property_id',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    placeholder="Enter the property ID"
+                                    maxlength="36"
+                                    aria-describedby="property-id-help"
+                                >
+                            {% endif %}
+
+                            <small id="property-id-help">
+                                Leave this blank if the document is not
+                                connected to a particular property.
+                            </small>
+
+                            {% if errors and errors.get("property_id") %}
+                                <p
+                                    class="landlord-upload-document-page__field-error"
+                                >
+                                    {{ errors.get("property_id") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Privacy -->
+                        <fieldset
+                            class="landlord-upload-document-page__fieldset"
+                        >
+                            <legend>
+                                Document privacy
+                            </legend>
+
+                            <label
+                                class="landlord-upload-document-page__checkbox"
+                                for="is_private"
+                            >
+                                <input
+                                    id="is_private"
+                                    name="is_private"
+                                    type="checkbox"
+                                    value="true"
+                                    {% if not form_data
+                                          or form_data.get(
+                                              "is_private"
+                                          ) == "true"
+                                    %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>
+                                    <strong>
+                                        Keep this document private
+                                    </strong>
+
+                                    <small>
+                                        Access will be limited to
+                                        authorized users.
+                                    </small>
+                                </span>
+                            </label>
+                        </fieldset>
+
+
+                        <!-- Consent -->
+                        <div
+                            class="landlord-upload-document-page__consent"
+                        >
+                            <label for="document_upload_consent">
+                                <input
+                                    id="document_upload_consent"
+                                    name="document_upload_consent"
+                                    type="checkbox"
+                                    value="accepted"
+                                    required
+                                >
+
+                                <span>
+                                    I confirm that I am authorized to
+                                    upload and store this document and
+                                    that it does not contain unnecessary
+                                    sensitive information.
+                                    <span aria-hidden="true">*</span>
+                                </span>
+                            </label>
+
+                            <p
+                                id="document-consent-error"
+                                class="landlord-upload-document-page__field-error"
+                                hidden
+                            ></p>
+                        </div>
+
+
+                        <!-- Form actions -->
+                        <div
+                            class="landlord-upload-document-page__form-actions"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_documents_page'
+                                ) }}"
+                                class="landlord-upload-document-page__button
+                                       landlord-upload-document-page__button--secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                id="landlord-document-submit-button"
+                                type="submit"
+                                class="landlord-upload-document-page__button
+                                       landlord-upload-document-page__button--primary"
+                            >
+                                <span
+                                    class="landlord-upload-document-page__spinner"
+                                    aria-hidden="true"
+                                ></span>
+
+                                <span data-submit-label>
+                                    Upload document
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+
+
+            <!-- Sidebar -->
+            <aside class="landlord-upload-document-page__sidebar">
+
+                <section
+                    class="landlord-upload-document-page__card"
+                    aria-labelledby="upload-requirements-title"
+                >
+                    <h2 id="upload-requirements-title">
+                        Upload requirements
+                    </h2>
+
+                    <ul
+                        class="landlord-upload-document-page__requirements"
+                    >
+                        <li>
+                            Maximum file size: 10 MB
+                        </li>
+
+                        <li>
+                            PDF, PNG, JPG, JPEG, DOC and DOCX only
+                        </li>
+
+                        <li>
+                            Use a clear and meaningful filename
+                        </li>
+
+                        <li>
+                            Remove unnecessary personal information
+                        </li>
+
+                        <li>
+                            Confirm you are authorized to store the file
+                        </li>
+                    </ul>
+                </section>
+
+
+                <section
+                    class="landlord-upload-document-page__card"
+                    aria-labelledby="upload-security-title"
+                >
+                    <h2 id="upload-security-title">
+                        Security reminder
+                    </h2>
+
+                    <p>
+                        Do not upload passwords, payment-card details,
+                        authentication codes or files that are not
+                        needed for property management.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Review the privacy policy
+                    </a>
+                </section>
+
+
+                <section
+                    class="landlord-upload-document-page__card"
+                    aria-labelledby="upload-help-title"
+                >
+                    <h2 id="upload-help-title">
+                        Need assistance?
+                    </h2>
+
+                    <p>
+                        If you cannot identify the correct document
+                        category, select “Other” or contact support.
+                    </p>
+
+                    <a href="{{ url_for('contact_page') }}">
+                        Contact support
+                    </a>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById(
+                "landlord-upload-document-form"
+            );
+
+            const fileInput = document.getElementById("file");
+
+            const selectedFile = document.getElementById(
+                "landlord-selected-document"
+            );
+
+            const fileError = document.getElementById(
+                "file-error"
+            );
+
+            const consent = document.getElementById(
+                "document_upload_consent"
+            );
+
+            const consentError = document.getElementById(
+                "document-consent-error"
+            );
+
+            const submitButton = document.getElementById(
+                "landlord-document-submit-button"
+            );
+
+            const allowedExtensions = [
+                ".pdf",
+                ".png",
+                ".jpg",
+                ".jpeg",
+                ".doc",
+                ".docx"
+            ];
+
+            const maximumFileSize = 10 * 1024 * 1024;
+
+            function getExtension(filename) {
+                const dotPosition = filename.lastIndexOf(".");
+
+                if (dotPosition === -1) {
+                    return "";
+                }
+
+                return filename
+                    .slice(dotPosition)
+                    .toLowerCase();
+            }
+
+            function validateFile() {
+                if (!fileInput || !fileInput.files.length) {
+                    if (fileError) {
+                        fileError.textContent =
+                            "Please select a document.";
+                        fileError.hidden = false;
+                    }
+
+                    return false;
+                }
+
+                const file = fileInput.files[0];
+                const extension = getExtension(file.name);
+
+                if (!allowedExtensions.includes(extension)) {
+                    if (fileError) {
+                        fileError.textContent =
+                            "Select a PDF, PNG, JPG, JPEG, DOC or DOCX file.";
+                        fileError.hidden = false;
+                    }
+
+                    return false;
+                }
+
+                if (file.size > maximumFileSize) {
+                    if (fileError) {
+                        fileError.textContent =
+                            "The selected file exceeds the 10 MB limit.";
+                        fileError.hidden = false;
+                    }
+
+                    return false;
+                }
+
+                if (fileError) {
+                    fileError.textContent = "";
+                    fileError.hidden = true;
+                }
+
+                return true;
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener("change", function () {
+                    if (!fileInput.files.length) {
+                        if (selectedFile) {
+                            selectedFile.textContent =
+                                "No file selected.";
+                        }
+
+                        return;
+                    }
+
+                    const file = fileInput.files[0];
+
+                    if (selectedFile) {
+                        selectedFile.textContent =
+                            "Selected: " + file.name;
+                    }
+
+                    validateFile();
+                });
+            }
+
+            if (form) {
+                form.addEventListener("submit", function (event) {
+                    let formIsValid = validateFile();
+
+                    if (!consent || !consent.checked) {
+                        formIsValid = false;
+
+                        if (consentError) {
+                            consentError.textContent =
+                                "Confirm that you are authorized to upload this document.";
+                            consentError.hidden = false;
+                        }
+                    } else if (consentError) {
+                        consentError.textContent = "";
+                        consentError.hidden = true;
+                    }
+
+                    if (!formIsValid) {
+                        event.preventDefault();
+
+                        const firstError = form.querySelector(
+                            ".landlord-upload-document-page__field-error:not([hidden])"
+                        );
+
+                        if (firstError) {
+                            firstError.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+                        }
+
+                        return;
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.setAttribute(
+                            "aria-busy",
+                            "true"
+                        );
+
+                        const label = submitButton.querySelector(
+                            "[data-submit-label]"
+                        );
+
+                        if (label) {
+                            label.textContent = "Uploading…";
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

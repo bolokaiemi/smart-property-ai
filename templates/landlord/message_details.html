@@ -1,0 +1,638 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Message Details | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review a private tenant or property message securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-message-details-page"
+    data-landlord-message-details-page
+>
+    <div class="landlord-message-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-message-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_messages_page') }}">
+                        Messages
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Message details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if message %}
+            {% set message_channel =
+                message.channel.value
+                if message.channel
+                and message.channel.value is defined
+                else message.channel | default("platform", true)
+            %}
+
+            {% set normalized_channel =
+                message_channel
+                | string
+                | lower
+                | replace("_", "-")
+                | replace(" ", "-")
+            %}
+
+            {% set message_subject =
+                message.subject
+                | default("Message without a subject", true)
+            %}
+
+            {% set is_received =
+                current_user
+                and message.recipient_id == current_user.id
+            %}
+
+            {% set is_sent =
+                current_user
+                and message.sender_id == current_user.id
+            %}
+
+
+            <!-- Header -->
+            <header class="landlord-message-details-page__header">
+                <div>
+                    <p class="landlord-message-details-page__eyebrow">
+                        {% if is_received %}
+                            Received message
+                        {% elif is_sent %}
+                            Sent message
+                        {% else %}
+                            Platform message
+                        {% endif %}
+                    </p>
+
+                    <h1>{{ message_subject }}</h1>
+
+                    <div
+                        class="landlord-message-details-page__header-meta"
+                    >
+                        <span
+                            class="landlord-message-details-page__channel
+                                   landlord-message-details-page__channel--{{
+                                       normalized_channel
+                                   }}"
+                        >
+                            {{
+                                message_channel
+                                | string
+                                | replace("_", " ")
+                                | title
+                            }}
+                        </span>
+
+                        {% if is_received %}
+                            <span
+                                class="landlord-message-details-page__direction
+                                       landlord-message-details-page__direction--received"
+                            >
+                                Received
+                            </span>
+                        {% elif is_sent %}
+                            <span
+                                class="landlord-message-details-page__direction
+                                       landlord-message-details-page__direction--sent"
+                            >
+                                Sent
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <a
+                    href="{{ url_for('landlord_messages_page') }}"
+                    class="landlord-message-details-page__button
+                           landlord-message-details-page__button--secondary"
+                >
+                    Back to messages
+                </a>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-message-details-page__alert
+                           landlord-message-details-page__alert--success"
+                    role="status"
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ success }}</span>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-message-details-page__alert
+                           landlord-message-details-page__alert--error"
+                    role="alert"
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+
+            <div class="landlord-message-details-page__layout">
+
+                <!-- Main message -->
+                <main class="landlord-message-details-page__main">
+                    <article
+                        class="landlord-message-details-page__message-card"
+                        aria-labelledby="message-content-title"
+                    >
+                        <header
+                            class="landlord-message-details-page__message-header"
+                        >
+                            <div
+                                class="landlord-message-details-page__avatar"
+                                aria-hidden="true"
+                            >
+                                {% if is_received %}
+                                    ↓
+                                {% else %}
+                                    ↑
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <h2 id="message-content-title">
+                                    {{ message_subject }}
+                                </h2>
+
+                                <p>
+                                    {% if message.created_at %}
+                                        <time
+                                            datetime="{{
+                                                message.created_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                message.created_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Date unavailable
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </header>
+
+
+                        <div
+                            class="landlord-message-details-page__message-body"
+                        >
+                            {% if message.content %}
+                                <p>
+                                    {{
+                                        message.content
+                                        | e
+                                        | replace("\n", "<br>")
+                                        | safe
+                                    }}
+                                </p>
+                            {% else %}
+                                <p
+                                    class="landlord-message-details-page__unavailable"
+                                >
+                                    This message does not contain any
+                                    text.
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <footer
+                            class="landlord-message-details-page__message-footer"
+                        >
+                            <span>
+                                Language:
+                                <strong>
+                                    {{
+                                        message.language
+                                        | default("en", true)
+                                        | upper
+                                    }}
+                                </strong>
+                            </span>
+
+                            <span>
+                                Channel:
+                                <strong>
+                                    {{
+                                        message_channel
+                                        | string
+                                        | replace("_", " ")
+                                        | title
+                                    }}
+                                </strong>
+                            </span>
+                        </footer>
+                    </article>
+
+
+                    <!-- Message information -->
+                    <section
+                        class="landlord-message-details-page__card"
+                        aria-labelledby="message-information-title"
+                    >
+                        <div
+                            class="landlord-message-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-message-details-page__section-label"
+                                >
+                                    Communication record
+                                </p>
+
+                                <h2 id="message-information-title">
+                                    Message information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl
+                            class="landlord-message-details-page__details-list"
+                        >
+                            <div>
+                                <dt>Subject</dt>
+                                <dd>{{ message_subject }}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Direction</dt>
+
+                                <dd>
+                                    {% if is_received %}
+                                        Received
+                                    {% elif is_sent %}
+                                        Sent
+                                    {% else %}
+                                        Platform message
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Channel</dt>
+
+                                <dd>
+                                    {{
+                                        message_channel
+                                        | string
+                                        | replace("_", " ")
+                                        | title
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Language</dt>
+
+                                <dd>
+                                    {{
+                                        message.language
+                                        | default("en", true)
+                                        | upper
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Sender ID</dt>
+
+                                <dd>
+                                    <code>{{ message.sender_id }}</code>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Recipient ID</dt>
+
+                                <dd>
+                                    <code>{{ message.recipient_id }}</code>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Sent</dt>
+
+                                <dd>
+                                    {% if message.created_at %}
+                                        <time
+                                            datetime="{{
+                                                message.created_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                message.created_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Read status</dt>
+
+                                <dd>
+                                    {% if message.read_at %}
+                                        <span
+                                            class="landlord-message-details-page__read-status
+                                                   landlord-message-details-page__read-status--read"
+                                        >
+                                            Read
+                                        </span>
+                                    {% else %}
+                                        <span
+                                            class="landlord-message-details-page__read-status
+                                                   landlord-message-details-page__read-status--unread"
+                                        >
+                                            Unread
+                                        </span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            {% if message.read_at %}
+                                <div>
+                                    <dt>Read at</dt>
+
+                                    <dd>
+                                        <time
+                                            datetime="{{
+                                                message.read_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                message.read_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    </dd>
+                                </div>
+                            {% endif %}
+
+                            <div>
+                                <dt>Message ID</dt>
+
+                                <dd>
+                                    <code>{{ message.id }}</code>
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Related property -->
+                    {% if message.property_id %}
+                        <section
+                            class="landlord-message-details-page__card"
+                            aria-labelledby="message-property-title"
+                        >
+                            <div
+                                class="landlord-message-details-page__card-header"
+                            >
+                                <div>
+                                    <p
+                                        class="landlord-message-details-page__section-label"
+                                    >
+                                        Related record
+                                    </p>
+
+                                    <h2 id="message-property-title">
+                                        Property
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div
+                                class="landlord-message-details-page__related-item"
+                            >
+                                <div>
+                                    <span>Property ID</span>
+
+                                    <code>
+                                        {{ message.property_id }}
+                                    </code>
+                                </div>
+
+                                <a
+                                    href="{{ url_for(
+                                        'property_details_page',
+                                        property_id=message.property_id
+                                    ) }}"
+                                >
+                                    View property
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                        </section>
+                    {% endif %}
+                </main>
+
+
+                <!-- Sidebar -->
+                <aside class="landlord-message-details-page__sidebar">
+
+                    <section
+                        class="landlord-message-details-page__card"
+                        aria-labelledby="message-status-title"
+                    >
+                        <h2 id="message-status-title">
+                            Message status
+                        </h2>
+
+                        {% if is_received %}
+                            <div
+                                class="landlord-message-details-page__status-message
+                                       landlord-message-details-page__status-message--received"
+                            >
+                                <span aria-hidden="true">↓</span>
+
+                                <p>
+                                    This message was sent to your
+                                    landlord account.
+                                </p>
+                            </div>
+                        {% elif is_sent %}
+                            <div
+                                class="landlord-message-details-page__status-message
+                                       landlord-message-details-page__status-message--sent"
+                            >
+                                <span aria-hidden="true">↑</span>
+
+                                <p>
+                                    This message was sent from your
+                                    landlord account.
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        {% if message.read_at %}
+                            <p
+                                class="landlord-message-details-page__read-note"
+                            >
+                                This message has been marked as read.
+                            </p>
+                        {% endif %}
+                    </section>
+
+
+                    <section
+                        class="landlord-message-details-page__card"
+                        aria-labelledby="message-actions-title"
+                    >
+                        <h2 id="message-actions-title">
+                            Related pages
+                        </h2>
+
+                        <div
+                            class="landlord-message-details-page__action-list"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_messages_page'
+                                ) }}"
+                            >
+                                View all messages
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            {% if message.property_id %}
+                                <a
+                                    href="{{ url_for(
+                                        'property_details_page',
+                                        property_id=message.property_id
+                                    ) }}"
+                                >
+                                    View related property
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for(
+                                    'landlord_maintenance_page'
+                                ) }}"
+                            >
+                                Maintenance requests
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'landlord_complaints_page'
+                                ) }}"
+                            >
+                                Tenant complaints
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </section>
+
+
+                    <section
+                        class="landlord-message-details-page__card
+                               landlord-message-details-page__card--privacy"
+                        aria-labelledby="message-privacy-title"
+                    >
+                        <h2 id="message-privacy-title">
+                            Private communication
+                        </h2>
+
+                        <p>
+                            Messages may contain personal tenancy or
+                            property information. Do not share this
+                            message with unauthorized people.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information
+                        </a>
+                    </section>
+                </aside>
+            </div>
+
+        {% else %}
+            <!-- Missing message -->
+            <section
+                class="landlord-message-details-page__not-found"
+                role="alert"
+            >
+                <div aria-hidden="true">!</div>
+
+                <h1>Message not found</h1>
+
+                <p>
+                    This message is unavailable or you do not have
+                    permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_messages_page') }}"
+                    class="landlord-message-details-page__button
+                           landlord-message-details-page__button--primary"
+                >
+                    Return to messages
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

@@ -1,0 +1,765 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Appointment Details") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review a property-viewing appointment in the Smart Property AI
+    landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-appointment-details-page"
+    data-landlord-appointment-details
+>
+    <div class="landlord-appointment-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-appointment-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'landlord_appointments_page'
+                        ) }}"
+                    >
+                        Appointments
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Appointment details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if appointment %}
+            {% set appointment_status =
+                appointment.status.value
+                if appointment.status
+                and appointment.status.value is defined
+                else appointment.status
+                | default("requested", true)
+            %}
+
+            <!-- Header -->
+            <header class="landlord-appointment-details-page__header">
+                <div class="landlord-appointment-details-page__identity">
+                    <span
+                        class="landlord-appointment-details-page__avatar"
+                        aria-hidden="true"
+                    >
+                        {% if appointment.first_name %}
+                            {{ appointment.first_name[0] | upper }}
+                        {% else %}
+                            V
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <p class="landlord-appointment-details-page__eyebrow">
+                            Property viewing
+                        </p>
+
+                        <div class="landlord-appointment-details-page__title-row">
+                            <h1>
+                                {{ appointment.full_name
+                                   | default(
+                                       (
+                                           appointment.first_name
+                                           | default("", true)
+                                       )
+                                       ~ " "
+                                       ~ (
+                                           appointment.last_name
+                                           | default("", true)
+                                       ),
+                                       true
+                                   )
+                                   | trim
+                                }}
+                            </h1>
+
+                            <span
+                                class="landlord-appointment-details-page__status
+                                       landlord-appointment-details-page__status--{{ appointment_status
+                                           | string
+                                           | lower
+                                           | replace('_', '-')
+                                       }}"
+                            >
+                                {{ appointment_status
+                                   | string
+                                   | replace("_", " ")
+                                   | title
+                                }}
+                            </span>
+                        </div>
+
+                        <p>
+                            Review the requested appointment time,
+                            contact preferences and accessibility needs.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="landlord-appointment-details-page__header-actions">
+                    {% if appointment.email %}
+                        <a
+                            href="mailto:{{ appointment.email }}"
+                            class="landlord-appointment-details-page__primary-button"
+                        >
+                            <span aria-hidden="true">✉️</span>
+                            <span>Contact visitor</span>
+                        </a>
+                    {% endif %}
+
+                    <a
+                        href="{{ url_for(
+                            'landlord_appointments_page'
+                        ) }}"
+                        class="landlord-appointment-details-page__secondary-button"
+                    >
+                        <span aria-hidden="true">←</span>
+                        <span>Back to appointments</span>
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-appointment-details-page__alert
+                           landlord-appointment-details-page__alert--success"
+                    role="status"
+                >
+                    {{ success }}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-appointment-details-page__alert
+                           landlord-appointment-details-page__alert--error"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            <!-- Summary -->
+            <section
+                class="landlord-appointment-details-page__summary"
+                aria-label="Appointment summary"
+            >
+                <article class="landlord-appointment-details-page__summary-card">
+                    <span aria-hidden="true">📅</span>
+
+                    <div>
+                        <span>Preferred appointment</span>
+
+                        <strong>
+                            {{ appointment.preferred_datetime
+                               | default("Not available", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-appointment-details-page__summary-card">
+                    <span aria-hidden="true">🎥</span>
+
+                    <div>
+                        <span>Viewing type</span>
+
+                        <strong>
+                            {{ appointment.viewing_type
+                               | default("in_person", true)
+                               | replace("_", " ")
+                               | title
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-appointment-details-page__summary-card">
+                    <span aria-hidden="true">🌍</span>
+
+                    <div>
+                        <span>Timezone</span>
+
+                        <strong>
+                            {{ appointment.timezone_name
+                               | default("UTC", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-appointment-details-page__summary-card">
+                    <span aria-hidden="true">⏰</span>
+
+                    <div>
+                        <span>Reminder</span>
+
+                        <strong>
+                            {% if appointment.reminder_at %}
+                                {{ appointment.reminder_at }}
+                            {% else %}
+                                Not scheduled
+                            {% endif %}
+                        </strong>
+                    </div>
+                </article>
+            </section>
+
+
+            <div class="landlord-appointment-details-page__layout">
+
+                <!-- Main column -->
+                <div class="landlord-appointment-details-page__main-column">
+
+                    <!-- Visitor information -->
+                    <section
+                        class="landlord-appointment-details-page__card"
+                        aria-labelledby="visitor-information-title"
+                    >
+                        <div class="landlord-appointment-details-page__card-header">
+                            <div>
+                                <p class="landlord-appointment-details-page__section-label">
+                                    Visitor
+                                </p>
+
+                                <h2 id="visitor-information-title">
+                                    Contact information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-appointment-details-page__details">
+                            <div>
+                                <dt>First name</dt>
+
+                                <dd>
+                                    {{ appointment.first_name
+                                       | default("Not provided", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Last name</dt>
+
+                                <dd>
+                                    {{ appointment.last_name
+                                       | default("Not provided", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Email address</dt>
+
+                                <dd>
+                                    {% if appointment.email %}
+                                        <a
+                                            href="mailto:{{ appointment.email }}"
+                                        >
+                                            {{ appointment.email }}
+                                        </a>
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Phone number</dt>
+
+                                <dd>
+                                    {% if appointment.phone %}
+                                        <a
+                                            href="tel:{{ appointment.phone }}"
+                                        >
+                                            {{ appointment.phone }}
+                                        </a>
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Preferred language</dt>
+
+                                <dd>
+                                    {{ appointment.preferred_language
+                                       | default("en", true)
+                                       | upper
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Registered user ID</dt>
+
+                                <dd>
+                                    {{ appointment.requester_user_id
+                                       | default(
+                                           "Guest visitor",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Property and unit -->
+                    <section
+                        class="landlord-appointment-details-page__card"
+                        aria-labelledby="viewing-location-title"
+                    >
+                        <div class="landlord-appointment-details-page__card-header">
+                            <div>
+                                <p class="landlord-appointment-details-page__section-label">
+                                    Viewing location
+                                </p>
+
+                                <h2 id="viewing-location-title">
+                                    Property and unit
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="landlord-appointment-details-page__connection-grid">
+                            <article class="landlord-appointment-details-page__connection">
+                                <span aria-hidden="true">🏢</span>
+
+                                <div>
+                                    <span>Property ID</span>
+
+                                    <strong>
+                                        {{ appointment.property_id
+                                           | default(
+                                               "Not available",
+                                               true
+                                           )
+                                        }}
+                                    </strong>
+
+                                    {% if appointment.property_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'property_details_page',
+                                                property_id=appointment.property_id
+                                            ) }}"
+                                        >
+                                            View property
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+
+                            <article class="landlord-appointment-details-page__connection">
+                                <span aria-hidden="true">🚪</span>
+
+                                <div>
+                                    <span>Unit ID</span>
+
+                                    <strong>
+                                        {{ appointment.unit_id
+                                           | default(
+                                               "Not available",
+                                               true
+                                           )
+                                        }}
+                                    </strong>
+
+                                    {% if appointment.unit_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'unit_details_page',
+                                                unit_id=appointment.unit_id
+                                            ) }}"
+                                        >
+                                            View unit
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+
+                    <!-- Appointment schedule -->
+                    <section
+                        class="landlord-appointment-details-page__card"
+                        aria-labelledby="appointment-schedule-title"
+                    >
+                        <div class="landlord-appointment-details-page__card-header">
+                            <div>
+                                <p class="landlord-appointment-details-page__section-label">
+                                    Schedule
+                                </p>
+
+                                <h2 id="appointment-schedule-title">
+                                    Appointment time
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-appointment-details-page__details">
+                            <div>
+                                <dt>Preferred time</dt>
+
+                                <dd>
+                                    {{ appointment.preferred_datetime
+                                       | default(
+                                           "Not provided",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Alternative time</dt>
+
+                                <dd>
+                                    {{ appointment.alternative_datetime
+                                       | default(
+                                           "Not provided",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Timezone</dt>
+
+                                <dd>
+                                    {{ appointment.timezone_name
+                                       | default("UTC", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Viewing type</dt>
+
+                                <dd>
+                                    {{ appointment.viewing_type
+                                       | default("in_person", true)
+                                       | replace("_", " ")
+                                       | title
+                                    }}
+                                </dd>
+                            </div>
+
+                            {% if appointment.meeting_url %}
+                                <div>
+                                    <dt>Meeting link</dt>
+
+                                    <dd>
+                                        <a
+                                            href="{{ appointment.meeting_url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Open video meeting
+                                        </a>
+                                    </dd>
+                                </div>
+                            {% endif %}
+                        </dl>
+                    </section>
+
+
+                    <!-- Accessibility -->
+                    <section
+                        class="landlord-appointment-details-page__card"
+                        aria-labelledby="appointment-accessibility-title"
+                    >
+                        <div class="landlord-appointment-details-page__card-header">
+                            <div>
+                                <p class="landlord-appointment-details-page__section-label">
+                                    Accessibility
+                                </p>
+
+                                <h2 id="appointment-accessibility-title">
+                                    Accommodation request
+                                </h2>
+                            </div>
+                        </div>
+
+                        {% if appointment.needs_accommodation %}
+                            <div
+                                class="landlord-appointment-details-page__accommodation
+                                       landlord-appointment-details-page__accommodation--required"
+                            >
+                                <span aria-hidden="true">♿</span>
+
+                                <div>
+                                    <strong>
+                                        Accommodation requested
+                                    </strong>
+
+                                    <p>
+                                        {{ appointment.accommodation_details
+                                           | default(
+                                               "No additional details were provided.",
+                                               true
+                                           )
+                                        }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div
+                                class="landlord-appointment-details-page__accommodation"
+                            >
+                                <span aria-hidden="true">✓</span>
+
+                                <p>
+                                    No accessibility accommodation was
+                                    requested.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+
+                    <!-- Visitor message -->
+                    {% if appointment.message %}
+                        <section
+                            class="landlord-appointment-details-page__card"
+                            aria-labelledby="appointment-message-title"
+                        >
+                            <div class="landlord-appointment-details-page__card-header">
+                                <div>
+                                    <p class="landlord-appointment-details-page__section-label">
+                                        Visitor message
+                                    </p>
+
+                                    <h2 id="appointment-message-title">
+                                        Additional information
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div class="landlord-appointment-details-page__message">
+                                {{ appointment.message }}
+                            </div>
+                        </section>
+                    {% endif %}
+
+
+                    <!-- Reminder settings -->
+                    <section
+                        class="landlord-appointment-details-page__card"
+                        aria-labelledby="reminder-settings-title"
+                    >
+                        <div class="landlord-appointment-details-page__card-header">
+                            <div>
+                                <p class="landlord-appointment-details-page__section-label">
+                                    Communication
+                                </p>
+
+                                <h2 id="reminder-settings-title">
+                                    Reminder settings
+                                </h2>
+                            </div>
+                        </div>
+
+                        <ul class="landlord-appointment-details-page__reminders">
+                            <li>
+                                <span>Email reminder</span>
+
+                                <strong>
+                                    {{ "Enabled"
+                                       if appointment.reminder_email
+                                       else "Disabled"
+                                    }}
+                                </strong>
+                            </li>
+
+                            <li>
+                                <span>SMS reminder</span>
+
+                                <strong>
+                                    {{ "Enabled"
+                                       if appointment.reminder_sms
+                                       else "Disabled"
+                                    }}
+                                </strong>
+                            </li>
+
+                            <li>
+                                <span>WhatsApp reminder</span>
+
+                                <strong>
+                                    {{ "Enabled"
+                                       if appointment.reminder_whatsapp
+                                       else "Disabled"
+                                    }}
+                                </strong>
+                            </li>
+
+                            <li>
+                                <span>Phone reminder</span>
+
+                                <strong>
+                                    {{ "Enabled"
+                                       if appointment.reminder_phone
+                                       else "Disabled"
+                                    }}
+                                </strong>
+                            </li>
+
+                            <li>
+                                <span>Reminder status</span>
+
+                                <strong>
+                                    {{ "Sent"
+                                       if appointment.reminder_sent
+                                       else "Not sent"
+                                    }}
+                                </strong>
+                            </li>
+                        </ul>
+
+                        {% if appointment.reminder_error %}
+                            <div
+                                class="landlord-appointment-details-page__alert
+                                       landlord-appointment-details-page__alert--error"
+                                role="alert"
+                            >
+                                Reminder error:
+                                {{ appointment.reminder_error }}
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+
+
+                <!-- Sidebar -->
+                <aside
+                    class="landlord-appointment-details-page__sidebar"
+                    aria-label="Appointment actions and information"
+                >
+                    <section class="landlord-appointment-details-page__sidebar-card">
+                        <span
+                            class="landlord-appointment-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⚡
+                        </span>
+
+                        <h2>Quick actions</h2>
+
+                        <div class="landlord-appointment-details-page__action-list">
+                            {% if appointment.email %}
+                                <a
+                                    href="mailto:{{ appointment.email }}"
+                                >
+                                    <span aria-hidden="true">✉️</span>
+                                    Send email
+                                </a>
+                            {% endif %}
+
+                            {% if appointment.phone %}
+                                <a href="tel:{{ appointment.phone }}">
+                                    <span aria-hidden="true">📞</span>
+                                    Call visitor
+                                </a>
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for(
+                                    'landlord_applications_page'
+                                ) }}"
+                            >
+                                <span aria-hidden="true">📋</span>
+                                View applications
+                            </a>
+
+                            <a href="{{ url_for('landlord_messages_page') }}">
+                                <span aria-hidden="true">💬</span>
+                                Open messages
+                            </a>
+                        </div>
+                    </section>
+
+
+                    <section class="landlord-appointment-details-page__sidebar-card">
+                        <span
+                            class="landlord-appointment-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⏰
+                        </span>
+
+                        <h2>Thirty-minute reminder</h2>
+
+                        <p>
+                            Confirmed appointments should receive their
+                            configured reminder thirty minutes before
+                            the viewing.
+                        </p>
+                    </section>
+
+
+                    <section
+                        class="landlord-appointment-details-page__sidebar-card
+                               landlord-appointment-details-page__sidebar-card--privacy"
+                    >
+                        <span
+                            class="landlord-appointment-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+                        <h2>Visitor privacy</h2>
+
+                        <p>
+                            Use visitor contact and accessibility
+                            information only for the requested viewing
+                            and authorized follow-up.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information

@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Details | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review detailed property portfolio and expense reports through the secure Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-report-details-page"
+    data-landlord-report-details-page
+>
+    <div class="landlord-report-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-report-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_reports_page') }}">
+                        Reports
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Report details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if report %}
+            {% set report_title =
+                report.title
+                | default("Landlord report", true)
+                | string
+            %}
+
+            {% set normalized_report_title =
+                report_title
+                | lower
+                | replace("_", "-")
+                | replace(" ", "-")
+            %}
+
+            {% set is_expense_report =
+                "expense" in report_title | lower
+            %}
+
+            {% set is_portfolio_report =
+                "portfolio" in report_title | lower
+            %}
+
+
+            <!-- Report header -->
+            <header class="landlord-report-details-page__header">
+                <div>
+                    <p class="landlord-report-details-page__eyebrow">
+                        Landlord report
+                    </p>
+
+                    <h1>{{ report_title }}</h1>
+
+                    <p>
+                        Reporting period:
+                        <strong>
+                            {{ report.period | default("Current", true) }}
+                        </strong>
+                    </p>
+                </div>
+
+                <div
+                    class="landlord-report-details-page__header-actions"
+                >
+                    <button
+                        id="landlord-report-print-button"
+                        type="button"
+                        class="landlord-report-details-page__button
+                               landlord-report-details-page__button--secondary"
+                    >
+                        <span aria-hidden="true">⎙</span>
+                        <span>Print report</span>
+                    </button>
+
+                    <a
+                        href="{{ url_for('landlord_reports_page') }}"
+                        class="landlord-report-details-page__button
+                               landlord-report-details-page__button--primary"
+                    >
+                        Back to reports
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-report-details-page__alert
+                           landlord-report-details-page__alert--success"
+                    role="status"
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ success }}</span>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-report-details-page__alert
+                           landlord-report-details-page__alert--error"
+                    role="alert"
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+
+            <!-- Report document -->
+            <article
+                id="landlord-report-print-area"
+                class="landlord-report-details-page__report
+                       landlord-report-details-page__report--{{
+                           normalized_report_title
+                       }}"
+                aria-labelledby="report-document-title"
+            >
+                <!-- Report heading -->
+                <header
+                    class="landlord-report-details-page__report-header"
+                >
+                    <div>
+                        <p
+                            class="landlord-report-details-page__report-brand"
+                        >
+                            Smart Property AI
+                        </p>
+
+                        <h2 id="report-document-title">
+                            {{ report_title }}
+                        </h2>
+
+                        <p>
+                            {{
+                                report.period
+                                | default("Current", true)
+                            }}
+                        </p>
+                    </div>
+
+                    <div
+                        class="landlord-report-details-page__report-icon"
+                        aria-hidden="true"
+                    >
+                        {% if is_expense_report %}
+                            €
+                        {% elif is_portfolio_report %}
+                            ▦
+                        {% else %}
+                            📊
+                        {% endif %}
+                    </div>
+                </header>
+
+
+                <!-- Report metadata -->
+                <section
+                    class="landlord-report-details-page__metadata"
+                    aria-label="Report information"
+                >
+                    <dl>
+                        <div>
+                            <dt>Report</dt>
+                            <dd>{{ report_title }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Period</dt>
+                            <dd>
+                                {{
+                                    report.period
+                                    | default("Current", true)
+                                }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Prepared</dt>
+
+                            <dd>
+                                {% if report.created_at %}
+                                    <time
+                                        datetime="{{
+                                            report.created_at.isoformat()
+                                        }}"
+                                    >
+                                        {{
+                                            report.created_at.strftime(
+                                                "%d %B %Y at %H:%M UTC"
+                                            )
+                                        }}
+                                    </time>
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Source</dt>
+                            <dd>Smart Property AI</dd>
+                        </div>
+                    </dl>
+                </section>
+
+
+                <!-- Main report result -->
+                <section
+                    class="landlord-report-details-page__result"
+                    aria-labelledby="report-result-title"
+                >
+                    <p
+                        class="landlord-report-details-page__section-label"
+                    >
+                        Report result
+                    </p>
+
+                    <h2 id="report-result-title">
+                        Summary
+                    </h2>
+
+                    <div
+                        class="landlord-report-details-page__result-value"
+                    >
+                        <span aria-hidden="true">
+                            {% if is_expense_report %}
+                                €
+                            {% elif is_portfolio_report %}
+                                🏢
+                            {% else %}
+                                📊
+                            {% endif %}
+                        </span>
+
+                        <p>
+                            {{
+                                report.summary
+                                | default(
+                                    "No report summary is available.",
+                                    true
+                                )
+                            }}
+                        </p>
+                    </div>
+                </section>
+
+
+                <!-- Explanation -->
+                <section
+                    class="landlord-report-details-page__explanation"
+                    aria-labelledby="report-explanation-title"
+                >
+                    <p
+                        class="landlord-report-details-page__section-label"
+                    >
+                        Understanding this report
+                    </p>
+
+                    <h2 id="report-explanation-title">
+                        What this report shows
+                    </h2>
+
+                    {% if is_expense_report %}
+                        <p>
+                            This report calculates the total value of
+                            expense records connected to properties
+                            managed through your landlord account.
+                        </p>
+
+                        <ul>
+                            <li>
+                                It includes recorded property and
+                                maintenance expenses.
+                            </li>
+
+                            <li>
+                                It uses the expense information currently
+                                stored in the platform.
+                            </li>
+
+                            <li>
+                                Missing or incorrect expense records can
+                                affect the total.
+                            </li>
+
+                            <li>
+                                Amounts should be checked against
+                                invoices, receipts and accounting
+                                records.
+                            </li>
+                        </ul>
+
+                    {% elif is_portfolio_report %}
+                        <p>
+                            This report shows the number of properties
+                            currently connected to your landlord
+                            account.
+                        </p>
+
+                        <ul>
+                            <li>
+                                It includes properties that you are
+                                authorized to manage.
+                            </li>
+
+                            <li>
+                                Newly added properties are included when
+                                they are saved successfully.
+                            </li>
+
+                            <li>
+                                Removed or inaccessible properties are
+                                not included.
+                            </li>
+
+                            <li>
+                                Property information should be reviewed
+                                regularly for accuracy.
+                            </li>
+                        </ul>
+
+                    {% else %}
+                        <p>
+                            This report summarizes information stored in
+                            your landlord account for the selected
+                            reporting period.
+                        </p>
+                    {% endif %}
+                </section>
+
+
+                <!-- Related actions -->
+                <section
+                    class="landlord-report-details-page__related"
+                    aria-labelledby="report-related-title"
+                >
+                    <p
+                        class="landlord-report-details-page__section-label"
+                    >
+                        Related records
+                    </p>
+
+                    <h2 id="report-related-title">
+                        Review the source information
+                    </h2>
+
+                    <div
+                        class="landlord-report-details-page__related-grid"
+                    >
+                        {% if is_expense_report %}
+                            <article>
+                                <h3>Expense records</h3>
+
+                                <p>
+                                    Review individual expense amounts,
+                                    dates, categories and currencies.
+                                </p>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_expenses_page'
+                                    ) }}"
+                                >
+                                    View expenses
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+
+                            <article>
+                                <h3>Maintenance requests</h3>
+
+                                <p>
+                                    Review maintenance records connected
+                                    to property expenses.
+                                </p>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_maintenance_page'
+                                    ) }}"
+                                >
+                                    View maintenance
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+
+                        {% elif is_portfolio_report %}
+                            <article>
+                                <h3>Properties</h3>
+
+                                <p>
+                                    Review all properties managed through
+                                    your landlord account.
+                                </p>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_properties_page'
+                                    ) }}"
+                                >
+                                    View properties
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+
+                            <article>
+                                <h3>Units</h3>
+
+                                <p>
+                                    Open a property to review its rental
+                                    units and occupancy information.
+                                </p>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_properties_page'
+                                    ) }}"
+                                >
+                                    Select a property
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+
+                        {% else %}
+                            <article>
+                                <h3>Dashboard</h3>
+
+                                <p>
+                                    Return to the landlord dashboard for
+                                    a complete platform overview.
+                                </p>
+
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_dashboard'
+                                    ) }}"
+                                >
+                                    Open dashboard
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+                        {% endif %}
+                    </div>
+                </section>
+
+
+                <!-- Report footer -->
+                <footer
+                    class="landlord-report-details-page__report-footer"
+                >
+                    <p>
+                        Generated by Smart Property AI.
+                    </p>
+
+                    {% if report.created_at %}
+                        <p>
+                            {{
+                                report.created_at.strftime(
+                                    "%d %B %Y"
+                                )
+                            }}
+                        </p>
+                    {% endif %}
+                </footer>
+            </article>
+
+
+            <!-- Disclaimer -->
+            <aside
+                class="landlord-report-details-page__notice"
+                aria-labelledby="report-disclaimer-title"
+            >
+                <span aria-hidden="true">ⓘ</span>
+
+                <div>
+                    <h2 id="report-disclaimer-title">
+                        Verify important information
+                    </h2>
+
+                    <p>
+                        This report is based on information stored in
+                        the platform. Verify all figures with original
+                        property, invoice, receipt and accounting
+                        records before making legal, financial, tax or
+                        tenancy decisions.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Review the privacy policy
+                    </a>
+                </div>
+            </aside>
+
+        {% else %}
+            <!-- Missing report -->
+            <section
+                class="landlord-report-details-page__not-found"
+                role="alert"
+            >
+                <div aria-hidden="true">!</div>
+
+                <h1>Report not found</h1>
+
+                <p>
+                    This report is unavailable or you do not have
+                    permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_reports_page') }}"
+                    class="landlord-report-details-page__button
+                           landlord-report-details-page__button--primary"
+                >
+                    Return to reports
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const printButton = document.getElementById(
+                "landlord-report-print-button"
+            );
+
+            if (!printButton) {
+                return;
+            }
+
+            printButton.addEventListener("click", function () {
+                window.print();
+            });
+        });
+    </script>
+{% endblock %}

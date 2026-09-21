@@ -1,0 +1,620 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Add Lease") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Create a property lease agreement in the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-lease-form-page"
+    data-landlord-lease-form
+>
+    <div class="landlord-lease-form-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-lease-form-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_leases_page') }}">
+                        Leases
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Add lease
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-lease-form-page__header">
+            <div>
+                <p class="landlord-lease-form-page__eyebrow">
+                    Tenancy management
+                </p>
+
+                <h1>
+                    Add lease agreement
+                </h1>
+
+                <p>
+                    Connect a tenant to a property unit and record the
+                    important financial and renewal information.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_leases_page') }}"
+                class="landlord-lease-form-page__back-link"
+            >
+                <span aria-hidden="true">←</span>
+                <span>Back to leases</span>
+            </a>
+        </header>
+
+
+        <!-- Errors -->
+        {% if errors %}
+            <div
+                class="landlord-lease-form-page__alert
+                       landlord-lease-form-page__alert--error"
+                role="alert"
+                aria-labelledby="lease-errors-title"
+            >
+                <strong id="lease-errors-title">
+                    Please correct the following information:
+                </strong>
+
+                <ul>
+                    {% if errors is mapping %}
+                        {% for field, message in errors.items() %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% else %}
+                        {% for message in errors %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-lease-form-page__layout">
+
+            <!-- Lease form -->
+            <section
+                class="landlord-lease-form-page__form-card"
+                aria-labelledby="lease-information-title"
+            >
+                <div class="landlord-lease-form-page__section-heading">
+                    <div>
+                        <p class="landlord-lease-form-page__section-label">
+                            New agreement
+                        </p>
+
+                        <h2 id="lease-information-title">
+                            Lease information
+                        </h2>
+                    </div>
+
+                    <span class="landlord-lease-form-page__draft-badge">
+                        Draft
+                    </span>
+                </div>
+
+                <form
+                    class="landlord-lease-form-page__form"
+                    action="{{ request.url.path }}"
+                    method="post"
+                    autocomplete="off"
+                    data-lease-form
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+
+                    <!-- Property and tenant -->
+                    <fieldset class="landlord-lease-form-page__fieldset">
+                        <legend>
+                            Property, unit and tenant
+                        </legend>
+
+                        <div class="landlord-lease-form-page__form-grid">
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-property-id">
+                                    Property ID
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-property-id"
+                                    name="property_id"
+                                    type="text"
+                                    maxlength="36"
+                                    value="{{ form_data.get(
+                                        'property_id',
+                                        ''
+                                    ) }}"
+                                    placeholder="Property record ID"
+                                    required
+                                >
+
+                                <small>
+                                    Copy the property ID from the
+                                    property-details page.
+                                </small>
+                            </div>
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-unit-id">
+                                    Unit ID
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-unit-id"
+                                    name="unit_id"
+                                    type="text"
+                                    maxlength="36"
+                                    value="{{ form_data.get(
+                                        'unit_id',
+                                        ''
+                                    ) }}"
+                                    placeholder="Unit record ID"
+                                    required
+                                >
+
+                                <small>
+                                    The unit must belong to the selected
+                                    property.
+                                </small>
+                            </div>
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-tenant-id">
+                                    Tenant ID
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-tenant-id"
+                                    name="tenant_id"
+                                    type="text"
+                                    maxlength="36"
+                                    value="{{ form_data.get(
+                                        'tenant_id',
+                                        ''
+                                    ) }}"
+                                    placeholder="Tenant account ID"
+                                    required
+                                >
+
+                                <small>
+                                    Use the registered tenant's user ID.
+                                </small>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Lease period -->
+                    <fieldset class="landlord-lease-form-page__fieldset">
+                        <legend>
+                            Lease period
+                        </legend>
+
+                        <div class="landlord-lease-form-page__form-grid">
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-start-date">
+                                    Start date
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-start-date"
+                                    name="start_date"
+                                    type="date"
+                                    value="{{ form_data.get(
+                                        'start_date',
+                                        ''
+                                    ) }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-end-date">
+                                    End date
+                                </label>
+
+                                <input
+                                    id="lease-end-date"
+                                    name="end_date"
+                                    type="date"
+                                    value="{{ form_data.get(
+                                        'end_date',
+                                        ''
+                                    ) }}"
+                                >
+
+                                <small>
+                                    Leave empty for an open-ended lease.
+                                </small>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Financial details -->
+                    <fieldset class="landlord-lease-form-page__fieldset">
+                        <legend>
+                            Rent and deposit
+                        </legend>
+
+                        <div class="landlord-lease-form-page__form-grid">
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-monthly-rent">
+                                    Monthly rent
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-monthly-rent"
+                                    name="monthly_rent"
+                                    type="number"
+                                    min="0"
+                                    max="99999999"
+                                    step="0.01"
+                                    value="{{ form_data.get(
+                                        'monthly_rent',
+                                        ''
+                                    ) }}"
+                                    placeholder="950.00"
+                                    inputmode="decimal"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-deposit-amount">
+                                    Deposit amount
+                                </label>
+
+                                <input
+                                    id="lease-deposit-amount"
+                                    name="deposit_amount"
+                                    type="number"
+                                    min="0"
+                                    max="99999999"
+                                    step="0.01"
+                                    value="{{ form_data.get(
+                                        'deposit_amount',
+                                        ''
+                                    ) }}"
+                                    placeholder="1900.00"
+                                    inputmode="decimal"
+                                >
+                            </div>
+
+                            {% set selected_currency =
+                                form_data.get(
+                                    "currency",
+                                    "EUR"
+                                )
+                            %}
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-currency">
+                                    Currency
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <select
+                                    id="lease-currency"
+                                    name="currency"
+                                    required
+                                >
+                                    <option
+                                        value="EUR"
+                                        {% if selected_currency == "EUR" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        EUR — Euro
+                                    </option>
+
+                                    <option
+                                        value="NGN"
+                                        {% if selected_currency == "NGN" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        NGN — Nigerian Naira
+                                    </option>
+
+                                    <option
+                                        value="USD"
+                                        {% if selected_currency == "USD" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        USD — US Dollar
+                                    </option>
+
+                                    <option
+                                        value="GBP"
+                                        {% if selected_currency == "GBP" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GBP — British Pound
+                                    </option>
+
+                                    <option
+                                        value="GHS"
+                                        {% if selected_currency == "GHS" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GHS — Ghanaian Cedi
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Payment and renewal -->
+                    <fieldset class="landlord-lease-form-page__fieldset">
+                        <legend>
+                            Payment and renewal
+                        </legend>
+
+                        <div class="landlord-lease-form-page__form-grid">
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-payment-day">
+                                    Monthly payment due day
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="lease-payment-day"
+                                    name="payment_due_day"
+                                    type="number"
+                                    min="1"
+                                    max="28"
+                                    step="1"
+                                    value="{{ form_data.get(
+                                        'payment_due_day',
+                                        '1'
+                                    ) }}"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                                <small>
+                                    Choose a day from 1 to 28.
+                                </small>
+                            </div>
+
+                            <div class="landlord-lease-form-page__field">
+                                <label for="lease-renewal-reminder">
+                                    Renewal reminder
+                                </label>
+
+                                <div class="landlord-lease-form-page__input-suffix">
+                                    <input
+                                        id="lease-renewal-reminder"
+                                        name="renewal_reminder_days"
+                                        type="number"
+                                        min="1"
+                                        max="365"
+                                        step="1"
+                                        value="{{ form_data.get(
+                                            'renewal_reminder_days',
+                                            '60'
+                                        ) }}"
+                                        inputmode="numeric"
+                                    >
+
+                                    <span>
+                                        days before
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Confirmation -->
+                    <fieldset
+                        class="landlord-lease-form-page__fieldset
+                               landlord-lease-form-page__fieldset--confirmation"
+                    >
+                        <legend>
+                            Confirmation
+                        </legend>
+
+                        <label class="landlord-lease-form-page__confirmation">
+                            <input
+                                type="checkbox"
+                                name="information_confirmed"
+                                value="true"
+                                required
+                            >
+
+                            <span>
+                                <strong>
+                                    I have reviewed the information.
+                                </strong>
+
+                                <small>
+                                    I confirm that the property, unit,
+                                    tenant and financial information is
+                                    accurate before creating this draft
+                                    lease.
+                                </small>
+                            </span>
+                        </label>
+                    </fieldset>
+
+
+                    <!-- Actions -->
+                    <div class="landlord-lease-form-page__actions">
+                        <a
+                            href="{{ url_for('landlord_leases_page') }}"
+                            class="landlord-lease-form-page__cancel-button"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="landlord-lease-form-page__submit-button"
+                            data-submit-button
+                        >
+                            <span aria-hidden="true">＋</span>
+                            <span>Create draft lease</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+
+            <!-- Information sidebar -->
+            <aside
+                class="landlord-lease-form-page__sidebar"
+                aria-label="Lease creation information"
+            >
+                <section class="landlord-lease-form-page__info-card">
+                    <span
+                        class="landlord-lease-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        📝
+                    </span>
+
+                    <h2>
+                        Draft status
+                    </h2>
+
+                    <p>
+                        New leases are saved as drafts. Review the
+                        agreement and required documents before
+                        activating it.
+                    </p>
+                </section>
+
+                <section class="landlord-lease-form-page__info-card">
+                    <span
+                        class="landlord-lease-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        ⏰
+                    </span>
+
+                    <h2>
+                        Renewal reminders
+                    </h2>
+
+                    <p>
+                        The reminder period determines when renewal
+                        communication should begin before the lease
+                        ends.
+                    </p>
+                </section>
+
+                <section
+                    class="landlord-lease-form-page__info-card
+                           landlord-lease-form-page__info-card--privacy"
+                >
+                    <span
+                        class="landlord-lease-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        🔒
+                    </span>
+
+                    <h2>
+                        Protect tenant information
+                    </h2>
+
+                    <p>
+                        Do not enter passwords, payment credentials or
+                        unnecessary identity-document information.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Privacy information
+                    </a>
+                </section>
+
+                <section
+                    class="landlord-lease-form-page__info-card
+                           landlord-lease-form-page__info-card--warning"
+                >
+                    <span
+                        class="landlord-lease-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        ⚖️
+                    </span>
+
+                    <h2>
+                        Legal review
+                    </h2>
+
+                    <p>
+                        Ensure that the final agreement complies with
+                        applicable tenancy law. AI guidance is not a
+                        substitute for professional legal advice.
+                    </p>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

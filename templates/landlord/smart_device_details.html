@@ -1,0 +1,811 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Smart Device Details | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Review smart-home device registration and connection information securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-device-details-page"
+    data-landlord-device-details-page
+>
+    <div class="landlord-device-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-device-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_smart_devices_page') }}">
+                        Smart devices
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Device details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if smart_device %}
+            {% set device_status =
+                smart_device.status.value
+                if smart_device.status
+                and smart_device.status.value is defined
+                else smart_device.status | default("pending", true)
+            %}
+
+            {% set normalized_status =
+                device_status
+                | string
+                | lower
+                | replace("_", "-")
+                | replace(" ", "-")
+            %}
+
+            {% set device_type =
+                smart_device.device_type
+                | default("smart_device", true)
+                | string
+            %}
+
+            {% set normalized_type =
+                device_type
+                | lower
+                | replace("_", "-")
+                | replace(" ", "-")
+            %}
+
+            {% set device_name =
+                smart_device.name
+                | default("Unnamed device", true)
+            %}
+
+
+            <!-- Header -->
+            <header class="landlord-device-details-page__header">
+                <div
+                    class="landlord-device-details-page__header-content"
+                >
+                    <div
+                        class="landlord-device-details-page__device-icon
+                               landlord-device-details-page__device-icon--{{
+                                   normalized_type
+                               }}"
+                        aria-hidden="true"
+                    >
+                        {% if "lock" in normalized_type %}
+                            🔐
+                        {% elif "thermostat" in normalized_type
+                              or "heating" in normalized_type
+                        %}
+                            🌡
+                        {% elif "camera" in normalized_type %}
+                            ◉
+                        {% elif "sensor" in normalized_type %}
+                            ◌
+                        {% elif "light" in normalized_type %}
+                            💡
+                        {% elif "smoke" in normalized_type
+                              or "alarm" in normalized_type
+                        %}
+                            🔔
+                        {% else %}
+                            ⌂
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <p
+                            class="landlord-device-details-page__eyebrow"
+                        >
+                            Smart-home device
+                        </p>
+
+                        <h1>{{ device_name }}</h1>
+
+                        <p>
+                            {{
+                                device_type
+                                | replace("_", " ")
+                                | title
+                            }}
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="landlord-device-details-page__header-actions"
+                >
+                    <span
+                        class="landlord-device-details-page__status
+                               landlord-device-details-page__status--{{
+                                   normalized_status
+                               }}"
+                    >
+                        <span
+                            class="landlord-device-details-page__status-dot"
+                            aria-hidden="true"
+                        ></span>
+
+                        {{
+                            device_status
+                            | string
+                            | replace("_", " ")
+                            | title
+                        }}
+                    </span>
+
+                    <a
+                        href="{{ url_for(
+                            'landlord_smart_devices_page'
+                        ) }}"
+                        class="landlord-device-details-page__button
+                               landlord-device-details-page__button--secondary"
+                    >
+                        Back to devices
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-device-details-page__alert
+                           landlord-device-details-page__alert--success"
+                    role="status"
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ success }}</span>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-device-details-page__alert
+                           landlord-device-details-page__alert--error"
+                    role="alert"
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+
+            <!-- Summary -->
+            <section
+                class="landlord-device-details-page__summary"
+                aria-label="Smart device summary"
+            >
+                <article
+                    class="landlord-device-details-page__summary-card"
+                >
+                    <span>Status</span>
+
+                    <strong>
+                        {{
+                            device_status
+                            | string
+                            | replace("_", " ")
+                            | title
+                        }}
+                    </strong>
+                </article>
+
+                <article
+                    class="landlord-device-details-page__summary-card"
+                >
+                    <span>Device type</span>
+
+                    <strong>
+                        {{
+                            device_type
+                            | replace("_", " ")
+                            | title
+                        }}
+                    </strong>
+                </article>
+
+                <article
+                    class="landlord-device-details-page__summary-card"
+                >
+                    <span>Location</span>
+
+                    <strong>
+                        {% if smart_device.unit_id %}
+                            Rental unit
+                        {% else %}
+                            Property-wide
+                        {% endif %}
+                    </strong>
+                </article>
+
+                <article
+                    class="landlord-device-details-page__summary-card"
+                >
+                    <span>Last seen</span>
+
+                    <strong>
+                        {% if smart_device.last_seen_at %}
+                            <time
+                                datetime="{{
+                                    smart_device.last_seen_at.isoformat()
+                                }}"
+                            >
+                                {{
+                                    smart_device.last_seen_at.strftime(
+                                        "%d %b %Y, %H:%M"
+                                    )
+                                }}
+                            </time>
+                        {% else %}
+                            Never connected
+                        {% endif %}
+                    </strong>
+                </article>
+            </section>
+
+
+            <div class="landlord-device-details-page__layout">
+
+                <main class="landlord-device-details-page__main">
+
+                    <!-- Device information -->
+                    <section
+                        class="landlord-device-details-page__card"
+                        aria-labelledby="device-information-title"
+                    >
+                        <div
+                            class="landlord-device-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-device-details-page__section-label"
+                                >
+                                    Registration
+                                </p>
+
+                                <h2 id="device-information-title">
+                                    Device information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl
+                            class="landlord-device-details-page__details-list"
+                        >
+                            <div>
+                                <dt>Device name</dt>
+                                <dd>{{ device_name }}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Device type</dt>
+
+                                <dd>
+                                    {{
+                                        device_type
+                                        | replace("_", " ")
+                                        | title
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Status</dt>
+
+                                <dd>
+                                    <span
+                                        class="landlord-device-details-page__status
+                                               landlord-device-details-page__status--{{
+                                                   normalized_status
+                                               }}"
+                                    >
+                                        {{
+                                            device_status
+                                            | string
+                                            | replace("_", " ")
+                                            | title
+                                        }}
+                                    </span>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Provider</dt>
+
+                                <dd>
+                                    {{
+                                        smart_device.provider
+                                        | default(
+                                            "Not specified",
+                                            true
+                                        )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Provider device ID</dt>
+
+                                <dd>
+                                    {% if
+                                        smart_device.external_device_id
+                                    %}
+                                        <code>
+                                            {{
+                                                smart_device.external_device_id
+                                            }}
+                                        </code>
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Platform device ID</dt>
+
+                                <dd>
+                                    <code>{{ smart_device.id }}</code>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Registered by</dt>
+
+                                <dd>
+                                    <code>
+                                        {{
+                                            smart_device.registered_by_id
+                                        }}
+                                    </code>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Registered</dt>
+
+                                <dd>
+                                    {% if smart_device.created_at %}
+                                        <time
+                                            datetime="{{
+                                                smart_device.created_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                smart_device.created_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Last seen</dt>
+
+                                <dd>
+                                    {% if smart_device.last_seen_at %}
+                                        <time
+                                            datetime="{{
+                                                smart_device.last_seen_at.isoformat()
+                                            }}"
+                                        >
+                                            {{
+                                                smart_device.last_seen_at.strftime(
+                                                    "%d %B %Y at %H:%M"
+                                                )
+                                            }}
+                                        </time>
+                                    {% else %}
+                                        Never connected
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Device location -->
+                    <section
+                        class="landlord-device-details-page__card"
+                        aria-labelledby="device-location-title"
+                    >
+                        <div
+                            class="landlord-device-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-device-details-page__section-label"
+                                >
+                                    Installation
+                                </p>
+
+                                <h2 id="device-location-title">
+                                    Device location
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div
+                            class="landlord-device-details-page__related-list"
+                        >
+                            <article
+                                class="landlord-device-details-page__related-item"
+                            >
+                                <div>
+                                    <span
+                                        class="landlord-device-details-page__related-label"
+                                    >
+                                        Property
+                                    </span>
+
+                                    <code>
+                                        {{ smart_device.property_id }}
+                                    </code>
+                                </div>
+
+                                <a
+                                    href="{{ url_for(
+                                        'property_details_page',
+                                        property_id=smart_device.property_id
+                                    ) }}"
+                                >
+                                    View property
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </article>
+
+                            {% if smart_device.unit_id %}
+                                <article
+                                    class="landlord-device-details-page__related-item"
+                                >
+                                    <div>
+                                        <span
+                                            class="landlord-device-details-page__related-label"
+                                        >
+                                            Rental unit
+                                        </span>
+
+                                        <code>
+                                            {{ smart_device.unit_id }}
+                                        </code>
+                                    </div>
+
+                                    <a
+                                        href="{{ url_for(
+                                            'unit_details_page',
+                                            unit_id=smart_device.unit_id
+                                        ) }}"
+                                    >
+                                        View unit
+                                        <span aria-hidden="true">→</span>
+                                    </a>
+                                </article>
+                            {% else %}
+                                <div
+                                    class="landlord-device-details-page__location-note"
+                                >
+                                    <p>
+                                        This device is registered as a
+                                        property-wide device and is not
+                                        assigned to an individual unit.
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+
+
+                    <!-- Connection information -->
+                    <section
+                        class="landlord-device-details-page__card"
+                        aria-labelledby="device-connection-title"
+                    >
+                        <div
+                            class="landlord-device-details-page__card-header"
+                        >
+                            <div>
+                                <p
+                                    class="landlord-device-details-page__section-label"
+                                >
+                                    Connection
+                                </p>
+
+                                <h2 id="device-connection-title">
+                                    Connection information
+                                </h2>
+                            </div>
+                        </div>
+
+                        {% if normalized_status == "active" %}
+                            <div
+                                class="landlord-device-details-page__connection-status
+                                       landlord-device-details-page__connection-status--active"
+                            >
+                                <span aria-hidden="true">✓</span>
+
+                                <div>
+                                    <strong>Device active</strong>
+
+                                    <p>
+                                        The device is registered and
+                                        currently available.
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% elif normalized_status == "pending" %}
+                            <div
+                                class="landlord-device-details-page__connection-status
+                                       landlord-device-details-page__connection-status--pending"
+                            >
+                                <span aria-hidden="true">⌛</span>
+
+                                <div>
+                                    <strong>
+                                        Registration pending
+                                    </strong>
+
+                                    <p>
+                                        The device is waiting for secure
+                                        provider verification or
+                                        activation.
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% elif normalized_status == "offline" %}
+                            <div
+                                class="landlord-device-details-page__connection-status
+                                       landlord-device-details-page__connection-status--offline"
+                            >
+                                <span aria-hidden="true">!</span>
+
+                                <div>
+                                    <strong>Device offline</strong>
+
+                                    <p>
+                                        The platform cannot currently
+                                        communicate with this device.
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% elif normalized_status == "revoked" %}
+                            <div
+                                class="landlord-device-details-page__connection-status
+                                       landlord-device-details-page__connection-status--revoked"
+                            >
+                                <span aria-hidden="true">×</span>
+
+                                <div>
+                                    <strong>Access revoked</strong>
+
+                                    <p>
+                                        The device connection or
+                                        provider authorization has been
+                                        disabled.
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </section>
+                </main>
+
+
+                <!-- Sidebar -->
+                <aside class="landlord-device-details-page__sidebar">
+
+                    <section
+                        class="landlord-device-details-page__card"
+                        aria-labelledby="device-actions-title"
+                    >
+                        <h2 id="device-actions-title">
+                            Related pages
+                        </h2>
+
+                        <div
+                            class="landlord-device-details-page__action-list"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_smart_devices_page'
+                                ) }}"
+                            >
+                                View all devices
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'add_smart_device_page'
+                                ) }}"
+                            >
+                                Add another device
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            <a
+                                href="{{ url_for(
+                                    'property_details_page',
+                                    property_id=smart_device.property_id
+                                ) }}"
+                            >
+                                View related property
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                            {% if smart_device.unit_id %}
+                                <a
+                                    href="{{ url_for(
+                                        'unit_details_page',
+                                        unit_id=smart_device.unit_id
+                                    ) }}"
+                                >
+                                    View related unit
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            {% else %}
+                                <a
+                                    href="{{ url_for(
+                                        'units_page',
+                                        property_id=smart_device.property_id
+                                    ) }}"
+                                >
+                                    View property units
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </section>
+
+
+                    <section
+                        class="landlord-device-details-page__card
+                               landlord-device-details-page__card--security"
+                        aria-labelledby="device-security-title"
+                    >
+                        <h2 id="device-security-title">
+                            Device security
+                        </h2>
+
+                        <ul
+                            class="landlord-device-details-page__security-list"
+                        >
+                            <li>
+                                Keep device firmware updated.
+                            </li>
+
+                            <li>
+                                Use a unique provider password.
+                            </li>
+
+                            <li>
+                                Enable multi-factor authentication.
+                            </li>
+
+                            <li>
+                                Never share access codes or API keys.
+                            </li>
+
+                            <li>
+                                Remove access when management rights
+                                end.
+                            </li>
+                        </ul>
+                    </section>
+
+
+                    <section
+                        class="landlord-device-details-page__card
+                               landlord-device-details-page__card--privacy"
+                        aria-labelledby="device-privacy-title"
+                    >
+                        <h2 id="device-privacy-title">
+                            Tenant privacy
+                        </h2>
+
+                        <p>
+                            Smart locks, cameras, sensors and similar
+                            devices may process personal information.
+                            Ensure that required tenant notices and
+                            permissions are in place.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information
+                        </a>
+                    </section>
+
+
+                    <section
+                        class="landlord-device-details-page__card
+                               landlord-device-details-page__card--notice"
+                        aria-labelledby="device-control-title"
+                    >
+                        <h2 id="device-control-title">
+                            Remote control
+                        </h2>
+
+                        <p>
+                            Remote device commands are not enabled on
+                            this page. A secure device-action endpoint
+                            and provider integration must be configured
+                            before controls can be added.
+                        </p>
+                    </section>
+                </aside>
+            </div>
+
+        {% else %}
+            <!-- Missing device -->
+            <section
+                class="landlord-device-details-page__not-found"
+                role="alert"
+            >
+                <div aria-hidden="true">!</div>
+
+                <h1>Smart device not found</h1>
+
+                <p>
+                    This device is unavailable or you do not have
+                    permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_smart_devices_page'
+                    ) }}"
+                    class="landlord-device-details-page__button
+                           landlord-device-details-page__button--primary"
+                >
+                    Return to smart devices
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

@@ -1,0 +1,1033 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Add Smart Device | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Register a supported smart-home device securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-add-device-page"
+    data-landlord-add-device-page
+>
+    <div class="landlord-add-device-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-add-device-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_smart_devices_page') }}">
+                        Smart devices
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Add smart device
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-add-device-page__header">
+            <div>
+                <p class="landlord-add-device-page__eyebrow">
+                    Smart-home integration
+                </p>
+
+                <h1>Add a smart device</h1>
+
+                <p>
+                    Register a supported smart lock, thermostat,
+                    sensor, camera, alarm or lighting system.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_smart_devices_page') }}"
+                class="landlord-add-device-page__button
+                       landlord-add-device-page__button--secondary"
+            >
+                Back to devices
+            </a>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-add-device-page__alert
+                       landlord-add-device-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-add-device-page__alert
+                       landlord-add-device-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div
+                class="landlord-add-device-page__alert
+                       landlord-add-device-page__alert--error"
+                role="alert"
+                aria-labelledby="smart-device-errors-heading"
+            >
+                <strong id="smart-device-errors-heading">
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% for field, message in errors.items() %}
+                        <li>
+                            <a href="#{{ field }}">
+                                {{ message }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-add-device-page__layout">
+
+            <!-- Registration form -->
+            <main class="landlord-add-device-page__main">
+                <section
+                    class="landlord-add-device-page__card"
+                    aria-labelledby="smart-device-form-heading"
+                >
+                    <div
+                        class="landlord-add-device-page__card-header"
+                    >
+                        <div>
+                            <p
+                                class="landlord-add-device-page__section-label"
+                            >
+                                Device registration
+                            </p>
+
+                            <h2 id="smart-device-form-heading">
+                                Device information
+                            </h2>
+                        </div>
+
+                        <span
+                            class="landlord-add-device-page__secure-label"
+                        >
+                            <span aria-hidden="true">🔒</span>
+                            Secure registration
+                        </span>
+                    </div>
+
+                    <form
+                        id="landlord-add-device-form"
+                        class="landlord-add-device-page__form"
+                        action="{{ url_for(
+                            'create_smart_device_action'
+                        ) }}"
+                        method="post"
+                        novalidate
+                    >
+                        <!-- CSRF token -->
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token | default(
+                                request.session.get(
+                                    'csrf_token',
+                                    ''
+                                ),
+                                true
+                            ) }}"
+                        >
+
+
+                        <!-- Property -->
+                        <div
+                            class="landlord-add-device-page__form-group"
+                        >
+                            <label for="property_id">
+                                Property
+                                <span aria-hidden="true">*</span>
+                            </label>
+
+                            {% if properties %}
+                                <select
+                                    id="property_id"
+                                    name="property_id"
+                                    aria-describedby="property-id-help"
+                                    required
+                                >
+                                    <option value="">
+                                        Select a property
+                                    </option>
+
+                                    {% set selected_property_id =
+                                        form_data.get(
+                                            "property_id",
+                                            ""
+                                        )
+                                        if form_data
+                                        else ""
+                                    %}
+
+                                    {% for property in properties %}
+                                        <option
+                                            value="{{ property.id }}"
+                                            {% if selected_property_id
+                                                | string
+                                                ==
+                                                property.id | string
+                                            %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ property.name
+                                               | default(
+                                                   property.title,
+                                                   true
+                                               )
+                                               | default(
+                                                   "Unnamed property",
+                                                   true
+                                               )
+                                            }}
+
+                                            {% if property.city %}
+                                                — {{ property.city }}
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input
+                                    id="property_id"
+                                    name="property_id"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'property_id',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    placeholder="Enter the property ID"
+                                    maxlength="36"
+                                    aria-describedby="property-id-help"
+                                    required
+                                >
+                            {% endif %}
+
+                            <small id="property-id-help">
+                                Select or enter the property where the
+                                device is installed.
+                            </small>
+
+                            {% if errors and errors.get("property_id") %}
+                                <p
+                                    class="landlord-add-device-page__field-error"
+                                >
+                                    {{ errors.get("property_id") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Unit -->
+                        <div
+                            class="landlord-add-device-page__form-group"
+                        >
+                            <label for="unit_id">
+                                Rental unit
+                                <span
+                                    class="landlord-add-device-page__optional"
+                                >
+                                    Optional
+                                </span>
+                            </label>
+
+                            {% if units %}
+                                <select
+                                    id="unit_id"
+                                    name="unit_id"
+                                    aria-describedby="unit-id-help"
+                                >
+                                    <option value="">
+                                        Property-wide device
+                                    </option>
+
+                                    {% set selected_unit_id =
+                                        form_data.get("unit_id", "")
+                                        if form_data
+                                        else ""
+                                    %}
+
+                                    {% for unit in units %}
+                                        <option
+                                            value="{{ unit.id }}"
+                                            data-property-id="{{
+                                                unit.property_id
+                                            }}"
+                                            {% if selected_unit_id
+                                                | string
+                                                ==
+                                                unit.id | string
+                                            %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Unit
+                                            {{
+                                                unit.unit_number
+                                                | default(
+                                                    unit.name,
+                                                    true
+                                                )
+                                                | default(
+                                                    "Unnamed",
+                                                    true
+                                                )
+                                            }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input
+                                    id="unit_id"
+                                    name="unit_id"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'unit_id',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    placeholder="Enter the unit ID"
+                                    maxlength="36"
+                                    aria-describedby="unit-id-help"
+                                >
+                            {% endif %}
+
+                            <small id="unit-id-help">
+                                Leave blank when the device serves the
+                                whole property.
+                            </small>
+
+                            {% if errors and errors.get("unit_id") %}
+                                <p
+                                    class="landlord-add-device-page__field-error"
+                                >
+                                    {{ errors.get("unit_id") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Device name and type -->
+                        <div
+                            class="landlord-add-device-page__form-grid
+                                   landlord-add-device-page__form-grid--two"
+                        >
+                            <div
+                                class="landlord-add-device-page__form-group"
+                            >
+                                <label for="name">
+                                    Device name
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    value="{{ form_data.get(
+                                        'name',
+                                        ''
+                                    ) if form_data else '' }}"
+                                    minlength="2"
+                                    maxlength="150"
+                                    placeholder="Example: Main entrance lock"
+                                    autocomplete="off"
+                                    required
+                                >
+
+                                <small>
+                                    Use a name that identifies the
+                                    location and purpose.
+                                </small>
+
+                                {% if errors and errors.get("name") %}
+                                    <p
+                                        class="landlord-add-device-page__field-error"
+                                    >
+                                        {{ errors.get("name") }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+
+                            <div
+                                class="landlord-add-device-page__form-group"
+                            >
+                                <label for="device_type">
+                                    Device type
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                {% set selected_device_type =
+                                    form_data.get(
+                                        "device_type",
+                                        ""
+                                    )
+                                    if form_data
+                                    else ""
+                                %}
+
+                                <select
+                                    id="device_type"
+                                    name="device_type"
+                                    required
+                                >
+                                    <option value="">
+                                        Select a device type
+                                    </option>
+
+                                    <option
+                                        value="smart_lock"
+                                        {% if selected_device_type ==
+                                            "smart_lock"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Smart lock
+                                    </option>
+
+                                    <option
+                                        value="thermostat"
+                                        {% if selected_device_type ==
+                                            "thermostat"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Thermostat
+                                    </option>
+
+                                    <option
+                                        value="temperature_sensor"
+                                        {% if selected_device_type ==
+                                            "temperature_sensor"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Temperature sensor
+                                    </option>
+
+                                    <option
+                                        value="water_leak_sensor"
+                                        {% if selected_device_type ==
+                                            "water_leak_sensor"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Water-leak sensor
+                                    </option>
+
+                                    <option
+                                        value="smoke_detector"
+                                        {% if selected_device_type ==
+                                            "smoke_detector"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Smoke detector
+                                    </option>
+
+                                    <option
+                                        value="security_camera"
+                                        {% if selected_device_type ==
+                                            "security_camera"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Security camera
+                                    </option>
+
+                                    <option
+                                        value="motion_sensor"
+                                        {% if selected_device_type ==
+                                            "motion_sensor"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Motion sensor
+                                    </option>
+
+                                    <option
+                                        value="smart_light"
+                                        {% if selected_device_type ==
+                                            "smart_light"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Smart light
+                                    </option>
+
+                                    <option
+                                        value="energy_meter"
+                                        {% if selected_device_type ==
+                                            "energy_meter"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Energy meter
+                                    </option>
+
+                                    <option
+                                        value="intercom"
+                                        {% if selected_device_type ==
+                                            "intercom"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Smart intercom
+                                    </option>
+
+                                    <option
+                                        value="other"
+                                        {% if selected_device_type ==
+                                            "other"
+                                        %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Other
+                                    </option>
+                                </select>
+
+                                {% if errors
+                                      and errors.get("device_type")
+                                %}
+                                    <p
+                                        class="landlord-add-device-page__field-error"
+                                    >
+                                        {{ errors.get("device_type") }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        <!-- Provider -->
+                        <div
+                            class="landlord-add-device-page__form-group"
+                        >
+                            <label for="provider">
+                                Provider or manufacturer
+                                <span
+                                    class="landlord-add-device-page__optional"
+                                >
+                                    Optional
+                                </span>
+                            </label>
+
+                            <input
+                                id="provider"
+                                name="provider"
+                                type="text"
+                                value="{{ form_data.get(
+                                    'provider',
+                                    ''
+                                ) if form_data else '' }}"
+                                maxlength="100"
+                                placeholder="Example: Nuki, Bosch or Google"
+                                autocomplete="organization"
+                            >
+
+                            <small>
+                                Enter the device manufacturer or
+                                integration provider.
+                            </small>
+
+                            {% if errors and errors.get("provider") %}
+                                <p
+                                    class="landlord-add-device-page__field-error"
+                                >
+                                    {{ errors.get("provider") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- External device ID -->
+                        <div
+                            class="landlord-add-device-page__form-group"
+                        >
+                            <label for="external_device_id">
+                                Provider device ID
+                                <span
+                                    class="landlord-add-device-page__optional"
+                                >
+                                    Optional
+                                </span>
+                            </label>
+
+                            <input
+                                id="external_device_id"
+                                name="external_device_id"
+                                type="text"
+                                value="{{ form_data.get(
+                                    'external_device_id',
+                                    ''
+                                ) if form_data else '' }}"
+                                maxlength="255"
+                                placeholder="Enter the device identifier"
+                                autocomplete="off"
+                                aria-describedby="external-device-id-help"
+                            >
+
+                            <small id="external-device-id-help">
+                                Enter only the public device identifier.
+                                Never enter an API key, password, PIN or
+                                access token.
+                            </small>
+
+                            {% if errors
+                                  and errors.get(
+                                      "external_device_id"
+                                  )
+                            %}
+                                <p
+                                    class="landlord-add-device-page__field-error"
+                                >
+                                    {{
+                                        errors.get(
+                                            "external_device_id"
+                                        )
+                                    }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Authorization -->
+                        <fieldset
+                            class="landlord-add-device-page__fieldset"
+                        >
+                            <legend>
+                                Authorization
+                            </legend>
+
+                            <label
+                                for="device_authorization"
+                                class="landlord-add-device-page__checkbox"
+                            >
+                                <input
+                                    id="device_authorization"
+                                    name="device_authorization"
+                                    type="checkbox"
+                                    value="confirmed"
+                                    required
+                                >
+
+                                <span>
+                                    <strong>
+                                        I am authorized to manage this
+                                        device.
+                                    </strong>
+
+                                    <small>
+                                        I confirm that the device is
+                                        installed in a property I am
+                                        permitted to manage.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <p
+                                id="device-authorization-error"
+                                class="landlord-add-device-page__field-error"
+                                hidden
+                            ></p>
+                        </fieldset>
+
+
+                        <!-- Consent -->
+                        <fieldset
+                            class="landlord-add-device-page__fieldset"
+                        >
+                            <legend>
+                                Privacy and tenant consent
+                            </legend>
+
+                            <label
+                                for="device_privacy_consent"
+                                class="landlord-add-device-page__checkbox"
+                            >
+                                <input
+                                    id="device_privacy_consent"
+                                    name="device_privacy_consent"
+                                    type="checkbox"
+                                    value="confirmed"
+                                    required
+                                >
+
+                                <span>
+                                    <strong>
+                                        Privacy requirements have been
+                                        reviewed.
+                                    </strong>
+
+                                    <small>
+                                        I confirm that required tenant
+                                        notices or permissions have been
+                                        obtained for this device.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <p
+                                id="device-consent-error"
+                                class="landlord-add-device-page__field-error"
+                                hidden
+                            ></p>
+                        </fieldset>
+
+
+                        <!-- Actions -->
+                        <div
+                            class="landlord-add-device-page__form-actions"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_smart_devices_page'
+                                ) }}"
+                                class="landlord-add-device-page__button
+                                       landlord-add-device-page__button--secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                id="landlord-device-submit-button"
+                                type="submit"
+                                class="landlord-add-device-page__button
+                                       landlord-add-device-page__button--primary"
+                            >
+                                <span
+                                    class="landlord-add-device-page__spinner"
+                                    aria-hidden="true"
+                                ></span>
+
+                                <span data-submit-label>
+                                    Register device
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+
+
+            <!-- Sidebar -->
+            <aside class="landlord-add-device-page__sidebar">
+
+                <section
+                    class="landlord-add-device-page__card"
+                    aria-labelledby="device-registration-help-title"
+                >
+                    <h2 id="device-registration-help-title">
+                        Before registering
+                    </h2>
+
+                    <ul
+                        class="landlord-add-device-page__guidance-list"
+                    >
+                        <li>
+                            Confirm the device supports secure remote
+                            integration.
+                        </li>
+
+                        <li>
+                            Install all available firmware updates.
+                        </li>
+
+                        <li>
+                            Change manufacturer default passwords.
+                        </li>
+
+                        <li>
+                            Enable multi-factor authentication with the
+                            provider when available.
+                        </li>
+
+                        <li>
+                            Inform affected tenants about device data
+                            collection.
+                        </li>
+                    </ul>
+                </section>
+
+
+                <section
+                    class="landlord-add-device-page__card"
+                    aria-labelledby="device-status-help-title"
+                >
+                    <h2 id="device-status-help-title">
+                        Initial device status
+                    </h2>
+
+                    <p>
+                        New devices are registered with a
+                        <strong>Pending</strong> status. They should
+                        only become active after the provider
+                        connection has been securely verified.
+                    </p>
+                </section>
+
+
+                <section
+                    class="landlord-add-device-page__card
+                           landlord-add-device-page__card--warning"
+                    aria-labelledby="device-secret-warning-title"
+                >
+                    <h2 id="device-secret-warning-title">
+                        Never enter device secrets
+                    </h2>
+
+                    <p>
+                        Do not enter passwords, door codes, alarm PINs,
+                        API keys, access tokens or recovery codes into
+                        this form.
+                    </p>
+                </section>
+
+
+                <section
+                    class="landlord-add-device-page__card"
+                    aria-labelledby="device-privacy-title"
+                >
+                    <h2 id="device-privacy-title">
+                        Privacy information
+                    </h2>
+
+                    <p>
+                        Cameras, locks, occupancy sensors and similar
+                        devices may process personal information.
+                        Confirm the applicable privacy and tenancy
+                        requirements before installation.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Review the privacy policy
+                    </a>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById(
+                "landlord-add-device-form"
+            );
+
+            const propertySelect = document.getElementById(
+                "property_id"
+            );
+
+            const unitSelect = document.getElementById(
+                "unit_id"
+            );
+
+            const authorization = document.getElementById(
+                "device_authorization"
+            );
+
+            const authorizationError = document.getElementById(
+                "device-authorization-error"
+            );
+
+            const privacyConsent = document.getElementById(
+                "device_privacy_consent"
+            );
+
+            const consentError = document.getElementById(
+                "device-consent-error"
+            );
+
+            const submitButton = document.getElementById(
+                "landlord-device-submit-button"
+            );
+
+            function filterUnitsByProperty() {
+                if (
+                    !propertySelect ||
+                    !unitSelect ||
+                    propertySelect.tagName !== "SELECT" ||
+                    unitSelect.tagName !== "SELECT"
+                ) {
+                    return;
+                }
+
+                const selectedProperty = propertySelect.value;
+
+                Array.from(unitSelect.options).forEach(
+                    function (option) {
+                        if (!option.value) {
+                            option.hidden = false;
+                            return;
+                        }
+
+                        const propertyId =
+                            option.dataset.propertyId || "";
+
+                        option.hidden =
+                            Boolean(selectedProperty) &&
+                            propertyId !== selectedProperty;
+                    }
+                );
+
+                const selectedOption =
+                    unitSelect.options[
+                        unitSelect.selectedIndex
+                    ];
+
+                if (
+                    selectedOption &&
+                    selectedOption.hidden
+                ) {
+                    unitSelect.value = "";
+                }
+            }
+
+            if (propertySelect) {
+                propertySelect.addEventListener(
+                    "change",
+                    filterUnitsByProperty
+                );
+
+                filterUnitsByProperty();
+            }
+
+            if (form) {
+                form.addEventListener("submit", function (event) {
+                    let formIsValid = true;
+
+                    if (!form.checkValidity()) {
+                        formIsValid = false;
+                    }
+
+                    if (
+                        !authorization ||
+                        !authorization.checked
+                    ) {
+                        formIsValid = false;
+
+                        if (authorizationError) {
+                            authorizationError.textContent =
+                                "Confirm that you are authorized to manage this device.";
+
+                            authorizationError.hidden = false;
+                        }
+                    } else if (authorizationError) {
+                        authorizationError.textContent = "";
+                        authorizationError.hidden = true;
+                    }
+
+                    if (
+                        !privacyConsent ||
+                        !privacyConsent.checked
+                    ) {
+                        formIsValid = false;
+
+                        if (consentError) {
+                            consentError.textContent =
+                                "Confirm that the privacy requirements have been reviewed.";
+
+                            consentError.hidden = false;
+                        }
+                    } else if (consentError) {
+                        consentError.textContent = "";
+                        consentError.hidden = true;
+                    }
+
+                    if (!formIsValid) {
+                        event.preventDefault();
+                        form.reportValidity();
+                        return;
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.setAttribute(
+                            "aria-busy",
+                            "true"
+                        );
+
+                        const label = submitButton.querySelector(
+                            "[data-submit-label]"
+                        );
+
+                        if (label) {
+                            label.textContent = "Registering…";
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

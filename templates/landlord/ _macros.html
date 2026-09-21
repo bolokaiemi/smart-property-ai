@@ -1,0 +1,89 @@
+{% macro status_badge(status, prefix="landlord") %}
+    {% set status_value =
+        status.value
+        if status and status.value is defined
+        else status | default("unknown", true)
+    %}
+
+    {% set normalized_status =
+        status_value
+        | string
+        | lower
+        | replace("_", "-")
+        | replace(" ", "-")
+    %}
+
+    <span
+        class="{{ prefix }}__status
+               {{ prefix }}__status--{{ normalized_status }}"
+    >
+        {{ status_value | string | replace("_", " ") | title }}
+    </span>
+{% endmacro %}
+
+
+{% macro format_date(value, include_time=false) %}
+    {% if value %}
+        <time datetime="{{ value.isoformat() }}">
+            {% if include_time %}
+                {{ value.strftime("%d %b %Y, %H:%M") }}
+            {% else %}
+                {{ value.strftime("%d %b %Y") }}
+            {% endif %}
+        </time>
+    {% else %}
+        <span class="landlord-shared__unavailable">
+            Not available
+        </span>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro money(amount, currency="EUR") %}
+    <span class="landlord-shared__money">
+        {{ currency | default("EUR", true) }}
+        {{ "%.2f" | format(amount | default(0, true) | float) }}
+    </span>
+{% endmacro %}
+
+
+{% macro csrf_input(request, csrf_token="") %}
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token | default(
+            request.session.get("csrf_token", ""),
+            true
+        ) }}"
+    >
+{% endmacro %}
+
+
+{% macro field_error(errors, field_name) %}
+    {% if errors and errors.get(field_name) %}
+        <p
+            id="{{ field_name }}-error"
+            class="landlord-shared__field-error"
+            role="alert"
+        >
+            {{ errors.get(field_name) }}
+        </p>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro empty_state(title, message, icon="ⓘ") %}
+    <div class="landlord-shared__empty-state">
+        <div
+            class="landlord-shared__empty-icon"
+            aria-hidden="true"
+        >
+            {{ icon }}
+        </div>
+
+        <h2>{{ title }}</h2>
+        <p>{{ message }}</p>
+
+        {{ caller() if caller is defined else "" }}
+    </div>
+{% endmacro %}

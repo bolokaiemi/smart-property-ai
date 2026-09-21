@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Tenants") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    View and manage tenants connected to your rental properties.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-tenants-page"
+    data-landlord-tenants-page
+>
+    <div class="landlord-tenants-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-tenants-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Tenants
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-tenants-page__header">
+            <div>
+                <p class="landlord-tenants-page__eyebrow">
+                    Tenant management
+                </p>
+
+                <h1>
+                    Tenants
+                </h1>
+
+                <p>
+                    Review tenants connected to your leases and access
+                    their permitted tenancy information.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_leases_page') }}"
+                class="landlord-tenants-page__header-link"
+            >
+                <span aria-hidden="true">📝</span>
+                <span>Manage leases</span>
+            </a>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-tenants-page__alert
+                       landlord-tenants-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-tenants-page__alert
+                       landlord-tenants-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Summary -->
+        <section
+            class="landlord-tenants-page__summary"
+            aria-label="Tenant summary"
+        >
+            <article class="landlord-tenants-page__summary-card">
+                <span
+                    class="landlord-tenants-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    👥
+                </span>
+
+                <div>
+                    <span>Total tenants</span>
+
+                    <strong>
+                        {{ tenants | length if tenants else 0 }}
+                    </strong>
+                </div>
+            </article>
+
+            <article class="landlord-tenants-page__summary-card">
+                <span
+                    class="landlord-tenants-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    📝
+                </span>
+
+                <div>
+                    <span>Lease records</span>
+
+                    <a href="{{ url_for('landlord_leases_page') }}">
+                        View leases
+                    </a>
+                </div>
+            </article>
+
+            <article class="landlord-tenants-page__summary-card">
+                <span
+                    class="landlord-tenants-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    ✉️
+                </span>
+
+                <div>
+                    <span>Tenant messages</span>
+
+                    <a href="{{ url_for('landlord_messages_page') }}">
+                        Open messages
+                    </a>
+                </div>
+            </article>
+        </section>
+
+
+        <!-- Tenant records -->
+        <section
+            class="landlord-tenants-page__panel"
+            aria-labelledby="tenant-records-title"
+        >
+            <div class="landlord-tenants-page__panel-header">
+                <div>
+                    <p class="landlord-tenants-page__section-label">
+                        Records
+                    </p>
+
+                    <h2 id="tenant-records-title">
+                        Current tenants
+                    </h2>
+                </div>
+
+                <p class="landlord-tenants-page__record-count">
+                    {{ tenants | length if tenants else 0 }}
+                    {% if tenants and tenants | length == 1 %}
+                        tenant
+                    {% else %}
+                        tenants
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if tenants %}
+                <div class="landlord-tenants-page__table-wrapper">
+                    <table class="landlord-tenants-page__table">
+                        <caption class="visually-hidden">
+                            Tenants connected to your leases
+                        </caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Tenant
+                                </th>
+
+                                <th scope="col">
+                                    Contact
+                                </th>
+
+                                <th scope="col">
+                                    Language
+                                </th>
+
+                                <th scope="col">
+                                    Account status
+                                </th>
+
+                                <th scope="col">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for tenant in tenants %}
+                                {% set tenant_status =
+                                    tenant.status.value
+                                    if tenant.status
+                                    and tenant.status.value is defined
+                                    else tenant.status
+                                    | default("unknown", true)
+                                %}
+
+                                <tr>
+                                    <td data-label="Tenant">
+                                        <div class="landlord-tenants-page__identity">
+                                            <span
+                                                class="landlord-tenants-page__avatar"
+                                                aria-hidden="true"
+                                            >
+                                                {% if tenant.full_name %}
+                                                    {{ tenant.full_name[0]
+                                                       | upper
+                                                    }}
+                                                {% else %}
+                                                    T
+                                                {% endif %}
+                                            </span>
+
+                                            <div>
+                                                <strong>
+                                                    {{ tenant.full_name
+                                                       | default(
+                                                           "Tenant",
+                                                           true
+                                                       )
+                                                    }}
+                                                </strong>
+
+                                                {% if tenant.username %}
+                                                    <small>
+                                                        @{{ tenant.username }}
+                                                    </small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td data-label="Contact">
+                                        <div class="landlord-tenants-page__contact">
+                                            {% if tenant.email %}
+                                                <a
+                                                    href="mailto:{{ tenant.email }}"
+                                                >
+                                                    {{ tenant.email }}
+                                                </a>
+                                            {% else %}
+                                                <span>
+                                                    Email unavailable
+                                                </span>
+                                            {% endif %}
+
+                                            {% if tenant.phone_number %}
+                                                <a
+                                                    href="tel:{{ tenant.phone_number }}"
+                                                >
+                                                    {{ tenant.phone_number }}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <td data-label="Language">
+                                        <span
+                                            class="landlord-tenants-page__language"
+                                            lang="{{ tenant.preferred_language
+                                                    | default('en', true)
+                                            }}"
+                                        >
+                                            {{ tenant.preferred_language
+                                               | default(
+                                                   "en",
+                                                   true
+                                               )
+                                               | upper
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <td data-label="Account status">
+                                        <span
+                                            class="landlord-tenants-page__status
+                                                   landlord-tenants-page__status--{{ tenant_status
+                                                       | string
+                                                       | lower
+                                                       | replace('_', '-')
+                                                   }}"
+                                        >
+                                            {{ tenant_status
+                                               | string
+                                               | replace("_", " ")
+                                               | title
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <td data-label="Action">
+                                        <a
+                                            href="{{ url_for(
+                                                'landlord_tenant_details_page',
+                                                tenant_id=tenant.id
+                                            ) }}"
+                                            class="landlord-tenants-page__view-link"
+                                        >
+                                            <span>View details</span>
+                                            <span aria-hidden="true">→</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-tenants-page__empty-state">
+                    <div
+                        class="landlord-tenants-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        👥
+                    </div>
+
+                    <h2>
+                        No tenants found
+                    </h2>
+
+                    <p>
+                        Tenants will appear here when they are connected
+                        to lease records for your properties.
+                    </p>
+
+                    <div class="landlord-tenants-page__empty-actions">
+                        <a
+                            href="{{ url_for('add_lease_page') }}"
+                            class="landlord-tenants-page__primary-button"
+                        >
+                            <span aria-hidden="true">＋</span>
+                            <span>Add lease</span>
+                        </a>
+
+                        <a
+                            href="{{ url_for(
+                                'landlord_applications_page'
+                            ) }}"
+                            class="landlord-tenants-page__secondary-button"
+                        >
+                            Review applications
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Privacy notice -->
+        <aside
+            class="landlord-tenants-page__privacy-notice"
+            aria-label="Tenant privacy notice"
+        >
+            <span aria-hidden="true">🔒</span>
+
+            <div>
+                <strong>
+                    Protect tenant information
+                </strong>
+
+                <p>
+                    Access tenant data only for legitimate property
+                    management purposes. Do not download, share or
+                    expose personal information unnecessarily.
+                </p>
+            </div>
+
+            <a href="{{ url_for('privacy_page') }}">
+                Privacy information
+            </a>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

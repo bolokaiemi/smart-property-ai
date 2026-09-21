@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% from "landlord/_macros.html" import status_badge, format_date %}
+
+{% block title %}Appointments | Smart Property AI{% endblock %}
+
+{% block meta_description %}
+Review tenant property-viewing appointments through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/landlord.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="landlord-appointments-page">
+    <div class="landlord-appointments-page__container">
+        <nav class="landlord-appointments-page__breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+                <li><a href="{{ url_for('landlord_dashboard') }}">Dashboard</a></li>
+                <li aria-current="page">Appointments</li>
+            </ol>
+        </nav>
+
+        <header class="landlord-appointments-page__header">
+            <div>
+                <p class="landlord-appointments-page__eyebrow">Property viewings</p>
+                <h1>Appointments</h1>
+                <p>Review requested, confirmed and completed property-viewing appointments.</p>
+            </div>
+
+            <a class="landlord-appointments-page__button landlord-appointments-page__button--secondary"
+               href="{{ url_for('landlord_properties_page') }}">
+                View properties
+            </a>
+        </header>
+
+        {% set totals = namespace(requested=0, confirmed=0, completed=0, cancelled=0) %}
+        {% for appointment in appointments | default([], true) %}
+            {% set state = appointment.status.value if appointment.status and appointment.status.value is defined else appointment.status | default('requested', true) %}
+            {% if state | lower == 'confirmed' %}
+                {% set totals.confirmed = totals.confirmed + 1 %}
+            {% elif state | lower == 'completed' %}
+                {% set totals.completed = totals.completed + 1 %}
+            {% elif state | lower in ['cancelled', 'declined', 'no_show'] %}
+                {% set totals.cancelled = totals.cancelled + 1 %}
+            {% else %}
+                {% set totals.requested = totals.requested + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <section class="landlord-appointments-page__summary" aria-label="Appointment summary">
+            <article class="landlord-appointments-page__summary-card">
+                <span>All appointments</span>
+                <strong>{{ appointments | default([], true) | length }}</strong>
+            </article>
+            <article class="landlord-appointments-page__summary-card landlord-appointments-page__summary-card--pending">
+                <span>Requested</span><strong>{{ totals.requested }}</strong>
+            </article>
+            <article class="landlord-appointments-page__summary-card landlord-appointments-page__summary-card--success">
+                <span>Confirmed</span><strong>{{ totals.confirmed }}</strong>
+            </article>
+            <article class="landlord-appointments-page__summary-card">
+                <span>Completed</span><strong>{{ totals.completed }}</strong>
+            </article>
+        </section>
+
+        <section class="landlord-appointments-page__toolbar" aria-label="Appointment filtering">
+            <div class="landlord-appointments-page__search">
+                <label class="visually-hidden" for="appointment-search">Search appointments</label>
+                <input id="appointment-search" type="search" placeholder="Search visitor, email or status">
+            </div>
+
+            <div class="landlord-appointments-page__filter">
+                <label for="appointment-status-filter">Status</label>
+                <select id="appointment-status-filter">
+                    <option value="all">All statuses</option>
+                    <option value="requested">Requested</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="declined">Declined</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="completed">Completed</option>
+                    <option value="no-show">No show</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="landlord-appointments-page__panel" aria-labelledby="appointment-list-title">
+            <div class="landlord-appointments-page__panel-header">
+                <div>
+                    <h2 id="appointment-list-title">Viewing requests</h2>
+                    <p>Select an appointment to review its visitor and reminder information.</p>
+                </div>
+                <p class="landlord-appointments-page__result-count">
+                    <strong id="appointment-visible-count">{{ appointments | default([], true) | length }}</strong>
+                    appointments
+                </p>
+            </div>
+
+            {% if appointments %}
+                <div class="landlord-appointments-page__table-wrapper">
+                    <table class="landlord-appointments-page__table">
+                        <caption class="visually-hidden">Property-viewing appointments</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Visitor</th>
+                                <th scope="col">Preferred date</th>
+                                <th scope="col">Viewing type</th>
+                                <th scope="col">Reminder</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"><span class="visually-hidden">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                                {% set state = appointment.status.value if appointment.status and appointment.status.value is defined else appointment.status | default('requested', true) %}
+                                {% set normalized_state = state | lower | replace('_', '-') | replace(' ', '-') %}
+                                <tr data-appointment-row
+                                    data-status="{{ normalized_state }}"
+                                    data-search="{{ (appointment.first_name ~ ' ' ~ appointment.last_name ~ ' ' ~ appointment.email ~ ' ' ~ state) | lower }}">
+                                    <td data-label="Visitor">
+                                        <strong>{{ appointment.first_name }} {{ appointment.last_name }}</strong>
+                                        <small>{{ appointment.email }}</small>
+                                    </td>
+                                    <td data-label="Preferred date">
+                                        {{ format_date(appointment.preferred_datetime, true) }}
+                                        <small>{{ appointment.timezone_name | default('UTC', true) }}</small>
+                                    </td>
+                                    <td data-label="Viewing type">
+                                        {{ appointment.viewing_type | default('in_person', true) | replace('_', ' ') | title }}
+                                    </td>
+                                    <td data-label="Reminder">
+                                        {% if appointment.reminder_sent %}
+                                            <span class="landlord-appointments-page__status landlord-appointments-page__status--completed">Sent</span>
+                                        {% elif appointment.reminder_consent %}
+                                            <span class="landlord-appointments-page__status landlord-appointments-page__status--pending">Scheduled</span>
+                                        {% else %}
+                                            Not requested
+                                        {% endif %}
+                                    </td>
+                                    <td data-label="Status">
+                                        {{ status_badge(appointment.status, 'landlord-appointments-page') }}
+                                    </td>
+                                    <td data-label="Action">
+                                        <a class="landlord-appointments-page__details-link"
+                                           href="{{ url_for('landlord_appointment_details_page', appointment_id=appointment.id) }}">
+                                            View details <span aria-hidden="true">→</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="appointment-filter-empty" class="landlord-appointments-page__filter-empty" hidden>
+                    <h2>No matching appointments</h2>
+                    <p>Try changing the search or status filter.</p>
+                </div>
+            {% else %}
+                <div class="landlord-appointments-page__empty-state">
+                    <div class="landlord-appointments-page__empty-icon" aria-hidden="true">📅</div>
+                    <h2>No appointments</h2>
+                    <p>Property-viewing requests will appear here after visitors submit them.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <aside class="landlord-appointments-page__notice">
+            <span aria-hidden="true">🔒</span>
+            <div>
+                <h2>Protect visitor information</h2>
+                <p>Use contact details only to arrange and manage the requested property viewing.</p>
+                <a href="{{ url_for('privacy_page') }}">Privacy information</a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', path='js/landlord.js') }}" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const search = document.getElementById("appointment-search");
+            const status = document.getElementById("appointment-status-filter");
+            const rows = Array.from(document.querySelectorAll("[data-appointment-row]"));
+            const empty = document.getElementById("appointment-filter-empty");
+            const count = document.getElementById("appointment-visible-count");
+
+            function filterAppointments() {
+                const query = search ? search.value.trim().toLowerCase() : "";
+                const selected = status ? status.value : "all";
+                let visible = 0;
+
+                rows.forEach(function (row) {
+                    const matchesText = !query || (row.dataset.search || "").includes(query);
+                    const matchesStatus = selected === "all" || row.dataset.status === selected;
+                    const show = matchesText && matchesStatus;
+                    row.hidden = !show;
+                    if (show) visible += 1;
+                });
+
+                if (count) count.textContent = String(visible);
+                if (empty) empty.hidden = visible !== 0;
+            }
+
+            search?.addEventListener("input", filterAppointments);
+            status?.addEventListener("change", filterAppointments);
+        });
+    </script>
+{% endblock %}

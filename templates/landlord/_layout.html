@@ -1,0 +1,652 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Landlord Portal") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    {{ page_description | default(
+        "Manage properties, units, tenants, leases and maintenance securely through the Smart Property AI landlord portal.",
+        true
+    ) }}
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+
+    {% block landlord_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-layout"
+    data-landlord-layout
+>
+    <!-- Mobile navigation control -->
+    <button
+        id="landlord-navigation-toggle"
+        class="landlord-layout__navigation-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="landlord-sidebar"
+    >
+        <span aria-hidden="true">☰</span>
+        <span>Landlord menu</span>
+    </button>
+
+
+    <div class="landlord-layout__shell">
+
+        <!-- Landlord sidebar -->
+        <aside
+            id="landlord-sidebar"
+            class="landlord-layout__sidebar"
+            aria-label="Landlord portal navigation"
+        >
+            <div class="landlord-layout__sidebar-header">
+                <a
+                    class="landlord-layout__brand"
+                    href="{{ url_for('landlord_dashboard') }}"
+                >
+                    <span
+                        class="landlord-layout__brand-icon"
+                        aria-hidden="true"
+                    >
+                        SP
+                    </span>
+
+                    <span>
+                        <strong>Smart Property AI</strong>
+                        <small>Landlord portal</small>
+                    </span>
+                </a>
+
+                <button
+                    id="landlord-navigation-close"
+                    class="landlord-layout__navigation-close"
+                    type="button"
+                    aria-label="Close landlord menu"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+
+            <!-- Account summary -->
+            <div class="landlord-layout__account">
+                <div
+                    class="landlord-layout__account-avatar"
+                    aria-hidden="true"
+                >
+                    {{
+                        current_user.full_name[0]
+                        | upper
+                        if current_user
+                        and current_user.full_name
+                        else "L"
+                    }}
+                </div>
+
+                <div>
+                    <strong>
+                        {{
+                            current_user.full_name
+                            | default(
+                                current_user.username,
+                                true
+                            )
+                            | default("Landlord", true)
+                        }}
+                    </strong>
+
+                    <small>
+                        {{
+                            current_user.email
+                            | default(
+                                "Property management account",
+                                true
+                            )
+                        }}
+                    </small>
+                </div>
+            </div>
+
+
+            <!-- Primary navigation -->
+            <nav
+                class="landlord-layout__navigation"
+                aria-label="Landlord sections"
+            >
+                <p class="landlord-layout__navigation-label">
+                    Overview
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_dashboard') }}"
+                    {% if request.url.path ==
+                        request.url_for(
+                            'landlord_dashboard'
+                        ).path
+                    %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+
+                <p class="landlord-layout__navigation-label">
+                    Property management
+                </p>
+
+                <a
+                    href="{{ url_for('properties_page') }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'properties_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">⌂</span>
+                    <span>Properties</span>
+                </a>
+
+                <a
+                    href="{{ url_for('landlord_tenants_page') }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_tenants_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">♙</span>
+                    <span>Tenants</span>
+                </a>
+
+                <a
+                    href="{{ url_for('landlord_leases_page') }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_leases_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">▤</span>
+                    <span>Leases</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_applications_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_applications_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>Applications</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_appointments_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_appointments_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">□</span>
+                    <span>Appointments</span>
+                </a>
+
+
+                <p class="landlord-layout__navigation-label">
+                    Tenant support
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_maintenance_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_maintenance_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">⚒</span>
+                    <span>Maintenance</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_complaints_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_complaints_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>Complaints</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_messages_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_messages_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">✉</span>
+                    <span>Messages</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_notifications_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_notifications_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">●</span>
+                    <span>Notifications</span>
+
+                    {% if unread_notification_count
+                          | default(0, true)
+                          | int > 0
+                    %}
+                        <span
+                            class="landlord-layout__navigation-count"
+                            aria-label="{{
+                                unread_notification_count
+                            }} unread notifications"
+                        >
+                            {{ unread_notification_count }}
+                        </span>
+                    {% endif %}
+                </a>
+
+
+                <p class="landlord-layout__navigation-label">
+                    Finance and records
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_payments_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_payments_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">€</span>
+                    <span>Payments</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_documents_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_documents_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">▣</span>
+                    <span>Documents</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_expenses_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_expenses_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">−</span>
+                    <span>Expenses</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_reports_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_reports_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">▥</span>
+                    <span>Reports</span>
+                </a>
+
+
+                <p class="landlord-layout__navigation-label">
+                    Integrations
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_smart_devices_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_smart_devices_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">⌁</span>
+                    <span>Smart devices</span>
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'landlord_settings_page'
+                    ) }}"
+                    {% if request.url.path.startswith(
+                        request.url_for(
+                            'landlord_settings_page'
+                        ).path
+                    ) %}
+                        aria-current="page"
+                        class="is-active"
+                    {% endif %}
+                >
+                    <span aria-hidden="true">⚙</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+
+            <!-- Sidebar footer -->
+            <footer class="landlord-layout__sidebar-footer">
+                <a href="{{ url_for('contact_page') }}">
+                    Help and support
+                </a>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Privacy
+                </a>
+            </footer>
+        </aside>
+
+
+        <!-- Mobile backdrop -->
+        <button
+            id="landlord-navigation-backdrop"
+            class="landlord-layout__backdrop"
+            type="button"
+            aria-label="Close landlord menu"
+            hidden
+        ></button>
+
+
+        <!-- Main landlord area -->
+        <main
+            id="landlord-main"
+            class="landlord-layout__main"
+            tabindex="-1"
+        >
+            <!-- Page heading -->
+            <header class="landlord-layout__page-header">
+                <div>
+                    <p class="landlord-layout__eyebrow">
+                        Smart Property AI
+                    </p>
+
+                    <h1>
+                        {{ page_title | default(
+                            "Landlord Portal"
+                        ) }}
+                    </h1>
+
+                    {% if page_subtitle %}
+                        <p>{{ page_subtitle }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="landlord-layout__page-actions">
+                    {% block page_actions %}{% endblock %}
+                </div>
+            </header>
+
+
+            <!-- Flash messages -->
+            {% if success %}
+                <div
+                    class="landlord-layout__alert
+                           landlord-layout__alert--success"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ success }}</span>
+
+                    <button
+                        type="button"
+                        data-dismiss-alert
+                        aria-label="Dismiss notification"
+                    >
+                        ×
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-layout__alert
+                           landlord-layout__alert--error"
+                    role="alert"
+                >
+                    <span aria-hidden="true">!</span>
+                    <span>{{ error }}</span>
+
+                    <button
+                        type="button"
+                        data-dismiss-alert
+                        aria-label="Dismiss error"
+                    >
+                        ×
+                    </button>
+                </div>
+            {% endif %}
+
+
+            <!-- Child-template content -->
+            <div class="landlord-layout__content">
+                {% block landlord_content %}{% endblock %}
+            </div>
+
+
+            <!-- Responsible information notice -->
+            {% block landlord_notice %}
+                <aside
+                    class="landlord-layout__notice"
+                    aria-label="Information notice"
+                >
+                    <span aria-hidden="true">ⓘ</span>
+
+                    <p>
+                        Review important property, financial, legal
+                        and tenancy information before acting.
+                    </p>
+                </aside>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const layout = document.querySelector(
+                "[data-landlord-layout]"
+            );
+
+            const sidebar = document.getElementById(
+                "landlord-sidebar"
+            );
+
+            const openButton = document.getElementById(
+                "landlord-navigation-toggle"
+            );
+
+            const closeButton = document.getElementById(
+                "landlord-navigation-close"
+            );
+
+            const backdrop = document.getElementById(
+                "landlord-navigation-backdrop"
+            );
+
+            if (!layout || !sidebar || !openButton) {
+                return;
+            }
+
+            function openNavigation() {
+                layout.classList.add(
+                    "landlord-layout--navigation-open"
+                );
+
+                openButton.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                backdrop.hidden = false;
+                closeButton?.focus();
+            }
+
+            function closeNavigation() {
+                layout.classList.remove(
+                    "landlord-layout--navigation-open"
+                );
+
+                openButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                backdrop.hidden = true;
+            }
+
+            openButton.addEventListener(
+                "click",
+                openNavigation
+            );
+
+            closeButton?.addEventListener(
+                "click",
+                closeNavigation
+            );
+
+            backdrop?.addEventListener(
+                "click",
+                closeNavigation
+            );
+
+            document.addEventListener(
+                "keydown",
+                function (event) {
+                    if (
+                        event.key === "Escape" &&
+                        layout.classList.contains(
+                            "landlord-layout--navigation-open"
+                        )
+                    ) {
+                        closeNavigation();
+                        openButton.focus();
+                    }
+                }
+            );
+
+            sidebar.querySelectorAll("a").forEach(
+                function (link) {
+                    link.addEventListener(
+                        "click",
+                        closeNavigation
+                    );
+                }
+            );
+        });
+    </script>
+
+    {% block landlord_extra_js %}{% endblock %}
+{% endblock %}

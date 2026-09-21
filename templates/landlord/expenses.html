@@ -1,0 +1,707 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Expenses") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Track property repairs, maintenance and operating expenses through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-expenses-page"
+    data-landlord-expenses-page
+>
+    <div class="landlord-expenses-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-expenses-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Expenses
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-expenses-page__header">
+            <div>
+                <p class="landlord-expenses-page__eyebrow">
+                    Property cost tracking
+                </p>
+
+                <h1>Expenses</h1>
+
+                <p>
+                    Record and review maintenance, repair, utility and
+                    property-management expenses.
+                </p>
+            </div>
+
+            <div class="landlord-expenses-page__header-actions">
+                <a
+                    href="{{ url_for('landlord_reports_page') }}"
+                    class="landlord-expenses-page__button
+                           landlord-expenses-page__button--secondary"
+                >
+                    View reports
+                </a>
+
+                <a
+                    href="{{ url_for('add_expense_page') }}"
+                    class="landlord-expenses-page__button
+                           landlord-expenses-page__button--primary"
+                >
+                    <span aria-hidden="true">＋</span>
+                    <span>Add expense</span>
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-expenses-page__alert
+                       landlord-expenses-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-expenses-page__alert
+                       landlord-expenses-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Calculate summary -->
+        {% set expense_summary = namespace(
+            total_amount=0,
+            maintenance_count=0,
+            property_count=0
+        ) %}
+
+        {% for expense in expenses | default([], true) %}
+            {% set expense_summary.total_amount =
+                expense_summary.total_amount +
+                (
+                    expense.amount
+                    | default(0, true)
+                    | float
+                )
+            %}
+
+            {% if expense.maintenance_request_id %}
+                {% set expense_summary.maintenance_count =
+                    expense_summary.maintenance_count + 1
+                %}
+            {% endif %}
+
+            {% if expense.property_id %}
+                {% set expense_summary.property_count =
+                    expense_summary.property_count + 1
+                %}
+            {% endif %}
+        {% endfor %}
+
+
+        <!-- Summary -->
+        <section
+            class="landlord-expenses-page__summary"
+            aria-label="Expense summary"
+        >
+            <article class="landlord-expenses-page__summary-card">
+                <span>Expense records</span>
+
+                <strong>
+                    {{ expenses | default([], true) | length }}
+                </strong>
+            </article>
+
+            <article
+                class="landlord-expenses-page__summary-card
+                       landlord-expenses-page__summary-card--amount"
+            >
+                <span>Total recorded value</span>
+
+                <strong>
+                    €{{ "%.2f" | format(
+                        expense_summary.total_amount
+                    ) }}
+                </strong>
+
+                <small>
+                    Check individual currencies below
+                </small>
+            </article>
+
+            <article class="landlord-expenses-page__summary-card">
+                <span>Property expenses</span>
+                <strong>{{ expense_summary.property_count }}</strong>
+            </article>
+
+            <article class="landlord-expenses-page__summary-card">
+                <span>Linked to maintenance</span>
+
+                <strong>
+                    {{ expense_summary.maintenance_count }}
+                </strong>
+            </article>
+        </section>
+
+
+        <!-- Filters -->
+        <section
+            class="landlord-expenses-page__toolbar"
+            aria-label="Expense search and filtering"
+        >
+            <div class="landlord-expenses-page__search">
+                <label
+                    for="landlord-expense-search"
+                    class="visually-hidden"
+                >
+                    Search expenses
+                </label>
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    id="landlord-expense-search"
+                    type="search"
+                    placeholder="Search category or description"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="landlord-expenses-page__filter">
+                <label for="landlord-expense-category-filter">
+                    Category
+                </label>
+
+                <select id="landlord-expense-category-filter">
+                    <option value="all">All categories</option>
+
+                    {% set available_categories = [] %}
+
+                    {% for expense in expenses | default([], true) %}
+                        {% set category =
+                            expense.category
+                            | default("Other", true)
+                            | string
+                        %}
+
+                        {% set normalized_category =
+                            category
+                            | lower
+                            | replace("_", "-")
+                            | replace(" ", "-")
+                        %}
+
+                        {% if normalized_category
+                              not in available_categories
+                        %}
+                            {% set unused =
+                                available_categories.append(
+                                    normalized_category
+                                )
+                            %}
+
+                            <option value="{{ normalized_category }}">
+                                {{
+                                    category
+                                    | replace("_", " ")
+                                    | title
+                                }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="landlord-expenses-page__filter">
+                <label for="landlord-expense-link-filter">
+                    Record type
+                </label>
+
+                <select id="landlord-expense-link-filter">
+                    <option value="all">All expenses</option>
+                    <option value="maintenance">
+                        Maintenance expenses
+                    </option>
+                    <option value="general">
+                        General expenses
+                    </option>
+                </select>
+            </div>
+        </section>
+
+
+        <!-- Expense list -->
+        <section
+            class="landlord-expenses-page__panel"
+            aria-labelledby="landlord-expense-list-title"
+        >
+            <div class="landlord-expenses-page__panel-header">
+                <div>
+                    <h2 id="landlord-expense-list-title">
+                        Expense history
+                    </h2>
+
+                    <p>
+                        Open an expense to review the complete record
+                        and related property information.
+                    </p>
+                </div>
+
+                <p class="landlord-expenses-page__result-count">
+                    <strong id="landlord-expense-visible-count">
+                        {{ expenses | default([], true) | length }}
+                    </strong>
+                    <span>records</span>
+                </p>
+            </div>
+
+
+            {% if expenses %}
+                <div class="landlord-expenses-page__table-wrapper">
+                    <table class="landlord-expenses-page__table">
+                        <caption class="visually-hidden">
+                            Property expense history
+                        </caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Expense</th>
+                                <th scope="col">Property</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Expense date</th>
+                                <th scope="col">Related record</th>
+                                <th scope="col">
+                                    <span class="visually-hidden">
+                                        Action
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for expense in expenses %}
+                                {% set category =
+                                    expense.category
+                                    | default("Other", true)
+                                    | string
+                                %}
+
+                                {% set normalized_category =
+                                    category
+                                    | lower
+                                    | replace("_", "-")
+                                    | replace(" ", "-")
+                                %}
+
+                                <tr
+                                    data-expense-row
+                                    data-expense-category="{{
+                                        normalized_category
+                                    }}"
+                                    data-expense-link="{{
+                                        'maintenance'
+                                        if expense.maintenance_request_id
+                                        else 'general'
+                                    }}"
+                                    data-expense-search="{{
+                                        (
+                                            category ~ ' ' ~
+                                            (
+                                                expense.description
+                                                | default("", true)
+                                            )
+                                        ) | lower
+                                    }}"
+                                >
+                                    <!-- Expense information -->
+                                    <td data-label="Expense">
+                                        <span
+                                            class="landlord-expenses-page__category
+                                                   landlord-expenses-page__category--{{
+                                                       normalized_category
+                                                   }}"
+                                        >
+                                            {{
+                                                category
+                                                | replace("_", " ")
+                                                | title
+                                            }}
+                                        </span>
+
+                                        <p>
+                                            {{
+                                                expense.description
+                                                | default(
+                                                    "No description",
+                                                    true
+                                                )
+                                                | truncate(
+                                                    100,
+                                                    true,
+                                                    "…"
+                                                )
+                                            }}
+                                        </p>
+                                    </td>
+
+
+                                    <!-- Property -->
+                                    <td data-label="Property">
+                                        {% if expense.property_id %}
+                                            <a
+                                                href="{{ url_for(
+                                                    'property_details_page',
+                                                    property_id=expense.property_id
+                                                ) }}"
+                                            >
+                                                View property
+                                            </a>
+
+                                            <small
+                                                title="{{
+                                                    expense.property_id
+                                                }}"
+                                            >
+                                                {{
+                                                    expense.property_id
+                                                    | string
+                                                    | truncate(
+                                                        12,
+                                                        true,
+                                                        "…"
+                                                    )
+                                                }}
+                                            </small>
+                                        {% else %}
+                                            <span
+                                                class="landlord-expenses-page__unavailable"
+                                            >
+                                                Not available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Amount -->
+                                    <td data-label="Amount">
+                                        <strong
+                                            class="landlord-expenses-page__amount"
+                                        >
+                                            {{
+                                                expense.currency
+                                                | default("EUR", true)
+                                            }}
+                                            {{
+                                                "%.2f" | format(
+                                                    expense.amount
+                                                    | default(0, true)
+                                                    | float
+                                                )
+                                            }}
+                                        </strong>
+                                    </td>
+
+
+                                    <!-- Date -->
+                                    <td data-label="Expense date">
+                                        {% if expense.expense_date %}
+                                            <time
+                                                datetime="{{
+                                                    expense.expense_date.isoformat()
+                                                }}"
+                                            >
+                                                {{
+                                                    expense.expense_date.strftime(
+                                                        "%d %b %Y"
+                                                    )
+                                                }}
+                                            </time>
+                                        {% else %}
+                                            <span
+                                                class="landlord-expenses-page__unavailable"
+                                            >
+                                                Not available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Related maintenance -->
+                                    <td data-label="Related record">
+                                        {% if expense.maintenance_request_id %}
+                                            <a
+                                                href="{{ url_for(
+                                                    'landlord_maintenance_details_page',
+                                                    request_id=expense.maintenance_request_id
+                                                ) }}"
+                                            >
+                                                Maintenance request
+                                            </a>
+                                        {% else %}
+                                            <span
+                                                class="landlord-expenses-page__general-label"
+                                            >
+                                                General expense
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- Action -->
+                                    <td
+                                        data-label="Action"
+                                        class="landlord-expenses-page__action"
+                                    >
+                                        <a
+                                            href="{{ url_for(
+                                                'landlord_expense_details_page',
+                                                expense_id=expense.id
+                                            ) }}"
+                                            class="landlord-expenses-page__details-link"
+                                            aria-label="View expense {{
+                                                category
+                                            }}"
+                                        >
+                                            View details
+                                            <span aria-hidden="true">
+                                                →
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div
+                    id="landlord-expenses-filter-empty"
+                    class="landlord-expenses-page__filter-empty"
+                    role="status"
+                    hidden
+                >
+                    <h2>No matching expenses</h2>
+
+                    <p>
+                        Try changing the search text or selected
+                        filters.
+                    </p>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-expenses-page__empty-state">
+                    <div
+                        class="landlord-expenses-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        €
+                    </div>
+
+                    <h2>No expenses recorded</h2>
+
+                    <p>
+                        Record your first property or maintenance
+                        expense to begin tracking costs.
+                    </p>
+
+                    <a
+                        href="{{ url_for('add_expense_page') }}"
+                        class="landlord-expenses-page__button
+                               landlord-expenses-page__button--primary"
+                    >
+                        <span aria-hidden="true">＋</span>
+                        <span>Add expense</span>
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Notice -->
+        <aside
+            class="landlord-expenses-page__notice"
+            aria-labelledby="expense-notice-title"
+        >
+            <span aria-hidden="true">ⓘ</span>
+
+            <div>
+                <h2 id="expense-notice-title">
+                    Financial information
+                </h2>
+
+                <p>
+                    Verify expense records, invoices and receipts
+                    before using this information for accounting, tax
+                    or legal decisions.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Review the privacy policy
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById(
+                "landlord-expense-search"
+            );
+
+            const categoryFilter = document.getElementById(
+                "landlord-expense-category-filter"
+            );
+
+            const linkFilter = document.getElementById(
+                "landlord-expense-link-filter"
+            );
+
+            const rows = Array.from(
+                document.querySelectorAll("[data-expense-row]")
+            );
+
+            const emptyMessage = document.getElementById(
+                "landlord-expenses-filter-empty"
+            );
+
+            const visibleCount = document.getElementById(
+                "landlord-expense-visible-count"
+            );
+
+            if (rows.length === 0) {
+                return;
+            }
+
+            function filterExpenses() {
+                const searchValue = searchInput
+                    ? searchInput.value.trim().toLowerCase()
+                    : "";
+
+                const selectedCategory = categoryFilter
+                    ? categoryFilter.value
+                    : "all";
+
+                const selectedLink = linkFilter
+                    ? linkFilter.value
+                    : "all";
+
+                let resultCount = 0;
+
+                rows.forEach(function (row) {
+                    const searchableText =
+                        row.dataset.expenseSearch || "";
+
+                    const category =
+                        row.dataset.expenseCategory || "";
+
+                    const linkedRecord =
+                        row.dataset.expenseLink || "general";
+
+                    const matchesSearch =
+                        !searchValue ||
+                        searchableText.includes(searchValue);
+
+                    const matchesCategory =
+                        selectedCategory === "all" ||
+                        category === selectedCategory;
+
+                    const matchesLink =
+                        selectedLink === "all" ||
+                        linkedRecord === selectedLink;
+
+                    const shouldDisplay =
+                        matchesSearch &&
+                        matchesCategory &&
+                        matchesLink;
+
+                    row.hidden = !shouldDisplay;
+
+                    if (shouldDisplay) {
+                        resultCount += 1;
+                    }
+                });
+
+                if (visibleCount) {
+                    visibleCount.textContent = String(resultCount);
+                }
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = resultCount !== 0;
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener(
+                    "input",
+                    filterExpenses
+                );
+            }
+
+            if (categoryFilter) {
+                categoryFilter.addEventListener(
+                    "change",
+                    filterExpenses
+                );
+            }
+
+            if (linkFilter) {
+                linkFilter.addEventListener(
+                    "change",
+                    filterExpenses
+                );
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,709 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Documents") }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Manage property, lease, maintenance and tenant documents securely through the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-documents-page"
+    data-landlord-documents-page
+>
+    <div class="landlord-documents-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-documents-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Documents
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Page header -->
+        <header class="landlord-documents-page__header">
+            <div>
+                <p class="landlord-documents-page__eyebrow">
+                    Digital document management
+                </p>
+
+                <h1>Documents</h1>
+
+                <p>
+                    Securely manage property, lease, application,
+                    invoice, inspection and maintenance documents.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('upload_landlord_document_page') }}"
+                class="landlord-documents-page__button
+                       landlord-documents-page__button--primary"
+            >
+                <span aria-hidden="true">＋</span>
+                <span>Upload document</span>
+            </a>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-documents-page__alert
+                       landlord-documents-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-documents-page__alert
+                       landlord-documents-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Document summary -->
+        {% set document_summary = namespace(
+            private_count=0,
+            property_count=0,
+            lease_count=0,
+            maintenance_count=0
+        ) %}
+
+        {% for document in documents | default([], true) %}
+            {% if document.is_private %}
+                {% set document_summary.private_count =
+                    document_summary.private_count + 1
+                %}
+            {% endif %}
+
+            {% if document.property_id %}
+                {% set document_summary.property_count =
+                    document_summary.property_count + 1
+                %}
+            {% endif %}
+
+            {% if document.lease_id %}
+                {% set document_summary.lease_count =
+                    document_summary.lease_count + 1
+                %}
+            {% endif %}
+
+            {% if document.maintenance_request_id %}
+                {% set document_summary.maintenance_count =
+                    document_summary.maintenance_count + 1
+                %}
+            {% endif %}
+        {% endfor %}
+
+        <section
+            class="landlord-documents-page__summary"
+            aria-label="Document summary"
+        >
+            <article class="landlord-documents-page__summary-card">
+                <span>Total documents</span>
+
+                <strong>
+                    {{ documents | default([], true) | length }}
+                </strong>
+            </article>
+
+            <article class="landlord-documents-page__summary-card">
+                <span>Private documents</span>
+                <strong>{{ document_summary.private_count }}</strong>
+            </article>
+
+            <article class="landlord-documents-page__summary-card">
+                <span>Lease documents</span>
+                <strong>{{ document_summary.lease_count }}</strong>
+            </article>
+
+            <article class="landlord-documents-page__summary-card">
+                <span>Maintenance documents</span>
+                <strong>
+                    {{ document_summary.maintenance_count }}
+                </strong>
+            </article>
+        </section>
+
+
+        <!-- Search and filters -->
+        <section
+            class="landlord-documents-page__toolbar"
+            aria-label="Document search and filtering"
+        >
+            <div class="landlord-documents-page__search">
+                <label
+                    for="landlord-document-search"
+                    class="visually-hidden"
+                >
+                    Search documents
+                </label>
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    id="landlord-document-search"
+                    type="search"
+                    placeholder="Search by filename"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="landlord-documents-page__filter">
+                <label for="landlord-document-type-filter">
+                    Document type
+                </label>
+
+                <select id="landlord-document-type-filter">
+                    <option value="all">All types</option>
+                    <option value="lease">Lease</option>
+                    <option value="application">Application</option>
+                    <option value="invoice">Invoice</option>
+                    <option value="inspection">Inspection</option>
+                    <option value="identification">
+                        Identification
+                    </option>
+                    <option value="maintenance">
+                        Maintenance
+                    </option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="landlord-documents-page__filter">
+                <label for="landlord-document-privacy-filter">
+                    Visibility
+                </label>
+
+                <select id="landlord-document-privacy-filter">
+                    <option value="all">All documents</option>
+                    <option value="private">Private</option>
+                    <option value="shared">Shared</option>
+                </select>
+            </div>
+        </section>
+
+
+        <!-- Document list -->
+        <section
+            class="landlord-documents-page__panel"
+            aria-labelledby="landlord-document-list-title"
+        >
+            <div class="landlord-documents-page__panel-header">
+                <div>
+                    <h2 id="landlord-document-list-title">
+                        Stored documents
+                    </h2>
+
+                    <p>
+                        Open a document record to review its metadata
+                        and related property information.
+                    </p>
+                </div>
+
+                <p class="landlord-documents-page__result-count">
+                    <strong id="landlord-document-visible-count">
+                        {{ documents | default([], true) | length }}
+                    </strong>
+
+                    <span>documents</span>
+                </p>
+            </div>
+
+
+            {% if documents %}
+                <div class="landlord-documents-page__grid">
+                    {% for document in documents %}
+                        {% set document_type =
+                            document.document_type.value
+                            if document.document_type
+                            and document.document_type.value is defined
+                            else document.document_type
+                                | default("other", true)
+                        %}
+
+                        {% set normalized_type =
+                            document_type
+                            | string
+                            | lower
+                            | replace("_", "-")
+                            | replace(" ", "-")
+                        %}
+
+                        {% set filename =
+                            document.original_filename
+                            | default("Unnamed document", true)
+                        %}
+
+                        <article
+                            class="landlord-documents-page__card"
+                            data-document-card
+                            data-document-name="{{ filename | lower }}"
+                            data-document-type="{{ normalized_type }}"
+                            data-document-privacy="{{
+                                'private'
+                                if document.is_private
+                                else 'shared'
+                            }}"
+                        >
+                            <div
+                                class="landlord-documents-page__card-header"
+                            >
+                                <div
+                                    class="landlord-documents-page__file-icon"
+                                    aria-hidden="true"
+                                >
+                                    {% if "pdf" in
+                                        document.mime_type
+                                        | default("", true)
+                                        | lower
+                                    %}
+                                        PDF
+                                    {% elif "image" in
+                                        document.mime_type
+                                        | default("", true)
+                                        | lower
+                                    %}
+                                        IMG
+                                    {% elif "word" in
+                                        document.mime_type
+                                        | default("", true)
+                                        | lower
+                                        or "document" in
+                                        document.mime_type
+                                        | default("", true)
+                                        | lower
+                                    %}
+                                        DOC
+                                    {% else %}
+                                        FILE
+                                    {% endif %}
+                                </div>
+
+                                <div
+                                    class="landlord-documents-page__badges"
+                                >
+                                    <span
+                                        class="landlord-documents-page__type
+                                               landlord-documents-page__type--{{
+                                                   normalized_type
+                                               }}"
+                                    >
+                                        {{
+                                            document_type
+                                            | string
+                                            | replace("_", " ")
+                                            | title
+                                        }}
+                                    </span>
+
+                                    {% if document.is_private %}
+                                        <span
+                                            class="landlord-documents-page__privacy
+                                                   landlord-documents-page__privacy--private"
+                                        >
+                                            <span aria-hidden="true">
+                                                🔒
+                                            </span>
+                                            Private
+                                        </span>
+                                    {% else %}
+                                        <span
+                                            class="landlord-documents-page__privacy
+                                                   landlord-documents-page__privacy--shared"
+                                        >
+                                            Shared
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+
+                            <div class="landlord-documents-page__card-body">
+                                <h3>
+                                    <a
+                                        href="{{ url_for(
+                                            'landlord_document_details_page',
+                                            document_id=document.id
+                                        ) }}"
+                                    >
+                                        {{ filename }}
+                                    </a>
+                                </h3>
+
+                                <dl
+                                    class="landlord-documents-page__metadata"
+                                >
+                                    <div>
+                                        <dt>File type</dt>
+
+                                        <dd>
+                                            {{ document.mime_type
+                                               | default(
+                                                   "Unknown",
+                                                   true
+                                               )
+                                            }}
+                                        </dd>
+                                    </div>
+
+                                    <div>
+                                        <dt>File size</dt>
+
+                                        <dd>
+                                            {% set file_size =
+                                                document.file_size
+                                                | default(0, true)
+                                                | int
+                                            %}
+
+                                            {% if file_size >= 1048576 %}
+                                                {{
+                                                    "%.2f" | format(
+                                                        file_size /
+                                                        1048576
+                                                    )
+                                                }}
+                                                MB
+                                            {% elif file_size >= 1024 %}
+                                                {{
+                                                    "%.1f" | format(
+                                                        file_size /
+                                                        1024
+                                                    )
+                                                }}
+                                                KB
+                                            {% else %}
+                                                {{ file_size }} bytes
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+
+                                    <div>
+                                        <dt>Uploaded</dt>
+
+                                        <dd>
+                                            {% if document.created_at %}
+                                                <time
+                                                    datetime="{{
+                                                        document.created_at.isoformat()
+                                                    }}"
+                                                >
+                                                    {{
+                                                        document.created_at.strftime(
+                                                            "%d %b %Y"
+                                                        )
+                                                    }}
+                                                </time>
+                                            {% else %}
+                                                Not available
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+
+                                    {% if document.expires_at %}
+                                        <div>
+                                            <dt>Expires</dt>
+
+                                            <dd>
+                                                <time
+                                                    datetime="{{
+                                                        document.expires_at.isoformat()
+                                                    }}"
+                                                >
+                                                    {{
+                                                        document.expires_at.strftime(
+                                                            "%d %b %Y"
+                                                        )
+                                                    }}
+                                                </time>
+                                            </dd>
+                                        </div>
+                                    {% endif %}
+                                </dl>
+
+
+                                <!-- Related records -->
+                                <div
+                                    class="landlord-documents-page__related"
+                                >
+                                    {% if document.property_id %}
+                                        <span>
+                                            Property document
+                                        </span>
+                                    {% endif %}
+
+                                    {% if document.lease_id %}
+                                        <span>
+                                            Lease document
+                                        </span>
+                                    {% endif %}
+
+                                    {% if document.maintenance_request_id %}
+                                        <span>
+                                            Maintenance document
+                                        </span>
+                                    {% endif %}
+
+                                    {% if not document.property_id
+                                          and not document.lease_id
+                                          and not
+                                              document.maintenance_request_id
+                                    %}
+                                        <span>
+                                            General document
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+
+                            <footer
+                                class="landlord-documents-page__card-footer"
+                            >
+                                <a
+                                    href="{{ url_for(
+                                        'landlord_document_details_page',
+                                        document_id=document.id
+                                    ) }}"
+                                    class="landlord-documents-page__details-link"
+                                    aria-label="View document {{ filename }}"
+                                >
+                                    View details
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </footer>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div
+                    id="landlord-documents-filter-empty"
+                    class="landlord-documents-page__filter-empty"
+                    role="status"
+                    hidden
+                >
+                    <h2>No matching documents</h2>
+
+                    <p>
+                        Try changing your search text or selected
+                        document filters.
+                    </p>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-documents-page__empty-state">
+                    <div
+                        class="landlord-documents-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        📄
+                    </div>
+
+                    <h2>No documents uploaded</h2>
+
+                    <p>
+                        Upload your first property, lease, invoice or
+                        maintenance document.
+                    </p>
+
+                    <a
+                        href="{{ url_for(
+                            'upload_landlord_document_page'
+                        ) }}"
+                        class="landlord-documents-page__button
+                               landlord-documents-page__button--primary"
+                    >
+                        <span aria-hidden="true">＋</span>
+                        <span>Upload document</span>
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Privacy notice -->
+        <aside
+            class="landlord-documents-page__privacy-notice"
+            aria-labelledby="document-privacy-title"
+        >
+            <span aria-hidden="true">🔒</span>
+
+            <div>
+                <h2 id="document-privacy-title">
+                    Protect personal documents
+                </h2>
+
+                <p>
+                    Documents may contain personal or financial
+                    information. Only authorized users should access,
+                    download or share these files.
+                </p>
+
+                <a href="{{ url_for('privacy_page') }}">
+                    Review the privacy policy
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById(
+                "landlord-document-search"
+            );
+
+            const typeFilter = document.getElementById(
+                "landlord-document-type-filter"
+            );
+
+            const privacyFilter = document.getElementById(
+                "landlord-document-privacy-filter"
+            );
+
+            const cards = Array.from(
+                document.querySelectorAll("[data-document-card]")
+            );
+
+            const emptyMessage = document.getElementById(
+                "landlord-documents-filter-empty"
+            );
+
+            const visibleCount = document.getElementById(
+                "landlord-document-visible-count"
+            );
+
+            if (cards.length === 0) {
+                return;
+            }
+
+            function filterDocuments() {
+                const searchValue = searchInput
+                    ? searchInput.value.trim().toLowerCase()
+                    : "";
+
+                const selectedType = typeFilter
+                    ? typeFilter.value
+                    : "all";
+
+                const selectedPrivacy = privacyFilter
+                    ? privacyFilter.value
+                    : "all";
+
+                let resultCount = 0;
+
+                cards.forEach(function (card) {
+                    const documentName =
+                        card.dataset.documentName || "";
+
+                    const documentType =
+                        card.dataset.documentType || "other";
+
+                    const documentPrivacy =
+                        card.dataset.documentPrivacy || "private";
+
+                    const matchesSearch =
+                        !searchValue ||
+                        documentName.includes(searchValue);
+
+                    const matchesType =
+                        selectedType === "all" ||
+                        documentType === selectedType;
+
+                    const matchesPrivacy =
+                        selectedPrivacy === "all" ||
+                        documentPrivacy === selectedPrivacy;
+
+                    const shouldDisplay =
+                        matchesSearch &&
+                        matchesType &&
+                        matchesPrivacy;
+
+                    card.hidden = !shouldDisplay;
+
+                    if (shouldDisplay) {
+                        resultCount += 1;
+                    }
+                });
+
+                if (visibleCount) {
+                    visibleCount.textContent = String(resultCount);
+                }
+
+                if (emptyMessage) {
+                    emptyMessage.hidden = resultCount !== 0;
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener(
+                    "input",
+                    filterDocuments
+                );
+            }
+
+            if (typeFilter) {
+                typeFilter.addEventListener(
+                    "change",
+                    filterDocuments
+                );
+            }
+
+            if (privacyFilter) {
+                privacyFilter.addEventListener(
+                    "change",
+                    filterDocuments
+                );
+            }
+        });
+    </script>
+{% endblock %}

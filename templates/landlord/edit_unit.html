@@ -1,0 +1,653 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Edit Unit") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Update rental unit information in the Smart Property AI landlord portal.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-unit-form-page landlord-unit-form-page--edit"
+    data-landlord-unit-form
+>
+    <div class="landlord-unit-form-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-unit-form-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('properties_page') }}">
+                        Properties
+                    </a>
+                </li>
+
+                {% if property_id %}
+                    <li>
+                        <a
+                            href="{{ url_for(
+                                'units_page',
+                                property_id=property_id
+                            ) }}"
+                        >
+                            Units
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li>
+                    <a
+                        href="{{ url_for(
+                            'unit_details_page',
+                            unit_id=unit_id
+                        ) }}"
+                    >
+                        Unit details
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Edit unit
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-unit-form-page__header">
+            <div>
+                <p class="landlord-unit-form-page__eyebrow">
+                    Unit management
+                </p>
+
+                <h1>
+                    Edit unit
+                </h1>
+
+                <p>
+                    Update the rental, accessibility and occupancy
+                    information for this unit.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'unit_details_page',
+                    unit_id=unit_id
+                ) }}"
+                class="landlord-unit-form-page__back-link"
+            >
+                <span aria-hidden="true">←</span>
+                <span>Back to unit details</span>
+            </a>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-unit-form-page__alert
+                       landlord-unit-form-page__alert--success"
+                role="status"
+            >
+                {{ success }}
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div
+                class="landlord-unit-form-page__alert
+                       landlord-unit-form-page__alert--error"
+                role="alert"
+                aria-labelledby="edit-unit-errors-title"
+            >
+                <strong id="edit-unit-errors-title">
+                    Please correct the following information:
+                </strong>
+
+                <ul>
+                    {% if errors is mapping %}
+                        {% for field, message in errors.items() %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% else %}
+                        {% for message in errors %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-unit-form-page__layout">
+
+            <!-- Edit form -->
+            <section
+                class="landlord-unit-form-page__form-card"
+                aria-labelledby="edit-unit-title"
+            >
+                <div class="landlord-unit-form-page__section-heading">
+                    <div>
+                        <p class="landlord-unit-form-page__section-label">
+                            Unit record
+                        </p>
+
+                        <h2 id="edit-unit-title">
+                            Unit information
+                        </h2>
+                    </div>
+
+                    {% if unit %}
+                        <span class="landlord-unit-form-page__record-reference">
+                            Unit:
+                            <strong>
+                                {{ unit.unit_number
+                                   | default(unit_id, true)
+                                }}
+                            </strong>
+                        </span>
+                    {% endif %}
+                </div>
+
+                <form
+                    class="landlord-unit-form-page__form"
+                    action="{{ request.url.path }}"
+                    method="post"
+                    autocomplete="off"
+                    data-unit-form
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="property_id"
+                        value="{{ property_id }}"
+                    >
+
+
+                    <!-- Basic details -->
+                    <fieldset class="landlord-unit-form-page__fieldset">
+                        <legend>
+                            Basic details
+                        </legend>
+
+                        <div class="landlord-unit-form-page__form-grid">
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-number">
+                                    Unit number
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="edit-unit-number"
+                                    name="unit_number"
+                                    type="text"
+                                    maxlength="50"
+                                    value="{{ form_data.get(
+                                        'unit_number',
+                                        unit.unit_number
+                                        if unit else ''
+                                    ) }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-floor">
+                                    Floor
+                                </label>
+
+                                <input
+                                    id="edit-unit-floor"
+                                    name="floor"
+                                    type="text"
+                                    maxlength="30"
+                                    value="{{ form_data.get(
+                                        'floor',
+                                        unit.floor
+                                        if unit and unit.floor else ''
+                                    ) }}"
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-rooms">
+                                    Total rooms
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="edit-unit-rooms"
+                                    name="rooms"
+                                    type="number"
+                                    min="0.5"
+                                    max="99"
+                                    step="0.5"
+                                    value="{{ form_data.get(
+                                        'rooms',
+                                        unit.rooms
+                                        if unit else ''
+                                    ) }}"
+                                    inputmode="decimal"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-bedrooms">
+                                    Bedrooms
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="edit-unit-bedrooms"
+                                    name="bedrooms"
+                                    type="number"
+                                    min="0"
+                                    max="50"
+                                    step="1"
+                                    value="{{ form_data.get(
+                                        'bedrooms',
+                                        unit.bedrooms
+                                        if unit else 0
+                                    ) }}"
+                                    inputmode="numeric"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-bathrooms">
+                                    Bathrooms
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="edit-unit-bathrooms"
+                                    name="bathrooms"
+                                    type="number"
+                                    min="1"
+                                    max="20"
+                                    step="1"
+                                    value="{{ form_data.get(
+                                        'bathrooms',
+                                        unit.bathrooms
+                                        if unit else 1
+                                    ) }}"
+                                    inputmode="numeric"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-area">
+                                    Area in square metres
+                                </label>
+
+                                <input
+                                    id="edit-unit-area"
+                                    name="area_square_metres"
+                                    type="number"
+                                    min="1"
+                                    max="100000"
+                                    step="0.01"
+                                    value="{{ form_data.get(
+                                        'area_square_metres',
+                                        unit.area_square_metres
+                                        if unit
+                                        and unit.area_square_metres
+                                        else ''
+                                    ) }}"
+                                    inputmode="decimal"
+                                >
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Financial information -->
+                    <fieldset class="landlord-unit-form-page__fieldset">
+                        <legend>
+                            Rent and deposit
+                        </legend>
+
+                        <div class="landlord-unit-form-page__form-grid">
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-rent">
+                                    Monthly rent
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <input
+                                    id="edit-unit-rent"
+                                    name="monthly_rent"
+                                    type="number"
+                                    min="0"
+                                    max="99999999"
+                                    step="0.01"
+                                    value="{{ form_data.get(
+                                        'monthly_rent',
+                                        unit.monthly_rent
+                                        if unit else ''
+                                    ) }}"
+                                    inputmode="decimal"
+                                    required
+                                >
+                            </div>
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-deposit">
+                                    Deposit amount
+                                </label>
+
+                                <input
+                                    id="edit-unit-deposit"
+                                    name="deposit_amount"
+                                    type="number"
+                                    min="0"
+                                    max="99999999"
+                                    step="0.01"
+                                    value="{{ form_data.get(
+                                        'deposit_amount',
+                                        unit.deposit_amount
+                                        if unit
+                                        and unit.deposit_amount
+                                        else ''
+                                    ) }}"
+                                    inputmode="decimal"
+                                >
+                            </div>
+
+                            {% set selected_currency =
+                                form_data.get(
+                                    "currency",
+                                    unit.currency
+                                    if unit and unit.currency
+                                    else "EUR"
+                                )
+                            %}
+
+                            <div class="landlord-unit-form-page__field">
+                                <label for="edit-unit-currency">
+                                    Currency
+                                    <span aria-hidden="true">*</span>
+                                </label>
+
+                                <select
+                                    id="edit-unit-currency"
+                                    name="currency"
+                                    required
+                                >
+                                    <option
+                                        value="EUR"
+                                        {% if selected_currency == "EUR" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        EUR — Euro
+                                    </option>
+
+                                    <option
+                                        value="NGN"
+                                        {% if selected_currency == "NGN" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        NGN — Nigerian Naira
+                                    </option>
+
+                                    <option
+                                        value="USD"
+                                        {% if selected_currency == "USD" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        USD — US Dollar
+                                    </option>
+
+                                    <option
+                                        value="GBP"
+                                        {% if selected_currency == "GBP" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GBP — British Pound
+                                    </option>
+
+                                    <option
+                                        value="GHS"
+                                        {% if selected_currency == "GHS" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        GHS — Ghanaian Cedi
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Options -->
+                    <fieldset class="landlord-unit-form-page__fieldset">
+                        <legend>
+                            Accessibility and tenancy
+                        </legend>
+
+                        {% set wheelchair_accessible =
+                            form_data.get(
+                                "wheelchair_accessible",
+                                unit.wheelchair_accessible
+                                if unit else false
+                            )
+                        %}
+
+                        {% set pets_allowed =
+                            form_data.get(
+                                "pets_allowed",
+                                unit.pets_allowed
+                                if unit else false
+                            )
+                        %}
+
+                        <div class="landlord-unit-form-page__option-list">
+                            <label class="landlord-unit-form-page__option">
+                                <input
+                                    type="checkbox"
+                                    name="wheelchair_accessible"
+                                    value="true"
+                                    {% if wheelchair_accessible %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span
+                                    class="landlord-unit-form-page__option-icon"
+                                    aria-hidden="true"
+                                >
+                                    ♿
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        Wheelchair accessible
+                                    </strong>
+
+                                    <small>
+                                        The unit includes accessibility
+                                        features.
+                                    </small>
+                                </span>
+                            </label>
+
+                            <label class="landlord-unit-form-page__option">
+                                <input
+                                    type="checkbox"
+                                    name="pets_allowed"
+                                    value="true"
+                                    {% if pets_allowed %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span
+                                    class="landlord-unit-form-page__option-icon"
+                                    aria-hidden="true"
+                                >
+                                    🐾
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        Pets allowed
+                                    </strong>
+
+                                    <small>
+                                        Approved pets may be kept in the
+                                        unit.
+                                    </small>
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- Form actions -->
+                    <div class="landlord-unit-form-page__actions">
+                        <a
+                            href="{{ url_for(
+                                'unit_details_page',
+                                unit_id=unit_id
+                            ) }}"
+                            class="landlord-unit-form-page__cancel-button"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="landlord-unit-form-page__submit-button"
+                            data-submit-button
+                        >
+                            <span aria-hidden="true">✓</span>
+                            <span>Save changes</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+
+            <!-- Sidebar -->
+            <aside
+                class="landlord-unit-form-page__sidebar"
+                aria-label="Unit editing information"
+            >
+                <section class="landlord-unit-form-page__info-card">
+                    <span
+                        class="landlord-unit-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        📝
+                    </span>
+
+                    <h2>
+                        Keep information current
+                    </h2>
+
+                    <p>
+                        Accurate rent, room and accessibility
+                        information helps prevent incorrect listings
+                        and tenant enquiries.
+                    </p>
+                </section>
+
+                {% if unit %}
+                    <section class="landlord-unit-form-page__info-card">
+                        <span
+                            class="landlord-unit-form-page__info-icon"
+                            aria-hidden="true"
+                        >
+                            🔑
+                        </span>
+
+                        <h2>
+                            Current status
+                        </h2>
+
+                        <p>
+                            {% if unit.status %}
+                                {{ unit.status.value
+                                   if unit.status.value is defined
+                                   else unit.status
+                                }}
+                            {% else %}
+                                Status unavailable
+                            {% endif %}
+                        </p>
+                    </section>
+                {% endif %}
+
+                <section class="landlord-unit-form-page__info-card">
+                    <span
+                        class="landlord-unit-form-page__info-icon"
+                        aria-hidden="true"
+                    >
+                        🔒
+                    </span>
+
+                    <h2>
+                        Protect tenant data
+                    </h2>
+
+                    <p>
+                        Do not place tenant names, payment credentials
+                        or identity-document details in unit fields.
+                    </p>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

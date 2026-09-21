@@ -1,0 +1,697 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Lease Details") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    View lease, tenant, property and payment information.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-lease-details-page"
+    data-landlord-lease-details
+>
+    <div class="landlord-lease-details-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-lease-details-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_leases_page') }}">
+                        Leases
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Lease details
+                </li>
+            </ol>
+        </nav>
+
+
+        {% if lease %}
+            {% set lease_status =
+                lease.status.value
+                if lease.status
+                and lease.status.value is defined
+                else lease.status | default("unknown", true)
+            %}
+
+            <!-- Page header -->
+            <header class="landlord-lease-details-page__header">
+                <div>
+                    <p class="landlord-lease-details-page__eyebrow">
+                        Lease agreement
+                    </p>
+
+                    <div class="landlord-lease-details-page__title-row">
+                        <h1>
+                            Lease {{ lease.id[:8] }}
+                        </h1>
+
+                        <span
+                            class="landlord-lease-details-page__status
+                                   landlord-lease-details-page__status--{{ lease_status
+                                       | string
+                                       | lower
+                                       | replace('_', '-')
+                                   }}"
+                        >
+                            {{ lease_status
+                               | string
+                               | replace("_", " ")
+                               | title
+                            }}
+                        </span>
+                    </div>
+
+                    <p>
+                        Review the property, unit, tenant, rent,
+                        deposit and renewal information.
+                    </p>
+                </div>
+
+                <div class="landlord-lease-details-page__header-actions">
+                    <a
+                        href="{{ url_for(
+                            'edit_lease_page',
+                            lease_id=lease.id
+                        ) }}"
+                        class="landlord-lease-details-page__primary-button"
+                    >
+                        <span aria-hidden="true">✏️</span>
+                        <span>Edit lease</span>
+                    </a>
+
+                    <a
+                        href="{{ url_for('landlord_leases_page') }}"
+                        class="landlord-lease-details-page__secondary-button"
+                    >
+                        <span aria-hidden="true">←</span>
+                        <span>Back to leases</span>
+                    </a>
+                </div>
+            </header>
+
+
+            <!-- Messages -->
+            {% if success %}
+                <div
+                    class="landlord-lease-details-page__alert
+                           landlord-lease-details-page__alert--success"
+                    role="status"
+                >
+                    {{ success }}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div
+                    class="landlord-lease-details-page__alert
+                           landlord-lease-details-page__alert--error"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
+
+
+            <!-- Summary -->
+            <section
+                class="landlord-lease-details-page__summary"
+                aria-label="Lease summary"
+            >
+                <article class="landlord-lease-details-page__summary-card">
+                    <span aria-hidden="true">📅</span>
+
+                    <div>
+                        <span>Start date</span>
+
+                        <strong>
+                            {{ lease.start_date
+                               | default("Not available", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-lease-details-page__summary-card">
+                    <span aria-hidden="true">🏁</span>
+
+                    <div>
+                        <span>End date</span>
+
+                        <strong>
+                            {{ lease.end_date
+                               | default("Open-ended", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-lease-details-page__summary-card">
+                    <span aria-hidden="true">💶</span>
+
+                    <div>
+                        <span>Monthly rent</span>
+
+                        <strong>
+                            {{ lease.monthly_rent
+                               | default("0.00", true)
+                            }}
+
+                            {{ lease.currency
+                               | default("EUR", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="landlord-lease-details-page__summary-card">
+                    <span aria-hidden="true">🔐</span>
+
+                    <div>
+                        <span>Deposit</span>
+
+                        <strong>
+                            {{ lease.deposit_amount
+                               | default("0.00", true)
+                            }}
+
+                            {{ lease.currency
+                               | default("EUR", true)
+                            }}
+                        </strong>
+                    </div>
+                </article>
+            </section>
+
+
+            <div class="landlord-lease-details-page__layout">
+
+                <!-- Main information -->
+                <div class="landlord-lease-details-page__main-column">
+
+                    <!-- Connected records -->
+                    <section
+                        class="landlord-lease-details-page__card"
+                        aria-labelledby="lease-connections-title"
+                    >
+                        <div class="landlord-lease-details-page__card-header">
+                            <div>
+                                <p class="landlord-lease-details-page__section-label">
+                                    Connections
+                                </p>
+
+                                <h2 id="lease-connections-title">
+                                    Property, unit and tenant
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="landlord-lease-details-page__connection-grid">
+
+                            <!-- Property -->
+                            <article class="landlord-lease-details-page__connection">
+                                <span
+                                    class="landlord-lease-details-page__connection-icon"
+                                    aria-hidden="true"
+                                >
+                                    🏢
+                                </span>
+
+                                <div>
+                                    <span>Property ID</span>
+
+                                    <strong>
+                                        {{ lease.property_id
+                                           | default("Not available", true)
+                                        }}
+                                    </strong>
+
+                                    {% if lease.property_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'property_details_page',
+                                                property_id=lease.property_id
+                                            ) }}"
+                                        >
+                                            View property
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+
+
+                            <!-- Unit -->
+                            <article class="landlord-lease-details-page__connection">
+                                <span
+                                    class="landlord-lease-details-page__connection-icon"
+                                    aria-hidden="true"
+                                >
+                                    🚪
+                                </span>
+
+                                <div>
+                                    <span>Unit ID</span>
+
+                                    <strong>
+                                        {{ lease.unit_id
+                                           | default("Not available", true)
+                                        }}
+                                    </strong>
+
+                                    {% if lease.unit_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'unit_details_page',
+                                                unit_id=lease.unit_id
+                                            ) }}"
+                                        >
+                                            View unit
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+
+
+                            <!-- Tenant -->
+                            <article class="landlord-lease-details-page__connection">
+                                <span
+                                    class="landlord-lease-details-page__connection-icon"
+                                    aria-hidden="true"
+                                >
+                                    👤
+                                </span>
+
+                                <div>
+                                    <span>Tenant ID</span>
+
+                                    <strong>
+                                        {{ lease.tenant_id
+                                           | default("Not available", true)
+                                        }}
+                                    </strong>
+
+                                    {% if lease.tenant_id %}
+                                        <a
+                                            href="{{ url_for(
+                                                'landlord_tenant_details_page',
+                                                tenant_id=lease.tenant_id
+                                            ) }}"
+                                        >
+                                            View tenant
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+
+                    <!-- Financial details -->
+                    <section
+                        class="landlord-lease-details-page__card"
+                        aria-labelledby="lease-financial-title"
+                    >
+                        <div class="landlord-lease-details-page__card-header">
+                            <div>
+                                <p class="landlord-lease-details-page__section-label">
+                                    Financial
+                                </p>
+
+                                <h2 id="lease-financial-title">
+                                    Rent and payment information
+                                </h2>
+                            </div>
+
+                            <a href="{{ url_for('landlord_payments_page') }}">
+                                View payments
+                            </a>
+                        </div>
+
+                        <dl class="landlord-lease-details-page__details">
+                            <div>
+                                <dt>Monthly rent</dt>
+
+                                <dd>
+                                    {{ lease.monthly_rent
+                                       | default("0.00", true)
+                                    }}
+
+                                    {{ lease.currency
+                                       | default("EUR", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Deposit amount</dt>
+
+                                <dd>
+                                    {{ lease.deposit_amount
+                                       | default("0.00", true)
+                                    }}
+
+                                    {{ lease.currency
+                                       | default("EUR", true)
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Payment due day</dt>
+
+                                <dd>
+                                    Day
+                                    {{ lease.payment_due_day
+                                       | default("1", true)
+                                    }}
+                                    of each month
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Currency</dt>
+
+                                <dd>
+                                    {{ lease.currency
+                                       | default("EUR", true)
+                                    }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- Dates and renewal -->
+                    <section
+                        class="landlord-lease-details-page__card"
+                        aria-labelledby="lease-period-title"
+                    >
+                        <div class="landlord-lease-details-page__card-header">
+                            <div>
+                                <p class="landlord-lease-details-page__section-label">
+                                    Schedule
+                                </p>
+
+                                <h2 id="lease-period-title">
+                                    Lease period and renewal
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-lease-details-page__details">
+                            <div>
+                                <dt>Start date</dt>
+
+                                <dd>
+                                    {{ lease.start_date
+                                       | default(
+                                           "Not available",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>End date</dt>
+
+                                <dd>
+                                    {{ lease.end_date
+                                       | default(
+                                           "Open-ended",
+                                           true
+                                       )
+                                    }}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Renewal reminder</dt>
+
+                                <dd>
+                                    {{ lease.renewal_reminder_days
+                                       | default("60", true)
+                                    }}
+                                    days before the end date
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Status</dt>
+
+                                <dd>
+                                    <span
+                                        class="landlord-lease-details-page__status
+                                               landlord-lease-details-page__status--{{ lease_status
+                                                   | string
+                                                   | lower
+                                                   | replace('_', '-')
+                                               }}"
+                                    >
+                                        {{ lease_status
+                                           | string
+                                           | replace("_", " ")
+                                           | title
+                                        }}
+                                    </span>
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+
+
+                    <!-- System information -->
+                    <section
+                        class="landlord-lease-details-page__card"
+                        aria-labelledby="lease-system-title"
+                    >
+                        <div class="landlord-lease-details-page__card-header">
+                            <div>
+                                <p class="landlord-lease-details-page__section-label">
+                                    System record
+                                </p>
+
+                                <h2 id="lease-system-title">
+                                    Record information
+                                </h2>
+                            </div>
+                        </div>
+
+                        <dl class="landlord-lease-details-page__details">
+                            <div>
+                                <dt>Lease ID</dt>
+                                <dd><code>{{ lease.id }}</code></dd>
+                            </div>
+
+                            <div>
+                                <dt>Created</dt>
+
+                                <dd>
+                                    {% if lease.created_at %}
+                                        <time
+                                            datetime="{{ lease.created_at }}"
+                                        >
+                                            {{ lease.created_at }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Last updated</dt>
+
+                                <dd>
+                                    {% if lease.updated_at %}
+                                        <time
+                                            datetime="{{ lease.updated_at }}"
+                                        >
+                                            {{ lease.updated_at }}
+                                        </time>
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+                </div>
+
+
+                <!-- Sidebar -->
+                <aside
+                    class="landlord-lease-details-page__sidebar"
+                    aria-label="Lease actions and information"
+                >
+                    <section class="landlord-lease-details-page__sidebar-card">
+                        <span
+                            class="landlord-lease-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⚡
+                        </span>
+
+                        <h2>Quick actions</h2>
+
+                        <div class="landlord-lease-details-page__action-list">
+                            <a
+                                href="{{ url_for(
+                                    'edit_lease_page',
+                                    lease_id=lease.id
+                                ) }}"
+                            >
+                                <span aria-hidden="true">✏️</span>
+                                Edit lease
+                            </a>
+
+                            <a href="{{ url_for('landlord_payments_page') }}">
+                                <span aria-hidden="true">💳</span>
+                                View payments
+                            </a>
+
+                            <a href="{{ url_for('landlord_documents_page') }}">
+                                <span aria-hidden="true">📁</span>
+                                View documents
+                            </a>
+
+                            <a href="{{ url_for('landlord_messages_page') }}">
+                                <span aria-hidden="true">✉️</span>
+                                Open messages
+                            </a>
+                        </div>
+                    </section>
+
+
+                    <section class="landlord-lease-details-page__sidebar-card">
+                        <span
+                            class="landlord-lease-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⏰
+                        </span>
+
+                        <h2>Renewal reminder</h2>
+
+                        <p>
+                            Renewal communication is scheduled to begin
+                            <strong>
+                                {{ lease.renewal_reminder_days
+                                   | default("60", true)
+                                }}
+                                days
+                            </strong>
+                            before the lease ends.
+                        </p>
+                    </section>
+
+
+                    <section
+                        class="landlord-lease-details-page__sidebar-card
+                               landlord-lease-details-page__sidebar-card--privacy"
+                    >
+                        <span
+                            class="landlord-lease-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+                        <h2>Sensitive information</h2>
+
+                        <p>
+                            Access lease and tenant information only
+                            for legitimate property-management
+                            purposes.
+                        </p>
+
+                        <a href="{{ url_for('privacy_page') }}">
+                            Privacy information
+                        </a>
+                    </section>
+
+
+                    <section
+                        class="landlord-lease-details-page__sidebar-card
+                               landlord-lease-details-page__sidebar-card--warning"
+                    >
+                        <span
+                            class="landlord-lease-details-page__sidebar-icon"
+                            aria-hidden="true"
+                        >
+                            ⚖️
+                        </span>
+
+                        <h2>Review important decisions</h2>
+
+                        <p>
+                            Verify legal and financial information
+                            before changing lease dates, rent, deposits
+                            or renewal terms.
+                        </p>
+                    </section>
+                </aside>
+            </div>
+
+        {% else %}
+            <!-- Record unavailable -->
+            <section class="landlord-lease-details-page__not-found">
+                <span aria-hidden="true">⚠️</span>
+
+                <h1>Lease information unavailable</h1>
+
+                <p>
+                    The requested lease could not be found or you do
+                    not have permission to view it.
+                </p>
+
+                <a
+                    href="{{ url_for('landlord_leases_page') }}"
+                    class="landlord-lease-details-page__primary-button"
+                >
+                    Return to leases
+                </a>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

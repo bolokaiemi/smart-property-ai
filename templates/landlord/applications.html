@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title | default("Rental Applications") }}
+    | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+    Review rental applications submitted for your properties and units.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-applications-page"
+    data-landlord-applications-page
+>
+    <div class="landlord-applications-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-applications-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Applications
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-applications-page__header">
+            <div>
+                <p class="landlord-applications-page__eyebrow">
+                    Rental management
+                </p>
+
+                <h1>
+                    Rental applications
+                </h1>
+
+                <p>
+                    Review applications submitted for your properties
+                    and rental units.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('properties_page') }}"
+                class="landlord-applications-page__header-link"
+            >
+                <span aria-hidden="true">🏠</span>
+                <span>View properties</span>
+            </a>
+        </header>
+
+
+        <!-- Messages -->
+        {% if success %}
+            <div
+                class="landlord-applications-page__alert
+                       landlord-applications-page__alert--success"
+                role="status"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div
+                class="landlord-applications-page__alert
+                       landlord-applications-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Summary -->
+        <section
+            class="landlord-applications-page__summary"
+            aria-label="Application summary"
+        >
+            <article class="landlord-applications-page__summary-card">
+                <span
+                    class="landlord-applications-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    📋
+                </span>
+
+                <div>
+                    <span>Total applications</span>
+
+                    <strong>
+                        {{ applications | length if applications else 0 }}
+                    </strong>
+                </div>
+            </article>
+
+            <article class="landlord-applications-page__summary-card">
+                <span
+                    class="landlord-applications-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    📅
+                </span>
+
+                <div>
+                    <span>Viewing appointments</span>
+
+                    <a href="{{ url_for('landlord_appointments_page') }}">
+                        View appointments
+                    </a>
+                </div>
+            </article>
+
+            <article class="landlord-applications-page__summary-card">
+                <span
+                    class="landlord-applications-page__summary-icon"
+                    aria-hidden="true"
+                >
+                    📝
+                </span>
+
+                <div>
+                    <span>Lease agreements</span>
+
+                    <a href="{{ url_for('landlord_leases_page') }}">
+                        View leases
+                    </a>
+                </div>
+            </article>
+        </section>
+
+
+        <!-- Application records -->
+        <section
+            class="landlord-applications-page__panel"
+            aria-labelledby="application-records-title"
+        >
+            <div class="landlord-applications-page__panel-header">
+                <div>
+                    <p class="landlord-applications-page__section-label">
+                        Applicant records
+                    </p>
+
+                    <h2 id="application-records-title">
+                        Submitted applications
+                    </h2>
+                </div>
+
+                <span class="landlord-applications-page__record-count">
+                    {{ applications | length if applications else 0 }}
+                    {% if applications and applications | length == 1 %}
+                        application
+                    {% else %}
+                        applications
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if applications %}
+                <div class="landlord-applications-page__table-wrapper">
+                    <table class="landlord-applications-page__table">
+                        <caption class="visually-hidden">
+                            Rental applications submitted for your
+                            properties
+                        </caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Applicant
+                                </th>
+
+                                <th scope="col">
+                                    Property
+                                </th>
+
+                                <th scope="col">
+                                    Unit
+                                </th>
+
+                                <th scope="col">
+                                    Preferred move-in
+                                </th>
+
+                                <th scope="col">
+                                    Submitted
+                                </th>
+
+                                <th scope="col">
+                                    Status
+                                </th>
+
+                                <th scope="col">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for application in applications %}
+                                {% set application_status =
+                                    application.status.value
+                                    if application.status
+                                    and application.status.value is defined
+                                    else application.status
+                                    | default("submitted", true)
+                                %}
+
+                                <tr>
+                                    <!-- Applicant -->
+                                    <td data-label="Applicant">
+                                        <div class="landlord-applications-page__applicant">
+                                            <span
+                                                class="landlord-applications-page__avatar"
+                                                aria-hidden="true"
+                                            >
+                                                {% if application.first_name %}
+                                                    {{ application.first_name[0]
+                                                       | upper
+                                                    }}
+                                                {% else %}
+                                                    A
+                                                {% endif %}
+                                            </span>
+
+                                            <div>
+                                                <strong>
+                                                    {{ application.full_name
+                                                       | default(
+                                                           (
+                                                               application.first_name
+                                                               | default(
+                                                                   "",
+                                                                   true
+                                                               )
+                                                           )
+                                                           ~ " "
+                                                           ~ (
+                                                               application.last_name
+                                                               | default(
+                                                                   "",
+                                                                   true
+                                                               )
+                                                           ),
+                                                           true
+                                                       )
+                                                       | trim
+                                                    }}
+                                                </strong>
+
+                                                {% if application.email %}
+                                                    <a
+                                                        href="mailto:{{ application.email }}"
+                                                    >
+                                                        {{ application.email }}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Property -->
+                                    <td data-label="Property">
+                                        {% if application.property_id %}
+                                            <a
+                                                href="{{ url_for(
+                                                    'property_details_page',
+                                                    property_id=application.property_id
+                                                ) }}"
+                                            >
+                                                {{ application.property_id[:8] }}
+                                            </a>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Unit -->
+                                    <td data-label="Unit">
+                                        {% if application.unit_id %}
+                                            <a
+                                                href="{{ url_for(
+                                                    'unit_details_page',
+                                                    unit_id=application.unit_id
+                                                ) }}"
+                                            >
+                                                {{ application.unit_id[:8] }}
+                                            </a>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Move-in -->
+                                    <td data-label="Preferred move-in">
+                                        {{ application.desired_move_in_date
+                                           | default(
+                                               application.preferred_move_in_date
+                                               | default(
+                                                   "Not specified",
+                                                   true
+                                               ),
+                                               true
+                                           )
+                                        }}
+                                    </td>
+
+                                    <!-- Submitted -->
+                                    <td data-label="Submitted">
+                                        {% if application.created_at %}
+                                            <time
+                                                datetime="{{ application.created_at }}"
+                                            >
+                                                {{ application.created_at }}
+                                            </time>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td data-label="Status">
+                                        <span
+                                            class="landlord-applications-page__status
+                                                   landlord-applications-page__status--{{ application_status
+                                                       | string
+                                                       | lower
+                                                       | replace('_', '-')
+                                                   }}"
+                                        >
+                                            {{ application_status
+                                               | string
+                                               | replace("_", " ")
+                                               | title
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Action -->
+                                    <td data-label="Action">
+                                        <a
+                                            href="{{ url_for(
+                                                'landlord_application_details_page',
+                                                application_id=application.id
+                                            ) }}"
+                                            class="landlord-applications-page__view-link"
+                                        >
+                                            <span>Review</span>
+                                            <span aria-hidden="true">→</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+                <!-- Empty state -->
+                <div class="landlord-applications-page__empty-state">
+                    <div
+                        class="landlord-applications-page__empty-icon"
+                        aria-hidden="true"
+                    >
+                        📋
+                    </div>
+
+                    <h2>
+                        No rental applications
+                    </h2>
+
+                    <p>
+                        Applications will appear here after prospective
+                        tenants submit an application for one of your
+                        available units.
+                    </p>
+
+                    <div class="landlord-applications-page__empty-actions">
+                        <a
+                            href="{{ url_for('properties_page') }}"
+                            class="landlord-applications-page__primary-button"
+                        >
+                            View properties
+                        </a>
+
+                        <a
+                            href="{{ url_for('landlord_appointments_page') }}"
+                            class="landlord-applications-page__secondary-button"
+                        >
+                            View appointments
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <!-- Responsible review notice -->
+        <aside
+            class="landlord-applications-page__notice"
+            aria-label="Application review notice"
+        >
+            <span aria-hidden="true">⚖️</span>
+
+            <div>
+                <strong>
+                    Review applications fairly
+                </strong>
+
+                <p>
+                    Base rental decisions on lawful, relevant and
+                    consistently applied criteria. Do not discriminate
+                    against applicants based on protected personal
+                    characteristics.
+                </p>
+            </div>
+
+            <a href="{{ url_for('privacy_page') }}">
+                Privacy information
+            </a>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Landlord Dashboard | Smart Property AI{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', path='css/landlord.css') }}?v=3.0.0">
+{% endblock %}
+
+{% block content %}
+{# All dashboard selectors and JS hooks are contained by this unique wrapper. #}
+<div class="sp-landlord-dashboard" data-sp-landlord-dashboard>
+    <div class="sp-landlord-dashboard__announcer visually-hidden"
+         data-sp-landlord-announcer aria-live="polite" aria-atomic="true"></div>
+
+    <header class="sp-landlord-dashboard__hero">
+        <div class="sp-landlord-dashboard__container sp-landlord-dashboard__hero-grid">
+            <div>
+                <p class="sp-landlord-dashboard__eyebrow">Landlord portal</p>
+                <h1>Welcome back, {{ current_user.full_name|default(current_user.name|default(current_user.username|default('Landlord', true), true), true) }}</h1>
+                <p class="sp-landlord-dashboard__intro">
+                    Monitor properties, tenants, applications, maintenance, and appointments from one secure workspace.
+                </p>
+            </div>
+
+            <div class="sp-landlord-dashboard__hero-actions">
+                <button type="button" class="sp-landlord-dashboard__button sp-landlord-dashboard__button--quiet"
+                        data-sp-landlord-refresh>
+                    <span aria-hidden="true">↻</span> Refresh
+                </button>
+                <a class="sp-landlord-dashboard__button sp-landlord-dashboard__button--primary"
+                   href="{{ url_for('add_property_page') }}">
+                    <span aria-hidden="true">＋</span> Add property
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="sp-landlord-dashboard__container">
+        {% if success_message %}
+        <div class="sp-landlord-dashboard__notice sp-landlord-dashboard__notice--success"
+             role="status" data-sp-landlord-dismissible>
+            <span>{{ success_message }}</span>
+            <button type="button" data-sp-landlord-dismiss aria-label="Dismiss message">×</button>
+        </div>
+        {% endif %}
+
+        {% if error_message %}
+        <div class="sp-landlord-dashboard__notice sp-landlord-dashboard__notice--error"
+             role="alert" data-sp-landlord-dismissible>
+            <span>{{ error_message }}</span>
+            <button type="button" data-sp-landlord-dismiss aria-label="Dismiss error">×</button>
+        </div>
+        {% endif %}
+
+        <nav class="sp-landlord-dashboard__nav" aria-label="Landlord dashboard navigation">
+            <button class="sp-landlord-dashboard__nav-toggle" type="button"
+                    aria-expanded="false" aria-controls="sp-landlord-dashboard-links"
+                    data-sp-landlord-nav-toggle>
+                <span aria-hidden="true">☰</span> Dashboard menu
+            </button>
+            <ul id="sp-landlord-dashboard-links" data-sp-landlord-nav-list>
+                <li><a class="is-active" aria-current="page" href="{{ url_for('landlord_dashboard') }}">Overview</a></li>
+                <li><a href="{{ url_for('properties_page') }}">Properties</a></li>
+                <li><a href="{{ url_for('landlord_tenants_page') }}">Tenants</a></li>
+                <li><a href="{{ url_for('landlord_leases_page') }}">Leases</a></li>
+                <li><a href="{{ url_for('landlord_applications_page') }}">Applications</a></li>
+                <li><a href="{{ url_for('landlord_maintenance_page') }}">Maintenance</a></li>
+                <li><a href="{{ url_for('landlord_payments_page') }}">Payments</a></li>
+                <li><a href="{{ url_for('landlord_messages_page') }}">Messages</a></li>
+            </ul>
+        </nav>
+
+        <section class="sp-landlord-dashboard__section" aria-labelledby="sp-landlord-overview-title">
+            <div class="sp-landlord-dashboard__section-heading">
+                <div>
+                    <p class="sp-landlord-dashboard__eyebrow">Live overview</p>
+                    <h2 id="sp-landlord-overview-title">Portfolio at a glance</h2>
+                </div>
+                <p data-sp-landlord-updated>Updated when this page loaded</p>
+            </div>
+
+            <div class="sp-landlord-dashboard__stats">
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('properties_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">⌂</span>
+                    <span><strong>{{ statistics.properties|default(0) }}</strong><small>Properties</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('properties_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">▦</span>
+                    <span><strong>{{ statistics.units|default(0) }}</strong><small>Total units</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('landlord_leases_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">✓</span>
+                    <span><strong>{{ statistics.occupied_units|default(0) }}</strong><small>Occupied units</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('landlord_maintenance_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">⚒</span>
+                    <span><strong>{{ statistics.open_maintenance|default(0) }}</strong><small>Open maintenance</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('landlord_applications_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">▤</span>
+                    <span><strong>{{ statistics.pending_applications|default(0) }}</strong><small>Applications</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="sp-landlord-dashboard__stat" href="{{ url_for('landlord_messages_page') }}">
+                    <span class="sp-landlord-dashboard__stat-icon" aria-hidden="true">✉</span>
+                    <span><strong>{{ statistics.unread_messages|default(0) }}</strong><small>Unread messages</small></span>
+                    <span class="sp-landlord-dashboard__stat-arrow" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
+
+        <div class="sp-landlord-dashboard__content-grid">
+            <main class="sp-landlord-dashboard__main-column">
+                <section class="sp-landlord-dashboard__card" aria-labelledby="sp-landlord-activity-title">
+                    <div class="sp-landlord-dashboard__card-header">
+                        <div>
+                            <p class="sp-landlord-dashboard__eyebrow">Audit trail</p>
+                            <h2 id="sp-landlord-activity-title">Recent activity</h2>
+                        </div>
+                    </div>
+
+                    {% if recent_activity %}
+                    <ol class="sp-landlord-dashboard__timeline">
+                        {% for activity in recent_activity %}
+                        <li>
+                            <span class="sp-landlord-dashboard__timeline-marker" aria-hidden="true"></span>
+                            <div>
+                                <h3>{{ activity.title|default('Portal activity', true) }}</h3>
+                                <p>{{ activity.description|default('A landlord portal action was recorded.', true) }}</p>
+                                {% if activity.created_at %}
+                                <time datetime="{{ activity.created_at.isoformat() }}" data-sp-local-date="{{ activity.created_at.isoformat() }}">
+                                    {{ activity.created_at.strftime('%d %b %Y, %H:%M') }}
+                                </time>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% else %}
+                    <div class="sp-landlord-dashboard__empty">
+                        <span aria-hidden="true">◎</span>
+                        <h3>No recent activity</h3>
+                        <p>Updates to your portfolio will appear here.</p>
+                    </div>
+                    {% endif %}
+                </section>
+            </main>
+
+            <aside class="sp-landlord-dashboard__side-column" aria-label="Appointments and shortcuts">
+                <section class="sp-landlord-dashboard__card" aria-labelledby="sp-landlord-appointments-title">
+                    <div class="sp-landlord-dashboard__card-header">
+                        <div>
+                            <p class="sp-landlord-dashboard__eyebrow">Schedule</p>
+                            <h2 id="sp-landlord-appointments-title">Upcoming appointments</h2>
+                        </div>
+                        <a href="{{ url_for('landlord_appointments_page') }}">View all</a>
+                    </div>
+
+                    {% if upcoming_appointments %}
+                    <ul class="sp-landlord-dashboard__appointments">
+                        {% for appointment in upcoming_appointments %}
+                        <li>
+                            <div class="sp-landlord-dashboard__date-tile">
+                                <strong>{{ appointment.scheduled_for.strftime('%d') if appointment.scheduled_for else '—' }}</strong>
+                                <span>{{ appointment.scheduled_for.strftime('%b') if appointment.scheduled_for else '' }}</span>
+                            </div>
+                            <div>
+                                <h3>{{ appointment.title|default('Property viewing', true) }}</h3>
+                                {% if appointment.scheduled_for %}
+                                <time datetime="{{ appointment.scheduled_for.isoformat() }}" data-sp-local-date="{{ appointment.scheduled_for.isoformat() }}">
+                                    {{ appointment.scheduled_for.strftime('%d %b %Y, %H:%M') }}
+                                </time>
+                                {% endif %}
+                                <span class="sp-landlord-dashboard__status">{{ appointment.status.value|default(appointment.status|default('Scheduled', true), true)|replace('_', ' ')|title }}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="sp-landlord-dashboard__empty sp-landlord-dashboard__empty--compact">
+                        <span aria-hidden="true">◷</span>
+                        <h3>No upcoming appointments</h3>
+                        <p>Scheduled viewings will appear here.</p>
+                    </div>
+                    {% endif %}
+                </section>
+
+                <section class="sp-landlord-dashboard__card" aria-labelledby="sp-landlord-actions-title">
+                    <div class="sp-landlord-dashboard__card-header">
+                        <h2 id="sp-landlord-actions-title">Quick actions</h2>
+                    </div>
+                    <div class="sp-landlord-dashboard__quick-actions">
+                        <a href="{{ url_for('add_property_page') }}"><span aria-hidden="true">＋</span><span>Add property<small>Create a new portfolio record</small></span></a>
+                        <a href="{{ url_for('add_lease_page') }}"><span aria-hidden="true">⌑</span><span>Create lease<small>Assign a tenant to a unit</small></span></a>
+                        <a href="{{ url_for('upload_landlord_document_page') }}"><span aria-hidden="true">⇧</span><span>Upload document<small>Store a secure property file</small></span></a>
+                        <a href="{{ url_for('add_expense_page') }}"><span aria-hidden="true">€</span><span>Add expense<small>Record a maintenance cost</small></span></a>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+        <section class="sp-landlord-dashboard__footer-links" aria-label="More landlord tools">
+            <a href="{{ url_for('landlord_documents_page') }}">Documents</a>
+            <a href="{{ url_for('landlord_expenses_page') }}">Expenses</a>
+            <a href="{{ url_for('landlord_reports_page') }}">Reports</a>
+            <a href="{{ url_for('landlord_smart_devices_page') }}">Smart devices</a>
+            <a href="{{ url_for('landlord_notifications_page') }}">Notifications</a>
+            <a href="{{ url_for('landlord_settings_page') }}">Settings</a>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ super() }}
+<script src="{{ url_for('static', path='js/landlord.js') }}?v=3.0.0" defer></script>
+{% endblock %}

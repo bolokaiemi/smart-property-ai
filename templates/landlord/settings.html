@@ -1,0 +1,682 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Landlord Settings | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+Manage your landlord display name and preferred language securely through Smart Property AI.
+{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/landlord.css') }}"
+    >
+{% endblock %}
+
+{% block content %}
+<div
+    class="landlord-settings-page"
+    data-landlord-settings-page
+>
+    <div class="landlord-settings-page__container">
+
+        <!-- Breadcrumbs -->
+        <nav
+            class="landlord-settings-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('landlord_dashboard') }}">
+                        Landlord dashboard
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    Settings
+                </li>
+            </ol>
+        </nav>
+
+
+        <!-- Header -->
+        <header class="landlord-settings-page__header">
+            <div>
+                <p class="landlord-settings-page__eyebrow">
+                    Account preferences
+                </p>
+
+                <h1>Landlord settings</h1>
+
+                <p>
+                    Update your display name and preferred platform
+                    language.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('landlord_dashboard') }}"
+                class="landlord-settings-page__button
+                       landlord-settings-page__button--secondary"
+            >
+                Return to dashboard
+            </a>
+        </header>
+
+
+        <!-- Success message -->
+        {% if success %}
+            <div
+                class="landlord-settings-page__alert
+                       landlord-settings-page__alert--success"
+                role="status"
+                aria-live="polite"
+            >
+                <span aria-hidden="true">✓</span>
+                <span>{{ success }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- General error -->
+        {% if error %}
+            <div
+                class="landlord-settings-page__alert
+                       landlord-settings-page__alert--error"
+                role="alert"
+            >
+                <span aria-hidden="true">!</span>
+                <span>{{ error }}</span>
+            </div>
+        {% endif %}
+
+
+        <!-- Validation errors -->
+        {% if errors %}
+            <div
+                class="landlord-settings-page__alert
+                       landlord-settings-page__alert--error"
+                role="alert"
+                aria-labelledby="settings-errors-title"
+            >
+                <strong id="settings-errors-title">
+                    Please correct the following:
+                </strong>
+
+                <ul>
+                    {% for field, message in errors.items() %}
+                        <li>
+                            <a href="#{{ field }}">
+                                {{ message }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        <div class="landlord-settings-page__layout">
+
+            <!-- Settings form -->
+            <main class="landlord-settings-page__main">
+                <section
+                    class="landlord-settings-page__card"
+                    aria-labelledby="landlord-profile-settings-title"
+                >
+                    <div
+                        class="landlord-settings-page__card-header"
+                    >
+                        <div>
+                            <p
+                                class="landlord-settings-page__section-label"
+                            >
+                                Profile
+                            </p>
+
+                            <h2 id="landlord-profile-settings-title">
+                                Profile preferences
+                            </h2>
+
+                            <p>
+                                These settings control how your name
+                                and language are displayed in the
+                                landlord portal.
+                            </p>
+                        </div>
+
+                        <span
+                            class="landlord-settings-page__secure-label"
+                        >
+                            <span aria-hidden="true">🔒</span>
+                            Secure settings
+                        </span>
+                    </div>
+
+                    <form
+                        id="landlord-settings-form"
+                        class="landlord-settings-page__form"
+                        action="{{ url_for(
+                            'update_landlord_settings_action'
+                        ) }}"
+                        method="post"
+                        novalidate
+                    >
+                        <!-- CSRF token -->
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token | default(
+                                request.session.get(
+                                    'csrf_token',
+                                    ''
+                                ),
+                                true
+                            ) }}"
+                        >
+
+
+                        <!-- Display name -->
+                        <div
+                            class="landlord-settings-page__form-group"
+                        >
+                            <label for="display_name">
+                                Display name
+                            </label>
+
+                            <input
+                                id="display_name"
+                                name="display_name"
+                                type="text"
+                                value="{{ form_data.get(
+                                    'display_name',
+                                    current_user.full_name
+                                    | default('', true)
+                                ) if form_data else
+                                current_user.full_name
+                                | default('', true) }}"
+                                minlength="2"
+                                maxlength="150"
+                                autocomplete="name"
+                                placeholder="Enter your display name"
+                                aria-describedby="display-name-help"
+                            >
+
+                            <small id="display-name-help">
+                                This name may appear in your dashboard
+                                and property-management records.
+                            </small>
+
+                            {% if errors
+                                  and errors.get("display_name")
+                            %}
+                                <p
+                                    class="landlord-settings-page__field-error"
+                                >
+                                    {{ errors.get("display_name") }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Email, read only -->
+                        <div
+                            class="landlord-settings-page__form-group"
+                        >
+                            <label for="account_email">
+                                Account email
+                            </label>
+
+                            <input
+                                id="account_email"
+                                type="email"
+                                value="{{ current_user.email
+                                    | default('', true) }}"
+                                autocomplete="email"
+                                readonly
+                                aria-describedby="account-email-help"
+                            >
+
+                            <small id="account-email-help">
+                                Your email address cannot be changed
+                                from this settings page.
+                            </small>
+                        </div>
+
+
+                        <!-- Preferred language -->
+                        <fieldset
+                            class="landlord-settings-page__fieldset"
+                        >
+                            <legend>
+                                Preferred language
+                            </legend>
+
+                            <p
+                                class="landlord-settings-page__fieldset-help"
+                            >
+                                Select the default language for your
+                                landlord portal.
+                            </p>
+
+                            {% set selected_language =
+                                form_data.get(
+                                    "language",
+                                    current_user.preferred_language
+                                    | default(
+                                        current_language
+                                        | default("en", true),
+                                        true
+                                    )
+                                )
+                                if form_data
+                                else current_user.preferred_language
+                                    | default(
+                                        current_language
+                                        | default("en", true),
+                                        true
+                                    )
+                            %}
+
+                            <div
+                                class="landlord-settings-page__language-grid"
+                            >
+                                <label
+                                    class="landlord-settings-page__language-option"
+                                    for="language-en"
+                                >
+                                    <input
+                                        id="language-en"
+                                        name="language"
+                                        type="radio"
+                                        value="en"
+                                        {% if selected_language ==
+                                            "en"
+                                        %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        <strong>English</strong>
+                                        <small>English</small>
+                                    </span>
+                                </label>
+
+                                <label
+                                    class="landlord-settings-page__language-option"
+                                    for="language-de"
+                                >
+                                    <input
+                                        id="language-de"
+                                        name="language"
+                                        type="radio"
+                                        value="de"
+                                        {% if selected_language ==
+                                            "de"
+                                        %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        <strong>Deutsch</strong>
+                                        <small>German</small>
+                                    </span>
+                                </label>
+
+                                <label
+                                    class="landlord-settings-page__language-option"
+                                    for="language-fr"
+                                >
+                                    <input
+                                        id="language-fr"
+                                        name="language"
+                                        type="radio"
+                                        value="fr"
+                                        {% if selected_language ==
+                                            "fr"
+                                        %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        <strong>Français</strong>
+                                        <small>French</small>
+                                    </span>
+                                </label>
+
+                                <label
+                                    class="landlord-settings-page__language-option"
+                                    for="language-es"
+                                >
+                                    <input
+                                        id="language-es"
+                                        name="language"
+                                        type="radio"
+                                        value="es"
+                                        {% if selected_language ==
+                                            "es"
+                                        %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        <strong>Español</strong>
+                                        <small>Spanish</small>
+                                    </span>
+                                </label>
+                            </div>
+
+                            {% if errors
+                                  and errors.get("language")
+                            %}
+                                <p
+                                    class="landlord-settings-page__field-error"
+                                >
+                                    {{ errors.get("language") }}
+                                </p>
+                            {% endif %}
+                        </fieldset>
+
+
+                        <!-- Actions -->
+                        <div
+                            class="landlord-settings-page__form-actions"
+                        >
+                            <a
+                                href="{{ url_for(
+                                    'landlord_dashboard'
+                                ) }}"
+                                class="landlord-settings-page__button
+                                       landlord-settings-page__button--secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                id="landlord-settings-submit-button"
+                                type="submit"
+                                class="landlord-settings-page__button
+                                       landlord-settings-page__button--primary"
+                            >
+                                <span
+                                    class="landlord-settings-page__spinner"
+                                    aria-hidden="true"
+                                ></span>
+
+                                <span data-submit-label>
+                                    Save settings
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+
+                <!-- Accessibility -->
+                <section
+                    class="landlord-settings-page__card"
+                    aria-labelledby="landlord-accessibility-title"
+                >
+                    <div
+                        class="landlord-settings-page__card-header"
+                    >
+                        <div>
+                            <p
+                                class="landlord-settings-page__section-label"
+                            >
+                                Accessibility
+                            </p>
+
+                            <h2 id="landlord-accessibility-title">
+                                Accessibility controls
+                            </h2>
+
+                            <p>
+                                Use the accessibility controls provided
+                                in the main navigation to adjust text,
+                                contrast and speech output.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="landlord-settings-page__information-actions"
+                    >
+                        <a
+                            href="{{ url_for('accessibility_page') }}"
+                            class="landlord-settings-page__text-link"
+                        >
+                            Read the accessibility statement
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </section>
+            </main>
+
+
+            <!-- Sidebar -->
+            <aside class="landlord-settings-page__sidebar">
+
+                <!-- Account -->
+                <section
+                    class="landlord-settings-page__card"
+                    aria-labelledby="landlord-account-title"
+                >
+                    <h2 id="landlord-account-title">
+                        Account
+                    </h2>
+
+                    <dl
+                        class="landlord-settings-page__account-list"
+                    >
+                        <div>
+                            <dt>Name</dt>
+
+                            <dd>
+                                {{
+                                    current_user.full_name
+                                    | default(
+                                        current_user.username,
+                                        true
+                                    )
+                                    | default(
+                                        "Landlord",
+                                        true
+                                    )
+                                }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Email</dt>
+
+                            <dd>
+                                {{
+                                    current_user.email
+                                    | default(
+                                        "Not available",
+                                        true
+                                    )
+                                }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Role</dt>
+
+                            <dd>
+                                {% set user_role =
+                                    current_user.role.value
+                                    if current_user.role
+                                    and current_user.role.value
+                                        is defined
+                                    else current_user.role
+                                        | default("landlord", true)
+                                %}
+
+                                {{
+                                    user_role
+                                    | string
+                                    | replace("_", " ")
+                                    | title
+                                }}
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Language</dt>
+
+                            <dd>
+                                {{
+                                    selected_language
+                                    | default("en", true)
+                                    | upper
+                                }}
+                            </dd>
+                        </div>
+                    </dl>
+                </section>
+
+
+                <!-- Security -->
+                <section
+                    class="landlord-settings-page__card
+                           landlord-settings-page__card--security"
+                    aria-labelledby="landlord-security-title"
+                >
+                    <h2 id="landlord-security-title">
+                        Account security
+                    </h2>
+
+                    <p>
+                        Keep your login information private. Sign out
+                        when using a shared computer and never share
+                        your password or verification codes.
+                    </p>
+
+                    <a href="{{ url_for('privacy_page') }}">
+                        Privacy information
+                    </a>
+                </section>
+
+
+                <!-- Supported settings -->
+                <section
+                    class="landlord-settings-page__card"
+                    aria-labelledby="supported-settings-title"
+                >
+                    <h2 id="supported-settings-title">
+                        Available settings
+                    </h2>
+
+                    <ul
+                        class="landlord-settings-page__feature-list"
+                    >
+                        <li>Display name</li>
+                        <li>Preferred language</li>
+                        <li>Accessibility controls</li>
+                    </ul>
+
+                    <p>
+                        Email changes, password changes and notification
+                        preferences require separate secure account
+                        routes.
+                    </p>
+                </section>
+
+
+                <!-- Help -->
+                <section
+                    class="landlord-settings-page__card"
+                    aria-labelledby="landlord-settings-help-title"
+                >
+                    <h2 id="landlord-settings-help-title">
+                        Need help?
+                    </h2>
+
+                    <p>
+                        Contact support if your account information is
+                        incorrect or you cannot update your settings.
+                    </p>
+
+                    <a href="{{ url_for('contact_page') }}">
+                        Contact support
+                    </a>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+
+    <script
+        src="{{ url_for('static', path='js/landlord.js') }}"
+        defer
+    ></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById(
+                "landlord-settings-form"
+            );
+
+            const displayName = document.getElementById(
+                "display_name"
+            );
+
+            const submitButton = document.getElementById(
+                "landlord-settings-submit-button"
+            );
+
+            if (!form) {
+                return;
+            }
+
+            form.addEventListener("submit", function (event) {
+                if (displayName) {
+                    displayName.value =
+                        displayName.value.trim();
+                }
+
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    form.reportValidity();
+                    return;
+                }
+
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.setAttribute(
+                        "aria-busy",
+                        "true"
+                    );
+
+                    const label = submitButton.querySelector(
+                        "[data-submit-label]"
+                    );
+
+                    if (label) {
+                        label.textContent = "Saving…";
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
