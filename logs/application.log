@@ -53510,3 +53510,934 @@ starlette.routing.NoMatchFound: No route exists for name "add_property_submit" a
 2026-09-21 08:14:12,066 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
 2026-09-21 08:14:57,802 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\requirements.txt~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\requirements.txt~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\requirements.txt')}
 2026-09-21 08:15:11,770 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-21 11:58:16,438 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-21 11:58:16,606 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-21 11:58:16,643 | INFO | smart_property_ai | Database tables are ready.
+2026-09-21 11:58:16,676 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-21 11:58:24,432 | INFO | smart_property_ai | GET / -> 200 897.91ms
+2026-09-21 11:58:24,478 | INFO | smart_property_ai | GET / -> 200 29.02ms
+2026-09-21 11:58:25,309 | INFO | smart_property_ai | GET /static/js/main.js -> 200 625.45ms
+2026-09-21 11:58:25,328 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 658.93ms
+2026-09-21 11:58:25,396 | INFO | smart_property_ai | GET /static/js/landlord.js -> 304 691.10ms
+2026-09-21 11:58:26,758 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-21 11:58:31,565 | INFO | smart_property_ai | GET /logout -> 405 10.41ms
+2026-09-21 11:58:35,432 | INFO | smart_property_ai | GET /logout -> 405 2.74ms
+2026-09-21 11:58:39,408 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-21 11:59:03,563 | INFO | smart_property_ai | GET / -> 200 9.07ms
+2026-09-21 11:59:14,021 | INFO | smart_property_ai | GET /logout -> 405 1.01ms
+2026-09-21 12:15:32,350 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-21 12:15:33,738 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-21 13:25:49,327 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-24 00:31:36,231 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-24 00:31:36,459 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-24 00:31:36,481 | INFO | smart_property_ai | Database tables are ready.
+2026-09-24 00:32:04,963 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-24 00:32:32,653 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-24 00:32:32,665 | INFO | smart_property_ai | Database tables are ready.
+2026-09-24 00:32:34,551 | INFO | smart_property_ai | GET / -> 200 159.81ms
+2026-09-24 00:32:34,895 | INFO | smart_property_ai | GET /static/css/style.css -> 200 152.58ms
+2026-09-24 00:32:34,897 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 153.37ms
+2026-09-24 00:32:34,899 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 152.17ms
+2026-09-24 00:32:34,901 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 153.63ms
+2026-09-24 00:32:34,902 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 153.24ms
+2026-09-24 00:32:34,904 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 154.64ms
+2026-09-24 00:32:34,983 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 62.30ms
+2026-09-24 00:32:34,989 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 66.95ms
+2026-09-24 00:32:34,991 | INFO | smart_property_ai | GET /static/js/main.js -> 200 71.16ms
+2026-09-24 00:32:34,995 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 10.38ms
+2026-09-24 00:32:35,011 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 11.22ms
+2026-09-24 00:32:35,013 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 24.42ms
+2026-09-24 00:32:35,015 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 26.34ms
+2026-09-24 00:32:35,502 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 2.92ms
+2026-09-24 00:32:39,461 | INFO | smart_property_ai | GET /login -> 200 137.24ms
+2026-09-24 00:32:39,481 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 4.22ms
+2026-09-24 00:32:52,665 | INFO | smart_property_ai | GET /logout -> 405 51.36ms
+2026-09-24 00:32:53,150 | INFO | smart_property_ai | GET /favicon.ico -> 307 4.52ms
+2026-09-24 00:32:53,227 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 10.02ms
+2026-09-24 00:33:35,233 | INFO | smart_property_ai | POST /login -> 303 89.96ms
+2026-09-24 00:33:35,240 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 2.21ms
+2026-09-24 00:33:36,689 | INFO | smart_property_ai | GET / -> 200 5.46ms
+2026-09-24 00:33:45,983 | INFO | smart_property_ai | GET /logout -> 405 1.16ms
+2026-09-24 00:33:49,065 | INFO | smart_property_ai | GET / -> 200 6.22ms
+2026-09-24 00:33:58,530 | INFO | smart_property_ai | POST /logout -> 303 11.91ms
+2026-09-24 00:33:58,541 | INFO | smart_property_ai | GET / -> 200 5.60ms
+2026-09-24 00:34:07,333 | INFO | smart_property_ai | GET /logout -> 405 1.80ms
+2026-09-24 00:34:09,794 | INFO | smart_property_ai | GET / -> 200 5.71ms
+2026-09-24 00:34:18,917 | INFO | smart_property_ai | GET /logout -> 405 0.92ms
+2026-09-24 00:34:21,090 | INFO | smart_property_ai | GET / -> 200 5.20ms
+2026-09-24 00:34:31,265 | INFO | smart_property_ai | GET /logout -> 405 0.97ms
+2026-09-24 00:34:33,165 | INFO | smart_property_ai | GET / -> 200 4.76ms
+2026-09-24 00:34:41,102 | INFO | smart_property_ai | GET /login -> 200 5.98ms
+2026-09-24 00:35:13,435 | INFO | smart_property_ai | POST /login -> 401 19.55ms
+2026-09-24 00:35:30,873 | INFO | smart_property_ai | POST /login -> 303 24.10ms
+2026-09-24 00:35:30,879 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 1.43ms
+2026-09-24 00:35:37,553 | INFO | smart_property_ai | GET / -> 200 6.80ms
+2026-09-24 00:35:47,997 | INFO | smart_property_ai | GET /logout -> 405 0.77ms
+2026-09-24 00:35:49,833 | INFO | smart_property_ai | GET / -> 200 4.90ms
+2026-09-24 00:35:51,508 | INFO | smart_property_ai | GET /landlord/landlorddashboard -> 200 133.89ms
+2026-09-24 00:35:51,524 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 7.03ms
+2026-09-24 00:35:51,527 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 8.78ms
+2026-09-24 00:36:11,528 | ERROR | smart_property_ai | GET /landlord/landlord/appointments -> unhandled error 51.10ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 448, in landlord_appointments_page
+    |     return _render(request, user, "landlord/appointments.html", page_title="Appointments", appointments=rows)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\appointments.html", line 3, in top-level template code
+    |     {% from "landlord/_macros.html" import status_badge, format_date %}
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    |     raise TemplateNotFound(
+    |     ...<2 lines>...
+    |     )
+    | jinja2.exceptions.TemplateNotFound: 'landlord/_macros.html' not found in search path: 'templates'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 448, in landlord_appointments_page
+    return _render(request, user, "landlord/appointments.html", page_title="Appointments", appointments=rows)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\appointments.html", line 3, in top-level template code
+    {% from "landlord/_macros.html" import status_badge, format_date %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    raise TemplateNotFound(
+    ...<2 lines>...
+    )
+jinja2.exceptions.TemplateNotFound: 'landlord/_macros.html' not found in search path: 'templates'
+2026-09-24 00:36:19,356 | INFO | smart_property_ai | GET /landlord/landlord/expenses/add -> 200 42.89ms
+2026-09-24 00:36:24,697 | INFO | smart_property_ai | GET /landlord/landlord/documents/upload -> 200 33.76ms
+2026-09-24 00:36:28,359 | INFO | smart_property_ai | GET /landlord/landlord/leases/add -> 200 26.23ms
+2026-09-24 00:36:46,824 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-24 00:36:46,826 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=0b56899b-a7e9-4c06-81ce-1aa59c809dfa model=smart-property-standard
+2026-09-24 00:36:46,832 | INFO | smart_property_ai | POST /api/ai/chat -> 200 13.02ms
+2026-09-24 00:37:19,958 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-24 00:37:19,959 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=0b56899b-a7e9-4c06-81ce-1aa59c809dfa model=smart-property-standard
+2026-09-24 00:37:19,960 | INFO | smart_property_ai | POST /api/ai/chat -> 200 4.79ms
+2026-09-24 00:37:52,298 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-24 00:37:52,298 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=0b56899b-a7e9-4c06-81ce-1aa59c809dfa model=smart-property-standard
+2026-09-24 00:37:52,300 | INFO | smart_property_ai | POST /api/ai/chat -> 200 4.39ms
+2026-09-24 00:38:33,082 | INFO | smart_property_ai | GET /landlord/landlord/documents -> 200 51.39ms
+2026-09-24 00:38:41,791 | INFO | smart_property_ai | GET /landlord/landlorddashboard -> 200 24.42ms
+2026-09-24 00:39:02,250 | INFO | smart_property_ai | GET /logout -> 405 1.96ms
+2026-09-24 00:39:03,591 | INFO | smart_property_ai | GET / -> 200 7.52ms
+2026-09-24 00:39:06,009 | INFO | smart_property_ai | GET /landlord/landlorddashboard -> 200 23.95ms
+2026-09-24 00:39:12,400 | INFO | smart_property_ai | GET /landlord/landlord/smart-devices -> 200 57.63ms
+2026-09-24 00:39:16,724 | INFO | smart_property_ai | GET /landlord/landlord/notifications -> 200 51.57ms
+2026-09-24 00:39:20,296 | INFO | smart_property_ai | GET /landlord/landlord/settings -> 200 32.91ms
+2026-09-24 00:39:23,700 | ERROR | smart_property_ai | GET /landlord/landlord/reports -> unhandled error 38.22ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 602, in landlord_reports_page
+    |     return _render(request, user, "landlord/reports.html", page_title="Reports", reports=reports)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\reports.html", line 1, in top-level template code
+    |     {% extends "base.html" %}
+    |   File "templates\base.html", line 550, in top-level template code
+    |     {% block content %}
+    |     ^^^^^^^^^^^^^^^^^
+    |   File "templates\landlord\reports.html", line 77, in block 'content'
+    |     href="{{ url_for('landlord_properties_page') }}"
+    |     ^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 110, in url_for
+    |     return request.url_for(name, **path_params)
+    |            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    |     url_path = url_path_provider.url_path_for(name, **path_params)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    |     raise NoMatchFound(name, path_params)
+    | starlette.routing.NoMatchFound: No route exists for name "landlord_properties_page" and params "".
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 602, in landlord_reports_page
+    return _render(request, user, "landlord/reports.html", page_title="Reports", reports=reports)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\reports.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "templates\base.html", line 550, in top-level template code
+    {% block content %}
+    ^^^^^^^^^^^^^^^^^
+  File "templates\landlord\reports.html", line 77, in block 'content'
+    href="{{ url_for('landlord_properties_page') }}"
+    ^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 110, in url_for
+    return request.url_for(name, **path_params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    url_path = url_path_provider.url_path_for(name, **path_params)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    raise NoMatchFound(name, path_params)
+starlette.routing.NoMatchFound: No route exists for name "landlord_properties_page" and params "".
+2026-09-24 00:39:29,741 | INFO | smart_property_ai | GET /landlord/landlord/documents -> 200 10.56ms
+2026-09-24 00:39:43,141 | INFO | smart_property_ai | GET /landlord/landlorddashboard -> 200 21.63ms
+2026-09-24 00:39:44,398 | ERROR | smart_property_ai | GET /landlord/landlord/properties -> unhandled error 54.38ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 219, in properties_page
+    |     return _render(request, user, "landlord/properties.html", page_title="Properties", properties=properties)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\properties.html", line 1, in top-level template code
+    |     {% extends "base.html" %}
+    |   File "templates\base.html", line 550, in top-level template code
+    |     {% block content %}
+    |     ^^^^^^^^^^^^^^^^^
+    |   File "templates\landlord\properties.html", line 107, in block 'content'
+    |     {{ summary.total_properties | default(0) }}
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    |     return getattr(obj, attribute)
+    | jinja2.exceptions.UndefinedError: 'summary' is undefined
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 219, in properties_page
+    return _render(request, user, "landlord/properties.html", page_title="Properties", properties=properties)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\properties.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "templates\base.html", line 550, in top-level template code
+    {% block content %}
+    ^^^^^^^^^^^^^^^^^
+  File "templates\landlord\properties.html", line 107, in block 'content'
+    {{ summary.total_properties | default(0) }}
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'summary' is undefined
+2026-09-24 00:39:48,940 | INFO | smart_property_ai | GET /logout -> 405 1.80ms
+2026-09-24 00:39:50,413 | INFO | smart_property_ai | GET / -> 200 5.14ms
+2026-09-24 00:39:51,959 | INFO | smart_property_ai | GET /landlord/landlorddashboard -> 200 17.99ms
+2026-09-24 00:39:54,566 | ERROR | smart_property_ai | GET /landlord/landlord/tenants -> unhandled error 10.34ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 350, in landlord_tenants_page
+    |     return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 148, in TemplateResponse
+    |     template = self.get_template(name)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 115, in get_template
+    |     return self.env.get_template(name)
+    |            ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    |     return self._load_template(name, globals)
+    |            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    |     template = self.loader.load(self, name, self.make_globals(globals))
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    |     source, filename, uptodate = self.get_source(environment, name)
+    |                                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    |     raise TemplateNotFound(
+    |     ...<2 lines>...
+    |     )
+    | jinja2.exceptions.TemplateNotFound: 'landlord/tenants.html' not found in search path: 'templates'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 281, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 249, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 350, in landlord_tenants_page
+    return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 117, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 148, in TemplateResponse
+    template = self.get_template(name)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 115, in get_template
+    return self.env.get_template(name)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    raise TemplateNotFound(
+    ...<2 lines>...
+    )
+jinja2.exceptions.TemplateNotFound: 'landlord/tenants.html' not found in search path: 'templates'
+2026-09-24 00:39:59,274 | INFO | smart_property_ai | GET /landlord/landlord/leases -> 200 50.98ms
+2026-09-24 00:40:15,784 | INFO | smart_property_ai | GET /logout -> 405 0.96ms
+2026-09-24 00:43:50,959 | INFO | smart_property_ai | GET / -> 200 9.28ms
+2026-09-24 00:43:54,571 | INFO | smart_property_ai | POST /logout -> 303 25.70ms
+2026-09-24 00:43:54,582 | INFO | smart_property_ai | GET / -> 200 4.67ms
+2026-09-24 00:43:56,432 | INFO | smart_property_ai | GET /login -> 200 7.81ms
+2026-09-24 00:44:13,339 | INFO | smart_property_ai | GET /logout -> 405 1.15ms
+2026-09-24 00:44:15,797 | INFO | smart_property_ai | GET / -> 200 5.84ms
+2026-09-24 00:44:23,199 | INFO | smart_property_ai | GET /login -> 200 4.60ms
+2026-09-24 00:44:30,272 | INFO | smart_property_ai | GET /logout -> 405 1.30ms
+2026-09-24 00:44:34,292 | INFO | smart_property_ai | GET / -> 200 4.54ms
+2026-09-24 00:44:37,391 | INFO | smart_property_ai | GET /login -> 200 6.67ms
+2026-09-24 00:45:07,160 | INFO | smart_property_ai | POST /login -> 303 56.20ms
+2026-09-24 00:45:07,176 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 9.40ms
+2026-09-24 00:45:08,629 | INFO | smart_property_ai | GET / -> 200 5.45ms
+2026-09-24 00:45:10,535 | INFO | smart_property_ai | GET /tenant/tenant -> 200 253.93ms
+2026-09-24 00:45:10,553 | INFO | smart_property_ai | GET /static/js/tenant.js -> 200 5.88ms
+2026-09-24 00:45:18,626 | INFO | smart_property_ai | GET /tenant/tenant/payments -> 200 48.87ms
+2026-09-24 00:45:25,160 | INFO | smart_property_ai | GET /logout -> 405 1.50ms
+2026-09-24 00:45:27,662 | INFO | smart_property_ai | GET / -> 200 5.13ms
+2026-09-24 00:45:32,312 | INFO | smart_property_ai | GET /tenant/tenant -> 200 24.79ms
+2026-09-24 00:45:35,518 | INFO | smart_property_ai | GET /tenant/tenant/leases -> 200 37.21ms
+2026-09-24 00:45:40,603 | INFO | smart_property_ai | GET /tenant/tenant/complaints -> 200 41.56ms
+2026-09-24 00:45:49,299 | INFO | smart_property_ai | GET /tenant/tenant/appointments -> 200 27.86ms
+2026-09-24 00:45:53,780 | INFO | smart_property_ai | GET /tenant/tenant/leases -> 200 12.57ms
+2026-09-24 00:46:01,716 | INFO | smart_property_ai | GET /logout -> 405 1.30ms
+2026-09-24 00:46:10,939 | INFO | smart_property_ai | Shutting down Smart Property AI.

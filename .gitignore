@@ -1,1 +1,12 @@
 .env
+# Evaluation reports may contain prompts, references, and model responses.
+# Keep generated reports local unless they have been reviewed and sanitized.
+*.json
+*.jsonl
+*.csv
+*.log
+.evaluation-cache/
+
+# Keep the documentation and ignore rules tracked.
+!.gitignore
+!README.md

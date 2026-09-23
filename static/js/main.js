@@ -1057,6 +1057,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
+
 //Backtop or scroll to top
 const scrollButton = document.getElementById("scroll-button");
 scrollButton.addEventListener('click', function() {
