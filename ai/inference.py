@@ -33,6 +33,9 @@ DEFAULT_LOCAL_MODEL: Final[str] = "smart-property-local-v1"
 DEFAULT_TIMEOUT_SECONDS: Final[float] = 30.0
 MAX_TIMEOUT_SECONDS: Final[float] = 120.0
 
+DEFAULT_MAX_NEW_TOKENS: Final[int] = 600
+MAX_NEW_TOKENS: Final[int] = 2_000
+
 MAX_RESPONSE_CHARACTERS: Final[int] = 8_000
 MAX_MESSAGE_CHARACTERS: Final[int] = 8_000
 MAX_MESSAGES: Final[int] = 20
@@ -68,7 +71,14 @@ class InferenceRequest:
     model: str | None = None
 
     temperature: float = 0.2
-    max_tokens: int = 600
+
+    # Primary output-length setting used by local/Hugging Face-style
+    # inference engines.
+    max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS
+
+    # Backward-compatible alias for callers that already use max_tokens.
+    # When provided, it takes precedence over max_new_tokens.
+    max_tokens: int | None = None
 
     metadata: Mapping[str, object] = field(
         default_factory=dict
@@ -90,6 +100,29 @@ class InferenceResponse:
     finish_reason: str | None = None
 
     used_fallback: bool = False
+
+
+def _output_token_limit(
+    request: InferenceRequest,
+) -> int:
+    """Return the safely bounded response-token limit.
+
+    ``max_tokens`` is retained for existing callers. New code should use
+    ``max_new_tokens`` because it clearly represents newly generated output
+    rather than the combined prompt and response length.
+    """
+
+    requested_limit = (
+        request.max_tokens
+        if request.max_tokens is not None
+        else request.max_new_tokens
+    )
+
+    return _bounded_int(
+        requested_limit,
+        1,
+        MAX_NEW_TOKENS,
+    )
 
 
 class InferenceEngine(Protocol):
@@ -859,10 +892,11 @@ class CompatibleAPIInferenceEngine:
                 0.0,
                 1.5,
             ),
-            "max_tokens": _bounded_int(
-                request.max_tokens,
-                1,
-                2_000,
+            # OpenAI-compatible chat-completions APIs commonly expect the
+            # legacy name max_tokens. The internal configuration uses the
+            # clearer max_new_tokens name and maps it here.
+            "max_tokens": _output_token_limit(
+                request
             ),
         }
 
@@ -1220,7 +1254,8 @@ def generate_response(
     language: str = "en",
     model: str | None = None,
     temperature: float = 0.2,
-    max_tokens: int = 600,
+    max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+    max_tokens: int | None = None,
     engine: InferenceEngine | None = None,
     metadata: Mapping[str, object] | None = None,
 ) -> InferenceResponse:
@@ -1238,6 +1273,7 @@ def generate_response(
         ),
         model=model,
         temperature=temperature,
+        max_new_tokens=max_new_tokens,
         max_tokens=max_tokens,
         metadata=metadata or {},
     )
@@ -1253,7 +1289,8 @@ async def generate_response_async(
     language: str = "en",
     model: str | None = None,
     temperature: float = 0.2,
-    max_tokens: int = 600,
+    max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+    max_tokens: int | None = None,
     engine: InferenceEngine | None = None,
     metadata: Mapping[str, object] | None = None,
 ) -> InferenceResponse:
@@ -1265,6 +1302,7 @@ async def generate_response_async(
         language=language,
         model=model,
         temperature=temperature,
+        max_new_tokens=max_new_tokens,
         max_tokens=max_tokens,
         engine=engine,
         metadata=metadata,
@@ -1298,6 +1336,7 @@ def engine_health(
 __all__ = [
     "CompatibleAPIInferenceEngine",
     "DEFAULT_LOCAL_MODEL",
+    "DEFAULT_MAX_NEW_TOKENS",
     "DEFAULT_PROVIDER",
     "InferenceConfigurationError",
     "InferenceEngine",
