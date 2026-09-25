@@ -67160,3 +67160,1757 @@ NameError: name 'property_service' is not defined. Did you mean: 'PropertyServic
 2026-09-25 10:35:06,409 | INFO | smart_property_ai | GET /ai-information -> 200 56.92ms
 2026-09-25 10:35:57,334 | INFO | smart_property_ai | GET /logout -> 303 1.48ms
 2026-09-25 10:35:57,360 | INFO | smart_property_ai | GET / -> 200 11.95ms
+2026-09-25 10:37:06,391 | INFO | smart_property_ai | GET /logout -> 303 2.22ms
+2026-09-25 10:37:06,435 | INFO | smart_property_ai | GET / -> 200 27.92ms
+2026-09-25 10:37:24,590 | INFO | smart_property_ai | GET /logout -> 303 4.34ms
+2026-09-25 10:37:24,618 | INFO | smart_property_ai | GET / -> 200 16.46ms
+2026-09-25 10:37:42,727 | INFO | smart_property_ai | GET /logout -> 303 1.16ms
+2026-09-25 10:37:42,767 | INFO | smart_property_ai | GET / -> 200 16.97ms
+2026-09-25 10:38:00,889 | INFO | smart_property_ai | GET /logout -> 303 4.65ms
+2026-09-25 10:38:00,916 | INFO | smart_property_ai | GET / -> 200 15.09ms
+2026-09-25 10:38:19,049 | INFO | smart_property_ai | GET /logout -> 303 2.65ms
+2026-09-25 10:38:19,073 | INFO | smart_property_ai | GET / -> 200 12.67ms
+2026-09-25 10:38:37,203 | INFO | smart_property_ai | GET /logout -> 303 3.53ms
+2026-09-25 10:38:37,228 | INFO | smart_property_ai | GET / -> 200 11.29ms
+2026-09-25 10:38:55,363 | INFO | smart_property_ai | GET /logout -> 303 2.44ms
+2026-09-25 10:38:55,409 | INFO | smart_property_ai | GET / -> 200 17.22ms
+2026-09-25 10:39:13,631 | INFO | smart_property_ai | GET /logout -> 303 2.82ms
+2026-09-25 10:39:13,663 | INFO | smart_property_ai | GET / -> 200 14.44ms
+2026-09-25 10:39:31,801 | INFO | smart_property_ai | GET /logout -> 303 3.02ms
+2026-09-25 10:39:31,826 | INFO | smart_property_ai | GET / -> 200 11.76ms
+2026-09-25 10:39:49,960 | INFO | smart_property_ai | GET /logout -> 303 2.81ms
+2026-09-25 10:39:49,991 | INFO | smart_property_ai | GET / -> 200 15.62ms
+2026-09-25 10:40:08,117 | INFO | smart_property_ai | GET /logout -> 303 2.25ms
+2026-09-25 10:40:08,198 | INFO | smart_property_ai | GET / -> 200 64.69ms
+2026-09-25 10:40:26,319 | INFO | smart_property_ai | GET /logout -> 303 2.77ms
+2026-09-25 10:40:26,348 | INFO | smart_property_ai | GET / -> 200 14.31ms
+2026-09-25 10:40:44,484 | INFO | smart_property_ai | GET /logout -> 303 2.58ms
+2026-09-25 10:40:44,513 | INFO | smart_property_ai | GET / -> 200 12.59ms
+2026-09-25 10:41:02,628 | INFO | smart_property_ai | GET /logout -> 303 1.43ms
+2026-09-25 10:41:02,664 | INFO | smart_property_ai | GET / -> 200 15.24ms
+2026-09-25 10:41:20,810 | INFO | smart_property_ai | GET /logout -> 303 1.46ms
+2026-09-25 10:41:20,852 | INFO | smart_property_ai | GET / -> 200 15.79ms
+2026-09-25 10:41:38,982 | INFO | smart_property_ai | GET /logout -> 303 1.45ms
+2026-09-25 10:41:39,017 | INFO | smart_property_ai | GET / -> 200 18.70ms
+2026-09-25 10:41:57,141 | INFO | smart_property_ai | GET /logout -> 303 1.23ms
+2026-09-25 10:41:57,169 | INFO | smart_property_ai | GET / -> 200 13.20ms
+2026-09-25 10:42:15,304 | INFO | smart_property_ai | GET /logout -> 303 1.58ms
+2026-09-25 10:42:15,328 | INFO | smart_property_ai | GET / -> 200 11.62ms
+2026-09-25 10:42:33,446 | INFO | smart_property_ai | GET /logout -> 303 4.58ms
+2026-09-25 10:42:33,471 | INFO | smart_property_ai | GET / -> 200 12.76ms
+2026-09-25 10:42:51,584 | INFO | smart_property_ai | GET /logout -> 303 1.82ms
+2026-09-25 10:42:51,621 | INFO | smart_property_ai | GET / -> 200 17.42ms
+2026-09-25 10:43:09,806 | INFO | smart_property_ai | GET /logout -> 303 2.03ms
+2026-09-25 10:43:09,851 | INFO | smart_property_ai | GET / -> 200 21.55ms
+2026-09-25 10:43:28,808 | INFO | smart_property_ai | GET /logout -> 303 4.49ms
+2026-09-25 10:43:28,847 | INFO | smart_property_ai | GET / -> 200 19.16ms
+2026-09-25 10:43:47,800 | INFO | smart_property_ai | GET /logout -> 303 1.71ms
+2026-09-25 10:43:47,833 | INFO | smart_property_ai | GET / -> 200 19.15ms
+2026-09-25 10:44:06,820 | INFO | smart_property_ai | GET /logout -> 303 11.79ms
+2026-09-25 10:44:06,856 | INFO | smart_property_ai | GET / -> 200 23.40ms
+2026-09-25 10:44:25,807 | INFO | smart_property_ai | GET /logout -> 303 3.79ms
+2026-09-25 10:44:25,846 | INFO | smart_property_ai | GET / -> 200 23.70ms
+2026-09-25 10:44:44,811 | INFO | smart_property_ai | GET /logout -> 303 4.25ms
+2026-09-25 10:44:44,850 | INFO | smart_property_ai | GET / -> 200 23.44ms
+2026-09-25 10:45:03,802 | INFO | smart_property_ai | GET /logout -> 303 2.67ms
+2026-09-25 10:45:03,831 | INFO | smart_property_ai | GET / -> 200 14.85ms
+2026-09-25 10:45:22,807 | INFO | smart_property_ai | GET /logout -> 303 4.05ms
+2026-09-25 10:45:22,854 | INFO | smart_property_ai | GET / -> 200 22.07ms
+2026-09-25 10:45:41,807 | INFO | smart_property_ai | GET /logout -> 303 6.53ms
+2026-09-25 10:45:41,842 | INFO | smart_property_ai | GET / -> 200 19.20ms
+2026-09-25 10:46:00,797 | INFO | smart_property_ai | GET /logout -> 303 1.42ms
+2026-09-25 10:46:00,833 | INFO | smart_property_ai | GET / -> 200 18.18ms
+2026-09-25 10:46:19,809 | INFO | smart_property_ai | GET /logout -> 303 3.43ms
+2026-09-25 10:46:19,856 | INFO | smart_property_ai | GET / -> 200 25.62ms
+2026-09-25 10:46:38,813 | INFO | smart_property_ai | GET /logout -> 303 3.26ms
+2026-09-25 10:46:38,858 | INFO | smart_property_ai | GET / -> 200 25.28ms
+2026-09-25 10:46:57,816 | INFO | smart_property_ai | GET /logout -> 303 5.12ms
+2026-09-25 10:46:57,862 | INFO | smart_property_ai | GET / -> 200 24.19ms
+2026-09-25 10:47:16,812 | INFO | smart_property_ai | GET /logout -> 303 2.13ms
+2026-09-25 10:47:16,850 | INFO | smart_property_ai | GET / -> 200 18.28ms
+2026-09-25 10:47:35,793 | INFO | smart_property_ai | GET /logout -> 303 2.31ms
+2026-09-25 10:47:35,831 | INFO | smart_property_ai | GET / -> 200 17.63ms
+2026-09-25 10:47:54,819 | INFO | smart_property_ai | GET /logout -> 303 1.42ms
+2026-09-25 10:47:54,866 | INFO | smart_property_ai | GET / -> 200 20.65ms
+2026-09-25 10:48:13,801 | INFO | smart_property_ai | GET /logout -> 303 2.51ms
+2026-09-25 10:48:13,844 | INFO | smart_property_ai | GET / -> 200 22.57ms
+2026-09-25 10:48:32,809 | INFO | smart_property_ai | GET /logout -> 303 1.43ms
+2026-09-25 10:48:32,835 | INFO | smart_property_ai | GET / -> 200 12.49ms
+2026-09-25 10:48:51,801 | INFO | smart_property_ai | GET /logout -> 303 1.56ms
+2026-09-25 10:48:51,842 | INFO | smart_property_ai | GET / -> 200 18.08ms
+2026-09-25 10:49:10,801 | INFO | smart_property_ai | GET /logout -> 303 2.34ms
+2026-09-25 10:49:10,838 | INFO | smart_property_ai | GET / -> 200 15.86ms
+2026-09-25 10:49:29,812 | INFO | smart_property_ai | GET /logout -> 303 3.01ms
+2026-09-25 10:49:29,853 | INFO | smart_property_ai | GET / -> 200 18.62ms
+2026-09-25 10:53:10,195 | INFO | smart_property_ai | GET /logout -> 303 128.56ms
+2026-09-25 10:53:10,359 | INFO | smart_property_ai | GET / -> 200 105.23ms
+2026-09-25 10:53:10,769 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 299.67ms
+2026-09-25 10:53:38,141 | INFO | smart_property_ai | GET /logout -> 303 7.15ms
+2026-09-25 10:53:38,179 | INFO | smart_property_ai | GET / -> 200 23.57ms
+2026-09-25 10:53:58,231 | INFO | smart_property_ai | GET /logout -> 303 23.94ms
+2026-09-25 10:53:58,293 | INFO | smart_property_ai | GET / -> 200 38.86ms
+2026-09-25 10:54:30,468 | INFO | smart_property_ai | GET /login -> 200 109.19ms
+2026-09-25 10:55:14,522 | INFO | smart_property_ai | POST /login -> 401 631.86ms
+2026-09-25 10:55:32,321 | INFO | smart_property_ai | POST /login -> 303 187.47ms
+2026-09-25 10:55:32,397 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 53.23ms
+2026-09-25 10:55:33,536 | INFO | smart_property_ai | GET / -> 200 35.42ms
+2026-09-25 10:55:49,024 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 226.58ms
+2026-09-25 10:56:10,823 | INFO | smart_property_ai | GET /logout -> 303 5.17ms
+2026-09-25 10:56:10,864 | INFO | smart_property_ai | GET / -> 200 19.69ms
+2026-09-25 10:56:29,814 | INFO | smart_property_ai | GET /logout -> 303 3.81ms
+2026-09-25 10:56:29,850 | INFO | smart_property_ai | GET / -> 200 15.17ms
+2026-09-25 10:56:29,962 | INFO | smart_property_ai | GET /static/js/main.js -> 304 29.79ms
+2026-09-25 10:56:48,811 | INFO | smart_property_ai | GET /logout -> 303 2.00ms
+2026-09-25 10:56:48,884 | INFO | smart_property_ai | GET / -> 200 29.22ms
+2026-09-25 10:57:07,831 | INFO | smart_property_ai | GET /logout -> 303 4.37ms
+2026-09-25 10:57:07,870 | INFO | smart_property_ai | GET / -> 200 17.72ms
+2026-09-25 10:57:26,802 | INFO | smart_property_ai | GET /logout -> 303 1.63ms
+2026-09-25 10:57:26,840 | INFO | smart_property_ai | GET / -> 200 18.19ms
+2026-09-25 10:57:45,826 | INFO | smart_property_ai | GET /logout -> 303 3.11ms
+2026-09-25 10:57:45,876 | INFO | smart_property_ai | GET / -> 200 35.91ms
+2026-09-25 10:58:13,799 | INFO | smart_property_ai | GET /logout -> 303 1.70ms
+2026-09-25 10:58:13,827 | INFO | smart_property_ai | GET / -> 200 13.12ms
+2026-09-25 10:58:32,798 | INFO | smart_property_ai | GET /logout -> 303 1.29ms
+2026-09-25 10:58:32,833 | INFO | smart_property_ai | GET / -> 200 22.24ms
+2026-09-25 10:58:51,801 | INFO | smart_property_ai | GET /logout -> 303 1.11ms
+2026-09-25 10:58:51,835 | INFO | smart_property_ai | GET / -> 200 20.66ms
+2026-09-25 10:59:10,798 | INFO | smart_property_ai | GET /logout -> 303 1.37ms
+2026-09-25 10:59:10,824 | INFO | smart_property_ai | GET / -> 200 14.89ms
+2026-09-25 10:59:29,798 | INFO | smart_property_ai | GET /logout -> 303 3.22ms
+2026-09-25 10:59:29,826 | INFO | smart_property_ai | GET / -> 200 17.24ms
+2026-09-25 10:59:48,798 | INFO | smart_property_ai | GET /logout -> 303 3.84ms
+2026-09-25 10:59:48,823 | INFO | smart_property_ai | GET / -> 200 13.36ms
+2026-09-25 11:07:00,722 | INFO | smart_property_ai | GET /logout -> 303 16.02ms
+2026-09-25 11:07:00,764 | INFO | smart_property_ai | GET / -> 200 27.50ms
+2026-09-25 11:07:54,816 | INFO | smart_property_ai | GET /logout -> 303 4.96ms
+2026-09-25 11:07:54,848 | INFO | smart_property_ai | GET / -> 200 20.02ms
+2026-09-25 11:08:17,356 | INFO | smart_property_ai | GET /logout -> 303 98.32ms
+2026-09-25 11:08:17,851 | INFO | smart_property_ai | GET / -> 200 76.82ms
+2026-09-25 11:08:40,801 | INFO | smart_property_ai | GET /logout -> 303 3.94ms
+2026-09-25 11:08:40,843 | INFO | smart_property_ai | GET / -> 200 22.16ms
+2026-09-25 11:08:59,802 | INFO | smart_property_ai | GET /logout -> 303 5.30ms
+2026-09-25 11:08:59,845 | INFO | smart_property_ai | GET / -> 200 21.30ms
+2026-09-25 11:09:18,821 | INFO | smart_property_ai | GET /logout -> 303 2.63ms
+2026-09-25 11:09:18,875 | INFO | smart_property_ai | GET / -> 200 37.67ms
+2026-09-25 11:09:37,815 | INFO | smart_property_ai | GET /logout -> 303 8.78ms
+2026-09-25 11:09:37,871 | INFO | smart_property_ai | GET / -> 200 38.24ms
+2026-09-25 11:09:56,807 | INFO | smart_property_ai | GET /logout -> 303 6.81ms
+2026-09-25 11:09:56,838 | INFO | smart_property_ai | GET / -> 200 18.93ms
+2026-09-25 11:10:15,813 | INFO | smart_property_ai | GET /logout -> 303 1.46ms
+2026-09-25 11:10:15,870 | INFO | smart_property_ai | GET / -> 200 33.62ms
+2026-09-25 11:10:34,821 | INFO | smart_property_ai | GET /logout -> 303 4.99ms
+2026-09-25 11:10:34,860 | INFO | smart_property_ai | GET / -> 200 25.46ms
+2026-09-25 11:10:53,808 | INFO | smart_property_ai | GET /logout -> 303 6.43ms
+2026-09-25 11:10:53,859 | INFO | smart_property_ai | GET / -> 200 25.17ms
+2026-09-25 11:11:12,802 | INFO | smart_property_ai | GET /logout -> 303 1.50ms
+2026-09-25 11:11:12,840 | INFO | smart_property_ai | GET / -> 200 17.91ms
+2026-09-25 11:11:31,799 | INFO | smart_property_ai | GET /logout -> 303 5.72ms
+2026-09-25 11:11:31,841 | INFO | smart_property_ai | GET / -> 200 20.25ms
+2026-09-25 11:11:50,819 | INFO | smart_property_ai | GET /logout -> 303 2.23ms
+2026-09-25 11:11:50,860 | INFO | smart_property_ai | GET / -> 200 21.52ms
+2026-09-25 11:12:09,812 | INFO | smart_property_ai | GET /logout -> 303 4.11ms
+2026-09-25 11:12:09,859 | INFO | smart_property_ai | GET / -> 200 23.05ms
+2026-09-25 12:18:49,000 | INFO | smart_property_ai | GET /logout -> 303 63.19ms
+2026-09-25 12:18:49,101 | INFO | smart_property_ai | GET / -> 200 64.49ms
+2026-09-25 12:18:49,231 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 80.99ms
+2026-09-25 12:19:07,811 | INFO | smart_property_ai | GET /logout -> 303 5.98ms
+2026-09-25 12:19:07,889 | INFO | smart_property_ai | GET / -> 200 63.62ms
+2026-09-25 12:19:07,958 | INFO | smart_property_ai | GET /static/js/main.js -> 304 10.91ms
+2026-09-25 12:19:26,809 | INFO | smart_property_ai | GET /logout -> 303 1.44ms
+2026-09-25 12:19:26,851 | INFO | smart_property_ai | GET / -> 200 22.77ms
+2026-09-25 12:19:45,807 | INFO | smart_property_ai | GET /logout -> 303 4.22ms
+2026-09-25 12:19:45,846 | INFO | smart_property_ai | GET / -> 200 18.37ms
+2026-09-25 12:20:04,840 | INFO | smart_property_ai | GET /logout -> 303 17.48ms
+2026-09-25 12:20:05,211 | INFO | smart_property_ai | GET / -> 200 14.66ms
+2026-09-25 12:20:23,810 | INFO | smart_property_ai | GET /logout -> 303 2.94ms
+2026-09-25 12:20:23,854 | INFO | smart_property_ai | GET / -> 200 19.49ms
+2026-09-25 12:20:42,801 | INFO | smart_property_ai | GET /logout -> 303 1.60ms
+2026-09-25 12:20:42,933 | INFO | smart_property_ai | GET / -> 200 116.94ms
+2026-09-25 12:21:01,810 | INFO | smart_property_ai | GET /logout -> 303 16.10ms
+2026-09-25 12:21:01,869 | INFO | smart_property_ai | GET / -> 200 46.43ms
+2026-09-25 12:21:20,797 | INFO | smart_property_ai | GET /logout -> 303 1.00ms
+2026-09-25 12:21:20,829 | INFO | smart_property_ai | GET / -> 200 14.10ms
+2026-09-25 12:21:39,809 | INFO | smart_property_ai | GET /logout -> 303 8.49ms
+2026-09-25 12:21:39,851 | INFO | smart_property_ai | GET / -> 200 19.40ms
+2026-09-25 12:21:58,809 | INFO | smart_property_ai | GET /logout -> 303 4.22ms
+2026-09-25 12:21:58,846 | INFO | smart_property_ai | GET / -> 200 24.30ms
+2026-09-25 12:22:23,829 | INFO | smart_property_ai | GET /logout -> 303 3.30ms
+2026-09-25 12:22:23,872 | INFO | smart_property_ai | GET / -> 200 26.18ms
+2026-09-25 12:22:42,895 | INFO | smart_property_ai | GET /logout -> 303 25.56ms
+2026-09-25 12:22:42,939 | INFO | smart_property_ai | GET / -> 200 31.25ms
+2026-09-25 12:23:01,811 | INFO | smart_property_ai | GET /logout -> 303 2.83ms
+2026-09-25 12:23:01,852 | INFO | smart_property_ai | GET / -> 200 23.31ms
+2026-09-25 12:23:20,884 | INFO | smart_property_ai | GET /logout -> 303 5.93ms
+2026-09-25 12:23:20,994 | INFO | smart_property_ai | GET / -> 200 57.03ms
+2026-09-25 12:23:39,823 | INFO | smart_property_ai | GET /logout -> 303 2.57ms
+2026-09-25 12:23:39,862 | INFO | smart_property_ai | GET / -> 200 16.70ms
+2026-09-25 12:23:58,809 | INFO | smart_property_ai | GET /logout -> 303 3.48ms
+2026-09-25 12:23:58,845 | INFO | smart_property_ai | GET / -> 200 17.14ms
+2026-09-25 12:24:17,835 | INFO | smart_property_ai | GET /logout -> 303 1.73ms
+2026-09-25 12:24:17,880 | INFO | smart_property_ai | GET / -> 200 27.04ms
+2026-09-25 12:24:36,799 | INFO | smart_property_ai | GET /logout -> 303 2.22ms
+2026-09-25 12:24:36,857 | INFO | smart_property_ai | GET / -> 200 30.43ms
+2026-09-25 12:24:55,811 | INFO | smart_property_ai | GET /logout -> 303 4.87ms
+2026-09-25 12:24:55,853 | INFO | smart_property_ai | GET / -> 200 24.75ms
+2026-09-25 12:25:14,807 | INFO | smart_property_ai | GET /logout -> 303 1.76ms
+2026-09-25 12:25:14,848 | INFO | smart_property_ai | GET / -> 200 16.52ms
+2026-09-25 12:25:33,814 | INFO | smart_property_ai | GET /logout -> 303 1.95ms
+2026-09-25 12:25:33,857 | INFO | smart_property_ai | GET / -> 200 19.99ms
+2026-09-25 12:25:52,803 | INFO | smart_property_ai | GET /logout -> 303 3.26ms
+2026-09-25 12:25:52,851 | INFO | smart_property_ai | GET / -> 200 19.89ms
+2026-09-25 12:26:32,137 | INFO | smart_property_ai | GET /logout -> 303 9.82ms
+2026-09-25 12:26:32,202 | INFO | smart_property_ai | GET / -> 200 27.78ms
+2026-09-25 12:27:01,809 | INFO | smart_property_ai | GET /logout -> 303 2.52ms
+2026-09-25 12:27:01,912 | INFO | smart_property_ai | GET / -> 200 36.32ms
+2026-09-25 12:27:20,815 | INFO | smart_property_ai | GET /logout -> 303 2.22ms
+2026-09-25 12:27:20,905 | INFO | smart_property_ai | GET / -> 200 68.78ms
+2026-09-25 12:27:39,815 | INFO | smart_property_ai | GET /logout -> 303 7.60ms
+2026-09-25 12:27:39,863 | INFO | smart_property_ai | GET / -> 200 18.95ms
+2026-09-25 12:27:58,815 | INFO | smart_property_ai | GET /logout -> 303 4.98ms
+2026-09-25 12:27:58,856 | INFO | smart_property_ai | GET / -> 200 18.29ms
+2026-09-25 12:28:17,802 | INFO | smart_property_ai | GET /logout -> 303 1.35ms
+2026-09-25 12:28:17,841 | INFO | smart_property_ai | GET / -> 200 20.97ms
+2026-09-25 12:28:37,469 | INFO | smart_property_ai | GET /logout -> 303 177.13ms
+2026-09-25 12:28:37,654 | INFO | smart_property_ai | GET / -> 200 148.45ms
+2026-09-25 12:28:56,788 | INFO | smart_property_ai | GET /logout -> 303 1.77ms
+2026-09-25 12:28:56,855 | INFO | smart_property_ai | GET / -> 200 17.16ms
+2026-09-25 12:29:15,816 | INFO | smart_property_ai | GET /logout -> 303 2.69ms
+2026-09-25 12:29:15,850 | INFO | smart_property_ai | GET / -> 200 21.32ms
+2026-09-25 12:29:34,815 | INFO | smart_property_ai | GET /logout -> 303 3.83ms
+2026-09-25 12:29:34,856 | INFO | smart_property_ai | GET / -> 200 21.62ms
+2026-09-25 12:29:53,808 | INFO | smart_property_ai | GET /logout -> 303 3.51ms
+2026-09-25 12:29:53,840 | INFO | smart_property_ai | GET / -> 200 16.39ms
+2026-09-25 12:30:12,809 | INFO | smart_property_ai | GET /logout -> 303 2.80ms
+2026-09-25 12:30:12,856 | INFO | smart_property_ai | GET / -> 200 26.30ms
+2026-09-25 12:30:31,853 | INFO | smart_property_ai | GET /logout -> 303 5.88ms
+2026-09-25 12:30:31,952 | INFO | smart_property_ai | GET / -> 200 58.53ms
+2026-09-25 12:30:51,335 | INFO | smart_property_ai | GET /logout -> 303 50.63ms
+2026-09-25 12:30:51,427 | INFO | smart_property_ai | GET / -> 200 46.26ms
+2026-09-25 12:31:10,811 | INFO | smart_property_ai | GET /logout -> 303 1.88ms
+2026-09-25 12:31:10,849 | INFO | smart_property_ai | GET / -> 200 19.88ms
+2026-09-25 12:31:29,806 | INFO | smart_property_ai | GET /logout -> 303 2.84ms
+2026-09-25 12:31:29,847 | INFO | smart_property_ai | GET / -> 200 22.20ms
+2026-09-25 12:31:48,808 | INFO | smart_property_ai | GET /logout -> 303 6.56ms
+2026-09-25 12:31:48,844 | INFO | smart_property_ai | GET / -> 200 17.12ms
+2026-09-25 12:32:07,812 | INFO | smart_property_ai | GET /logout -> 303 5.23ms
+2026-09-25 12:32:07,854 | INFO | smart_property_ai | GET / -> 200 21.04ms
+2026-09-25 12:32:26,816 | INFO | smart_property_ai | GET /logout -> 303 3.22ms
+2026-09-25 12:32:26,856 | INFO | smart_property_ai | GET / -> 200 21.83ms
+2026-09-25 12:32:45,800 | INFO | smart_property_ai | GET /logout -> 303 3.43ms
+2026-09-25 12:32:45,835 | INFO | smart_property_ai | GET / -> 200 17.31ms
+2026-09-25 12:33:04,807 | INFO | smart_property_ai | GET /logout -> 303 1.57ms
+2026-09-25 12:33:04,844 | INFO | smart_property_ai | GET / -> 200 19.56ms
+2026-09-25 12:33:23,816 | INFO | smart_property_ai | GET /logout -> 303 2.53ms
+2026-09-25 12:33:23,851 | INFO | smart_property_ai | GET / -> 200 15.32ms
+2026-09-25 12:33:42,805 | INFO | smart_property_ai | GET /logout -> 303 1.63ms
+2026-09-25 12:33:42,844 | INFO | smart_property_ai | GET / -> 200 23.46ms
+2026-09-25 12:34:01,810 | INFO | smart_property_ai | GET /logout -> 303 1.75ms
+2026-09-25 12:34:01,850 | INFO | smart_property_ai | GET / -> 200 22.60ms
+2026-09-25 14:52:21,476 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 14:52:21,504 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 14:52:32,157 | INFO | smart_property_ai | GET / -> 200 720.24ms
+2026-09-25 14:52:32,354 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 107.10ms
+2026-09-25 14:52:32,368 | INFO | smart_property_ai | GET /static/js/main.js -> 304 81.99ms
+2026-09-25 14:53:00,621 | INFO | smart_property_ai | GET /logout -> 303 37.62ms
+2026-09-25 14:53:00,706 | INFO | smart_property_ai | GET / -> 200 29.91ms
+2026-09-25 14:53:18,988 | INFO | smart_property_ai | GET /logout -> 303 17.97ms
+2026-09-25 14:53:19,032 | INFO | smart_property_ai | GET / -> 200 21.84ms
+2026-09-25 14:53:37,167 | INFO | smart_property_ai | GET /logout -> 303 0.62ms
+2026-09-25 14:53:37,180 | INFO | smart_property_ai | GET / -> 200 5.93ms
+2026-09-25 14:53:53,665 | INFO | smart_property_ai | GET / -> 200 7.59ms
+2026-09-25 14:53:55,789 | INFO | smart_property_ai | GET /logout -> 303 0.90ms
+2026-09-25 14:53:55,803 | INFO | smart_property_ai | GET / -> 200 6.94ms
+2026-09-25 14:54:14,787 | INFO | smart_property_ai | GET /logout -> 303 1.92ms
+2026-09-25 14:54:14,799 | INFO | smart_property_ai | GET / -> 200 7.45ms
+2026-09-25 14:54:27,759 | INFO | smart_property_ai | GET /logout -> 303 1.96ms
+2026-09-25 14:54:27,778 | INFO | smart_property_ai | GET / -> 200 9.05ms
+2026-09-25 14:54:33,788 | INFO | smart_property_ai | GET /logout -> 303 1.07ms
+2026-09-25 14:54:33,805 | INFO | smart_property_ai | GET / -> 200 9.71ms
+2026-09-25 14:54:45,862 | INFO | smart_property_ai | GET /logout -> 303 1.49ms
+2026-09-25 14:54:45,890 | INFO | smart_property_ai | GET / -> 200 16.45ms
+2026-09-25 14:54:52,829 | INFO | smart_property_ai | GET /logout -> 303 6.64ms
+2026-09-25 14:54:52,905 | INFO | smart_property_ai | GET / -> 200 42.34ms
+2026-09-25 14:55:03,979 | INFO | smart_property_ai | GET /logout -> 303 0.62ms
+2026-09-25 14:55:03,993 | INFO | smart_property_ai | GET / -> 200 5.94ms
+2026-09-25 14:55:11,785 | INFO | smart_property_ai | GET /logout -> 303 1.64ms
+2026-09-25 14:55:11,801 | INFO | smart_property_ai | GET / -> 200 8.00ms
+2026-09-25 14:55:22,053 | INFO | smart_property_ai | GET /logout -> 303 0.83ms
+2026-09-25 14:55:22,073 | INFO | smart_property_ai | GET / -> 200 9.30ms
+2026-09-25 14:55:30,784 | INFO | smart_property_ai | GET /logout -> 303 0.49ms
+2026-09-25 14:55:30,797 | INFO | smart_property_ai | GET / -> 200 6.16ms
+2026-09-25 14:55:40,567 | INFO | smart_property_ai | GET /logout -> 303 7.48ms
+2026-09-25 14:55:40,808 | INFO | smart_property_ai | GET / -> 200 147.45ms
+2026-09-25 14:55:49,845 | INFO | smart_property_ai | GET /logout -> 303 11.93ms
+2026-09-25 14:55:49,931 | INFO | smart_property_ai | GET / -> 200 62.03ms
+2026-09-25 14:55:59,878 | INFO | smart_property_ai | GET /logout -> 303 16.70ms
+2026-09-25 14:56:00,218 | INFO | smart_property_ai | GET / -> 200 217.46ms
+2026-09-25 14:56:08,829 | INFO | smart_property_ai | GET /logout -> 303 2.72ms
+2026-09-25 14:56:08,915 | INFO | smart_property_ai | GET / -> 200 61.63ms
+2026-09-25 14:56:25,828 | INFO | smart_property_ai | GET /logout -> 303 1.19ms
+2026-09-25 14:56:25,841 | INFO | smart_property_ai | GET / -> 200 7.57ms
+2026-09-25 14:56:27,794 | INFO | smart_property_ai | GET /logout -> 303 2.31ms
+2026-09-25 14:56:27,811 | INFO | smart_property_ai | GET / -> 200 8.85ms
+2026-09-25 14:56:43,901 | INFO | smart_property_ai | GET /logout -> 303 1.10ms
+2026-09-25 14:56:43,913 | INFO | smart_property_ai | GET / -> 200 7.00ms
+2026-09-25 14:56:46,784 | INFO | smart_property_ai | GET /logout -> 303 2.26ms
+2026-09-25 14:56:46,804 | INFO | smart_property_ai | GET / -> 200 12.33ms
+2026-09-25 14:57:02,037 | INFO | smart_property_ai | GET /logout -> 303 34.43ms
+2026-09-25 14:57:02,074 | INFO | smart_property_ai | GET / -> 200 24.99ms
+2026-09-25 14:57:05,804 | INFO | smart_property_ai | GET /logout -> 303 10.40ms
+2026-09-25 14:57:05,979 | INFO | smart_property_ai | GET / -> 200 166.15ms
+2026-09-25 14:57:20,217 | INFO | smart_property_ai | GET /logout -> 303 1.68ms
+2026-09-25 14:57:20,237 | INFO | smart_property_ai | GET / -> 200 9.79ms
+2026-09-25 14:57:24,802 | INFO | smart_property_ai | GET /logout -> 303 1.36ms
+2026-09-25 14:57:24,826 | INFO | smart_property_ai | GET / -> 200 13.12ms
+2026-09-25 14:57:38,341 | INFO | smart_property_ai | GET /logout -> 303 0.96ms
+2026-09-25 14:57:38,365 | INFO | smart_property_ai | GET / -> 200 8.35ms
+2026-09-25 14:57:43,888 | INFO | smart_property_ai | GET /logout -> 303 4.08ms
+2026-09-25 14:57:44,020 | INFO | smart_property_ai | GET / -> 200 75.21ms
+2026-09-25 14:57:56,497 | INFO | smart_property_ai | GET /logout -> 303 7.67ms
+2026-09-25 14:57:56,558 | INFO | smart_property_ai | GET / -> 200 28.94ms
+2026-09-25 14:58:02,816 | INFO | smart_property_ai | GET /logout -> 303 22.39ms
+2026-09-25 14:58:02,966 | INFO | smart_property_ai | GET / -> 200 8.53ms
+2026-09-25 14:58:14,784 | INFO | smart_property_ai | GET /logout -> 303 0.96ms
+2026-09-25 14:58:14,814 | INFO | smart_property_ai | GET / -> 200 14.14ms
+2026-09-25 14:58:32,892 | INFO | smart_property_ai | GET /logout -> 303 1.23ms
+2026-09-25 14:58:32,902 | INFO | smart_property_ai | GET / -> 200 5.46ms
+2026-09-25 14:58:51,793 | INFO | smart_property_ai | GET /logout -> 303 1.71ms
+2026-09-25 14:58:51,940 | INFO | smart_property_ai | GET / -> 200 139.76ms
+2026-09-25 14:59:10,907 | INFO | smart_property_ai | GET /logout -> 303 28.47ms
+2026-09-25 14:59:10,961 | INFO | smart_property_ai | GET / -> 200 9.19ms
+2026-09-25 14:59:29,790 | INFO | smart_property_ai | GET /logout -> 303 1.19ms
+2026-09-25 14:59:29,803 | INFO | smart_property_ai | GET / -> 200 6.17ms
+2026-09-25 14:59:48,790 | INFO | smart_property_ai | GET /logout -> 303 0.57ms
+2026-09-25 14:59:48,802 | INFO | smart_property_ai | GET / -> 200 6.97ms
+2026-09-25 15:00:07,780 | INFO | smart_property_ai | GET /logout -> 303 0.68ms
+2026-09-25 15:00:07,792 | INFO | smart_property_ai | GET / -> 200 5.68ms
+2026-09-25 15:00:23,552 | INFO | smart_property_ai | GET /login -> 200 159.52ms
+2026-09-25 15:00:31,018 | INFO | smart_property_ai | GET /logout -> 303 3.35ms
+2026-09-25 15:00:54,798 | INFO | smart_property_ai | GET /logout -> 303 1.34ms
+2026-09-25 15:00:54,832 | INFO | smart_property_ai | GET / -> 200 14.93ms
+2026-09-25 15:01:18,667 | INFO | smart_property_ai | GET /logout -> 303 27.33ms
+2026-09-25 15:01:19,686 | INFO | smart_property_ai | GET / -> 200 746.08ms
+2026-09-25 15:01:42,800 | INFO | smart_property_ai | GET /logout -> 303 2.92ms
+2026-09-25 15:01:42,827 | INFO | smart_property_ai | GET / -> 200 13.14ms
+2026-09-25 15:02:01,786 | INFO | smart_property_ai | GET /logout -> 303 2.43ms
+2026-09-25 15:02:01,803 | INFO | smart_property_ai | GET / -> 200 9.19ms
+2026-09-25 15:02:20,792 | INFO | smart_property_ai | GET /logout -> 303 1.45ms
+2026-09-25 15:02:20,807 | INFO | smart_property_ai | GET / -> 200 9.73ms
+2026-09-25 15:02:39,792 | INFO | smart_property_ai | GET /logout -> 303 3.06ms
+2026-09-25 15:02:39,814 | INFO | smart_property_ai | GET / -> 200 11.58ms
+2026-09-25 15:02:58,781 | INFO | smart_property_ai | GET /logout -> 303 1.65ms
+2026-09-25 15:02:58,806 | INFO | smart_property_ai | GET / -> 200 9.69ms
+2026-09-25 15:03:17,800 | INFO | smart_property_ai | GET /logout -> 303 3.96ms
+2026-09-25 15:03:17,816 | INFO | smart_property_ai | GET / -> 200 8.51ms
+2026-09-25 15:03:36,789 | INFO | smart_property_ai | GET /logout -> 303 0.65ms
+2026-09-25 15:03:36,817 | INFO | smart_property_ai | GET / -> 200 14.13ms
+2026-09-25 15:03:55,784 | INFO | smart_property_ai | GET /logout -> 303 0.97ms
+2026-09-25 15:03:55,799 | INFO | smart_property_ai | GET / -> 200 7.90ms
+2026-09-25 15:04:14,805 | INFO | smart_property_ai | GET /logout -> 303 2.10ms
+2026-09-25 15:04:14,862 | INFO | smart_property_ai | GET / -> 200 17.05ms
+2026-09-25 15:04:33,794 | INFO | smart_property_ai | GET /logout -> 303 2.81ms
+2026-09-25 15:04:33,820 | INFO | smart_property_ai | GET / -> 200 13.94ms
+2026-09-25 15:04:52,783 | INFO | smart_property_ai | GET /logout -> 303 1.45ms
+2026-09-25 15:04:52,799 | INFO | smart_property_ai | GET / -> 200 8.00ms
+2026-09-25 15:05:11,778 | INFO | smart_property_ai | GET /logout -> 303 2.64ms
+2026-09-25 15:05:11,789 | INFO | smart_property_ai | GET / -> 200 6.21ms
+2026-09-25 15:05:30,783 | INFO | smart_property_ai | GET /logout -> 303 1.76ms
+2026-09-25 15:05:30,797 | INFO | smart_property_ai | GET / -> 200 6.68ms
+2026-09-25 15:09:24,066 | INFO | smart_property_ai | GET /logout -> 303 34.46ms
+2026-09-25 15:09:24,143 | INFO | smart_property_ai | GET / -> 200 39.26ms
+2026-09-25 15:09:47,930 | INFO | smart_property_ai | GET /logout -> 303 12.99ms
+2026-09-25 15:09:48,125 | INFO | smart_property_ai | GET / -> 200 130.59ms
+2026-09-25 15:10:06,404 | INFO | smart_property_ai | GET /logout -> 303 3.40ms
+2026-09-25 15:10:06,438 | INFO | smart_property_ai | GET / -> 200 17.94ms
+2026-09-25 15:10:24,645 | INFO | smart_property_ai | GET /logout -> 303 9.42ms
+2026-09-25 15:10:25,740 | INFO | smart_property_ai | GET / -> 200 1054.70ms
+2026-09-25 15:10:30,107 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 15:10:30,128 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 15:10:35,896 | INFO | smart_property_ai | GET / -> 200 7.44ms
+2026-09-25 15:10:39,567 | INFO | smart_property_ai | GET /ai-assistant -> 303 167.92ms
+2026-09-25 15:10:39,793 | INFO | smart_property_ai | GET /login -> 200 203.55ms
+2026-09-25 15:10:42,925 | INFO | smart_property_ai | GET /listings/guided_search_page -> 200 1512.88ms
+2026-09-25 15:10:43,278 | INFO | smart_property_ai | GET /static/css/listings.css -> 200 266.11ms
+2026-09-25 15:10:43,322 | INFO | smart_property_ai | GET /static/js/listings.js -> 200 304.79ms
+2026-09-25 15:10:59,137 | INFO | smart_property_ai | GET /listings/ -> 200 992.43ms
+2026-09-25 15:11:10,718 | INFO | smart_property_ai | GET / -> 200 11.09ms
+2026-09-25 15:13:27,015 | INFO | smart_property_ai | GET /logout -> 303 44.08ms
+2026-09-25 15:13:27,299 | INFO | smart_property_ai | GET / -> 200 251.46ms
+2026-09-25 15:13:45,804 | INFO | smart_property_ai | GET /logout -> 303 6.35ms
+2026-09-25 15:13:45,820 | INFO | smart_property_ai | GET / -> 200 9.32ms
+2026-09-25 15:14:10,631 | INFO | smart_property_ai | GET /logout -> 303 297.83ms
+2026-09-25 15:14:20,582 | INFO | smart_property_ai | GET / -> 200 8495.26ms
+2026-09-25 15:14:20,590 | INFO | smart_property_ai | GET /logout -> 303 10.59ms
+2026-09-25 15:14:20,693 | INFO | smart_property_ai | GET / -> 200 35.78ms
+2026-09-25 15:14:39,822 | INFO | smart_property_ai | GET /logout -> 303 1.88ms
+2026-09-25 15:14:39,901 | INFO | smart_property_ai | GET / -> 200 11.20ms
+2026-09-25 15:14:39,930 | INFO | smart_property_ai | GET /logout -> 303 1.07ms
+2026-09-25 15:14:40,070 | INFO | smart_property_ai | GET / -> 200 51.60ms
+2026-09-25 15:14:59,842 | INFO | smart_property_ai | GET /logout -> 303 2.35ms
+2026-09-25 15:14:59,896 | INFO | smart_property_ai | GET /logout -> 303 2.95ms
+2026-09-25 15:15:00,032 | INFO | smart_property_ai | GET / -> 200 25.97ms
+2026-09-25 15:15:00,268 | INFO | smart_property_ai | GET / -> 200 22.51ms
+2026-09-25 15:15:18,805 | INFO | smart_property_ai | GET /logout -> 303 1.23ms
+2026-09-25 15:15:18,972 | INFO | smart_property_ai | GET / -> 200 146.91ms
+2026-09-25 15:15:18,977 | INFO | smart_property_ai | GET /logout -> 303 3.07ms
+2026-09-25 15:15:19,029 | INFO | smart_property_ai | GET / -> 200 17.01ms
+2026-09-25 15:21:23,692 | INFO | smart_property_ai | GET /logout -> 303 387.46ms
+2026-09-25 15:21:24,638 | INFO | smart_property_ai | GET / -> 200 727.80ms
+2026-09-25 15:22:19,712 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 15:22:59,899 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 15:22:59,992 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 15:23:06,693 | INFO | smart_property_ai | GET / -> 200 1380.91ms
+2026-09-25 15:27:24,230 | INFO | smart_property_ai | GET /login -> 200 187.26ms
+2026-09-25 15:30:28,123 | INFO | smart_property_ai | GET /logout -> 303 24.93ms
+2026-09-25 15:30:28,173 | INFO | smart_property_ai | GET / -> 200 21.46ms
+2026-09-25 15:32:52,790 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 15:33:00,104 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 15:33:00,120 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 15:33:04,551 | INFO | smart_property_ai | GET / -> 200 301.42ms
+2026-09-25 15:33:07,242 | INFO | smart_property_ai | GET /login -> 200 119.16ms
+2026-09-25 15:33:28,973 | INFO | smart_property_ai | GET /logout -> 303 9.06ms
+2026-09-25 15:33:29,036 | INFO | smart_property_ai | GET / -> 200 11.74ms
+2026-09-25 15:33:42,409 | INFO | smart_property_ai | POST /login -> 303 250.02ms
+2026-09-25 15:33:42,500 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 77.53ms
+2026-09-25 15:33:43,720 | INFO | smart_property_ai | GET / -> 200 8.84ms
+2026-09-25 15:33:56,876 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 133.63ms
+2026-09-25 15:33:58,606 | ERROR | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> unhandled error 26.76ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 507, in landlord_maintenance_page
+    |     return _render(request, user, "landlord/maintenance_requests.html", page_title="Maintenance Requests", maintenance_requests=rows)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 148, in TemplateResponse
+    |     template = self.get_template(name)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 115, in get_template
+    |     return self.env.get_template(name)
+    |            ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    |     return self._load_template(name, globals)
+    |            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    |     template = self.loader.load(self, name, self.make_globals(globals))
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    |     code = environment.compile(source, name, filename)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    |     self.handle_exception(source=source_hint)
+    |     ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\maintenance_requests.html", line 21, in template
+    |     {% block extra_css %}
+    | jinja2.exceptions.TemplateAssertionError: block 'extra_css' defined twice
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 507, in landlord_maintenance_page
+    return _render(request, user, "landlord/maintenance_requests.html", page_title="Maintenance Requests", maintenance_requests=rows)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 148, in TemplateResponse
+    template = self.get_template(name)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 115, in get_template
+    return self.env.get_template(name)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\maintenance_requests.html", line 21, in template
+    {% block extra_css %}
+jinja2.exceptions.TemplateAssertionError: block 'extra_css' defined twice
+2026-09-25 15:35:07,983 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 15:35:23,944 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 15:35:23,964 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 15:35:26,813 | INFO | smart_property_ai | GET / -> 200 476.08ms
+2026-09-25 15:35:35,039 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 1788.80ms
+2026-09-25 15:35:38,196 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> 200 540.50ms
+2026-09-25 15:38:43,804 | INFO | smart_property_ai | GET /logout -> 303 6.08ms
+2026-09-25 15:38:43,819 | INFO | smart_property_ai | GET / -> 200 6.66ms
+2026-09-25 15:41:45,743 | INFO | smart_property_ai | GET /logout -> 303 60.71ms
+2026-09-25 15:41:46,058 | INFO | smart_property_ai | GET / -> 200 212.56ms
+2026-09-25 15:44:49,963 | INFO | smart_property_ai | GET /logout -> 303 92.61ms
+2026-09-25 15:44:50,239 | INFO | smart_property_ai | GET / -> 200 88.14ms
+2026-09-25 16:08:25,380 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 16:09:10,955 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 16:09:11,097 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 16:09:37,175 | INFO | smart_property_ai | GET / -> 200 1233.45ms
+2026-09-25 16:09:37,855 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 468.20ms
+2026-09-25 16:09:37,858 | INFO | smart_property_ai | GET /static/css/style.css -> 200 546.78ms
+2026-09-25 16:09:37,861 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 487.53ms
+2026-09-25 16:09:37,891 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 9.05ms
+2026-09-25 16:09:37,897 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 13.59ms
+2026-09-25 16:09:37,908 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 17.62ms
+2026-09-25 16:09:37,992 | INFO | smart_property_ai | GET /static/js/main.js -> 200 9.32ms
+2026-09-25 16:09:38,050 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 26.16ms
+2026-09-25 16:09:38,060 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 6.28ms
+2026-09-25 16:09:38,093 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 12.61ms
+2026-09-25 16:09:38,095 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 13.97ms
+2026-09-25 16:09:38,165 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 9.29ms
+2026-09-25 16:09:38,251 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 6.53ms
+2026-09-25 16:09:39,191 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 12.87ms
+2026-09-25 16:09:47,833 | INFO | smart_property_ai | GET /login -> 200 128.14ms
+2026-09-25 16:09:47,851 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 3.96ms
+2026-09-25 16:10:09,834 | INFO | smart_property_ai | POST /login -> 303 732.60ms
+2026-09-25 16:10:10,468 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 610.38ms
+2026-09-25 16:10:10,647 | INFO | smart_property_ai | GET /favicon.ico -> 307 4.30ms
+2026-09-25 16:10:10,659 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 5.24ms
+2026-09-25 16:10:12,172 | INFO | smart_property_ai | GET / -> 200 103.89ms
+2026-09-25 16:10:13,679 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 333.14ms
+2026-09-25 16:10:13,694 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 1.96ms
+2026-09-25 16:10:13,708 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 3.04ms
+2026-09-25 16:10:16,500 | ERROR | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> unhandled error 175.58ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 392, in landlord_tenants_page
+    |     return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\tenants.html", line 1, in top-level template code
+    |     {% extends "landlord/layout.html" %}
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    |     raise TemplateNotFound(
+    |     ...<2 lines>...
+    |     )
+    | jinja2.exceptions.TemplateNotFound: 'landlord/layout.html' not found in search path: 'templates'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 392, in landlord_tenants_page
+    return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\tenants.html", line 1, in top-level template code
+    {% extends "landlord/layout.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    raise TemplateNotFound(
+    ...<2 lines>...
+    )
+jinja2.exceptions.TemplateNotFound: 'landlord/layout.html' not found in search path: 'templates'
+2026-09-25 16:13:53,100 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 16:14:06,059 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 16:14:06,081 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 16:14:17,492 | INFO | smart_property_ai | GET / -> 200 179.03ms
+2026-09-25 16:14:20,209 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 171.82ms
+2026-09-25 16:14:21,816 | ERROR | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> unhandled error 35.84ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 392, in landlord_tenants_page
+    |     return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\tenants.html", line 1, in top-level template code
+    |     {% extends "landlord/layout.html" %}
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    |     raise TemplateNotFound(
+    |     ...<2 lines>...
+    |     )
+    | jinja2.exceptions.TemplateNotFound: 'landlord/layout.html' not found in search path: 'templates'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 392, in landlord_tenants_page
+    return _render(request, user, "landlord/tenants.html", page_title="Tenants", tenants=tenants)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\tenants.html", line 1, in top-level template code
+    {% extends "landlord/layout.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    raise TemplateNotFound(
+    ...<2 lines>...
+    )
+jinja2.exceptions.TemplateNotFound: 'landlord/layout.html' not found in search path: 'templates'
+2026-09-25 16:15:10,970 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 16:15:22,152 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 16:15:22,168 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 16:15:26,582 | INFO | smart_property_ai | GET / -> 200 619.39ms
+2026-09-25 16:15:29,865 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 140.84ms
+2026-09-25 16:15:33,751 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 1839.94ms
+2026-09-25 16:15:53,102 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 24.90ms
+2026-09-25 16:15:55,425 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 41.39ms
+2026-09-25 16:15:57,273 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 20.79ms
+2026-09-25 16:16:04,213 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 23.49ms
+2026-09-25 16:16:06,321 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 18.69ms
+2026-09-25 16:19:09,917 | INFO | smart_property_ai | GET /logout -> 303 18.42ms
+2026-09-25 16:19:09,939 | INFO | smart_property_ai | GET / -> 200 12.98ms
+2026-09-25 19:48:15,823 | INFO | smart_property_ai | GET /logout -> 303 1.13ms
+2026-09-25 19:48:16,943 | INFO | smart_property_ai | GET / -> 200 224.80ms
+2026-09-25 19:48:18,474 | INFO | smart_property_ai | GET /static/js/main.js -> 304 1370.47ms
+2026-09-25 19:48:18,512 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 1408.65ms
+2026-09-25 19:49:01,081 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 303 37.59ms
+2026-09-25 19:49:01,294 | INFO | smart_property_ai | GET /login -> 200 204.41ms
+2026-09-25 19:49:05,730 | INFO | smart_property_ai | GET /login -> 200 20.41ms
+2026-09-25 19:50:06,912 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 19:50:13,128 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 19:50:13,143 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 19:50:20,226 | INFO | smart_property_ai | GET / -> 200 379.78ms
+2026-09-25 19:50:22,287 | INFO | smart_property_ai | GET /login -> 200 57.36ms
+2026-09-25 19:51:03,434 | INFO | smart_property_ai | POST /login -> 303 718.42ms
+2026-09-25 19:51:03,529 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 84.71ms
+2026-09-25 19:51:04,963 | INFO | smart_property_ai | GET / -> 200 10.92ms
+2026-09-25 19:51:38,433 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 174.74ms
+2026-09-25 19:51:42,368 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 75.82ms
+2026-09-25 19:51:53,149 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 38.09ms
+2026-09-25 20:02:33,651 | INFO | smart_property_ai | GET /logout -> 303 47.26ms
+2026-09-25 20:02:33,694 | INFO | smart_property_ai | GET / -> 200 24.82ms
+2026-09-25 20:02:40,239 | INFO | smart_property_ai | GET /login -> 200 148.92ms
+2026-09-25 20:02:41,037 | INFO | smart_property_ai | GET /login -> 200 42.02ms
+2026-09-25 20:05:59,991 | INFO | smart_property_ai | GET /logout -> 303 1.67ms
+2026-09-25 20:06:00,011 | INFO | smart_property_ai | GET / -> 200 15.30ms
+2026-09-25 20:06:07,969 | INFO | smart_property_ai | GET /login -> 200 9.84ms
+2026-09-25 20:06:39,921 | INFO | smart_property_ai | POST /login -> 303 227.23ms
+2026-09-25 20:06:39,933 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 7.76ms
+2026-09-25 20:06:45,287 | INFO | smart_property_ai | GET / -> 200 10.25ms
+2026-09-25 20:06:48,866 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 50.01ms
+2026-09-25 20:06:50,534 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/messages -> 200 300.63ms
+2026-09-25 20:06:53,789 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/payments -> 200 65.46ms
+2026-09-25 20:06:57,235 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> 200 57.11ms
+2026-09-25 20:10:07,106 | INFO | smart_property_ai | GET /logout -> 303 89.47ms
+2026-09-25 20:10:07,631 | INFO | smart_property_ai | GET / -> 200 315.35ms
+2026-09-25 20:13:08,793 | INFO | smart_property_ai | GET /logout -> 303 3.38ms
+2026-09-25 20:13:08,811 | INFO | smart_property_ai | GET / -> 200 11.89ms
+2026-09-25 20:26:56,541 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 20:27:10,526 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 20:27:10,562 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 20:27:22,319 | INFO | smart_property_ai | GET / -> 200 110.76ms
+2026-09-25 20:27:25,907 | INFO | smart_property_ai | GET /login -> 200 61.52ms
+2026-09-25 20:28:00,261 | INFO | smart_property_ai | POST /login -> 303 98.04ms
+2026-09-25 20:28:00,332 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 63.79ms
+2026-09-25 20:28:01,768 | INFO | smart_property_ai | GET / -> 200 6.77ms
+2026-09-25 20:28:03,735 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 113.23ms
+2026-09-25 20:28:05,317 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 78.36ms
+2026-09-25 20:31:09,888 | INFO | smart_property_ai | GET /logout -> 303 27.88ms
+2026-09-25 20:31:09,923 | INFO | smart_property_ai | GET / -> 200 22.50ms
+2026-09-25 20:43:27,109 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 20:43:55,685 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 20:43:55,697 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 20:43:59,332 | INFO | smart_property_ai | GET / -> 200 102.30ms
+2026-09-25 20:44:05,771 | INFO | smart_property_ai | GET /login -> 200 167.77ms
+2026-09-25 20:44:35,617 | INFO | smart_property_ai | POST /login -> 303 100.55ms
+2026-09-25 20:44:35,692 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 66.79ms
+2026-09-25 20:44:38,193 | INFO | smart_property_ai | GET / -> 200 6.53ms
+2026-09-25 20:44:48,013 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 117.29ms
+2026-09-25 20:44:53,420 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 87.87ms
+2026-09-25 20:44:58,842 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/applications -> 200 48.74ms
+2026-09-25 20:45:01,748 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> 200 44.19ms
+2026-09-25 20:45:06,683 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/documents -> 200 49.19ms
+2026-09-25 20:45:17,027 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/reports -> 200 32.01ms
+2026-09-25 20:45:21,150 | INFO | smart_property_ai | GET / -> 200 6.45ms
+2026-09-25 20:45:36,275 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 18.58ms
+2026-09-25 20:45:39,125 | INFO | smart_property_ai | GET /landlord/properties -> 200 101.54ms
+2026-09-25 20:45:39,287 | INFO | smart_property_ai | GET /static/css/property.css -> 200 153.02ms
+2026-09-25 20:48:44,889 | INFO | smart_property_ai | GET /logout -> 303 15.27ms
+2026-09-25 20:48:44,915 | INFO | smart_property_ai | GET / -> 200 13.64ms
+2026-09-25 21:17:37,626 | INFO | smart_property_ai | GET /logout -> 303 90.63ms
+2026-09-25 21:17:37,949 | INFO | smart_property_ai | GET / -> 200 268.36ms
+2026-09-25 21:20:56,930 | INFO | smart_property_ai | GET /logout -> 303 12.83ms
+2026-09-25 21:20:56,961 | INFO | smart_property_ai | GET / -> 200 13.87ms
+2026-09-25 21:41:06,470 | INFO | smart_property_ai | GET /logout -> 303 92.36ms
+2026-09-25 21:41:07,372 | INFO | smart_property_ai | GET / -> 200 775.59ms
+2026-09-25 21:41:15,031 | INFO | smart_property_ai | GET / -> 200 103.45ms
+2026-09-25 21:41:16,634 | INFO | smart_property_ai | GET / -> 200 1272.67ms
+2026-09-25 21:50:33,733 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 21:50:33,763 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 21:53:22,453 | INFO | smart_property_ai | GET /logout -> 303 64.45ms
+2026-09-25 21:53:24,485 | INFO | smart_property_ai | GET / -> 200 1877.29ms
+2026-09-25 21:57:21,715 | INFO | smart_property_ai | GET /logout -> 303 77.97ms
+2026-09-25 21:57:21,878 | INFO | smart_property_ai | GET / -> 200 108.13ms
+2026-09-25 21:58:14,619 | INFO | smart_property_ai | GET / -> 200 11.33ms
+2026-09-25 21:58:20,200 | INFO | smart_property_ai | GET /login -> 200 783.11ms
+2026-09-25 21:58:43,382 | INFO | smart_property_ai | POST /login -> 401 1676.35ms
+2026-09-25 21:58:43,532 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 134.05ms
+2026-09-25 21:58:59,325 | INFO | smart_property_ai | POST /login -> 303 482.19ms
+2026-09-25 21:59:07,549 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 8178.63ms
+2026-09-25 21:59:07,838 | INFO | smart_property_ai | POST /login -> 303 291.68ms
+2026-09-25 21:59:08,213 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 33.95ms
+2026-09-25 21:59:10,146 | INFO | smart_property_ai | GET / -> 200 88.77ms
+2026-09-25 21:59:14,416 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 1854.42ms
+2026-09-25 21:59:17,050 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 303.74ms
+2026-09-25 22:02:28,162 | INFO | smart_property_ai | GET /logout -> 303 110.95ms
+2026-09-25 22:02:28,305 | INFO | smart_property_ai | GET / -> 200 95.55ms
+2026-09-25 22:16:43,018 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 22:16:52,897 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 22:16:52,917 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 22:16:55,908 | INFO | smart_property_ai | GET / -> 200 285.90ms
+2026-09-25 22:16:56,238 | INFO | smart_property_ai | GET /static/js/main.js -> 304 243.10ms
+2026-09-25 22:17:35,642 | INFO | smart_property_ai | GET /login -> 200 271.07ms
+2026-09-25 22:18:07,842 | INFO | smart_property_ai | POST /login -> 303 297.61ms
+2026-09-25 22:18:08,006 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 154.52ms
+2026-09-25 22:18:09,043 | INFO | smart_property_ai | GET / -> 200 11.94ms
+2026-09-25 22:18:10,849 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 211.41ms
+2026-09-25 22:18:12,555 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 128.68ms
+2026-09-25 22:18:19,377 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 38.63ms
+2026-09-25 22:18:32,104 | INFO | smart_property_ai | GET /landlord/properties/add -> 200 75.25ms
+2026-09-25 22:18:45,932 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 34.23ms
+2026-09-25 22:18:53,684 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 18.49ms
+2026-09-25 22:19:00,339 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 25.65ms
+2026-09-25 22:19:03,583 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 17.75ms
+2026-09-25 22:19:04,497 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 44.40ms
+2026-09-25 22:21:33,420 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 22:21:48,015 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 22:21:48,047 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 22:21:57,159 | INFO | smart_property_ai | GET / -> 200 5003.01ms
+2026-09-25 22:21:57,420 | INFO | smart_property_ai | GET / -> 200 57.39ms
+2026-09-25 22:21:59,770 | INFO | smart_property_ai | GET / -> 200 1499.22ms
+2026-09-25 22:22:01,485 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 1640.75ms
+2026-09-25 22:22:01,501 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 1655.62ms
+2026-09-25 22:22:01,522 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 1601.69ms
+2026-09-25 22:22:01,550 | INFO | smart_property_ai | GET /static/css/style.css -> 200 1783.04ms
+2026-09-25 22:22:01,553 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 1707.60ms
+2026-09-25 22:22:01,583 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 1732.79ms
+2026-09-25 22:22:01,738 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 71.28ms
+2026-09-25 22:22:01,752 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 91.68ms
+2026-09-25 22:22:01,765 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 97.94ms
+2026-09-25 22:22:01,781 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 115.40ms
+2026-09-25 22:22:01,786 | INFO | smart_property_ai | GET /static/js/main.js -> 200 157.19ms
+2026-09-25 22:22:01,816 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 148.08ms
+2026-09-25 22:22:01,987 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 69.93ms
+2026-09-25 22:22:04,823 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 1804.51ms
+2026-09-25 22:22:09,978 | INFO | smart_property_ai | GET /login -> 200 2646.12ms
+2026-09-25 22:22:10,171 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 95.08ms
+2026-09-25 22:22:39,409 | INFO | smart_property_ai | POST /login -> 303 1462.09ms
+2026-09-25 22:22:39,883 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 440.29ms
+2026-09-25 22:22:40,045 | INFO | smart_property_ai | GET /favicon.ico -> 307 14.66ms
+2026-09-25 22:22:40,069 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 11.56ms
+2026-09-25 22:22:41,245 | INFO | smart_property_ai | GET / -> 200 9.08ms
+2026-09-25 22:22:42,715 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 249.37ms
+2026-09-25 22:22:42,736 | INFO | smart_property_ai | GET /static/js/tenant.js -> 200 4.56ms
+2026-09-25 22:22:46,329 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 60.57ms
+2026-09-25 22:26:02,004 | INFO | smart_property_ai | GET /logout -> 303 2.54ms
+2026-09-25 22:26:02,028 | INFO | smart_property_ai | GET / -> 200 4.59ms
+2026-09-25 22:29:02,153 | INFO | smart_property_ai | GET /logout -> 303 0.62ms
+2026-09-25 22:29:02,172 | INFO | smart_property_ai | GET / -> 200 8.45ms
+2026-09-25 22:31:28,333 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 22:31:28,349 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 22:31:57,813 | INFO | smart_property_ai | GET / -> 200 432.61ms
+2026-09-25 22:31:58,012 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 160.82ms
+2026-09-25 22:32:38,246 | INFO | smart_property_ai | GET / -> 200 2590.99ms
+2026-09-25 22:32:38,505 | INFO | smart_property_ai | GET / -> 200 7.82ms
+2026-09-25 22:32:39,620 | INFO | smart_property_ai | GET /static/css/style.css -> 200 344.01ms
+2026-09-25 22:32:39,627 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 338.88ms
+2026-09-25 22:32:39,636 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 348.30ms
+2026-09-25 22:32:39,656 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 31.28ms
+2026-09-25 22:32:39,665 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 40.59ms
+2026-09-25 22:32:39,669 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 44.87ms
+2026-09-25 22:32:39,786 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 44.12ms
+2026-09-25 22:32:39,790 | INFO | smart_property_ai | GET /static/js/main.js -> 200 122.19ms
+2026-09-25 22:32:39,792 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 116.69ms
+2026-09-25 22:32:39,793 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 55.70ms
+2026-09-25 22:32:39,797 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 31.13ms
+2026-09-25 22:32:39,811 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 14.12ms
+2026-09-25 22:32:39,860 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 26.92ms
+2026-09-25 22:32:42,952 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 66.24ms
+2026-09-25 22:32:43,105 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 16.04ms
+2026-09-25 22:32:48,747 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 22:33:06,548 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 22:33:06,625 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 22:33:10,038 | INFO | smart_property_ai | GET / -> 200 942.32ms
+2026-09-25 22:33:16,627 | INFO | smart_property_ai | GET /login -> 200 290.11ms
+2026-09-25 22:33:19,222 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 2330.61ms
+2026-09-25 22:33:43,140 | INFO | smart_property_ai | POST /login -> 303 296.62ms
+2026-09-25 22:33:43,355 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 201.82ms
+2026-09-25 22:33:43,425 | INFO | smart_property_ai | GET /favicon.ico -> 307 6.68ms
+2026-09-25 22:33:43,437 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 6.23ms
+2026-09-25 22:33:44,878 | INFO | smart_property_ai | GET / -> 200 12.67ms
+2026-09-25 22:33:46,364 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 272.84ms
+2026-09-25 22:33:46,382 | INFO | smart_property_ai | GET /static/js/tenant.js -> 200 4.68ms
+2026-09-25 22:33:49,591 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 71.00ms
+2026-09-25 22:33:54,149 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/profile -> 200 30.29ms
+2026-09-25 22:33:56,344 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 36.59ms
+2026-09-25 22:34:31,371 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 137.47ms
+2026-09-25 22:37:39,044 | INFO | smart_property_ai | GET /logout -> 303 2.10ms
+2026-09-25 22:37:39,058 | INFO | smart_property_ai | GET / -> 200 8.06ms
+2026-09-25 22:38:40,528 | INFO | smart_property_ai | GET /login -> 200 11.71ms
+2026-09-25 22:39:04,994 | INFO | smart_property_ai | POST /login -> 303 46.15ms
+2026-09-25 22:39:05,006 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 6.48ms
+2026-09-25 22:39:11,992 | INFO | smart_property_ai | GET / -> 200 10.09ms
+2026-09-25 22:39:14,138 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 40.80ms
+2026-09-25 22:39:26,043 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/notifications -> 200 30.22ms
+2026-09-25 22:39:44,700 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 28.39ms
+2026-09-25 22:39:53,585 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 26.73ms
+2026-09-25 22:39:57,654 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 29.26ms
+2026-09-25 22:40:04,035 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 29.22ms
+2026-09-25 22:40:16,934 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 25.22ms
+2026-09-25 22:40:19,902 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/documents -> 200 39.78ms
+2026-09-25 22:40:29,015 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 26.92ms
+2026-09-25 22:40:32,626 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 23.01ms
+2026-09-25 22:40:33,414 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 23.97ms
+2026-09-25 22:40:35,767 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/messages -> 200 28.49ms
+2026-09-25 22:40:55,245 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 25.71ms
+2026-09-25 22:41:00,760 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 43.31ms
+2026-09-25 22:41:05,939 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 11.11ms
+2026-09-25 22:41:08,165 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 10.17ms
+2026-09-25 22:41:12,824 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 12.84ms
+2026-09-25 22:41:14,795 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 24.57ms
+2026-09-25 22:41:16,846 | INFO | smart_property_ai | POST /logout -> 303 1.64ms
+2026-09-25 22:41:16,858 | INFO | smart_property_ai | GET / -> 200 5.09ms
+2026-09-25 22:41:19,869 | INFO | smart_property_ai | GET /login -> 200 4.59ms
+2026-09-25 22:41:21,525 | INFO | smart_property_ai | GET /login -> 200 4.07ms
+2026-09-25 22:42:16,903 | INFO | smart_property_ai | POST /login -> 401 15.52ms
+2026-09-25 22:42:29,071 | INFO | smart_property_ai | POST /login -> 401 13.46ms
+2026-09-25 22:42:51,964 | INFO | smart_property_ai | POST /login -> 303 21.23ms
+2026-09-25 22:42:51,973 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 3.02ms
+2026-09-25 22:42:53,231 | INFO | smart_property_ai | GET / -> 200 8.87ms
+2026-09-25 22:42:55,886 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 160.86ms
+2026-09-25 22:42:55,901 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 5.97ms
+2026-09-25 22:42:55,903 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 7.41ms
+2026-09-25 22:42:57,932 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 81.59ms
+2026-09-25 22:43:16,303 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/payments -> 200 54.55ms
+2026-09-25 22:43:26,370 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 35.29ms
+2026-09-25 22:43:30,097 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/applications -> 200 57.81ms
+2026-09-25 22:43:33,874 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/messages -> 200 47.77ms
+2026-09-25 22:43:36,861 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/notifications -> 200 49.91ms
+2026-09-25 22:43:40,101 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/reports -> 200 40.25ms
+2026-09-25 22:43:40,116 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 3.07ms
+2026-09-25 22:43:53,141 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/smart-devices -> 200 52.09ms
+2026-09-25 22:43:53,152 | INFO | smart_property_ai | GET /static/css/property.css -> 200 3.13ms
+2026-09-25 22:43:58,639 | INFO | smart_property_ai | GET /privacy -> 200 14.46ms
+2026-09-25 22:44:10,943 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 20.11ms
+2026-09-25 22:44:17,246 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/documents -> 200 42.68ms
+2026-09-25 22:44:20,747 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/expenses -> 200 41.19ms
+2026-09-25 22:44:23,990 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/reports -> 200 9.87ms
+2026-09-25 22:44:27,292 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/reports -> 200 11.18ms
+2026-09-25 22:44:30,055 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/smart-devices -> 200 8.08ms
+2026-09-25 22:44:32,898 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/notifications -> 200 8.53ms
+2026-09-25 22:44:35,853 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/notifications -> 200 6.66ms
+2026-09-25 22:44:42,560 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/settings -> 200 31.98ms
+2026-09-25 22:45:13,729 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/payments -> 200 11.48ms
+2026-09-25 22:45:22,631 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/applications -> 200 12.80ms
+2026-09-25 22:45:25,404 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 19.25ms
+2026-09-25 22:45:30,115 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 8.81ms
+2026-09-25 22:45:33,135 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/applications -> 200 10.13ms
+2026-09-25 22:45:35,713 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> 200 46.13ms
+2026-09-25 22:45:39,907 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 22.19ms
+2026-09-25 22:45:52,531 | INFO | smart_property_ai | GET / -> 200 7.60ms
+2026-09-25 22:45:52,994 | INFO | smart_property_ai | GET /landlord/dashboard -> 200 1.29ms
+2026-09-25 22:47:22,743 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 22:47:22,747 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 22:47:24,977 | INFO | smart_property_ai | GET / -> 200 360.67ms
+2026-09-25 22:47:28,807 | INFO | smart_property_ai | POST /logout -> 303 7.71ms
+2026-09-25 22:47:28,838 | INFO | smart_property_ai | GET / -> 200 18.05ms
+2026-09-25 22:47:33,881 | INFO | smart_property_ai | GET /login -> 200 3277.34ms
+2026-09-25 22:47:33,987 | INFO | smart_property_ai | GET /login -> 200 100.08ms
+2026-09-25 22:47:35,104 | INFO | smart_property_ai | GET /login -> 200 57.08ms
+2026-09-25 22:47:36,169 | INFO | smart_property_ai | GET /login -> 200 20.69ms
+2026-09-25 22:47:40,123 | INFO | smart_property_ai | GET /login -> 200 67.79ms
+2026-09-25 22:47:42,702 | INFO | smart_property_ai | GET /login -> 200 27.63ms
+2026-09-25 22:49:18,393 | INFO | smart_property_ai | POST /login -> 303 474.02ms
+2026-09-25 22:49:18,501 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 100.26ms
+2026-09-25 22:49:19,546 | INFO | smart_property_ai | GET / -> 200 9.00ms
+2026-09-25 22:49:23,614 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 233.67ms
+2026-09-25 22:49:26,312 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 50.76ms
+2026-09-25 22:49:43,793 | INFO | smart_property_ai | GET /logout -> 303 1.06ms
+2026-09-25 22:49:43,804 | INFO | smart_property_ai | GET / -> 200 5.20ms
+2026-09-25 22:50:41,109 | ERROR | smart_property_ai | GET /tenant_dashboard/tenant -> unhandled error 7.44ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    |     return await run_in_threadpool(dependant.call, **values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    |     return await anyio.to_thread.run_sync(func)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    |     return await get_async_backend().run_sync_in_worker_thread(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 2641, in run_sync_in_worker_thread
+    |     return await future
+    |            ^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 1033, in run
+    |     result = context.run(func, *args)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 278, in tenant_dashboard_page
+    |     return login_redirect(request)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 173, in login_redirect
+    |     login_url = request.url_for("login_page")
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    |     url_path = url_path_provider.url_path_for(name, **path_params)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    |     raise NoMatchFound(name, path_params)
+    | starlette.routing.NoMatchFound: No route exists for name "login_page" and params "".
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 278, in tenant_dashboard_page
+    return login_redirect(request)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 173, in login_redirect
+    login_url = request.url_for("login_page")
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    url_path = url_path_provider.url_path_for(name, **path_params)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    raise NoMatchFound(name, path_params)
+starlette.routing.NoMatchFound: No route exists for name "login_page" and params "".
+2026-09-25 22:50:46,057 | ERROR | smart_property_ai | GET /tenant_dashboard/tenant -> unhandled error 2.44ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    |     return await run_in_threadpool(dependant.call, **values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    |     return await anyio.to_thread.run_sync(func)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    |     return await get_async_backend().run_sync_in_worker_thread(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 2641, in run_sync_in_worker_thread
+    |     return await future
+    |            ^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 1033, in run
+    |     result = context.run(func, *args)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 278, in tenant_dashboard_page
+    |     return login_redirect(request)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 173, in login_redirect
+    |     login_url = request.url_for("login_page")
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    |     url_path = url_path_provider.url_path_for(name, **path_params)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    |     raise NoMatchFound(name, path_params)
+    | starlette.routing.NoMatchFound: No route exists for name "login_page" and params "".
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 275, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 243, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 278, in tenant_dashboard_page
+    return login_redirect(request)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\tenant_routes.py", line 173, in login_redirect
+    login_url = request.url_for("login_page")
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\requests.py", line 202, in url_for
+    url_path = url_path_provider.url_path_for(name, **path_params)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 637, in url_path_for
+    raise NoMatchFound(name, path_params)
+starlette.routing.NoMatchFound: No route exists for name "login_page" and params "".
+2026-09-25 22:53:33,965 | INFO | smart_property_ai | GET /login -> 200 35.70ms
+2026-09-25 22:55:26,551 | INFO | smart_property_ai | POST /login -> 303 202.92ms
+2026-09-25 22:55:26,573 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 13.89ms
+2026-09-25 22:55:28,215 | INFO | smart_property_ai | GET / -> 200 15.25ms
+2026-09-25 22:55:30,631 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 74.80ms
+2026-09-25 22:55:34,248 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 839.17ms
+2026-09-25 22:55:41,201 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 15.99ms
+2026-09-25 22:55:44,090 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/maintenance -> 200 79.74ms
+2026-09-25 22:55:47,524 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 61.10ms
+2026-09-25 22:55:47,685 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 152.23ms
+2026-09-25 22:55:55,631 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 11.80ms
+2026-09-25 22:55:58,931 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/documents -> 200 39.72ms
+2026-09-25 22:56:01,831 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/documents -> 200 10.79ms
+2026-09-25 22:57:27,383 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/appointments -> 200 36.09ms
+2026-09-25 22:57:31,464 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 31.91ms
+2026-09-25 22:57:37,561 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 24.52ms
+2026-09-25 22:57:41,173 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/profile -> 200 35.46ms
+2026-09-25 22:58:07,497 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 27.12ms
+2026-09-25 22:58:10,368 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 13.05ms
+2026-09-25 22:58:12,384 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 27.79ms
+2026-09-25 22:58:18,558 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 24.41ms
+2026-09-25 22:58:21,434 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 11.90ms
+2026-09-25 22:58:22,664 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 11.58ms
+2026-09-25 22:58:24,135 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 13.44ms
+2026-09-25 22:58:29,700 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 14.19ms
+2026-09-25 22:58:30,602 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 14.54ms
+2026-09-25 22:58:34,045 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 9.46ms
+2026-09-25 22:58:38,598 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 10.07ms
+2026-09-25 22:58:42,632 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/documents -> 200 13.08ms
+2026-09-25 22:58:45,780 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/messages -> 200 48.79ms
+2026-09-25 22:58:48,920 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/appointments -> 200 10.33ms
+2026-09-25 22:58:53,801 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/profile -> 200 9.49ms
+2026-09-25 22:58:57,508 | INFO | smart_property_ai | GET /privacy -> 200 19.00ms
+2026-09-25 22:59:03,726 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 25.38ms
+2026-09-25 22:59:15,290 | INFO | smart_property_ai | GET /ai-assistant -> 200 99.48ms
+2026-09-25 22:59:15,309 | INFO | smart_property_ai | GET /static/css/ai-assistant.css -> 200 10.48ms
+2026-09-25 22:59:15,314 | INFO | smart_property_ai | GET /static/js/ai-assistant.js -> 200 13.61ms
+2026-09-25 22:59:17,219 | INFO | smart_property_ai | GET /listings/guided_search_page -> 200 137.33ms
+2026-09-25 22:59:17,232 | INFO | smart_property_ai | GET /static/js/listings.js -> 200 4.20ms
+2026-09-25 22:59:17,233 | INFO | smart_property_ai | GET /static/css/listings.css -> 200 5.78ms
+2026-09-25 22:59:18,582 | INFO | smart_property_ai | GET /listings/ -> 200 107.71ms
+2026-09-25 22:59:20,624 | INFO | smart_property_ai | GET / -> 200 5.54ms
+2026-09-25 22:59:22,292 | INFO | smart_property_ai | GET /listings/ -> 200 12.06ms
+2026-09-25 22:59:29,229 | INFO | smart_property_ai | GET /listings/guided-search -> 422 21.45ms
+2026-09-25 22:59:30,482 | INFO | smart_property_ai | GET / -> 200 7.83ms
+2026-09-25 22:59:32,913 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 24.37ms
+2026-09-25 22:59:38,445 | INFO | smart_property_ai | GET /listings/ -> 200 12.68ms
+2026-09-25 22:59:41,360 | INFO | smart_property_ai | GET /listings/guided_search_page -> 200 9.17ms
+2026-09-25 22:59:43,866 | INFO | smart_property_ai | GET /ai-assistant -> 200 9.27ms
+2026-09-25 22:59:47,541 | INFO | smart_property_ai | GET /contact -> 200 45.66ms
+2026-09-25 22:59:47,554 | INFO | smart_property_ai | GET /static/css/contact.css -> 200 4.42ms
+2026-09-25 22:59:47,556 | INFO | smart_property_ai | GET /static/js/contact.js -> 200 5.65ms
+2026-09-25 23:00:23,767 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 24.18ms
+2026-09-25 23:00:28,082 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/appointments -> 200 11.47ms
+2026-09-25 23:00:44,016 | INFO | smart_property_ai | GET /ai-assistant -> 200 7.27ms
+2026-09-25 23:01:22,026 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-25 23:01:22,033 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=c9c9e330-565f-4ac7-aec6-828945140af4 model=smart-property-standard
+2026-09-25 23:01:22,047 | INFO | smart_property_ai | POST /api/ai/chat -> 200 48.46ms
+2026-09-25 23:02:56,959 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-25 23:02:56,960 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=c9c9e330-565f-4ac7-aec6-828945140af4 model=smart-property-standard
+2026-09-25 23:02:56,962 | INFO | smart_property_ai | POST /api/ai/chat -> 200 6.55ms

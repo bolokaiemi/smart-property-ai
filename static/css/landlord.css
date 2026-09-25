@@ -1,5 +1,7 @@
-/* Smart Property AI landlord dashboard.
-   Every page rule is scoped to .sp-landlord-dashboard. */
+/* Smart Property AI landlord portal stylesheet.
+   Dashboard rules use .sp-landlord-dashboard.
+   Shared subpage rules target landlord *-page wrappers while explicitly
+   excluding property and unit pages, which remain owned by property.css. */
 
 .sp-landlord-dashboard {
     --sp-ld-bg: #f3f7fa;
@@ -378,4 +380,529 @@
     .sp-landlord-dashboard__hero .sp-landlord-dashboard__eyebrow { color: #333; }
     .sp-landlord-dashboard__card,
     .sp-landlord-dashboard__stat { box-shadow: none; break-inside: avoid; }
+}
+
+
+/* ============================================================
+   SHARED LANDLORD SUBPAGES
+   Covers tenants, leases, applications, appointments,
+   maintenance, complaints, payments, documents, expenses,
+   reports, messages, notifications, smart devices and settings.
+   Property and unit pages are deliberately excluded.
+   ============================================================ */
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) {
+    --sp-ld-bg: #f3f7fa;
+    --sp-ld-surface: #ffffff;
+    --sp-ld-surface-soft: #eaf5f7;
+    --sp-ld-text: #142a3a;
+    --sp-ld-muted: #617684;
+    --sp-ld-border: #d7e3e9;
+    --sp-ld-primary: #087991;
+    --sp-ld-primary-dark: #055a6d;
+    --sp-ld-accent: #e3a638;
+    --sp-ld-success: #16734a;
+    --sp-ld-error: #a5364b;
+    --sp-ld-warning: #9a6818;
+    --sp-ld-radius: 18px;
+    --sp-ld-shadow: 0 14px 38px rgba(22, 54, 72, .09);
+    min-height: 70vh;
+    padding: clamp(1.25rem, 3vw, 2.5rem) 0 4rem;
+    color: var(--sp-ld-text);
+    background:
+        radial-gradient(circle at 5% 4%, rgba(58, 177, 196, .1), transparent 27rem),
+        var(--sp-ld-bg);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *,
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *::before,
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *::after {
+    box-sizing: border-box;
+}
+
+/* Page container */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__container"] {
+    width: min(1180px, 100%);
+    margin-inline: auto;
+    padding-inline: 1rem;
+}
+
+/* Breadcrumbs */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__breadcrumbs"] {
+    margin-bottom: 1.25rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__breadcrumbs"] ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem .65rem;
+    margin: 0;
+    padding: 0;
+    color: var(--sp-ld-muted);
+    list-style: none;
+    font-size: .87rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__breadcrumbs"] li + li::before {
+    content: "/";
+    margin-right: .65rem;
+    color: #96a9b3;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) a {
+    color: var(--sp-ld-primary-dark);
+    text-underline-offset: .2em;
+}
+
+/* Page header */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__header"] {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: clamp(1.4rem, 3vw, 2.25rem);
+    border-radius: var(--sp-ld-radius);
+    color: #fff;
+    background: linear-gradient(125deg, #0a3348, #075f73 58%, #0b8296);
+    box-shadow: var(--sp-ld-shadow);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__header"] h1 {
+    margin: .2rem 0 .55rem;
+    color: #fff;
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+    line-height: 1.12;
+    letter-spacing: -.035em;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__header"] p:not([class$="__eyebrow"]) {
+    max-width: 720px;
+    margin: 0;
+    color: #d4edf1;
+    line-height: 1.65;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__eyebrow"],
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__section-label"] {
+    margin: 0 0 .35rem;
+    color: #9de7ef;
+    font-size: .76rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__section-label"] {
+    color: var(--sp-ld-primary);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__header-link"], [class$="__primary-button"], [class$="__secondary-button"], [class$="__view-link"]) {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    padding: .65rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__header-link"] {
+    flex: 0 0 auto;
+    color: #10313c;
+    background: #fff;
+}
+
+/* Alerts */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class*="__alert"] {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin-bottom: 1rem;
+    padding: .9rem 1rem;
+    border: 1px solid;
+    border-radius: 12px;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class*="__alert--success"] {
+    color: #115738;
+    border-color: #a8d9bf;
+    background: #e9f8f0;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class*="__alert--error"] {
+    color: #7c2537;
+    border-color: #e9b7c1;
+    background: #fff0f3;
+}
+
+/* Summary cards */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__summary"] {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__summary-card"] {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: .85rem;
+    padding: 1.1rem;
+    border: 1px solid var(--sp-ld-border);
+    border-radius: var(--sp-ld-radius);
+    background: var(--sp-ld-surface);
+    box-shadow: 0 7px 22px rgba(22, 54, 72, .055);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__summary-icon"] {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 12px;
+    color: var(--sp-ld-primary-dark);
+    background: var(--sp-ld-surface-soft);
+    font-size: 1.2rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__summary-card"] strong {
+    display: block;
+    margin-top: .15rem;
+    font-size: 1.5rem;
+}
+
+/* Panels and cards */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__panel"], [class$="__card"], [class$="__information-card"], [class$="__privacy-notice"]) {
+    border: 1px solid var(--sp-ld-border);
+    border-radius: var(--sp-ld-radius);
+    background: var(--sp-ld-surface);
+    box-shadow: 0 8px 28px rgba(22, 54, 72, .06);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__panel"] {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__panel-header"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid var(--sp-ld-border);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__panel-header"] h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__record-count"] {
+    margin: 0;
+    padding: .35rem .65rem;
+    border-radius: 999px;
+    color: var(--sp-ld-primary-dark);
+    background: var(--sp-ld-surface-soft);
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+/* Responsive data tables */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__table-wrapper"] {
+    width: 100%;
+    overflow-x: auto;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__table"] {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__table"] :is(th, td) {
+    padding: .95rem 1rem;
+    border-bottom: 1px solid #e7eef2;
+    text-align: left;
+    vertical-align: middle;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__table"] th {
+    color: #425d6c;
+    background: #f6fafb;
+    font-size: .78rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__table"] tbody tr:hover {
+    background: #f8fbfc;
+}
+
+/* Identity, contact and badges */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__identity"], [class$="__contact"], [class$="__badges"], [class$="__location"]) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem .75rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__contact"] {
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__avatar"] {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--sp-ld-primary);
+    font-weight: 800;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class*="__status"], [class*="__priority"], [class$="__language"]) {
+    display: inline-flex;
+    align-items: center;
+    padding: .28rem .58rem;
+    border-radius: 999px;
+    color: #245263;
+    background: #e7f2f5;
+    font-size: .75rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class*="--active"], [class*="--approved"], [class*="--completed"], [class*="--paid"], [class*="--resolved"]) {
+    color: #135c42;
+    background: #e5f6ed;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class*="--urgent"], [class*="--emergency"], [class*="--overdue"], [class*="--rejected"], [class*="--cancelled"]) {
+    color: #7c2537;
+    background: #fff0f3;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class*="--pending"], [class*="--medium"], [class*="--normal"], [class*="--scheduled"]) {
+    color: #765015;
+    background: #fff5dc;
+}
+
+/* Lists, request cards and information grids */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__list"] {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__request-card"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .35fr);
+    gap: 1.25rem;
+    padding: 1.15rem;
+    border: 1px solid var(--sp-ld-border);
+    border-radius: 14px;
+    background: #fff;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__request-heading"] {
+    display: flex;
+    gap: .8rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__request-heading"] h3 {
+    margin: .15rem 0 .4rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__description"] {
+    color: var(--sp-ld-muted);
+    line-height: 1.65;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__information"] {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__information-card"] {
+    display: flex;
+    gap: .8rem;
+    padding: 1rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__information-card"] h2 {
+    margin: 0 0 .3rem;
+    font-size: 1rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__information-card"] p {
+    margin: 0;
+    color: var(--sp-ld-muted);
+    line-height: 1.55;
+}
+
+/* Forms */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is(form, [class$="__form"]) {
+    min-width: 0;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__form-grid"], [class$="__fields"], [class$="__details-grid"]) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    width: 100%;
+    min-height: 45px;
+    padding: .7rem .8rem;
+    border: 1px solid #cbdbe3;
+    border-radius: 10px;
+    color: var(--sp-ld-text);
+    background: #fff;
+    font: inherit;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is(input, select, textarea):focus {
+    outline: none;
+    border-color: var(--sp-ld-primary);
+    box-shadow: 0 0 0 4px rgba(8, 121, 145, .14);
+}
+
+/* Empty and privacy states */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__empty-state"] {
+    padding: clamp(2rem, 5vw, 4rem) 1.25rem;
+    color: var(--sp-ld-muted);
+    text-align: center;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__empty-icon"] {
+    margin-bottom: .6rem;
+    font-size: 2.4rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__empty-state"] h2 {
+    margin: 0;
+    color: var(--sp-ld-text);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__empty-actions"] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .7rem;
+    margin-top: 1rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__primary-button"] {
+    color: #fff;
+    background: var(--sp-ld-primary);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__secondary-button"] {
+    color: var(--sp-ld-primary-dark);
+    border-color: var(--sp-ld-border);
+    background: #fff;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__privacy-notice"] {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem 1.15rem;
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__privacy-notice"] p {
+    margin: .25rem 0 0;
+    color: var(--sp-ld-muted);
+}
+
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__privacy-notice"] > a {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+/* Accessibility */
+:where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--sp-ld-accent);
+    outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__summary"], [class$="__information"]) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__request-card"] {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 680px) {
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) {
+        padding-top: 1rem;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__container"] {
+        width: min(100% - 1.25rem, 1180px);
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__header"], [class$="__panel-header"], [class$="__privacy-notice"]) {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__summary"], [class$="__information"], [class$="__form-grid"], [class$="__fields"], [class$="__details-grid"]) {
+        grid-template-columns: 1fr;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__header-link"] {
+        width: 100%;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) [class$="__privacy-notice"] > a {
+        margin-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *,
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *::before,
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+@media print {
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) {
+        padding: 0;
+        color: #000;
+        background: #fff;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__breadcrumbs"], [class$="__header-link"], [class$="__empty-actions"]) {
+        display: none !important;
+    }
+
+    :where([class^="landlord-"][class$="-page"]:not(.landlord-properties-page):not(.landlord-property-details-page):not(.landlord-add-property-page):not(.landlord-edit-property-page):not(.landlord-units-page):not(.landlord-unit-details-page):not(.landlord-add-unit-page):not(.landlord-edit-unit-page)) :is([class$="__panel"], [class$="__summary-card"], [class$="__request-card"]) {
+        box-shadow: none;
+        break-inside: avoid;
+    }
 }
