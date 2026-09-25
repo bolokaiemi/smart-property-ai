@@ -869,9 +869,10 @@ async def register_submit(
 # Logout
 # ==========================================================================
 
-@router.post(
+@router.api_route(
     "/logout",
     name="logout",
+    methods=["GET", "POST"],
 )
 async def logout(
     request: Request,
@@ -905,7 +906,7 @@ async def logout(
     request.session["language"] = language
 
     return RedirectResponse(
-        url="/",
+        url=request.url_for("home"),
         status_code=status.HTTP_303_SEE_OTHER,
     )
 

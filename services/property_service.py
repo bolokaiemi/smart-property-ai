@@ -590,6 +590,15 @@ class PropertyService:
             self.db.scalars(query).all()
         )
 
+    def get_dashboard_statistics(self, db: Session, landlord_id: str) -> dict[str, int]:
+        """Return dashboard statistics for the given landlord.
+
+        Delegates to the high‑level function in ``services.landlord_service`` which
+        aggregates property, unit, maintenance, and application counts.
+        """
+        from services.landlord_service import get_dashboard_statistics as _get_stats
+        return _get_stats(db=db, landlord_id=landlord_id)
+
     def count_properties(
         self,
         current_user: User,

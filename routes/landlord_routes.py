@@ -9,11 +9,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlencode
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status, Query
 from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
+import math
 from starlette.datastructures import UploadFile
 
 from database.database import get_db
@@ -211,12 +212,53 @@ async def landlord_dashboard(request: Request, db: Session = Depends(get_db)) ->
 # ---------------------------------------------------------------------------
 
 @router.get("/properties", name="properties_page")
-async def properties_page(request: Request, db: Session = Depends(get_db)) -> Response:
+@router.get("/properties", name="landlord_properties_page", include_in_schema=False)
+async def properties_page(
+    request: Request,
+    page: int = Query(default=1, ge=1),
+    db: Session = Depends(get_db),
+) -> Response:
     user = _require_landlord(request, db)
-    if isinstance(user, Response): return user
+
+    if isinstance(user, Response):
+        return user
+
     service = PropertyService(db)
-    properties = service.list_properties(user, search=request.query_params.get("search"))
-    return _render(request, user, "landlord/properties.html", page_title="Properties", properties=properties)
+    page_size = 12
+    # Retrieve filtered properties with pagination
+    properties = service.list_properties(
+        user,
+        page=page,
+        page_size=page_size,
+        search=request.query_params.get("search"),
+    )
+    # Count total properties for pagination
+    total_properties = service.count_properties(
+        user,
+        search=request.query_params.get("search"),
+    )
+    total_pages = (
+        math.ceil(total_properties / page_size)
+        if total_properties
+        else 1
+    )
+    summary = service.get_dashboard_statistics(
+        db=db,
+        landlord_id=user.id,
+    )
+
+    return _render(
+        request,
+        user,
+        "landlord/properties.html",
+        page_title="Properties",
+        properties=properties,
+        summary=summary,
+        total_properties=total_properties,
+        total_pages=total_pages,
+        page=page,
+        page_size=page_size,
+    )
 
 
 @router.get("/properties/add", name="add_property_page")

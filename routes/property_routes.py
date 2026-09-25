@@ -294,9 +294,8 @@ async def add_property_page(
         context=template_context(
             request=request,
             current_user=current_user,
-            form_data={
-                "country": "Germany",
-            },
+            # property_types are already supplied by template_context; no extra service call needed.
+            form_data={"country": "Germany"},
         ),
         status_code=status.HTTP_200_OK,
     )

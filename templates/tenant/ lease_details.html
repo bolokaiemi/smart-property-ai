@@ -15,6 +15,7 @@
         rel="stylesheet"
         href="{{ url_for('static', path='css/tenant.css') }}"
     >
+
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,11 @@
     |default(lease.status, true)
 %}
 
+
 <main
+
+<div class="tenant-page tenant-leases-page">
+
     id="main-content"
     class="tenant-page tenant-lease-details-page"
     tabindex="-1"
@@ -695,6 +700,8 @@
         aria-atomic="true"
     ></p>
 </main>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}

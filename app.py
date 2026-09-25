@@ -39,7 +39,8 @@ from routes.auth_routes import router as auth_router
 from routes.listing_routes import router as listing_router
 from routes.main_routes import router as main_router
 from routes.tenant_routes import router as tenant_router
-
+from routes.property_routes import router as property_router
+from services.property_service import PropertyService
 
 # ==========================================================================
 # 1. Environment configuration
@@ -88,8 +89,8 @@ if not SECRET_KEY:
             "SECRET_KEY is missing. Add a secure SECRET_KEY "
             "to the production environment."
         )
-
-    SECRET_KEY = secrets.token_hex(32)
+    # Development fallback: use a deterministic secret key to avoid session resets.
+    SECRET_KEY = "dev-static-secret-key"
 
 from fastapi import FastAPI, Request
 from starlette.middleware.sessions import SessionMiddleware
@@ -127,14 +128,7 @@ async def ensure_csrf_token(
 
 # Add SessionMiddleware after defining ensure_csrf_token.
 # This ordering allows the CSRF middleware to access request.session.
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=SECRET_KEY,
-    session_cookie="smart_property_session",
-    same_site="lax",
-    https_only=not settings.DEBUG,
-    max_age=60 * 60 * 24 * 7,
-)
+
 # ==========================================================================
 # 2. Required directories
 # ==========================================================================
@@ -319,19 +313,54 @@ app.mount(
 # Do not mount /uploads publicly. Private tenant documents must be
 # returned through an authenticated route after an authorization check.
 
+# ===========================================================================
+# 12. Logout route
+# ===========================================================================
+
+from fastapi import Request
+from fastapi.responses import RedirectResponse
+
+@app.post("/logout", name="logout")
+async def logout(request: Request):
+    """Clear the session and redirect to the homepage.
+    This endpoint is used by the logout form in the base template.
+    """
+    request.session.clear()
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+# Also support GET for convenience (e.g., direct link)
+@app.get("/logout", name="logout_get")
+async def logout_get(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.get(
+    "/debug/routes",
+    include_in_schema=False,
+)
+async def get_routes() -> list[str]:
+    return sorted(
+        {
+            route.path
+            for route in app.routes
+            if hasattr(route, "path")
+        }
+    )
+
 
 # ==========================================================================
 # 10. Register every router exactly once
 # ==========================================================================
-
+app.include_router(property_router)
 app.include_router(main_router)
 app.include_router(auth_router)
 app.include_router(listing_router)
 app.include_router(application_router)
 app.include_router(ai_router)
 
-app.include_router(tenant_router, prefix="/tenant")
-app.include_router(landlord_router, prefix="/landlord")
+app.include_router(tenant_router, prefix="/tenant_dashboard")
+app.include_router(landlord_router, prefix="/landlord_dashboard")
+app.include_router(property_router)
 
 
 # ==========================================================================

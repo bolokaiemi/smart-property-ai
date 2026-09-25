@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ page_title | default("Smart Property AI", true) }} | Smart Property AI
+{% endblock %}
+
+{% block meta_description %}
+{{ page_description | default("Smart Property AI information page.", true) }}
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+{% if page_stylesheet %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path=page_stylesheet) }}"
+>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<main
+    id="main-content"
+    class="generic-page"
+    tabindex="-1"
+>
+    <div class="generic-page__container">
+
+        <nav
+            class="generic-page__breadcrumbs"
+            aria-label="Breadcrumb"
+        >
+            <ol>
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+                </li>
+
+                <li aria-current="page">
+                    {{ page_title | default("Page", true) }}
+                </li>
+            </ol>
+        </nav>
+
+        <header class="generic-page__header">
+            {% if page_eyebrow %}
+            <p class="generic-page__eyebrow">
+                {{ page_eyebrow }}
+            </p>
+            {% endif %}
+
+            <div class="generic-page__heading-row">
+                <div>
+                    <h1>
+                        {{ page_title | default("Page", true) }}
+                    </h1>
+
+                    {% if page_description %}
+                    <p class="generic-page__description">
+                        {{ page_description }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                {% if action_url and action_label %}
+                <a
+                    class="button button-primary"
+                    href="{{ action_url }}"
+                >
+                    {{ action_label }}
+                </a>
+                {% endif %}
+            </div>
+        </header>
+
+        {% if success %}
+        <div
+            class="alert alert-success"
+            role="status"
+        >
+            {{ success }}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div
+            class="alert alert-error"
+            role="alert"
+        >
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if messages %}
+        <section
+            class="generic-page__messages"
+            aria-label="Page messages"
+        >
+            {% for message in messages %}
+            <div
+                class="alert alert-{{ message.category | default('info', true) }}"
+                role="{% if message.category == 'error' %}alert{% else %}status{% endif %}"
+            >
+                {{ message.text }}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="generic-page__content">
+            {% block page_content %}
+                {% if page_content %}
+                    {# Escaped by default to prevent injected HTML. #}
+                    <p>{{ page_content }}</p>
+                {% else %}
+                    <div class="generic-page__empty" role="status">
+                        <h2>Content coming soon</h2>
+                        <p>
+                            This page is being prepared. Please check again later.
+                        </p>
+                    </div>
+                {% endif %}
+            {% endblock %}
+        </section>
+
+        <footer class="generic-page__footer">
+            <a href="{{ url_for('home') }}">
+                Return to the homepage
+            </a>
+        </footer>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+{{ super() }}
+{% if page_script %}
+<script
+    src="{{ url_for('static', path=page_script) }}"
+    defer
+></script>
+{% endif %}
+{% endblock %}

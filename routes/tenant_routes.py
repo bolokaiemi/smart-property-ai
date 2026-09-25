@@ -262,7 +262,7 @@ def boolean_form_value(
     name="tenant_dashboard",
 )
 @router.get(
-    "/",
+    "/dashboard",
     response_class=HTMLResponse,
     include_in_schema=False,
 )
