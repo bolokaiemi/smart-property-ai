@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Smart Property Admin{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-primary: #1e1e2f;
+            --bg-secondary: #2a2a3c;
+            --accent: #4e91f9;
+            --text-primary: #f0f0f5;
+            --text-muted: #a0a0b5;
+            --radius: 8px;
+            --transition: all 0.3s ease;
+            font-family: 'Inter', -apple-system, Helvetica, Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        header {
+            background: linear-gradient(135deg, #4e91f9, #7a5cff);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        nav a:hover {
+            color: var(--accent);
+        }
+        main {
+            padding: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        th {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+        tr:nth-child(even) {
+            background: rgba(255,255,255,0.02);
+        }
+        .btn {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn:hover {
+            background: #3a78e0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Smart Property Admin</h1>
+        <nav>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/users">Users</a>
+            <a href="/admin/audit-logs">Audit Logs</a>
+            <a href="/admin/reports">Reports</a>
+            <a href="/admin/ai-monitoring">AI Monitoring</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer style="text-align:center; padding:1rem; color:var(--text-muted); font-size:0.9rem;">
+        © {{ now().year }} Smart Property AI – Admin Console
+    </footer>
+</body>
+</html>

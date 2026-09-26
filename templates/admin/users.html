@@ -1,0 +1,27 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Users - Smart Property Admin{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>All Users</h2>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ "Active" if user.is_active else "Inactive" }}</td>
+                <td>
+                    <a class="btn" href="/admin/users/{{ user.id }}">Details</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No users found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Dashboard - Smart Property Admin{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Overview</h2>
+    <p>Quick snapshot of key metrics for the property platform.</p>
+    <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px; background:#2a2a3c; padding:1rem; border-radius:8px; text-align:center;">
+            <h3>Total Properties</h3>
+            <p style="font-size:2rem; margin:0; color:var(--accent);">{{ stats.total_properties }}</p>
+        </div>
+        <div style="flex:1; min-width:200px; background:#2a2a3c; padding:1rem; border-radius:8px; text-align:center;">
+            <h3>Active Users</h3>
+            <p style="font-size:2rem; margin:0; color:var(--accent);">{{ stats.active_users }}</p>
+        </div>
+        <div style="flex:1; min-width:200px; background:#2a2a3c; padding:1rem; border-radius:8px; text-align:center;">
+            <h3>Pending Requests</h3>
+            <p style="font-size:2rem; margin:0; color:var(--accent);">{{ stats.pending_requests }}</p>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <h2>Recent Activity</h2>
+    <table>
+        <thead>
+            <tr><th>Time</th><th>User</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            {% for entry in recent_activity %}
+            <tr>
+                <td>{{ entry.time }}</td>
+                <td>{{ entry.user }}</td>
+                <td>{{ entry.action }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No recent activity.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
