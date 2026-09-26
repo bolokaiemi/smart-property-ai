@@ -1589,3 +1589,7 @@ body.high-contrast .property-filter-group select {
         flex-wrap: wrap;
     }
 }
+
+* {
+    text-decoration:none ;
+}

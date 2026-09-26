@@ -68914,3 +68914,1169 @@ starlette.routing.NoMatchFound: No route exists for name "login_page" and params
 2026-09-25 23:02:56,959 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
 2026-09-25 23:02:56,960 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=c9c9e330-565f-4ac7-aec6-828945140af4 model=smart-property-standard
 2026-09-25 23:02:56,962 | INFO | smart_property_ai | POST /api/ai/chat -> 200 6.55ms
+2026-09-25 23:52:38,264 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 23:52:38,289 | INFO | smart_property_ai | Database tables are ready.
+2026-09-25 23:52:43,474 | INFO | smart_property_ai | GET / -> 200 1107.50ms
+2026-09-25 23:52:44,541 | INFO | smart_property_ai | GET /static/css/style.css -> 200 568.12ms
+2026-09-25 23:52:44,551 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 534.50ms
+2026-09-25 23:52:44,556 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 538.20ms
+2026-09-25 23:52:44,558 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 526.47ms
+2026-09-25 23:52:44,561 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 528.90ms
+2026-09-25 23:52:44,570 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 593.52ms
+2026-09-25 23:52:44,620 | INFO | smart_property_ai | GET /static/js/main.js -> 200 27.01ms
+2026-09-25 23:52:44,624 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 27.65ms
+2026-09-25 23:52:44,639 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 38.66ms
+2026-09-25 23:52:44,648 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 40.61ms
+2026-09-25 23:52:44,657 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 41.82ms
+2026-09-25 23:52:44,664 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 34.24ms
+2026-09-25 23:52:44,694 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 21.63ms
+2026-09-25 23:52:46,566 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 45.98ms
+2026-09-25 23:53:07,862 | INFO | smart_property_ai | GET /login -> 200 100.92ms
+2026-09-25 23:53:07,931 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 14.19ms
+2026-09-25 23:53:45,544 | INFO | smart_property_ai | POST /login -> 303 1145.33ms
+2026-09-25 23:53:45,664 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 103.69ms
+2026-09-25 23:53:45,748 | INFO | smart_property_ai | GET /favicon.ico -> 307 4.21ms
+2026-09-25 23:53:45,758 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 4.20ms
+2026-09-25 23:53:47,924 | INFO | smart_property_ai | GET / -> 200 9.88ms
+2026-09-25 23:53:50,274 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 274.72ms
+2026-09-25 23:53:50,293 | INFO | smart_property_ai | GET /static/js/tenant.js -> 200 5.05ms
+2026-09-25 23:53:53,398 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 89.04ms
+2026-09-25 23:57:08,109 | INFO | smart_property_ai | GET /logout -> 303 2.24ms
+2026-09-25 23:57:08,122 | INFO | smart_property_ai | GET / -> 200 6.77ms
+2026-09-25 23:59:37,845 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-25 23:59:49,926 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-25 23:59:49,970 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:00:09,037 | INFO | smart_property_ai | GET /logout -> 303 5.94ms
+2026-09-26 00:00:09,939 | INFO | smart_property_ai | GET / -> 200 848.70ms
+2026-09-26 00:00:10,680 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 509.46ms
+2026-09-26 00:03:11,941 | INFO | smart_property_ai | GET /logout -> 303 54.62ms
+2026-09-26 00:03:12,063 | INFO | smart_property_ai | GET / -> 200 91.76ms
+2026-09-26 00:06:12,350 | INFO | smart_property_ai | GET /logout -> 303 5.47ms
+2026-09-26 00:06:12,374 | INFO | smart_property_ai | GET / -> 200 7.40ms
+2026-09-26 00:09:12,539 | INFO | smart_property_ai | GET /logout -> 303 26.25ms
+2026-09-26 00:09:12,594 | INFO | smart_property_ai | GET / -> 200 26.81ms
+2026-09-26 00:09:12,671 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 41.31ms
+2026-09-26 00:11:02,595 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 00:11:05,510 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 00:11:05,527 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:12:12,882 | INFO | smart_property_ai | GET /logout -> 303 7.58ms
+2026-09-26 00:12:13,120 | INFO | smart_property_ai | GET / -> 200 226.15ms
+2026-09-26 00:12:13,334 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 167.56ms
+2026-09-26 00:14:57,116 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 00:14:59,242 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 00:14:59,251 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:15:14,532 | INFO | smart_property_ai | GET /logout -> 303 12.06ms
+2026-09-26 00:15:15,087 | INFO | smart_property_ai | GET / -> 200 526.61ms
+2026-09-26 00:41:13,952 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 00:41:13,975 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:41:16,837 | INFO | smart_property_ai | GET / -> 200 116.54ms
+2026-09-26 00:41:17,424 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 212.38ms
+2026-09-26 00:41:17,426 | INFO | smart_property_ai | GET /static/css/style.css -> 200 214.99ms
+2026-09-26 00:41:17,430 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 202.30ms
+2026-09-26 00:41:17,434 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 205.32ms
+2026-09-26 00:41:17,437 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 203.57ms
+2026-09-26 00:41:17,443 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 209.08ms
+2026-09-26 00:41:17,505 | INFO | smart_property_ai | GET /static/js/main.js -> 200 36.05ms
+2026-09-26 00:41:17,509 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 34.51ms
+2026-09-26 00:41:17,512 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 32.01ms
+2026-09-26 00:41:17,522 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 35.69ms
+2026-09-26 00:41:17,528 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 44.82ms
+2026-09-26 00:41:17,533 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 44.88ms
+2026-09-26 00:41:17,625 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 68.24ms
+2026-09-26 00:41:19,295 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 13.95ms
+2026-09-26 00:45:19,924 | INFO | smart_property_ai | GET /logout -> 303 32.43ms
+2026-09-26 00:45:19,981 | INFO | smart_property_ai | GET / -> 200 38.11ms
+2026-09-26 00:48:11,392 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 00:48:25,544 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 00:48:25,671 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:48:25,790 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 00:59:48,249 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 00:59:48,270 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 00:59:48,270 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400 s)
+2026-09-26 00:59:48,271 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800 s)
+2026-09-26 00:59:48,271 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600 s)
+2026-09-26 00:59:48,271 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000 s)
+2026-09-26 00:59:48,271 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 01:30:03,856 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 01:30:03,866 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 01:30:03,866 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400 s)
+2026-09-26 01:30:03,866 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800 s)
+2026-09-26 01:30:03,866 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600 s)
+2026-09-26 01:30:03,866 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000 s)
+2026-09-26 01:30:03,866 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 01:41:04,231 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 01:41:04,244 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 01:41:04,245 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400 s)
+2026-09-26 01:41:04,245 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800 s)
+2026-09-26 01:41:04,245 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600 s)
+2026-09-26 01:41:04,245 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000 s)
+2026-09-26 01:41:04,245 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 01:56:47,259 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 01:56:47,293 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 01:56:47,294 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400 s)
+2026-09-26 01:56:47,294 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800 s)
+2026-09-26 01:56:47,295 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600 s)
+2026-09-26 01:56:47,295 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000 s)
+2026-09-26 01:56:47,295 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 02:07:09,577 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 02:07:09,813 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 02:07:09,814 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 02:07:09,815 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 02:07:09,819 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 02:07:09,821 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 02:07:09,822 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 02:07:09,823 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 02:07:09,824 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 02:07:09,826 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 02:07:09,827 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 02:07:09,829 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 02:07:09,830 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 02:07:09,831 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 02:07:09,832 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 02:07:09,834 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 02:07:09,836 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 02:07:09,837 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 02:07:09,839 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 02:07:09,841 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 02:07:54,617 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 02:07:54,635 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 02:07:54,635 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 02:07:54,636 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 02:07:54,638 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 02:07:54,638 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 02:07:54,639 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 02:07:54,640 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 02:07:54,640 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 02:07:54,641 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 02:07:54,641 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 02:07:54,642 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 02:07:54,643 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 02:07:54,643 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 02:07:54,644 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 02:07:54,645 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 02:07:54,646 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 02:07:54,646 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 02:07:54,647 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 02:07:54,647 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 02:08:00,037 | INFO | smart_property_ai | GET / -> 200 721.99ms
+2026-09-26 02:08:00,777 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 646.43ms
+2026-09-26 02:08:00,787 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 613.77ms
+2026-09-26 02:08:00,794 | INFO | smart_property_ai | GET /static/css/style.css -> 200 664.14ms
+2026-09-26 02:08:00,800 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 636.45ms
+2026-09-26 02:08:00,810 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 637.25ms
+2026-09-26 02:08:00,816 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 632.32ms
+2026-09-26 02:08:01,112 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 64.61ms
+2026-09-26 02:08:01,135 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 89.34ms
+2026-09-26 02:08:01,167 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 182.95ms
+2026-09-26 02:08:01,180 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 197.85ms
+2026-09-26 02:08:01,185 | INFO | smart_property_ai | GET /static/js/main.js -> 200 201.37ms
+2026-09-26 02:08:01,196 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 133.53ms
+2026-09-26 02:08:01,408 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 112.60ms
+2026-09-26 02:08:02,266 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 11.18ms
+2026-09-26 02:08:15,422 | INFO | smart_property_ai | GET /login -> 200 191.55ms
+2026-09-26 02:08:15,469 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 14.94ms
+2026-09-26 02:08:30,926 | INFO | smart_property_ai | GET /ai-assistant -> 303 51.92ms
+2026-09-26 02:08:30,994 | INFO | smart_property_ai | GET /login -> 200 49.74ms
+2026-09-26 02:08:32,772 | INFO | smart_property_ai | GET /ai-assistant -> 303 2.21ms
+2026-09-26 02:08:32,786 | INFO | smart_property_ai | GET /login -> 200 6.98ms
+2026-09-26 02:08:55,328 | INFO | smart_property_ai | POST /login -> 303 92.88ms
+2026-09-26 02:08:55,433 | INFO | smart_property_ai | GET /ai-assistant -> 200 100.92ms
+2026-09-26 02:08:55,446 | INFO | smart_property_ai | GET /static/css/ai-assistant.css -> 200 3.89ms
+2026-09-26 02:08:55,448 | INFO | smart_property_ai | GET /static/js/ai-assistant.js -> 200 4.93ms
+2026-09-26 02:10:44,937 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:10:44,939 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:10:44,944 | INFO | smart_property_ai | POST /api/ai/chat -> 200 14.40ms
+2026-09-26 02:11:35,020 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:11:35,020 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:11:35,021 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.41ms
+2026-09-26 02:12:10,855 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:12:10,855 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:12:10,856 | INFO | smart_property_ai | POST /api/ai/chat -> 200 4.60ms
+2026-09-26 02:12:14,977 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:12:14,977 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:12:14,979 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.86ms
+2026-09-26 02:13:04,534 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:13:04,534 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:13:04,536 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.06ms
+2026-09-26 02:13:32,352 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 150.76ms
+2026-09-26 02:13:32,368 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 4.61ms
+2026-09-26 02:13:32,370 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 6.11ms
+2026-09-26 02:13:40,496 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 74.49ms
+2026-09-26 02:13:51,171 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/payments -> 200 47.26ms
+2026-09-26 02:13:54,618 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 20.12ms
+2026-09-26 02:13:57,035 | INFO | smart_property_ai | GET /landlord/properties -> 200 83.71ms
+2026-09-26 02:13:57,049 | INFO | smart_property_ai | GET /static/css/property.css -> 200 3.69ms
+2026-09-26 02:13:59,912 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/tenants -> 200 21.10ms
+2026-09-26 02:14:04,493 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 34.67ms
+2026-09-26 02:14:07,961 | ERROR | smart_property_ai | GET /landlord_dashboard/landlord/appointments -> unhandled error 51.22ms
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_utils.py", line 85, in create_collapsing_task_group
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\anyio\_backends\_asyncio.py", line 815, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 291, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 259, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    |     await self.app(scope, receive, send_wrapper)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    |     await self.original_router.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    |     await included_router._handle_selected(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    |     await original_route.handle(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    |     await app(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 490, in landlord_appointments_page
+    |     return _render(request, user, "landlord/appointments.html", page_title="Appointments", appointments=rows)
+    |   File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    |     return templates.TemplateResponse(
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         request=request,
+    |         ^^^^^^^^^^^^^^^^
+    |         name=template,
+    |         ^^^^^^^^^^^^^^
+    |         context=_context(request, user, **values),
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    |     return _TemplateResponse(
+    |         template,
+    |     ...<4 lines>...
+    |         background=background,
+    |     )
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    |     content = template.render(context)
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    |     self.environment.handle_exception()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    |     raise rewrite_traceback_stack(source=source)
+    |   File "templates\landlord\appointments.html", line 3, in top-level template code
+    |     {% from "landlord/_macros.html" import status_badge, format_date %}
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    |     raise TemplateNotFound(
+    |     ...<2 lines>...
+    |     )
+    | jinja2.exceptions.TemplateNotFound: 'landlord/_macros.html' not found in search path: 'templates'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 291, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\app.py", line 259, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\sessions.py", line 88, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 490, in landlord_appointments_page
+    return _render(request, user, "landlord/appointments.html", page_title="Appointments", appointments=rows)
+  File "C:\Users\Bolokaiemi\PycharmProjects\smart property ai\routes\landlord_routes.py", line 118, in _render
+    return templates.TemplateResponse(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=request,
+        ^^^^^^^^^^^^^^^^
+        name=template,
+        ^^^^^^^^^^^^^^
+        context=_context(request, user, **values),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+        template,
+    ...<4 lines>...
+        background=background,
+    )
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\starlette\templating.py", line 43, in __init__
+    content = template.render(context)
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "templates\landlord\appointments.html", line 3, in top-level template code
+    {% from "landlord/_macros.html" import status_badge, format_date %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Bolokaiemi\AppData\Local\Programs\Python\Python314\Lib\site-packages\jinja2\loaders.py", line 209, in get_source
+    raise TemplateNotFound(
+    ...<2 lines>...
+    )
+jinja2.exceptions.TemplateNotFound: 'landlord/_macros.html' not found in search path: 'templates'
+2026-09-26 02:14:08,541 | INFO | smart_property_ai | GET /favicon.ico -> 307 29.75ms
+2026-09-26 02:14:08,550 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 2.59ms
+2026-09-26 02:14:21,746 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 22.68ms
+2026-09-26 02:14:23,329 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/applications -> 200 41.96ms
+2026-09-26 02:14:24,910 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 19.51ms
+2026-09-26 02:14:26,085 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/maintenance -> 200 46.08ms
+2026-09-26 02:14:27,742 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 21.57ms
+2026-09-26 02:14:29,318 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/payments -> 200 12.18ms
+2026-09-26 02:14:30,689 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 22.80ms
+2026-09-26 02:14:31,893 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/messages -> 200 43.53ms
+2026-09-26 02:14:33,138 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 20.50ms
+2026-09-26 02:14:34,583 | INFO | smart_property_ai | GET /landlord_dashboard/landlord/leases -> 200 11.03ms
+2026-09-26 02:14:36,591 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 21.02ms
+2026-09-26 02:14:50,253 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:14:50,254 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:14:50,255 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.60ms
+2026-09-26 02:16:06,380 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:16:06,380 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:16:06,381 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.79ms
+2026-09-26 02:17:17,763 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:17:17,764 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:17:17,766 | INFO | smart_property_ai | POST /api/ai/chat -> 200 8.00ms
+2026-09-26 02:18:11,851 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:18:11,852 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:18:11,853 | INFO | smart_property_ai | POST /api/ai/chat -> 200 4.00ms
+2026-09-26 02:19:23,699 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:19:23,700 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:19:23,701 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.33ms
+2026-09-26 02:20:15,430 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:20:15,432 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:20:15,436 | INFO | smart_property_ai | POST /api/ai/chat -> 200 10.49ms
+2026-09-26 02:22:20,492 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:22:20,492 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:22:20,496 | INFO | smart_property_ai | POST /api/ai/chat -> 200 9.93ms
+2026-09-26 02:23:20,175 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:23:20,176 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:23:20,179 | INFO | smart_property_ai | POST /api/ai/chat -> 200 9.45ms
+2026-09-26 02:24:13,805 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:24:13,808 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:24:13,811 | INFO | smart_property_ai | POST /api/ai/chat -> 200 15.94ms
+2026-09-26 02:25:04,867 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:25:04,869 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:25:04,873 | INFO | smart_property_ai | POST /api/ai/chat -> 200 11.89ms
+2026-09-26 02:25:58,610 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:25:58,611 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:25:58,616 | INFO | smart_property_ai | POST /api/ai/chat -> 200 51.98ms
+2026-09-26 02:27:02,997 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:27:02,998 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:27:03,001 | INFO | smart_property_ai | POST /api/ai/chat -> 200 9.78ms
+2026-09-26 02:27:47,999 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:27:48,000 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:27:48,006 | INFO | smart_property_ai | POST /api/ai/chat -> 200 12.59ms
+2026-09-26 02:28:28,097 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:28:28,098 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-standard
+2026-09-26 02:28:28,103 | INFO | smart_property_ai | POST /api/ai/chat -> 200 10.05ms
+2026-09-26 02:28:50,575 | INFO | smart_property_ai | GET /ai-assistant -> 200 66.29ms
+2026-09-26 02:28:50,617 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 8.21ms
+2026-09-26 02:30:06,357 | INFO | smart_property_ai | AI chat request received from user cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed
+2026-09-26 02:30:06,358 | INFO | smart_property_ai | AI assistant request handled: user=cdf5b5ba-c0a3-43b4-b2bf-bf69d4cde2ed conversation=c0699425-f1fe-4841-88fc-a7b701f5dde9 model=smart-property-fast
+2026-09-26 02:30:06,362 | INFO | smart_property_ai | POST /api/ai/chat -> 200 12.65ms
+2026-09-26 02:32:50,491 | INFO | smart_property_ai | GET /landlord_dashboard/landlorddashboard -> 200 185.83ms
+2026-09-26 02:32:51,982 | INFO | smart_property_ai | POST /logout -> 303 14.70ms
+2026-09-26 02:32:52,010 | INFO | smart_property_ai | GET / -> 200 20.68ms
+2026-09-26 02:33:11,127 | INFO | smart_property_ai | GET /listings/guided_search_page -> 200 178.36ms
+2026-09-26 02:33:11,144 | INFO | smart_property_ai | GET /static/css/listings.css -> 200 5.77ms
+2026-09-26 02:33:11,146 | INFO | smart_property_ai | GET /static/js/listings.js -> 200 8.08ms
+2026-09-26 02:34:02,350 | INFO | smart_property_ai | GET / -> 200 8.62ms
+2026-09-26 02:35:13,417 | INFO | smart_property_ai | GET /ai-assistant -> 303 1.57ms
+2026-09-26 02:35:13,439 | INFO | smart_property_ai | GET /login -> 200 16.06ms
+2026-09-26 02:37:31,951 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 02:37:31,960 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 02:37:31,960 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 02:37:31,961 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 02:37:31,961 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 02:37:31,961 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 02:37:31,961 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 02:37:31,962 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 02:37:31,962 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 02:37:31,962 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 02:37:31,962 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 02:37:31,962 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 02:37:31,963 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 02:37:31,963 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 02:37:31,963 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 02:37:31,963 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 02:37:31,963 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 02:37:31,963 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 02:37:31,963 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 02:37:31,964 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 02:37:58,741 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 02:37:58,752 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 02:37:58,753 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 02:37:58,753 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 02:37:58,754 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 02:37:58,754 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 02:37:58,754 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 02:37:58,754 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 02:37:58,754 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 02:37:58,754 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 02:37:58,755 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 02:37:58,755 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 02:38:07,250 | INFO | smart_property_ai | GET / -> 200 312.97ms
+2026-09-26 02:38:57,786 | INFO | smart_property_ai | GET /ai-assistant -> 303 5.09ms
+2026-09-26 02:38:57,849 | INFO | smart_property_ai | GET /login -> 200 58.02ms
+2026-09-26 02:39:47,357 | INFO | smart_property_ai | POST /login -> 303 96.45ms
+2026-09-26 02:39:47,448 | INFO | smart_property_ai | GET /ai-assistant -> 200 84.92ms
+2026-09-26 02:40:10,682 | INFO | smart_property_ai | GET /login -> 303 1.12ms
+2026-09-26 02:40:10,737 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 50.10ms
+2026-09-26 02:44:24,309 | INFO | smart_property_ai | GET /logout -> 303 15.92ms
+2026-09-26 02:44:24,329 | INFO | smart_property_ai | GET / -> 200 10.11ms
+2026-09-26 02:44:24,444 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 95.06ms
+2026-09-26 02:48:10,373 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 30.07ms
+2026-09-26 02:48:23,573 | INFO | smart_property_ai | GET /login -> 200 40.40ms
+2026-09-26 02:48:23,652 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 3.36ms
+2026-09-26 02:51:45,231 | INFO | smart_property_ai | GET /login -> 200 8.39ms
+2026-09-26 02:51:45,270 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 13.07ms
+2026-09-26 02:51:45,285 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 2.26ms
+2026-09-26 02:56:29,213 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 1.64ms
+2026-09-26 02:59:29,852 | INFO | smart_property_ai | GET /logout -> 303 6.10ms
+2026-09-26 02:59:29,907 | INFO | smart_property_ai | GET / -> 200 37.02ms
+2026-09-26 02:59:29,997 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 3.05ms
+2026-09-26 13:28:37,939 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 13:28:38,464 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 13:28:38,507 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 13:28:38,507 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 13:28:38,507 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 13:28:38,508 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 13:28:38,508 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 13:28:38,508 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 13:28:38,508 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 13:28:38,508 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 13:28:38,509 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 13:28:38,509 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 13:28:38,509 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 13:28:38,510 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 13:28:38,510 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 13:28:38,510 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 13:28:38,510 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 13:28:38,510 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 13:28:38,511 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 13:28:38,511 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 13:28:38,511 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 13:29:06,224 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 13:29:06,225 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 13:29:06,225 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 13:29:06,225 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 13:29:06,225 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 13:29:06,225 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 13:29:24,449 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 13:29:24,464 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 13:29:24,464 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 13:29:24,464 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 13:29:24,464 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 13:29:24,465 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 13:29:24,465 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 13:29:24,465 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 13:29:24,465 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 13:29:24,465 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 13:29:24,466 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 13:29:24,466 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 13:29:24,466 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 13:29:24,466 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 13:29:24,467 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 13:29:24,467 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 13:29:24,467 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 13:29:24,468 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 13:29:24,468 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 13:29:24,468 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 13:29:29,786 | INFO | smart_property_ai | GET / -> 200 109.24ms
+2026-09-26 13:29:30,083 | INFO | smart_property_ai | GET /static/css/style.css -> 200 122.62ms
+2026-09-26 13:29:30,085 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 122.66ms
+2026-09-26 13:29:30,090 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 122.33ms
+2026-09-26 13:29:30,092 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 124.32ms
+2026-09-26 13:29:30,093 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 125.67ms
+2026-09-26 13:29:30,099 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 131.33ms
+2026-09-26 13:29:30,201 | INFO | smart_property_ai | GET /static/js/main.js -> 200 84.72ms
+2026-09-26 13:29:30,203 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 81.33ms
+2026-09-26 13:29:30,204 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 87.79ms
+2026-09-26 13:29:30,206 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 87.73ms
+2026-09-26 13:29:30,208 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 88.03ms
+2026-09-26 13:29:30,222 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 33.20ms
+2026-09-26 13:29:30,230 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 11.70ms
+2026-09-26 13:29:33,597 | INFO | smart_property_ai | GET /login -> 200 343.14ms
+2026-09-26 13:29:33,659 | INFO | smart_property_ai | GET /static/css/auth.css -> 200 22.37ms
+2026-09-26 13:29:34,195 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 21.44ms
+2026-09-26 13:30:02,877 | INFO | smart_property_ai | POST /login -> 303 237.52ms
+2026-09-26 13:30:02,946 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 63.25ms
+2026-09-26 13:30:03,032 | INFO | smart_property_ai | GET /favicon.ico -> 307 3.48ms
+2026-09-26 13:30:03,058 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 2.41ms
+2026-09-26 13:30:04,319 | INFO | smart_property_ai | GET / -> 200 6.52ms
+2026-09-26 13:30:05,901 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 160.02ms
+2026-09-26 13:30:05,913 | INFO | smart_property_ai | GET /static/js/tenant.js -> 200 3.91ms
+2026-09-26 13:30:12,173 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 33.91ms
+2026-09-26 13:30:38,219 | INFO | smart_property_ai | GET /ai-assistant -> 200 63.13ms
+2026-09-26 13:30:38,234 | INFO | smart_property_ai | GET /static/css/ai-assistant.css -> 200 5.51ms
+2026-09-26 13:30:38,236 | INFO | smart_property_ai | GET /static/js/ai-assistant.js -> 200 5.97ms
+2026-09-26 13:34:09,991 | INFO | smart_property_ai | GET /logout -> 303 74.03ms
+2026-09-26 13:34:10,098 | INFO | smart_property_ai | GET / -> 200 49.69ms
+2026-09-26 13:49:20,868 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 13:49:20,879 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 13:49:20,880 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 13:49:20,881 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 13:49:20,882 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 13:49:20,883 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 13:49:24,156 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 13:49:24,190 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 13:49:24,191 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 13:49:24,192 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 13:49:24,192 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 13:49:24,193 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 13:49:24,193 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 13:49:24,194 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 13:49:24,194 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 13:49:24,195 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 13:49:24,196 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 13:49:24,196 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 13:49:24,197 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 13:49:24,198 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 13:49:24,198 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 13:49:24,199 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 13:49:24,200 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 13:49:24,201 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 13:49:24,201 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 13:49:24,202 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 13:49:40,035 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 13:49:40,036 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 13:49:40,037 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 13:49:40,037 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 13:49:40,037 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 13:49:40,038 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 13:50:50,815 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 13:50:50,819 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 13:50:50,819 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 13:50:50,820 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 13:50:50,820 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 13:50:50,821 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 13:50:50,821 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 13:50:50,821 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 13:50:50,821 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 13:50:50,821 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 13:50:50,821 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 13:50:50,821 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 13:50:50,821 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 13:55:40,469 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 13:55:40,471 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 13:55:40,471 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 13:55:40,472 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 13:55:40,472 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 13:55:40,472 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 14:19:27,530 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 14:19:27,578 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 14:19:27,596 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 14:19:27,596 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 14:19:27,596 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 14:19:27,597 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 14:19:27,597 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 14:19:27,597 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 14:19:27,597 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 14:19:27,598 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 14:19:27,598 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 14:19:27,598 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 14:19:27,598 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 14:19:27,598 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 14:19:27,599 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 14:19:27,599 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 14:19:27,654 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 14:19:33,258 | INFO | smart_property_ai | GET / -> 200 152.87ms
+2026-09-26 14:19:33,782 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 14:19:38,221 | INFO | smart_property_ai | GET /login -> 200 67.65ms
+2026-09-26 14:19:48,270 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 14:23:58,718 | INFO | smart_property_ai | GET /logout -> 303 5.68ms
+2026-09-26 14:23:58,731 | INFO | smart_property_ai | GET / -> 200 7.36ms
+2026-09-26 14:24:21,996 | INFO | smart_property_ai | GET /login -> 200 5.03ms
+2026-09-26 14:33:42,601 | INFO | smart_property_ai | GET /logout -> 303 1.22ms
+2026-09-26 14:33:42,617 | INFO | smart_property_ai | GET / -> 200 9.13ms
+2026-09-26 14:33:42,730 | INFO | smart_property_ai | GET /static/css/style.css -> 304 103.47ms
+2026-09-26 14:33:49,231 | INFO | smart_property_ai | GET /login -> 200 7.42ms
+2026-09-26 14:36:49,989 | INFO | smart_property_ai | GET /logout -> 303 0.75ms
+2026-09-26 14:36:50,002 | INFO | smart_property_ai | GET / -> 200 6.45ms
+2026-09-26 14:39:22,475 | INFO | smart_property_ai | GET /login -> 200 7.20ms
+2026-09-26 14:39:55,744 | INFO | smart_property_ai | POST /login -> 303 371.81ms
+2026-09-26 14:39:55,852 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 103.26ms
+2026-09-26 14:39:55,845 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal')}
+2026-09-26 14:39:58,860 | INFO | smart_property_ai | GET / -> 200 9.21ms
+2026-09-26 14:40:26,616 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 237.81ms
+2026-09-26 14:40:29,705 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 41.98ms
+2026-09-26 14:41:04,777 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 35.33ms
+2026-09-26 14:41:06,948 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 31.10ms
+2026-09-26 14:41:10,178 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/leases -> 200 11.14ms
+2026-09-26 14:41:12,765 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/payments -> 200 13.16ms
+2026-09-26 14:41:14,706 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/maintenance -> 200 46.74ms
+2026-09-26 14:41:17,286 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 41.60ms
+2026-09-26 14:41:19,701 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 10.63ms
+2026-09-26 14:41:21,255 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 12.28ms
+2026-09-26 14:41:21,995 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 12.30ms
+2026-09-26 14:41:24,309 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/complaints -> 200 8.93ms
+2026-09-26 14:41:26,240 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 25.75ms
+2026-09-26 14:43:29,848 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/appointments -> 200 27.83ms
+2026-09-26 14:43:41,811 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/profile -> 200 34.36ms
+2026-09-26 14:43:57,969 | INFO | smart_property_ai | GET /tenant_dashboard/tenant/documents -> 200 31.80ms
+2026-09-26 14:44:57,819 | INFO | smart_property_ai | GET /ai-assistant -> 200 81.62ms
+2026-09-26 14:45:31,136 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 14:45:31,143 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=82e73781-2773-48fa-a6ef-7c6cd8456071 model=smart-property-standard
+2026-09-26 14:45:31,157 | INFO | smart_property_ai | POST /api/ai/chat -> 200 42.79ms
+2026-09-26 14:45:44,801 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 14:45:44,802 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=82e73781-2773-48fa-a6ef-7c6cd8456071 model=smart-property-standard
+2026-09-26 14:45:44,803 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.60ms
+2026-09-26 14:46:04,530 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 14:46:04,531 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=82e73781-2773-48fa-a6ef-7c6cd8456071 model=smart-property-standard
+2026-09-26 14:46:04,532 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.79ms
+2026-09-26 14:49:04,564 | INFO | smart_property_ai | POST /logout -> 303 2.37ms
+2026-09-26 14:49:04,574 | INFO | smart_property_ai | GET / -> 200 6.41ms
+2026-09-26 14:49:04,601 | INFO | smart_property_ai | GET /login -> 200 6.22ms
+2026-09-26 14:52:04,711 | INFO | smart_property_ai | GET /logout -> 303 0.55ms
+2026-09-26 14:52:04,723 | INFO | smart_property_ai | GET / -> 200 5.40ms
+2026-09-26 14:56:08,396 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 14:56:22,654 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 14:57:21,213 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 14:57:21,223 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 14:57:21,223 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 14:57:21,223 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 14:57:21,224 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 14:57:21,226 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 14:57:54,730 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 14:57:54,801 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 14:57:54,817 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 14:57:54,817 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 14:57:54,817 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 14:57:54,818 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 14:57:54,819 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 14:57:54,819 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 14:57:54,819 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 14:57:54,819 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 14:57:54,819 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 14:57:54,819 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 14:57:54,820 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 14:57:54,820 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 14:57:54,820 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 14:57:54,861 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 14:57:58,575 | INFO | smart_property_ai | GET / -> 200 98.47ms
+2026-09-26 14:57:58,993 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 139.13ms
+2026-09-26 14:58:09,958 | INFO | smart_property_ai | GET /login -> 200 2486.90ms
+2026-09-26 14:58:37,666 | INFO | smart_property_ai | POST /login -> 303 92.01ms
+2026-09-26 14:58:37,734 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db')}
+2026-09-26 14:58:37,738 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 67.28ms
+2026-09-26 14:58:39,512 | INFO | smart_property_ai | GET / -> 200 6.75ms
+2026-09-26 14:58:43,966 | INFO | smart_property_ai | GET /ai-assistant -> 200 72.27ms
+2026-09-26 15:00:11,876 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:00:11,878 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:00:11,887 | INFO | smart_property_ai | POST /api/ai/chat -> 200 14.61ms
+2026-09-26 15:00:35,966 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:00:35,967 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:00:35,968 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.52ms
+2026-09-26 15:01:17,883 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:01:17,884 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:01:17,886 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.62ms
+2026-09-26 15:03:11,700 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:03:11,701 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:03:11,702 | INFO | smart_property_ai | POST /api/ai/chat -> 200 4.01ms
+2026-09-26 15:03:39,900 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:03:39,901 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:03:39,903 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.74ms
+2026-09-26 15:04:16,782 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:04:16,782 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:04:16,783 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.89ms
+2026-09-26 15:05:41,925 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:05:41,926 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:05:41,927 | INFO | smart_property_ai | POST /api/ai/chat -> 200 3.79ms
+2026-09-26 15:06:08,100 | INFO | smart_property_ai | AI chat request received from user c1ca5e72-fd96-480b-a256-50f1b7e3ba03
+2026-09-26 15:06:08,101 | INFO | smart_property_ai | AI assistant request handled: user=c1ca5e72-fd96-480b-a256-50f1b7e3ba03 conversation=3df4c2ba-c8f1-416c-8155-7663e7bcbe13 model=smart-property-standard
+2026-09-26 15:06:08,103 | INFO | smart_property_ai | POST /api/ai/chat -> 200 5.83ms
+2026-09-26 15:07:28,634 | INFO | smart_property_ai | GET /ai-information -> 200 19.09ms
+2026-09-26 15:11:24,866 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:11:39,245 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:14:57,251 | INFO | smart_property_ai | GET / -> 200 28.45ms
+2026-09-26 15:14:57,344 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 51.88ms
+2026-09-26 15:14:57,351 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 48.68ms
+2026-09-26 15:14:57,354 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 9.32ms
+2026-09-26 15:14:57,359 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 4.47ms
+2026-09-26 15:14:57,361 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 4.22ms
+2026-09-26 15:14:57,369 | INFO | smart_property_ai | GET /static/js/main.js -> 200 5.67ms
+2026-09-26 15:14:57,371 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 3.98ms
+2026-09-26 15:14:57,374 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 6.07ms
+2026-09-26 15:14:57,383 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 6.53ms
+2026-09-26 15:14:57,386 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 7.01ms
+2026-09-26 15:14:57,391 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 5.50ms
+2026-09-26 15:14:57,397 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 3.62ms
+2026-09-26 15:15:00,130 | INFO | smart_property_ai | GET /static/images/icons/favicon.ico -> 404 13.77ms
+2026-09-26 15:16:22,184 | INFO | smart_property_ai | GET / -> 200 10.71ms
+2026-09-26 15:16:22,255 | INFO | smart_property_ai | GET /static/css/landlord.css -> 304 9.81ms
+2026-09-26 15:16:26,000 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:16:26,967 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:18:00,211 | INFO | smart_property_ai | GET / -> 200 9.36ms
+2026-09-26 15:19:06,256 | INFO | smart_property_ai | GET /static/css/style.css -> 200 15.05ms
+2026-09-26 15:19:06,261 | INFO | smart_property_ai | GET /static/css/accessibility.css -> 200 18.85ms
+2026-09-26 15:19:06,266 | INFO | smart_property_ai | GET /static/css/responsive.css -> 200 19.98ms
+2026-09-26 15:19:06,267 | INFO | smart_property_ai | GET /static/css/tenant.css -> 200 21.75ms
+2026-09-26 15:19:06,268 | INFO | smart_property_ai | GET /static/css/landlord.css -> 200 21.72ms
+2026-09-26 15:19:06,269 | INFO | smart_property_ai | GET /static/css/chat-overlay.css -> 200 16.54ms
+2026-09-26 15:19:06,298 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 20.34ms
+2026-09-26 15:22:06,396 | INFO | smart_property_ai | GET /logout -> 303 31.94ms
+2026-09-26 15:22:06,410 | INFO | smart_property_ai | GET / -> 200 7.32ms
+2026-09-26 15:22:06,459 | INFO | smart_property_ai | GET /static/js/main.js -> 200 14.98ms
+2026-09-26 15:22:06,467 | INFO | smart_property_ai | GET /static/js/language-selector.js -> 200 18.89ms
+2026-09-26 15:22:06,468 | INFO | smart_property_ai | GET /static/js/speech-output.js -> 200 18.89ms
+2026-09-26 15:22:06,471 | INFO | smart_property_ai | GET /static/js/chat-overlay.js -> 200 17.05ms
+2026-09-26 15:22:06,472 | INFO | smart_property_ai | GET /static/js/voice-forms.js -> 200 15.80ms
+2026-09-26 15:22:06,473 | INFO | smart_property_ai | GET /static/js/landlord.js -> 200 16.86ms
+2026-09-26 15:22:06,480 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 5.38ms
+2026-09-26 15:22:06,548 | INFO | smart_property_ai | GET /static/js/guided-search.js -> 200 64.25ms
+2026-09-26 15:23:50,529 | INFO | smart_property_ai | GET /logout -> 303 3.32ms
+2026-09-26 15:23:50,549 | INFO | smart_property_ai | GET / -> 200 6.99ms
+2026-09-26 15:26:04,173 | INFO | smart_property_ai | GET /logout -> 303 0.65ms
+2026-09-26 15:26:04,185 | INFO | smart_property_ai | GET / -> 200 7.37ms
+2026-09-26 15:28:48,438 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:28:52,176 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:28:52,718 | INFO | smart_property_ai | GET /logout -> 303 1.25ms
+2026-09-26 15:28:52,732 | INFO | smart_property_ai | GET / -> 200 8.45ms
+2026-09-26 15:29:54,845 | INFO | smart_property_ai | GET / -> 200 6.95ms
+2026-09-26 15:30:30,478 | INFO | smart_property_ai | GET / -> 200 7.89ms
+2026-09-26 15:30:31,029 | INFO | smart_property_ai | GET / -> 200 6.24ms
+2026-09-26 15:31:53,509 | INFO | smart_property_ai | GET /logout -> 303 0.75ms
+2026-09-26 15:31:53,527 | INFO | smart_property_ai | GET / -> 200 9.66ms
+2026-09-26 15:32:45,553 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\js\\speech-output.js')}
+2026-09-26 15:33:42,173 | INFO | smart_property_ai | GET /logout -> 303 0.55ms
+2026-09-26 15:33:42,186 | INFO | smart_property_ai | GET / -> 200 8.95ms
+2026-09-26 15:36:42,262 | INFO | smart_property_ai | GET /logout -> 303 0.69ms
+2026-09-26 15:36:42,276 | INFO | smart_property_ai | GET / -> 200 9.68ms
+2026-09-26 15:38:49,121 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 15:38:49,217 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 15:38:49,232 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 15:38:49,232 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 15:38:49,233 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 15:38:49,233 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 15:38:49,233 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 15:38:49,233 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 15:38:49,234 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 15:38:49,234 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 15:38:49,234 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 15:38:49,234 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 15:38:49,234 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 15:38:49,235 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 15:38:49,235 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 15:38:49,313 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 15:39:13,572 | INFO | smart_property_ai | GET / -> 200 162.73ms
+2026-09-26 15:39:13,953 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:39:28,575 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:39:42,720 | INFO | smart_property_ai | GET /logout -> 303 3.25ms
+2026-09-26 15:39:42,759 | INFO | smart_property_ai | GET / -> 200 9.67ms
+2026-09-26 15:42:43,514 | INFO | smart_property_ai | GET /logout -> 303 0.51ms
+2026-09-26 15:42:43,523 | INFO | smart_property_ai | GET / -> 200 4.00ms
+2026-09-26 15:45:44,516 | INFO | smart_property_ai | GET /logout -> 303 0.89ms
+2026-09-26 15:45:44,527 | INFO | smart_property_ai | GET / -> 200 5.33ms
+2026-09-26 15:45:44,933 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 105.55ms
+2026-09-26 15:45:45,044 | INFO | smart_property_ai | GET /static/css/style.css -> 304 221.10ms
+2026-09-26 15:48:45,509 | INFO | smart_property_ai | GET /logout -> 303 0.52ms
+2026-09-26 15:48:45,521 | INFO | smart_property_ai | GET / -> 200 6.89ms
+2026-09-26 15:48:45,672 | INFO | smart_property_ai | GET /logout -> 303 0.48ms
+2026-09-26 15:48:45,695 | INFO | smart_property_ai | GET / -> 200 4.05ms
+2026-09-26 15:48:45,995 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 1.23ms
+2026-09-26 15:50:45,466 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html')}
+2026-09-26 15:50:45,899 | DEBUG | watchfiles.main | 5 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:50:56,692 | INFO | smart_property_ai | GET / -> 200 155.86ms
+2026-09-26 15:50:56,768 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 1.95ms
+2026-09-26 15:51:00,504 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:51:46,611 | INFO | smart_property_ai | GET /logout -> 303 1.17ms
+2026-09-26 15:51:46,626 | INFO | smart_property_ai | GET / -> 200 3.36ms
+2026-09-26 15:52:38,109 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 15:54:16,519 | INFO | smart_property_ai | GET /logout -> 303 1.01ms
+2026-09-26 15:54:16,529 | INFO | smart_property_ai | GET / -> 200 2.68ms
+2026-09-26 15:54:47,520 | INFO | smart_property_ai | GET /logout -> 303 1.31ms
+2026-09-26 15:54:47,529 | INFO | smart_property_ai | GET / -> 200 4.29ms
+2026-09-26 15:54:52,159 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 15:54:53,462 | INFO | smart_property_ai | GET / -> 200 6.98ms
+2026-09-26 15:54:55,273 | INFO | smart_property_ai | GET / -> 200 7.98ms
+2026-09-26 15:54:56,711 | INFO | smart_property_ai | GET / -> 200 8.79ms
+2026-09-26 15:55:34,361 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 15:55:34,729 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 15:55:35,489 | INFO | smart_property_ai | GET / -> 200 6.87ms
+2026-09-26 15:55:36,445 | INFO | smart_property_ai | GET / -> 200 6.88ms
+2026-09-26 15:55:36,896 | INFO | smart_property_ai | GET / -> 200 7.25ms
+2026-09-26 15:56:02,619 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 15:56:03,033 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 15:56:04,783 | INFO | smart_property_ai | GET / -> 200 7.14ms
+2026-09-26 15:56:05,571 | INFO | smart_property_ai | GET / -> 200 7.66ms
+2026-09-26 15:56:05,968 | INFO | smart_property_ai | GET / -> 200 7.12ms
+2026-09-26 15:56:08,685 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 15:56:23,037 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 15:56:23,044 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 15:56:23,044 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 15:56:23,045 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 15:56:23,045 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 15:56:23,046 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 15:56:27,983 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 15:56:28,035 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 15:56:28,048 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 15:56:28,049 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 15:56:28,050 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 15:56:28,050 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 15:56:28,050 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 15:56:28,050 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 15:56:28,051 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 15:56:28,051 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 15:56:28,051 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 15:56:28,051 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 15:56:28,051 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 15:56:28,106 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 15:56:32,599 | INFO | smart_property_ai | GET / -> 200 181.51ms
+2026-09-26 15:56:41,043 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 63.31ms
+2026-09-26 15:56:56,549 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 9.90ms
+2026-09-26 15:57:48,524 | INFO | smart_property_ai | GET /logout -> 303 1.60ms
+2026-09-26 15:57:48,535 | INFO | smart_property_ai | GET / -> 200 4.59ms
+2026-09-26 15:58:11,891 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 15:58:12,296 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 15:58:13,880 | INFO | smart_property_ai | GET / -> 200 6.66ms
+2026-09-26 15:58:14,705 | INFO | smart_property_ai | GET / -> 200 7.05ms
+2026-09-26 15:58:15,137 | INFO | smart_property_ai | GET / -> 200 6.86ms
+2026-09-26 15:58:16,699 | INFO | smart_property_ai | GET / -> 200 6.83ms
+2026-09-26 15:59:10,058 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 15:59:10,462 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 15:59:11,556 | INFO | smart_property_ai | GET / -> 200 6.64ms
+2026-09-26 15:59:12,227 | INFO | smart_property_ai | GET / -> 200 5.31ms
+2026-09-26 15:59:27,835 | INFO | smart_property_ai | GET / -> 200 6.75ms
+2026-09-26 15:59:29,656 | INFO | smart_property_ai | GET / -> 200 5.61ms
+2026-09-26 15:59:30,589 | INFO | smart_property_ai | GET / -> 200 7.53ms
+2026-09-26 15:59:30,937 | INFO | smart_property_ai | GET / -> 200 6.27ms
+2026-09-26 16:00:05,152 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:00:05,559 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 16:00:07,608 | INFO | smart_property_ai | GET / -> 200 6.88ms
+2026-09-26 16:00:08,222 | INFO | smart_property_ai | GET / -> 200 6.79ms
+2026-09-26 16:00:49,547 | INFO | smart_property_ai | GET /logout -> 303 1.11ms
+2026-09-26 16:00:49,565 | INFO | smart_property_ai | GET / -> 200 3.82ms
+2026-09-26 16:01:18,525 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:01:19,644 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:01:27,527 | INFO | smart_property_ai | GET /logout -> 303 0.61ms
+2026-09-26 16:01:27,540 | INFO | smart_property_ai | GET / -> 200 5.84ms
+2026-09-26 16:02:09,515 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:02:09,874 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:02:22,679 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:02:23,098 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:02:24,778 | INFO | smart_property_ai | GET / -> 200 137.00ms
+2026-09-26 16:02:25,609 | INFO | smart_property_ai | GET /logout -> 303 1.73ms
+2026-09-26 16:02:25,623 | INFO | smart_property_ai | GET / -> 200 7.54ms
+2026-09-26 16:02:43,200 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:02:43,557 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:02:45,117 | INFO | smart_property_ai | GET / -> 200 135.30ms
+2026-09-26 16:03:01,566 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:03:01,969 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:03:05,177 | INFO | smart_property_ai | GET / -> 200 74.35ms
+2026-09-26 16:03:16,567 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:03:16,920 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:03:18,406 | INFO | smart_property_ai | GET / -> 200 59.23ms
+2026-09-26 16:03:36,889 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:03:37,252 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:03:40,717 | INFO | smart_property_ai | GET / -> 200 71.81ms
+2026-09-26 16:03:50,514 | INFO | smart_property_ai | GET /logout -> 303 0.74ms
+2026-09-26 16:03:50,522 | INFO | smart_property_ai | GET / -> 200 3.22ms
+2026-09-26 16:03:52,002 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:03:52,408 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:03:54,419 | INFO | smart_property_ai | GET / -> 200 54.76ms
+2026-09-26 16:04:50,277 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:04:55,192 | INFO | smart_property_ai | GET / -> 200 7.65ms
+2026-09-26 16:04:55,994 | INFO | smart_property_ai | GET / -> 200 9.62ms
+2026-09-26 16:04:57,146 | INFO | smart_property_ai | GET / -> 200 10.59ms
+2026-09-26 16:04:57,775 | INFO | smart_property_ai | GET / -> 200 10.77ms
+2026-09-26 16:05:26,520 | INFO | smart_property_ai | GET /logout -> 303 0.47ms
+2026-09-26 16:05:26,531 | INFO | smart_property_ai | GET / -> 200 3.78ms
+2026-09-26 16:05:34,608 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:05:34,970 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 16:05:37,104 | INFO | smart_property_ai | GET / -> 200 7.49ms
+2026-09-26 16:05:37,722 | INFO | smart_property_ai | GET / -> 200 7.47ms
+2026-09-26 16:05:38,088 | INFO | smart_property_ai | GET / -> 200 6.40ms
+2026-09-26 16:05:38,998 | INFO | smart_property_ai | GET / -> 200 7.63ms
+2026-09-26 16:05:39,247 | INFO | smart_property_ai | GET / -> 200 7.13ms
+2026-09-26 16:05:39,409 | INFO | smart_property_ai | GET / -> 200 6.83ms
+2026-09-26 16:05:39,620 | INFO | smart_property_ai | GET / -> 200 7.03ms
+2026-09-26 16:06:07,128 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 16.24ms
+2026-09-26 16:06:51,539 | INFO | smart_property_ai | GET /logout -> 303 0.93ms
+2026-09-26 16:06:51,549 | INFO | smart_property_ai | GET / -> 200 5.05ms
+2026-09-26 16:07:30,140 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:07:30,500 | DEBUG | watchfiles.main | 5 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 16:07:36,558 | INFO | smart_property_ai | GET / -> 200 6.72ms
+2026-09-26 16:07:37,225 | INFO | smart_property_ai | GET / -> 200 11.10ms
+2026-09-26 16:07:42,834 | INFO | smart_property_ai | GET /login -> 200 147.83ms
+2026-09-26 16:07:45,140 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:08:09,853 | INFO | smart_property_ai | POST /login -> 303 318.99ms
+2026-09-26 16:08:09,860 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 1.80ms
+2026-09-26 16:08:09,908 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db')}
+2026-09-26 16:08:11,118 | INFO | smart_property_ai | GET / -> 200 6.42ms
+2026-09-26 16:08:13,208 | INFO | smart_property_ai | GET / -> 200 6.99ms
+2026-09-26 16:08:14,129 | INFO | smart_property_ai | GET / -> 200 6.74ms
+2026-09-26 16:08:14,404 | INFO | smart_property_ai | GET / -> 200 5.09ms
+2026-09-26 16:09:07,445 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:09:07,797 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:09:09,243 | INFO | smart_property_ai | GET / -> 200 45.31ms
+2026-09-26 16:09:42,331 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:09:42,748 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:09:44,077 | INFO | smart_property_ai | GET / -> 200 58.22ms
+2026-09-26 16:09:47,345 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:09:47,752 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:09:52,517 | INFO | smart_property_ai | GET /logout -> 303 0.86ms
+2026-09-26 16:09:52,631 | INFO | smart_property_ai | GET / -> 200 87.80ms
+2026-09-26 16:10:37,150 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:10:37,512 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 16:10:39,575 | INFO | smart_property_ai | GET / -> 200 6.52ms
+2026-09-26 16:10:40,772 | INFO | smart_property_ai | GET / -> 200 10.06ms
+2026-09-26 16:10:41,177 | INFO | smart_property_ai | GET / -> 200 9.02ms
+2026-09-26 16:10:42,361 | INFO | smart_property_ai | GET / -> 200 7.56ms
+2026-09-26 16:10:42,690 | INFO | smart_property_ai | GET / -> 200 9.26ms
+2026-09-26 16:10:42,930 | INFO | smart_property_ai | GET / -> 200 12.14ms
+2026-09-26 16:11:56,239 | DEBUG | watchfiles.main | 8 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:11:56,599 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:11:58,100 | INFO | smart_property_ai | GET / -> 200 56.87ms
+2026-09-26 16:12:39,177 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:12:39,538 | DEBUG | watchfiles.main | 5 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 16:12:40,829 | INFO | smart_property_ai | GET / -> 200 52.98ms
+2026-09-26 16:12:44,595 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:12:53,531 | INFO | smart_property_ai | GET /logout -> 303 1.22ms
+2026-09-26 16:12:53,551 | INFO | smart_property_ai | GET / -> 200 12.64ms
+2026-09-26 16:13:43,683 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:13:44,042 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:13:48,030 | INFO | smart_property_ai | GET / -> 200 57.23ms
+2026-09-26 16:14:20,067 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates\\base.html~')}
+2026-09-26 16:14:20,424 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\templates')}
+2026-09-26 16:14:21,616 | INFO | smart_property_ai | GET / -> 200 55.04ms
+2026-09-26 16:15:54,508 | INFO | smart_property_ai | GET /logout -> 303 2.97ms
+2026-09-26 16:15:54,518 | INFO | smart_property_ai | GET / -> 200 4.36ms
+2026-09-26 16:16:05,900 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:16:06,262 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 16:16:08,364 | INFO | smart_property_ai | GET / -> 200 9.17ms
+2026-09-26 16:16:58,341 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 20.37ms
+2026-09-26 16:17:35,434 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:17:39,176 | INFO | smart_property_ai | GET / -> 200 7.32ms
+2026-09-26 16:17:39,289 | INFO | smart_property_ai | GET /.well-known/appspecific/com.chrome.devtools.json -> 404 11.33ms
+2026-09-26 16:18:22,047 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:18:22,458 | DEBUG | watchfiles.main | 5 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 16:18:25,502 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:18:38,810 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:18:39,167 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css')}
+2026-09-26 16:18:40,585 | INFO | smart_property_ai | GET / -> 200 7.90ms
+2026-09-26 16:18:55,511 | INFO | smart_property_ai | GET /logout -> 303 0.53ms
+2026-09-26 16:18:55,519 | INFO | smart_property_ai | GET / -> 200 4.83ms
+2026-09-26 16:21:56,516 | INFO | smart_property_ai | GET /logout -> 303 0.89ms
+2026-09-26 16:21:56,525 | INFO | smart_property_ai | GET / -> 200 3.77ms
+2026-09-26 16:24:57,504 | INFO | smart_property_ai | GET /logout -> 303 0.60ms
+2026-09-26 16:24:57,514 | INFO | smart_property_ai | GET / -> 200 4.19ms
+2026-09-26 16:26:35,149 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css')}
+2026-09-26 16:26:35,505 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~')}
+2026-09-26 16:26:50,151 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:27:58,502 | INFO | smart_property_ai | GET /logout -> 303 0.88ms
+2026-09-26 16:27:58,514 | INFO | smart_property_ai | GET / -> 200 7.47ms
+2026-09-26 16:33:48,508 | INFO | smart_property_ai | GET /logout -> 303 1.44ms
+2026-09-26 16:33:48,542 | INFO | smart_property_ai | GET / -> 200 8.79ms
+2026-09-26 16:33:48,970 | INFO | smart_property_ai | GET /static/css/style.css -> 200 353.60ms
+2026-09-26 16:34:07,171 | INFO | smart_property_ai | GET / -> 200 10.08ms
+2026-09-26 16:34:08,283 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~')}
+2026-09-26 16:34:17,340 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 382.15ms
+2026-09-26 16:34:22,379 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:34:39,274 | INFO | smart_property_ai | GET / -> 200 5.26ms
+2026-09-26 16:36:49,646 | INFO | smart_property_ai | GET /logout -> 303 0.68ms
+2026-09-26 16:36:49,659 | INFO | smart_property_ai | GET / -> 200 4.85ms
+2026-09-26 16:36:49,745 | INFO | smart_property_ai | GET /static/css/style.css -> 304 4.32ms
+2026-09-26 16:37:39,527 | INFO | smart_property_ai | GET /logout -> 303 0.63ms
+2026-09-26 16:37:39,537 | INFO | smart_property_ai | GET / -> 200 3.45ms
+2026-09-26 16:37:39,554 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 2.19ms
+2026-09-26 16:37:53,521 | INFO | smart_property_ai | GET /logout -> 303 0.56ms
+2026-09-26 16:37:53,534 | INFO | smart_property_ai | GET / -> 200 3.82ms
+2026-09-26 16:37:53,555 | INFO | smart_property_ai | GET /static/css/tenant.css -> 304 1.93ms
+2026-09-26 16:38:27,633 | DEBUG | watchfiles.main | 31 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\chat-overlay.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\landlord.css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\responsive.css'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\chat-overlay.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\contact.css'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\auth.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\accessibility.css'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\accessibility.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\style.css'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\landlord.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\auth.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\contact.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\chat-overlay.css'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\accessibility.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\property.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\listings.css~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\responsive.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\landlord.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\contact.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\property.css'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\listings.css'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\listings.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\ai-assistant.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\responsive.css~'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\property.css~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\static\\css\\auth.css')}
+2026-09-26 16:38:30,673 | INFO | smart_property_ai | GET / -> 200 7.48ms
+2026-09-26 16:38:34,788 | INFO | smart_property_ai | GET /login -> 200 96.76ms
+2026-09-26 16:38:54,117 | INFO | smart_property_ai | POST /login -> 303 99.32ms
+2026-09-26 16:38:54,128 | INFO | smart_property_ai | GET /tenant/dashboard -> 404 4.99ms
+2026-09-26 16:38:54,390 | DEBUG | watchfiles.main | 3 changes detected: {(<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db'), (<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\smart_property.db-journal')}
+2026-09-26 16:38:55,520 | INFO | smart_property_ai | GET / -> 200 6.85ms
+2026-09-26 16:38:57,831 | INFO | smart_property_ai | GET /tenant_dashboard/tenant -> 200 36.18ms
+2026-09-26 16:39:50,564 | INFO | smart_property_ai | GET /logout -> 303 0.75ms
+2026-09-26 16:39:50,575 | INFO | smart_property_ai | GET / -> 200 5.27ms
+2026-09-26 16:39:50,613 | INFO | smart_property_ai | GET /static/css/style.css -> 200 2.73ms
+2026-09-26 16:42:51,517 | INFO | smart_property_ai | GET /logout -> 303 3.42ms
+2026-09-26 16:42:51,533 | INFO | smart_property_ai | GET / -> 200 8.12ms
+2026-09-26 16:42:51,558 | INFO | smart_property_ai | GET /static/css/style.css -> 304 2.37ms
+2026-09-26 16:43:24,235 | INFO | smart_property_ai | GET /logout -> 303 1.96ms
+2026-09-26 16:43:24,250 | INFO | smart_property_ai | GET / -> 200 8.71ms
+2026-09-26 16:45:52,521 | INFO | smart_property_ai | GET /logout -> 303 0.73ms
+2026-09-26 16:45:52,531 | INFO | smart_property_ai | GET / -> 200 5.60ms
+2026-09-26 16:45:52,556 | INFO | smart_property_ai | GET /static/css/style.css -> 304 1.74ms
+2026-09-26 16:46:24,319 | INFO | smart_property_ai | GET /logout -> 303 0.66ms
+2026-09-26 16:46:24,334 | INFO | smart_property_ai | GET / -> 200 9.02ms
+2026-09-26 16:51:04,702 | INFO | smart_property_ai | GET /logout -> 303 0.58ms
+2026-09-26 16:51:04,714 | INFO | smart_property_ai | GET / -> 200 6.67ms
+2026-09-26 16:51:09,499 | INFO | smart_property_ai | GET / -> 200 6.13ms
+2026-09-26 16:51:10,393 | INFO | smart_property_ai | GET / -> 200 8.26ms
+2026-09-26 16:51:10,730 | INFO | smart_property_ai | GET / -> 200 6.99ms
+2026-09-26 16:51:12,824 | INFO | smart_property_ai | GET /logout -> 303 0.75ms
+2026-09-26 16:51:12,834 | INFO | smart_property_ai | GET / -> 200 5.40ms
+2026-09-26 16:51:48,138 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 16:51:48,141 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 16:51:48,141 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 16:51:48,142 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 16:51:48,142 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 16:51:48,142 | INFO | smart_property_ai | Shutting down Smart Property AI.
+2026-09-26 16:51:53,214 | DEBUG | asyncio | Using selector: SelectSelector
+2026-09-26 16:51:53,271 | INFO | smart_property_ai | Starting Smart Property AI version 1.0.0 in development mode.
+2026-09-26 16:51:53,279 | INFO | smart_property_ai | Database tables are ready.
+2026-09-26 16:51:53,280 | DEBUG | smart_property_ai.automation.scheduler | AutomationScheduler instantiated
+2026-09-26 16:51:53,280 | DEBUG | smart_property_ai.automation.scheduler | Registered job rent-reminders (interval=86400.0s, enabled=True)
+2026-09-26 16:51:53,280 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job rent-reminders
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Registered job lease-renewals (interval=604800.0s, enabled=True)
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job lease-renewals
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Registered job appointment-reminders (interval=3600.0s, enabled=True)
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job appointment-reminders
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Registered job routine-reports (interval=2592000.0s, enabled=True)
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Started asyncio task for job routine-reports
+2026-09-26 16:51:53,281 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler started with 4 jobs
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job rent-reminders
+2026-09-26 16:51:53,281 | INFO | automation.rent_reminders | [RentReminder] Placeholder job executed
+2026-09-26 16:51:53,281 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job lease-renewals
+2026-09-26 16:51:53,282 | INFO | automation.lease_renewals | [LeaseRenewal] Placeholder job executed
+2026-09-26 16:51:53,282 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job appointment-reminders
+2026-09-26 16:51:53,282 | INFO | automation.appointment_reminders | [AppointmentReminder] Placeholder job executed
+2026-09-26 16:51:53,282 | DEBUG | smart_property_ai.automation.scheduler | Running scheduled job routine-reports
+2026-09-26 16:51:53,282 | INFO | automation.routine_reports | [RoutineReport] Placeholder job executed
+2026-09-26 16:51:53,365 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\logs\\application.log')}
+2026-09-26 16:51:58,886 | INFO | smart_property_ai | GET / -> 200 121.76ms
+2026-09-26 16:52:04,900 | DEBUG | watchfiles.main | 4 changes detected: {(<Change.deleted: 3>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.added: 1>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml~'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea'), (<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea\\workspace.xml')}
+2026-09-26 16:52:18,909 | DEBUG | watchfiles.main | 1 change detected: {(<Change.modified: 2>, 'C:\\Users\\Bolokaiemi\\PycharmProjects\\smart property ai\\.idea')}
+2026-09-26 16:53:43,338 | INFO | smart_property_ai.automation.scheduler | AutomationScheduler stopping 4 jobs
+2026-09-26 16:53:43,338 | DEBUG | smart_property_ai.automation.scheduler | Stopped job rent-reminders
+2026-09-26 16:53:43,338 | DEBUG | smart_property_ai.automation.scheduler | Stopped job lease-renewals
+2026-09-26 16:53:43,338 | DEBUG | smart_property_ai.automation.scheduler | Stopped job appointment-reminders
+2026-09-26 16:53:43,338 | DEBUG | smart_property_ai.automation.scheduler | Stopped job routine-reports
+2026-09-26 16:53:43,339 | INFO | smart_property_ai | Shutting down Smart Property AI.

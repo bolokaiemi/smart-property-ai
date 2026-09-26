@@ -704,3 +704,7 @@ body.ai-overlay-is-open {
         transform: rotate(360deg);
     }
 }
+
+* {
+    text-decoration:none ;
+}

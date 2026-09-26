@@ -1649,3 +1649,8 @@ html.high-contrast .filter-panel {
         gap: 0.25rem;
     }
 }
+
+
+* {
+    text-decoration:none ;
+}

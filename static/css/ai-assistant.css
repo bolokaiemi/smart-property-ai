@@ -816,3 +816,6 @@ html[data-theme="dark"] .ai-assistant-page .ai-inactivity-warning {
         overflow: visible;
     }
 }
+* {
+    text-decoration:none ;
+}

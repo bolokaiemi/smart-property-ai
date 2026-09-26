@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tenant/layout.html" %}
 
 {% block title %}
     {{ page_title|default("Payment Details") }}
@@ -18,7 +18,7 @@
     >
 {% endblock %}
 
-{% block content %}
+{% block tenant_content %}
 {% set payment_status =
     payment.status.value
     |default(payment.status, true)

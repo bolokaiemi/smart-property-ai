@@ -27,6 +27,8 @@ from fastapi import (
     Request,
     status,
 )
+# Guardrail service for professional tone
+from services.guardrail_service import apply_professional_guardrails
 from fastapi.responses import (
     HTMLResponse,
     JSONResponse,
@@ -390,8 +392,13 @@ def sanitize_message(
 def normalize_language(
     language: str | None,
 ) -> str:
-    """Normalize and validate a requested language code."""
+    """Normalize and validate a requested language code.
 
+    Previously, unsupported languages defaulted to English, limiting multilingual support.
+    This change returns the normalized language code regardless of whether it is listed
+    in SUPPORTED_LANGUAGES, allowing the AI component to receive the desired language
+    identifier.
+    """
     normalized = str(
         language or "en"
     ).strip().lower()
@@ -402,13 +409,8 @@ def normalize_language(
         .split("-")[0]
     )
 
-    if (
-        normalized
-        in SUPPORTED_LANGUAGES
-    ):
-        return normalized
-
-    return "en"
+    # Return the normalized language code even if not in SUPPORTED_LANGUAGES.
+    return normalized
 
 
 def normalize_model(
@@ -1151,12 +1153,8 @@ def ai_chat(
             language,
         )
 
-    save_conversation_message(
-        request,
-        role="user",
-        content=message,
-        language=language,
-    )
+    # Apply professional tone guardrail before storing response
+    response_text = apply_professional_guardrails(response_text)
 
     save_conversation_message(
         request,

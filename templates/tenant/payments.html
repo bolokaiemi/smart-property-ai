@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tenant/layout.html" %}
 
 {% block title %}
     {{ page_title|default("Rent and Payments") }}
@@ -18,7 +18,7 @@
     >
 {% endblock %}
 
-{% block content %}
+{% block tenant_content %}
 <main
     id="main-content"
     class="tenant-page tenant-payments-page"

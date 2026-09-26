@@ -906,3 +906,7 @@
         break-inside: avoid;
     }
 }
+
+* {
+    text-decoration:none ;
+}

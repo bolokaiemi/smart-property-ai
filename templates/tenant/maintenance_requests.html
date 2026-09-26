@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tenant/layout.html" %}
 
 {% block title %}
     {{ page_title|default("Maintenance Requests") }}
@@ -17,7 +17,7 @@
     >
 {% endblock %}
 
-{% block content %}
+{% block tenant_content %}
 <main
     id="main-content"
     class="tenant-page tenant-maintenance-page"

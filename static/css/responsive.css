@@ -789,3 +789,7 @@ body.reduce-motion *::after {
         color: #000000 !important;
     }
 }
+
+* {
+    text-decoration:none ;
+}

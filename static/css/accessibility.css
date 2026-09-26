@@ -530,3 +530,6 @@ html[data-reduce-motion="true"] * {
         display: none !important;
     }
 }
+* {
+    text-decoration:none ;
+}

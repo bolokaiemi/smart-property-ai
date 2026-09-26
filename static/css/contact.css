@@ -824,3 +824,7 @@ input[type="checkbox"] {
         border-color: #354f5e;
     }
 }
+
+* {
+    text-decoration:none ;
+}

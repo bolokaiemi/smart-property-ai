@@ -752,3 +752,7 @@ body.high-contrast .auth-highlight {
         box-shadow: none;
     }
 }
+
+* {
+    text-decoration:none ;
+}

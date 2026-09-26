@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import AsyncIterator
 
 from dotenv import load_dotenv
+from automation.scheduler import AutomationScheduler
+from automation.rent_reminders import register_rent_reminder_job
+from automation.lease_renewals import register_lease_renewal_job
+from automation.appointment_reminders import register_appointment_reminder_job
+from automation.routine_reports import register_routine_report_job
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -191,10 +196,21 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
     #
     # application.state.ai_model = load_ai_model()
     #
-    # A reminder scheduler can also be started here.
+    # Initialize automation scheduler and register jobs
+    automation_scheduler = AutomationScheduler()
+    # Register each job with sensible defaults (can be overridden later)
+    register_rent_reminder_job(scheduler=automation_scheduler, interval_seconds=86400)
+    register_lease_renewal_job(scheduler=automation_scheduler, interval_seconds=86400 * 7)
+    register_appointment_reminder_job(scheduler=automation_scheduler, interval_seconds=3600)
+    register_routine_report_job(scheduler=automation_scheduler, interval_seconds=86400 * 30)
+
+    # Start the scheduler before yielding control to the application
+    await automation_scheduler.start()
 
     yield
 
+    # Stop the scheduler gracefully on shutdown
+    await automation_scheduler.stop()
     logger.info("Shutting down %s.", APP_NAME)
 
 

@@ -10,6 +10,17 @@
 (() => {
     "use strict";
 
+// Track current language for speech synthesis
+let currentLanguage = document.documentElement.lang || navigator.language || "en-US";
+
+// Update language when the language selector changes
+document.addEventListener("smartproperty:languagechange", (e) => {
+    const newLang = e.detail?.language;
+    if (newLang) {
+        currentLanguage = newLang;
+    }
+});
+
     function initializeSpeechOutput() {
         const speechSupported =
             "speechSynthesis" in window &&

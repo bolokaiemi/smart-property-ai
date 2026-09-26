@@ -1,0 +1,7 @@
+User: Hello, I'm looking for a 2‑bedroom apartment in Berlin.
+Assistant: Certainly! What is your maximum monthly rent?
+User: Up to 1200 euros.
+Assistant: Great, I will search for listings that match your criteria.
+---
+User: Can you schedule a viewing for the second property?
+Assistant: Absolutely, please provide a preferred date and time.
